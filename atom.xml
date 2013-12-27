@@ -4,7 +4,7 @@
   <title><![CDATA[Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2013-12-27T17:41:00+08:00</updated>
+  <updated>2013-12-27T20:46:49+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -12,5 +12,17 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Shana]]></title>
+    <link href="http://LanderlYoung.github.io/blog/2013/12/27/shana/"/>
+    <updated>2013-12-27T20:22:33+08:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2013/12/27/shana</id>
+    <content type="html"><![CDATA[<p><video controls>
+<source src="http://LanderlYoung.github.io/assets/media/shana_Final_FinalED.mp4" type="video/mp4"/>
+This is no suitable format of video for your browser!
+</video></p>
+]]></content>
+  </entry>
   
 </feed>
