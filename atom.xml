@@ -4,7 +4,7 @@
   <title><![CDATA[Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2013-12-27T16:53:58+08:00</updated>
+  <updated>2013-12-27T16:57:46+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -18,14 +18,9 @@
     <link href="http://LanderlYoung.github.io/blog/2013/12/27/hello/"/>
     <updated>2013-12-27T16:24:21+08:00</updated>
     <id>http://LanderlYoung.github.io/blog/2013/12/27/hello</id>
-    <content type="html"><![CDATA[<pre><code>today is much miserable
-    1.i created my blog on github.io
-    2.i have much report to write.Oh...
-</code></pre>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>document.close();</span></code></pre></td></tr></table></div></figure>
-
+    <content type="html"><![CDATA[<p>today is much miserable
+1.i created my blog on github.io
+2.i have much report to write.Oh&hellip;</p>
 ]]></content>
   </entry>
   
