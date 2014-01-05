@@ -5,11 +5,10 @@ date: 2014-01-05 22:32:13 +0800
 comments: true
 categories: [Node.js, dictonary_Node.js]
 ---
-#基于Node.js的命令行词典应用#
 
 &lt; 开场白 &gt;
 
-[项目地址][0]
+[**基于Node.js的命令行词典应用**][0]
 
 项目刚开始做，今天先做个铺垫吧。
 
@@ -17,16 +16,15 @@ categories: [Node.js, dictonary_Node.js]
 
 一直以来都很想学习一下web技术，HTML5, CSS3, Javascript，前段时间算是终于闲下来了（其实是好多课没有意思，不想去上了），于是学习了一下，同时还写了一个Chrome 应用  [Magent2Torrent][1]。了解javascript之后发现她真是一个灵活可爱的语言，也可能是我接触的第一个动态语言（或者叫弱类型语言），总觉得她有着无限的魅力。同时还喜欢上了JSON！
 
-前一段时间（在这个github博客搭建之前）玩了一下[Node.js][2]，发现这真是个好东西，我可以在本地执行javascript脚本了, 尽管Node.js的设计初衷北非如此……（我这是玩得有点偏了）虽然和python等本地执行的脚本语言在API上还有差距，鉴于Node.js可以使用C++模块（add on），也算是功能完备了。
+前一段时间（在这个github博客搭建之前）玩了一下[Node.js][2]，发现这真是个好东西，我可以在本地执行javascript脚本了, 尽管Node.js的设计初衷并非如此……（我这是玩得有点偏了）虽然和python等本地执行的脚本语言在API上还有差距，鉴于Node.js可以使用C++模块（add on），也算是功能完备了。
 
 之前用过一个python写的脚本，可以请求有道网页版的词典，然后解析得到的html内容，行命令行输出单词解释，于是我冒出了用javascript+Node.js实现上述功能的想法。
-与之前的python脚本不同的是，我打算使用有到的API来查询单词。鉴于有到词典的查询
+与之前的python脚本不同的是，我打算使用有到的API来查询单词。
 
-
-API需要申请，且免费用户查询次数有限，我决定使用wireshark抓包来得到官方
+鉴于有到词典的查询API需要申请，且免费用户查询次数有限，我决定使用wireshark抓包来得到官方
 API。抓包的应用是win8上的有道词典。得到的数据如下：
 
-```
+``` cpp
 GET /search?keyfrom=metrodict.main&xmlDetail=true&doctype=xml&xmlVersion=8.1&dogVersion=1.0&q=node&le=eng&keyfrom=metrodict.input&client=metrodict&id=3019615280104595010663601040404140109040186114402823410158212201782429070109&appVer=1.1.49.6663.beta&vendor=store HTTP/1.1
 
 Host: dict.youdao.com
@@ -43,7 +41,7 @@ Host: dict.youdao.com
  * doctype肯定是文档类型，此处是xml。
  * xmlVersion，xml文档的版本。
  * dog.Version, 又是某个东西的版本。
- * ###q就是要查询的单词了。
+ * **q**就是要查询的单词了。
  * le看来是语言的意思，le = language，值是eng表示英语english。
  * kerfrom和前文一样。client是客户端，这里是metrodict就是win8的词典啦。
  * id，卧槽！这么长，估计申请到的id就是这样，这个id肯定是有道官方使用的id（绝对没有查询次数限制，哦吼吼！）
@@ -62,7 +60,7 @@ Host: dict.youdao.com
 
 接下来再瞅瞅发音是怎么回事，老方法。wireshark抓包得到的结果是：
 
-```
+``` cpp
 GET /dictvoice?audio=world&type=2 HTTP/1.1
 Accept: */*
 If-Modified-Since: Sun,  05 Jan 2014 14:04:56 GMT
