@@ -28,14 +28,21 @@ article{
 		.more-link{
 			display: block;
 			margin-top: 16px;
-			padding-left: 30px;
+			padding-left: 3em;
 			position: relative;
 			&:before{
 				content: "\f061";
 				font: 1.3em $font-icon;
 				line-height: 1.6em;
 				position: absolute;
-				left: 0;
+				left: 10px;
+			}
+		}
+		.more-link:hover{
+			&:before{
+				font: 2.6em $font-icon;
+				animation:rot 0.5s ease-in-out;
+				-webkit-animation:rot 0.5s ease-in-out;
 			}
 		}
 		p, blockquote, ul, ol, dl, table, iframe, h1, h2, h3, h4, h5, h6, .video-container{
@@ -139,3 +146,25 @@ article{
 	padding: 15px 0;
 	@include border-shadow();
 }
+
+@keyframes rot {
+	0% {
+		transform:rotate(0deg);
+		-moz-transform:rotate(0deg);
+		-o-transform:rotate(0deg);
+	}
+	100%{
+		transform:rotate(-360deg);
+		-moz-transform:rotate(-360deg);
+		-o-transform:rotate(-360deg);
+	}
+}
+@-webkit-keyframes rot{
+	0%{
+		-webkit-transform:rotate(0deg);
+	}
+	100%{
+		-webkit-transform:rotate(-360deg);
+	}
+}
+

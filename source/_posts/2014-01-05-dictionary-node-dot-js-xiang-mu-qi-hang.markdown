@@ -18,6 +18,8 @@ categories: [Node.js, dictonary_Node.js]
 
 前一段时间（在这个github博客搭建之前）玩了一下[Node.js][2]，发现这真是个好东西，我可以在本地执行javascript脚本了, 尽管Node.js的设计初衷并非如此……（我这是玩得有点偏了）虽然和python等本地执行的脚本语言在API上还有差距，鉴于Node.js可以使用C++模块（add on），也算是功能完备了。
 
+<!--more-->
+
 之前用过一个python写的脚本，可以请求有道网页版的词典，然后解析得到的html内容，行命令行输出单词解释，于是我冒出了用javascript+Node.js实现上述功能的想法。
 与之前的python脚本不同的是，我打算使用有到的API来查询单词。
 
