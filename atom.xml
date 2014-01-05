@@ -4,7 +4,7 @@
   <title><![CDATA[Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-01-06T02:21:47+08:00</updated>
+  <updated>2014-01-06T02:54:29+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -29,6 +29,9 @@
 <p>一直以来都很想学习一下web技术，HTML5, CSS3, Javascript，前段时间算是终于闲下来了（其实是好多课没有意思，不想去上了），于是学习了一下，同时还写了一个Chrome 应用  <a href="https://github.com/LanderlYoung/Magnet2Torrent">Magent2Torrent</a>。了解javascript之后发现她真是一个灵活可爱的语言，也可能是我接触的第一个动态语言（或者叫弱类型语言），总觉得她有着无限的魅力。同时还喜欢上了JSON！</p>
 
 <p>前一段时间（在这个github博客搭建之前）玩了一下<a href="http://www.nodejs.org">Node.js</a>，发现这真是个好东西，我可以在本地执行javascript脚本了, 尽管Node.js的设计初衷并非如此……（我这是玩得有点偏了）虽然和python等本地执行的脚本语言在API上还有差距，鉴于Node.js可以使用C++模块（add on），也算是功能完备了。</p>
+
+<!--more-->
+
 
 <p>之前用过一个python写的脚本，可以请求有道网页版的词典，然后解析得到的html内容，行命令行输出单词解释，于是我冒出了用javascript+Node.js实现上述功能的想法。
 与之前的python脚本不同的是，我打算使用有到的API来查询单词。</p>
@@ -125,6 +128,11 @@ API。抓包的应用是win8上的有道词典。得到的数据如下：</p>
     <id>http://LanderlYoung.github.io/blog/2013/12/28/chu-tan-mfc</id>
     <content type="html"><![CDATA[<p>这几天要写智能卡大作业，老师要求必须有图形界面。
 作业本身没什么难的，调用提供的API函数完成相应功能。倒是图形界面让我觉得比较有趣，以前一直用java写图形界面。但是java程序运行起来比较麻烦，首先得有jre，其次jar也不一定能双击运行，当时就萌生了写个MFC程序的念头，囿于时间有限一直没学习。这次倒是给了我一个大好机会。</p>
+
+<!--more-->
+
+
+
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
