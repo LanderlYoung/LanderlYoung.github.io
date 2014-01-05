@@ -7,7 +7,7 @@
 	<meta name="author" content="LanderlYoung">
 
 	
-	<meta name="description" content="dictionary_Node.js-项目启航 基于Node.js的命令行词典应用 &lt; 开场白 &gt; 项目地址 项目刚开始做，今天先做个铺垫吧。 &lt;/ 开场白 &gt; 一直以来都很想学习一下web技术，HTML5, CSS3, Javascript，前段时间算是终于闲下来了（ &hellip;">
+	<meta name="description" content="dictionary_Node.js-项目启航 &lt; 开场白 &gt; 基于Node.js的命令行词典应用 项目刚开始做，今天先做个铺垫吧。 &lt;/ 开场白 &gt; 一直以来都很想学习一下web技术，HTML5, CSS3, Javascript，前段时间算是终于闲下来了（ &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,11 +80,9 @@
 			<div class="mid-col-container">
 				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 	<h1 class="title" itemprop="name">dictionary_Node.js-项目启航</h1>
-	<div class="entry-content" itemprop="articleBody"><h1>基于Node.js的命令行词典应用</h1>
+	<div class="entry-content" itemprop="articleBody"><p>&lt; 开场白 &gt;</p>
 
-<p>&lt; 开场白 &gt;</p>
-
-<p><a href="https://github.com/LanderlYoung/Dictinoary_Node.js">项目地址</a></p>
+<p><a href="https://github.com/LanderlYoung/Dictinoary_Node.js"><strong>基于Node.js的命令行词典应用</strong></a></p>
 
 <p>项目刚开始做，今天先做个铺垫吧。</p>
 
@@ -92,24 +90,25 @@
 
 <p>一直以来都很想学习一下web技术，HTML5, CSS3, Javascript，前段时间算是终于闲下来了（其实是好多课没有意思，不想去上了），于是学习了一下，同时还写了一个Chrome 应用  <a href="https://github.com/LanderlYoung/Magnet2Torrent">Magent2Torrent</a>。了解javascript之后发现她真是一个灵活可爱的语言，也可能是我接触的第一个动态语言（或者叫弱类型语言），总觉得她有着无限的魅力。同时还喜欢上了JSON！</p>
 
-<p>前一段时间（在这个github博客搭建之前）玩了一下<a href="http://www.nodejs.org">Node.js</a>，发现这真是个好东西，我可以在本地执行javascript脚本了, 尽管Node.js的设计初衷北非如此……（我这是玩得有点偏了）虽然和python等本地执行的脚本语言在API上还有差距，鉴于Node.js可以使用C++模块（add on），也算是功能完备了。</p>
+<p>前一段时间（在这个github博客搭建之前）玩了一下<a href="http://www.nodejs.org">Node.js</a>，发现这真是个好东西，我可以在本地执行javascript脚本了, 尽管Node.js的设计初衷并非如此……（我这是玩得有点偏了）虽然和python等本地执行的脚本语言在API上还有差距，鉴于Node.js可以使用C++模块（add on），也算是功能完备了。</p>
 
 <p>之前用过一个python写的脚本，可以请求有道网页版的词典，然后解析得到的html内容，行命令行输出单词解释，于是我冒出了用javascript+Node.js实现上述功能的想法。
-与之前的python脚本不同的是，我打算使用有到的API来查询单词。鉴于有到词典的查询</p>
+与之前的python脚本不同的是，我打算使用有到的API来查询单词。</p>
 
-<p>API需要申请，且免费用户查询次数有限，我决定使用wireshark抓包来得到官方
+<p>鉴于有到词典的查询API需要申请，且免费用户查询次数有限，我决定使用wireshark抓包来得到官方
 API。抓包的应用是win8上的有道词典。得到的数据如下：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>GET /search?keyfrom=metrodict.main&xmlDetail=true&doctype=xml&xmlVersion=8.1&dogVersion=1.0&q=node&le=eng&keyfrom=metrodict.input&client=metrodict&id=3019615280104595010663601040404140109040186114402823410158212201782429070109&appVer=1.1.49.6663.beta&vendor=store HTTP/1.1
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">GET</span> <span class="o">/</span><span class="n">search</span><span class="o">?</span><span class="n">keyfrom</span><span class="o">=</span><span class="n">metrodict</span><span class="p">.</span><span class="n">main</span><span class="o">&amp;</span><span class="n">xmlDetail</span><span class="o">=</span><span class="kc">true</span><span class="o">&amp;</span><span class="n">doctype</span><span class="o">=</span><span class="n">xml</span><span class="o">&amp;</span><span class="n">xmlVersion</span><span class="o">=</span><span class="mf">8.1</span><span class="o">&amp;</span><span class="n">dogVersion</span><span class="o">=</span><span class="mf">1.0</span><span class="o">&amp;</span><span class="n">q</span><span class="o">=</span><span class="n">node</span><span class="o">&amp;</span><span class="n">le</span><span class="o">=</span><span class="n">eng</span><span class="o">&amp;</span><span class="n">keyfrom</span><span class="o">=</span><span class="n">metrodict</span><span class="p">.</span><span class="n">input</span><span class="o">&amp;</span><span class="n">client</span><span class="o">=</span><span class="n">metrodict</span><span class="o">&amp;</span><span class="n">id</span><span class="o">=</span><span class="mi">3019615280104595010663601040404140109040186114402823410158212201782429070109</span><span class="o">&amp;</span><span class="n">appVer</span><span class="o">=</span><span class="mf">1.1.49.6663</span><span class="p">.</span><span class="n">beta</span><span class="o">&amp;</span><span class="n">vendor</span><span class="o">=</span><span class="n">store</span> <span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
 </span><span class='line'>
-</span><span class='line'>Host: dict.youdao.com
+</span><span class='line'><span class="nl">Host:</span> <span class="n">dict</span><span class="p">.</span><span class="n">youdao</span><span class="p">.</span><span class="n">com</span>
 </span><span class='line'>
-</span><span class='line'>... ...</span></code></pre></td></tr></table></div></figure>
+</span><span class='line'><span class="p">...</span> <span class="p">...</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>可以从中看到各个参数，其中参数q就是我们要查询的单词，此处是node。其他参数事实上并不需要考虑太多，不过秉承着geek精神还是看一下为好。</p>
@@ -122,7 +121,7 @@ API。抓包的应用是win8上的有道词典。得到的数据如下：</p>
 <li>doctype肯定是文档类型，此处是xml。</li>
 <li>xmlVersion，xml文档的版本。</li>
 <li>dog.Version, 又是某个东西的版本。</li>
-<li><h3>q就是要查询的单词了。</h3></li>
+<li><strong>q</strong>就是要查询的单词了。</li>
 <li>le看来是语言的意思，le = language，值是eng表示英语english。</li>
 <li>kerfrom和前文一样。client是客户端，这里是metrodict就是win8的词典啦。</li>
 <li>id，卧槽！这么长，估计申请到的id就是这样，这个id肯定是有道官方使用的id（绝对没有查询次数限制，哦吼吼！）</li>
@@ -143,7 +142,7 @@ API。抓包的应用是win8上的有道词典。得到的数据如下：</p>
 
 <p>接下来再瞅瞅发音是怎么回事，老方法。wireshark抓包得到的结果是：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -154,17 +153,18 @@ API。抓包的应用是win8上的有道词典。得到的数据如下：</p>
 <span class='line-number'>9</span>
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>GET /dictvoice?audio=world&type=2 HTTP/1.1
-</span><span class='line'>Accept: */*
-</span><span class='line'>If-Modified-Since: Sun,  05 Jan 2014 14:04:56 GMT
-</span><span class='line'>User-Agent: Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0; MSAppHost/1.0)
-</span><span class='line'>GetContentFeatures.DLNA.ORG: 1
-</span><span class='line'>Pragma: getIfoFileURI.dlna.org
-</span><span class='line'>Accept-Language: zh-Hans-CN, zh-Hans;q=0.8, en-US;q=0.5, en;q=0.3
-</span><span class='line'>UA-CPU: AMD64
-</span><span class='line'>Accept-Encoding: gzip,  deflate
-</span><span class='line'>Host: dict.youdao.com
-</span><span class='line'>Connection: Keep-Alive</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">GET</span> <span class="o">/</span><span class="n">dictvoice</span><span class="o">?</span><span class="n">audio</span><span class="o">=</span><span class="n">world</span><span class="o">&amp;</span><span class="n">type</span><span class="o">=</span><span class="mi">2</span> <span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+</span><span class='line'><span class="nl">Accept:</span> <span class="err">*/</span><span class="o">*</span>
+</span><span class='line'><span class="n">If</span><span class="o">-</span><span class="n">Modified</span><span class="o">-</span><span class="nl">Since:</span> <span class="n">Sun</span><span class="p">,</span>  <span class="mo">05</span> <span class="n">Jan</span> <span class="mi">2014</span> <span class="mi">14</span><span class="o">:</span><span class="mo">04</span><span class="o">:</span><span class="mi">56</span> <span class="n">GMT</span>
+</span><span class='line'><span class="n">User</span><span class="o">-</span><span class="nl">Agent:</span> <span class="n">Mozilla</span><span class="o">/</span><span class="mf">5.0</span> <span class="p">(</span><span class="n">compatible</span><span class="p">;</span> <span class="n">MSIE</span> <span class="mf">10.0</span><span class="p">;</span> <span class="n">Windows</span> <span class="n">NT</span> <span class="mf">6.2</span><span class="p">;</span> <span class="n">Trident</span><span class="o">/</span><span class="mf">6.0</span><span class="p">;</span> <span class="n">MSAppHost</span><span class="o">/</span><span class="mf">1.0</span><span class="p">)</span>
+</span><span class='line'><span class="n">GetContentFeatures</span><span class="p">.</span><span class="n">DLNA</span><span class="p">.</span><span class="nl">ORG:</span> <span class="mi">1</span>
+</span><span class='line'><span class="nl">Pragma:</span> <span class="n">getIfoFileURI</span><span class="p">.</span><span class="n">dlna</span><span class="p">.</span><span class="n">org</span>
+</span><span class='line'><span class="n">Accept</span><span class="o">-</span><span class="nl">Language:</span> <span class="n">zh</span><span class="o">-</span><span class="n">Hans</span><span class="o">-</span><span class="n">CN</span><span class="p">,</span> <span class="n">zh</span><span class="o">-</span><span class="n">Hans</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">en</span><span class="o">-</span><span class="n">US</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">en</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.3</span>
+</span><span class='line'><span class="n">UA</span><span class="o">-</span><span class="nl">CPU:</span> <span class="n">AMD64</span>
+</span><span class='line'><span class="n">Accept</span><span class="o">-</span><span class="nl">Encoding:</span> <span class="n">gzip</span><span class="p">,</span>  <span class="n">deflate</span>
+</span><span class='line'><span class="nl">Host:</span> <span class="n">dict</span><span class="p">.</span><span class="n">youdao</span><span class="p">.</span><span class="n">com</span>
+</span><span class='line'><span class="nl">Connection:</span> <span class="n">Keep</span><span class="o">-</span><span class="n">Alive</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
 <p>蛮长的嘛。话说这个更简单了。只有两个参数audio和type。老衲闭着眼睛都能算出来audio参数是干嘛的：&#8221;那就是！要发音的单词！&#8221;。&#8221;喂！我说，你太聪明了吧&#8221;。唉，一不小心人格分裂症又犯了, 最近期末考试，药停了两天没办法。另一个type参数经过实验发现是英音和美音。当type == 1时是英音，等于2时是美音，其他情况我没试，猜测是默认发音（英音或美音）。
@@ -181,22 +181,40 @@ API。抓包的应用是win8上的有道词典。得到的数据如下：</p>
 
 </article>
 
-	<div class="share">
+	<!--[add this]>
+<div class="share">
 	<div class="addthis_toolbox addthis_default_style addthis_16x16_style">
-	
-	<a class="addthis_button_sinaweibo"></a>
-	
-	
-	
-	
-	
-	<a class="addthis_button_google_plusone_share"></a>
-	
-	<a class="addthis_button_compact"></a>
-	<a class="addthis_counter addthis_bubble_style"></a>
+		
+		<a class="addthis_button_sinaweibo"></a>
+		
+		
+		
+		
+		
+		<a class="addthis_button_google_plusone_share"></a>
+		
+		<a class="addthis_button_compact"></a>
+		<a class="addthis_counter addthis_bubble_style"></a>
 	</div>
-  <script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid="></script>
+	<script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid="></script>
 </div>
+<[add this]-->
+
+<!--[jia this]-->
+
+<!--aThis Button BEGIN -->
+<div class="jiathis_style">
+	<span class="jiathis_txt">分享到：</span>
+	<a class="jiathis_button_tools_1"></a>
+	<a class="jiathis_button_tools_2"></a>
+	<a class="jiathis_button_tools_3"></a>
+	<a class="jiathis_button_tools_4"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+<!--[jia this]-->
 
 
 
