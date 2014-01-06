@@ -61,10 +61,21 @@ c.onmouseup = function(e)
 	P=0;
 }
 
+//add by young
+function getElementTop(element){
+	　　　　var actualTop = element.offsetTop;
+	　　　　var current = element.offsetParent;
+	　　　　while (current !== null){
+		　　　　　　actualTop += current.offsetTop;
+		　　　　　　current = current.offsetParent;
+		　　　　}
+	　　　　return actualTop;
+	　　}
+	var canvas_offsetY = getElementTop(c);
 //what to do when the mouse moves
 c.onmousemove=function(e)
 {
-	i=f(e.pageY/D);
+	i=f((e.pageY - canvas_offsetY)/D);
 	j=f(e.pageX/D);
 	if(i<m && j<n && (I != i || J !=j))
 	{
