@@ -4,7 +4,7 @@
   <title><![CDATA[Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-01-06T17:11:46+08:00</updated>
+  <updated>2014-01-06T17:39:02+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -31,63 +31,61 @@
 
 <p> 2.cd进去输入</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">git</span> <span class="n">init</span>
-</span></code></pre></td></tr></table></div></figure>
+<pre>
+    git init
+</pre>
 
 
 <p> 3.配置git，比如</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">git</span> <span class="n">remote</span> <span class="n">add</span> <span class="n">origin</span> <span class="n">git</span><span class="err">@</span><span class="n">xxx</span>
-</span></code></pre></td></tr></table></div></figure>
+<pre>
+    git remote add origin git@xxx
+</pre>
 
 
 <p> 4.然后是</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">git</span> <span class="n">fetch</span> <span class="n">origin</span>
-</span></code></pre></td></tr></table></div></figure>
+<pre>
+    git fetch origin
+</pre>
 
 
 <p>   把仓库的状态取回来</p>
 
 <p> 5.因为_deploy目录里面也是这个项目，所以索性把.git目录复制进去</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">cp</span> <span class="o">-</span><span class="n">r</span> <span class="p">.</span><span class="n">git</span> <span class="n">_deploy</span><span class="o">/</span>
-</span></code></pre></td></tr></table></div></figure>
+<pre>
+    cp -r .git _deploy/
+</pre>
 
 
 <p> 6.然后是下载分支，可以使用</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">git</span> <span class="n">branch</span> <span class="o">-</span><span class="n">b</span> <span class="n">branch_name</span> <span class="n">origin</span><span class="o">/</span><span class="n">source</span>
-</span></code></pre></td></tr></table></div></figure>
+<pre>
+    git branch -b branch_name origin/source
+</pre>
 
 
 <p>   从source分支新建一个分支。或者简单点，用：</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">git</span> <span class="n">branch</span> <span class="o">-</span><span class="n">t</span> <span class="n">origin</span><span class="o">/</span><span class="n">source</span>
-</span></code></pre></td></tr></table></div></figure>
+<pre>
+    git branch -t origin/source
+</pre>
 
 
 <p>   直接吧source分支搞下来，其作用等同于</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">git</span> <span class="n">branch</span> <span class="o">-</span><span class="n">b</span> <span class="n">source</span> <span class="n">origin</span><span class="o">/</span><span class="n">source</span>
-</span></code></pre></td></tr></table></div></figure>
+<pre>
+    git branch -b source origin/source
+</pre>
 
 
-<p> 7.cd 到_deploy目录，干同样的事：</p>
+<p> 7.cd 到_deploy目录，干同样的事</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">git</span> <span class="n">branch</span> <span class="o">-</span><span class="n">t</span> <span class="n">origin</span><span class="o">/</span><span class="n">source</span>
-</span></code></pre></td></tr></table></div></figure>
+<pre>
+    git branch -t origin/source
+</pre>
 
-
-<hr />
 
 <p>这样两个分支就放到了不同的目录里面，接着按照octpress官方教程安装jekyll和rake等就可以开始博客了！</p>
 

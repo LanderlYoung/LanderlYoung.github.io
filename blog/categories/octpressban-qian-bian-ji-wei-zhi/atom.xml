@@ -4,7 +4,7 @@
   <title><![CDATA[Category: octpress搬迁编辑位置 | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/blog/categories/octpressban-qian-bian-ji-wei-zhi/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-01-06T17:11:46+08:00</updated>
+  <updated>2014-01-06T17:39:02+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -29,68 +29,63 @@
 
 <p> 1.新建一个文件夹，假设名字是blog</p>
 
-<p> 2.cd进去输入
-``` cpp</p>
+<p> 2.cd进去输入</p>
 
-<pre><code>git init
-</code></pre>
+<pre>
+    git init
+</pre>
 
-<p>```</p>
 
-<p> 3.配置git，比如
-``` cpp</p>
+<p> 3.配置git，比如</p>
 
-<pre><code>git remote add origin git@xxx
-</code></pre>
+<pre>
+    git remote add origin git@xxx
+</pre>
 
-<p>```</p>
 
-<p> 4.然后是
-``` cpp</p>
+<p> 4.然后是</p>
 
-<pre><code>git fetch origin
-</code></pre>
+<pre>
+    git fetch origin
+</pre>
 
-<p>```
-   把仓库的状态取回来</p>
 
-<p> 5.因为_deploy目录里面也是这个项目，所以索性把.git目录复制进去
-``` cpp</p>
+<p>   把仓库的状态取回来</p>
 
-<pre><code>cp -r .git _deploy/
-</code></pre>
+<p> 5.因为_deploy目录里面也是这个项目，所以索性把.git目录复制进去</p>
 
-<p>```</p>
+<pre>
+    cp -r .git _deploy/
+</pre>
 
-<p> 6.然后是下载分支，可以使用
-``` cpp</p>
 
-<pre><code>git branch -b branch_name origin/source
-</code></pre>
+<p> 6.然后是下载分支，可以使用</p>
 
-<p><code>
-   从source分支新建一个分支。或者简单点，用：
-</code> cpp</p>
+<pre>
+    git branch -b branch_name origin/source
+</pre>
 
-<pre><code>git branch -t origin/source
-</code></pre>
 
-<p><code>
-   直接吧source分支搞下来，其作用等同于
-</code> cpp</p>
+<p>   从source分支新建一个分支。或者简单点，用：</p>
 
-<pre><code>git branch -b source origin/source
-</code></pre>
+<pre>
+    git branch -t origin/source
+</pre>
 
-<p>```</p>
 
-<p> 7.cd 到_deploy目录，干同样的事：
-``` cpp</p>
+<p>   直接吧source分支搞下来，其作用等同于</p>
 
-<pre><code>git branch -t origin/source
-</code></pre>
+<pre>
+    git branch -b source origin/source
+</pre>
 
-<h2>```</h2>
+
+<p> 7.cd 到_deploy目录，干同样的事</p>
+
+<pre>
+    git branch -t origin/source
+</pre>
+
 
 <p>这样两个分支就放到了不同的目录里面，接着按照octpress官方教程安装jekyll和rake等就可以开始博客了！</p>
 
