@@ -60,18 +60,19 @@ function jump_spring(){
 
 	//add by young
 	　function getElementLeft(element){
-	　　　　var actualLeft = element.offsetLeft;
-	　　　　var current = element.offsetParent;
-	　　　　while (current !== null){
-		　　　　　　actualLeft += current.offsetLeft;
-		　　　　　　current = current.offsetParent;
-		　　　　}
-	　　　　return actualLeft;
-	　　}
+		　　　　var actualLeft = element.offsetLeft;
+		　　　　var current = element.offsetParent;
+		　　　　while (current !== null){
+			　　　　　　actualLeft += current.offsetLeft;
+			　　　　　　current = current.offsetParent;
+			　　　　}
+		　　　　return actualLeft;
+		　　}
+	var canvas_offsetX = getElementLeft(c);
 	b.onmousemove = function (e) {
 		// move the mouse to the left and right to move the spring as appropriate
 		// modified by young
-		ma = e.pageX - getElementLeft(c);
+		ma = e.pageX - canvas_offsetX;
 		moveSpring(ma < springX ? -1 : ma > springX ? 1 : 0);
 	};
 
