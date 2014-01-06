@@ -1,0 +1,73 @@
+<html>
+	<head>
+		<title>404</title>
+		<link href="/stylesheets/screen.css" rel="text/stylesheet"/>
+		<link href='http://fonts.googleapis.com/css?family=Exo+2' rel='stylesheet' type='text/css'>
+		<style>
+			body {
+				background-color: whitesmoke;
+				font-family: 'Exo 2', "Microsoft YaHei", "STHeiti", sans-serif;
+			}
+			.ntf_en{
+				font-size:2.5em !important;
+			}
+			#main-area {
+				padding-top: 2%;
+				padding-bottom: 5%;
+				text-align: center;
+				margin-left: auto;
+				margin-right: auto;
+				position: relative;
+			}
+			#main-area p {
+				font-size: 2em;
+			}
+			#bg {
+				margin-top: 0%;
+			}
+			#bg img{
+				cursor: pointer;
+			}
+			#main-area .hid {
+				margin-top: 0%;
+				display:none;
+			}
+
+		</style>
+	</head>
+	<body>
+		<div id="main-area">
+			<p class="ntf_en">the page you are looking for is not found</p>
+			<div id="bg">
+				<img id="wnm" src="/images/404.png" alt="cry"/>
+				<p>你要找的页面飞跑了</p>
+			</div>
+			<div class="hid">
+				<canvas id="myCanvas" width="510" height=510"></canvas>
+				<p><a href="https://github.com/bxia/Javascript-Pacman" target=_blank>a pacman game</a></p>
+			</div>
+			<div class="hid">
+				<canvas id="bubble-canvas" width="600" height="600"></canvas>
+				<p><a href="http://js1k.com/2013-spring/demo/1533" target=_balnk>bubble from js1k</a></p>
+			</div>
+			<div class="hid">
+				<canvas id="jump" width="320"style="position:relative" height="500"></canvas>
+				<p><a href="http://js1k.com/2013-spring/demo/1472" target=_balnk>jump srping from js1k</a></p>
+
+			</div>
+		</div>
+		<!--[pac-man]-->
+		<script type="text/javascript" src="/javascripts/Javascript-Pacman-master/Pacman.js"></script>
+		<script type="text/javascript" src="/javascripts/Javascript-Pacman-master/Ghost.js"></script>
+		<script type="text/javascript" src="/javascripts/Javascript-Pacman-master/Grid.js"></script>
+		<script type="text/javascript" src="/javascripts/Javascript-Pacman-master/Game.js"></script>
+		<!--[pac-man]-->
+		<!--[bubble-js1k]-->
+		<script type="text/javascript" src="/javascripts/js1k/bubble.js"></script>
+		<!--[bubble-js1k]-->
+		<!--[jump spring]-->
+		<script type="text/javascript" src="/javascripts/js1k/jump.js"></script>
+		<!--[jump spring]-->
+		<script type="text/javascript" src="/javascripts/404.js"></script>
+	</body>
+</html>
