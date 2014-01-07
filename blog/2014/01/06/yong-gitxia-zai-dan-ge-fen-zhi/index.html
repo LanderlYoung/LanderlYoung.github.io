@@ -3,11 +3,11 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>shana - Young_Blog</title>
+	<title>用git下载单个分支 - Young_Blog</title>
 	<meta name="author" content="LanderlYoung">
 
 	
-	<meta name="description" content=" Shana 分享到： 更多 Comments Please enable JavaScript to view the comments powered by Disqus. ">
+	<meta name="description" content="用git下载单个分支 最近在玩octpress。开始一直在我的Debian系统里面玩的，后来因为一夹些软件必须在windows下面跑，只能在虚拟机里写博客了。然后就打算把github上的网页项目下载下来。但是这个项目有点不一样。github.io的博客项目有两个分支，master和source; &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -17,7 +17,7 @@
 
 	<link href="/atom.xml" rel="alternate" title="Young_Blog" type="application/atom+xml">
 	
-	<link rel="canonical" href="http://LanderlYoung.github.io/blog/2013/12/27/shana/">
+	<link rel="canonical" href="http://LanderlYoung.github.io/blog/2014/01/06/yong-gitxia-zai-dan-ge-fen-zhi/">
 	<link href="/favicon.png" rel="shortcut icon">
 	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
 	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
@@ -75,10 +75,79 @@
 			
 			<div class="mid-col-container">
 				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-	<h1 class="title" itemprop="name">Shana</h1>
-	<div class="entry-content" itemprop="articleBody"><p><video controls>
-<source src="/assets/media/shana_Final_FinalED.mp4" type="video/mp4"/>
-</video></p>
+	<h1 class="title" itemprop="name">用git下载单个分支</h1>
+	<div class="entry-content" itemprop="articleBody"><p>最近在玩octpress。开始一直在我的Debian系统里面玩的，后来因为一夹些软件必须在windows下面跑，只能在虚拟机里写博客了。然后就打算把github上的网页项目下载下来。但是这个项目有点不一样。github.io的博客项目有两个分支，master和source;其实他们根本不是分支的概念，没有什么交集的。在octpress项目文件夹里面是source分支里的内容，除了_deploy目录内的东西是用gitignore忽略的，_deploy里面的内容就是master分支的东西了。</p>
+
+<p>所以我的需求是把两个分支单独下载下来，开始的方案失败（其实是不完美），后来搜了好多东西在stackoverflow上面找到了解决方案。</p>
+
+<!--more-->
+
+
+<hr />
+
+<p> 1.新建一个文件夹，假设名字是blog</p>
+
+<p> 2.cd进去输入</p>
+
+<pre>
+    git init
+</pre>
+
+
+<p> 3.配置git，比如</p>
+
+<pre>
+    git remote add origin git@xxx
+</pre>
+
+
+<p> 4.然后是</p>
+
+<pre>
+    git fetch origin
+</pre>
+
+
+<p>   把仓库的状态取回来</p>
+
+<p> 5.因为_deploy目录里面也是这个项目，所以索性把.git目录复制进去</p>
+
+<pre>
+    cp -r .git _deploy/
+</pre>
+
+
+<p> 6.然后是下载分支，可以使用</p>
+
+<pre>
+    git branch -b branch_name origin/source
+</pre>
+
+
+<p>   从source分支新建一个分支。或者简单点，用：</p>
+
+<pre>
+    git branch -t origin/source
+</pre>
+
+
+<p>   直接吧source分支搞下来，其作用等同于</p>
+
+<pre>
+    git branch -b source origin/source
+</pre>
+
+
+<p> 7.cd 到_deploy目录，干同样的事</p>
+
+<pre>
+    git branch -t origin/source
+</pre>
+
+
+<p>这样两个分支就放到了不同的目录里面，接着按照octpress官方教程安装jekyll和rake等就可以开始博客了！</p>
+
+<p>对了，顺便提一句。Debian里不允许使用gem安装ruby软件，只能使用apt安装bundler之类的东西。不过我在fedoral和基于Ubuntu的Deepin Linux上都没发现这个问题。</p>
 </div>
 
 </article>
@@ -129,8 +198,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://LanderlYoung.github.io/blog/2013/12/27/shana/';
-        var disqus_url = 'http://LanderlYoung.github.io/blog/2013/12/27/shana/';
+        var disqus_identifier = 'http://LanderlYoung.github.io/blog/2014/01/06/yong-gitxia-zai-dan-ge-fen-zhi/';
+        var disqus_url = 'http://LanderlYoung.github.io/blog/2014/01/06/yong-gitxia-zai-dan-ge-fen-zhi/';
         var disqus_script = 'embed.js';
       
     (function () {
