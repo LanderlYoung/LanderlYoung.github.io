@@ -4,7 +4,7 @@
   <title><![CDATA[Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-01-07T20:25:07+08:00</updated>
+  <updated>2014-01-06T22:06:02+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -426,6 +426,7 @@ API。抓包的应用是win8上的有道词典。得到的数据如下：</p>
     <id>http://LanderlYoung.github.io/blog/2013/12/27/shana</id>
     <content type="html"><![CDATA[<p><video controls>
 <source src="http://LanderlYoung.github.io/assets/media/shana_Final_FinalED.mp4" type="video/mp4"/>
+This is no suitable format of video for your browser!
 </video></p>
 ]]></content>
   </entry>
