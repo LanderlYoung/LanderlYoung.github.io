@@ -5,8 +5,6 @@ date: 2013-12-27 20:22:33 +0800
 comments: true
 categories: 
 ---
-
 <video controls>
 <source src="/assets/media/shana_Final_FinalED.mp4" type="video/mp4"/>
-This is no suitable format of video for your browser!
 </video>
