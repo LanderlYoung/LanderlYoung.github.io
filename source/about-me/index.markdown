@@ -6,17 +6,21 @@ comments: true
 sharing: true
 footer: true
 ---
-{% img right /assets/images/kyoko.jpg 200 200 %}
+{% img right /assets/images/kyoko.png 200 200 %}
 
  * 一个带有典型极客精神的计算机狂热者。
  * 武汉大学本科生
  * 二次元中毒者
 	* 野中萌、钉宫粉
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
 
+---
 
-
-
-##友情链接（我和我的小伙伴们）：
+**友情链接（我和我的小伙伴们）：**
 
  *  方爷的blog
 	* [technicrow.me]()
