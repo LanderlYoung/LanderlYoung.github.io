@@ -220,7 +220,7 @@ echo Hello world
 <a name="appendix"></a>
 在<a href="#list">上面</a>说到arg0和可执行文件名不一样的情况。比如大家读知道的busybox就这一个例子。
 
-在c语言中main函数想使用命令行参数的话就得使用先面的声明方式：
+在c/c++语言中main函数想使用命令行参数的话就得使用下面的声明方式：
 <pre>
 int main(int argc, char *argv[])
 </pre>
