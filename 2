@@ -83,7 +83,7 @@ v - 命令的参数通过一个数组`vector`传入
 
  1. 如果使用带`l`的函数，即execl、execle、execlp应该在参数列表最后传入一个NULL标记参数完毕。
  2. 如果是带v的函数就应该在数组的最后一项设置成NULL标记数组的完毕。
- 3. 并且arg0（就是第一个参数）通常情况下都是可执行文件自身的名字，否则可能会导致函数调用失败，<a name="list"></a>当然也有特例，为了行文通畅，放到<a href="#appendix"> 最后</a>再说。
+ 3. 并且arg0（就是第一个参数）通常情况下都是可执行文件自身的名字，否则可能会导致函数调用失败，当然已有特例，为了行文通畅，放到最后再说。
  4.  如果使用带有e的函数那么环境变量数组envp的最后也要有NULL标记数组的结束。
  5. 实验证明对于带有e的函数在传入正确的envp的前提下还要写对正确的路径，否则不能执行。
 
@@ -94,9 +94,9 @@ v - 命令的参数通过一个数组`vector`传入
 ``` cpp
 #include <stdio.h>
 #include <unistd.h>
-int main() {
-	printf("process pid: %d\n", getpid());
-	execlp("./child", "child", NULL);
+
+int main(void) {
+	execlp("ls", "ls", "-l", NULL);
 	printf("hello\n");
 	return 0;
 }
@@ -104,23 +104,18 @@ int main() {
 
 编译执行：
 ``` cpp
-young@Y470:~/Desktop$./a
-process pid: 12369
-pid: 12369
+young@Y470:~/Desktop$make exec_lp
+cc     exec_lp.c   -o exec_lp
+young@Y470:~/Desktop$./exec_lp
+total 392
+drwxr-xr-x 4 young young   4096 Feb 18  2013 android-tools
+-rw-r--r-- 1 young young 226262 Jan 11 19:32 autotools.pdf
+-rwxr-xr-x 1 young young   7668 Jan 13 00:27 be
+-rw-r--r-- 1 young young    800 Jan 13 00:27 be.c
 ```
-执行了`./child`命令，第一行输出是原进程的输出，第二行输出是新进程（不是子进程）child的输出，注意printf没有执行。那是因为exec函数执行是清理了当强进程的内存空间整个进程可以说是直接换成了child进程。这个child是一个小程序，代码如下：
+执行了`ls -l`命令，注意printf没有执行。那是因为exec函数执行是清理了当强进程的内存空间整个进程可以说是直接换成了ls进程。
 
-``` cpp
-#include <stdio.h>
-#include <unistd.h>
-int main(void) {
-	printf("pid: %d\n", getpid());
-	return 0;
-}
-```
-通过这段代码我们也可以证明，**exec创建的进程和调用进程pid一样**。
-
-然后我们写个程序测试并说明上述说有exec函数的用法：
+然后我们写个程序测试上述说有exec函数：
 
 ``` cpp
 #include <stdio.h>
@@ -217,83 +212,9 @@ echo Hello world
 这里也展示了**如何开启一个进程**，就是fork之后在子进程执行exec。
 
 ##3.附录
-<a name="appendix"></a>
-在<a href="#list">上面</a>说到arg0和可执行文件名不一样的情况。比如大家读知道的busybox就这一个例子。
+在上面说到arg0和可执行文件名不一样的情况。
 
-在c语言中main函数想使用命令行参数的话就得使用先面的声明方式：
-<pre>
-int main(int argc, char *argv[])
-</pre>
-在程序执行是，argc至少是1, 所以argv[0]始终有值，他就是程序调用的可执行文件的名字。比如ls命令他的argv[0]始终都是“ls“。不妨写个程序测试：
 
-``` cpp
-#include <stdio.h>
-int main(int argc, char *argv[]) {
-	printf("%s\n", argv[0]);
-	return 0;
-}
-```
-编译执行，请看仔细：
-
-``` cpp
-young@Y470:~/Desktop$make name
-cc     name.c   -o name
-young@Y470:~/Desktop$./name
-./name
-young@Y470:~/Desktop$ln -s name some
-young@Y470:~/Desktop$./some
-./some
-young@Y470:~/Desktop$/home/young/Desktop/name 
-/home/young/Desktop/name
-young@Y470:~/Desktop$../Desktop/name 
-../Desktop/name
-```
-
-想必你已经看明白了，我也不用多解释了。当我们使用软链接时，argv[0]的名字就是软链接的名字。busybox就是对自身设置了好多软链接比如:`ln -s busybox ls`这样再调用ls时，argv[0]就是”ls“这样就能知道用户的目的然后执行ls的功能。
-
-最后在写个程序测试一下：
-
-``` cpp
-
-#include <stdio.h>
-#include <unistd.h>
-
-int main(void) {
-	if(!fork()) {
-		execlp("busybox", "busybox", NULL);
-	}
-	if(!fork()) {
-		//arg0 和可执行文件名不一样
-		execlp("busybox", "ls", "-l", NULL);
-	}
-	return 0;
-}
-```
-
-看一下结果：
-``` cpp
-young@Y470:~/Desktop/busy$Copyright (C) 1998-2011 Erik Andersen,  Rob Landley,  Denys Vlasenko
-and others. Licensed under GPLv2.
-See source distribution for full notice.
-
-Usage: busybox [function] [arguments]...
-   or: busybox --list[-full]
-   or: busybox --install [-s] [DIR]
-   or: function [arguments]...
-
-	BusyBox is a multi-call binary that combines many common Unix
-	utilities into a single executable.  Most people will create a
-					…………
-	cttyhack,  cut,  date,  dc,  -rwxr-xr-x    1 young    young       697656 Jan 13 03:29 busybox
-dd,  -rwxr-xr-x    1 young    young         6935 Jan 13 03:35 t
-deallocvt,  -rw-r--r--    1 young    young          476 Jan 13 03:35 t.c
-depmod,  df-rw-r--r--    1 young    young            0 Jan 13 03:30 ??
-,  diff, 
-					…………
-```
-busybox 的输出太长了，我删掉一部分用省略号标记了。可以看到ls的输出（夹杂在busybox之间，因为是两个进程的输出）。
-
-大功告成，没想到好好写一篇博客需要3个小时！！！困死我了，怒睡！
 
 [0]: http://en.wikipedia.org/wiki/Fork_(system_call)
 [1]: http://en.wikipedia.org/wiki/Fork_(system_call)
