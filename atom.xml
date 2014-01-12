@@ -4,14 +4,156 @@
   <title><![CDATA[Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-01-11T05:30:45+08:00</updated>
+  <updated>2014-01-12T21:49:15+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
-    
+    <email><![CDATA[landerlyoung@gmail.com]]></email>
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[linux触摸板自然滚动]]></title>
+    <link href="http://LanderlYoung.github.io/blog/2014/01/12/linuxchong-mo-ban-zi-ran-gun-dong/"/>
+    <updated>2014-01-12T20:11:36+08:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2014/01/12/linuxchong-mo-ban-zi-ran-gun-dong</id>
+    <content type="html"><![CDATA[<p>触摸板的自然滚动最早是乔帮主发明的。</p>
+
+<p>所谓自然滚动是指触摸板双指滚动的功能，当用两个手指向上滑动触摸板时，屏幕向上滚动，当双指向下化时，屏幕向下滚动。若是反过来就和鼠标一样了。自然滚动让人觉是得在用爽指控制屏幕而不是在控制触摸板。</p>
+
+<p>开始觉得反人类，谁知道用习惯了才知道那真的很爽！爽到不想再用鼠标了。但是在linux系统里面触摸板还不是自然滚动。</p>
+
+<!--more-->
+
+
+<p>我是synaptics的触摸板，方法一对其他触摸板不见得管用。如果不是synaptics的触摸板貌似也有利用xorg来改的方法，在文章后面再介绍。</p>
+
+<h3>1. synaptics 触摸板</h3>
+
+<p>首先要安装synapclient的驱动：<code>xserver-xorg-input-synaptics</code>。
+其实在大多数linux系统内动已经默认按装了。</p>
+
+<pre>
+sudo apt-get install xserver-xorg-input-synaptics
+</pre>
+
+
+<p>然后你可以用两个命令来设置垂直滚动和水平滚动的<code>速度</code>:</p>
+
+<pre>
+synclient VertScrollDelta=-103
+synclient HorizScrollDelta=-103
+</pre>
+
+
+<p>这里把速度设置成负值意思就是让触摸板按照与原来方向的相反方向移动。需要说明的是数值的绝对值越大滚动越慢。</p>
+
+<p>然后我们就达到目的了。为了让这两个命令开机的之后就能自动执行可以</p>
+
+<ol>
+<li>把他们加到home目录里的<code>.bashrc</code>文件里。</li>
+<li>或者在<code>/etc/profile.d/</code>里面创建一个脚本，比如我建立的是<br/>
+<code>/etc/profile.d/synaptics\_natural\_scrolling.sh</code></li>
+</ol>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="cp">###################################################################</span>
+</span><span class='line'><span class="cp"># File Name:     /etc/profile.d/synaptics_natural_scrolling.sh</span>
+</span><span class='line'><span class="cp"># Author:            Landerl Young</span>
+</span><span class='line'><span class="cp"># e-Mail:            LanderlYoung@gmail.com</span>
+</span><span class='line'><span class="cp"># Created Time:      Thu 31 Oct 2013 01:41:46 PM HST</span>
+</span><span class='line'><span class="cp">###################################################################</span>
+</span><span class='line'><span class="cp">#!/bin/bash</span>
+</span><span class='line'><span class="n">synclient</span> <span class="n">VertScrollDelta</span><span class="o">=-</span><span class="mi">103</span>
+</span><span class='line'><span class="n">synclient</span> <span class="n">HorizScrollDelta</span><span class="o">=-</span><span class="mi">103</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>最后别忘了加可执行权限</p>
+
+<pre>
+sudo chmod a+x /etc/profile.d/synaptics_natural_scrolling.sh
+</pre>
+
+
+<p>大功告成。</p>
+
+<h3>2. 其他方法（所有触摸板通用）</h3>
+
+<p>xorg有个<code>xinput</code>命令。如果，我是说如果，你没有这个命令的话，我帮你查好了它所在的软件包名——<code>xinput</code>：</p>
+
+<pre>
+young@Y470:~/Documents/octopress$dpkg -S /usr/bin/xinput 
+xinput: /usr/bin/xinput
+</pre>
+
+
+<p>输入之后（不加任何参数），有如下输出：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">young</span><span class="err">@</span><span class="nl">Y470:</span><span class="o">~/</span><span class="n">Documents</span><span class="o">/</span><span class="n">octopress</span><span class="err">$</span><span class="n">xinput</span>
+</span><span class='line'><span class="err">⎡</span> <span class="n">Virtual</span> <span class="n">core</span> <span class="n">pointer</span>                        <span class="n">id</span><span class="o">=</span><span class="mi">2</span>  <span class="p">[</span><span class="n">master</span> <span class="n">pointer</span>  <span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+</span><span class='line'><span class="err">⎜</span>   <span class="err">↳</span> <span class="n">Virtual</span> <span class="n">core</span> <span class="n">XTEST</span> <span class="n">pointer</span>                <span class="n">id</span><span class="o">=</span><span class="mi">4</span>  <span class="p">[</span><span class="n">slave</span>  <span class="n">pointer</span>  <span class="p">(</span><span class="mi">2</span><span class="p">)]</span>
+</span><span class='line'><span class="err">⎜</span>   <span class="err">↳</span> <span class="n">SynPS</span><span class="o">/</span><span class="mi">2</span> <span class="n">Synaptics</span> <span class="n">TouchPad</span>                <span class="n">id</span><span class="o">=</span><span class="mi">14</span> <span class="p">[</span><span class="n">slave</span>  <span class="n">pointer</span>  <span class="p">(</span><span class="mi">2</span><span class="p">)]</span>
+</span><span class='line'><span class="err">⎣</span> <span class="n">Virtual</span> <span class="n">core</span> <span class="n">keyboard</span>                       <span class="n">id</span><span class="o">=</span><span class="mi">3</span>  <span class="p">[</span><span class="n">master</span> <span class="n">keyboard</span> <span class="p">(</span><span class="mi">2</span><span class="p">)]</span>
+</span><span class='line'>    <span class="err">↳</span> <span class="n">Virtual</span> <span class="n">core</span> <span class="n">XTEST</span> <span class="n">keyboard</span>              <span class="n">id</span><span class="o">=</span><span class="mi">5</span>  <span class="p">[</span><span class="n">slave</span>  <span class="n">keyboard</span> <span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+</span><span class='line'>    <span class="err">↳</span> <span class="n">Power</span> <span class="n">Button</span>                               <span class="n">id</span><span class="o">=</span><span class="mi">6</span>  <span class="p">[</span><span class="n">slave</span>  <span class="n">keyboard</span> <span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+</span><span class='line'>    <span class="err">↳</span> <span class="n">Video</span> <span class="n">Bus</span>                                  <span class="n">id</span><span class="o">=</span><span class="mi">7</span>  <span class="p">[</span><span class="n">slave</span>  <span class="n">keyboard</span> <span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+</span><span class='line'>    <span class="err">↳</span> <span class="n">Power</span> <span class="n">Button</span>                               <span class="n">id</span><span class="o">=</span><span class="mi">8</span>  <span class="p">[</span><span class="n">slave</span>  <span class="n">keyboard</span> <span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+</span><span class='line'>    <span class="err">↳</span> <span class="n">Sleep</span> <span class="n">Button</span>                               <span class="n">id</span><span class="o">=</span><span class="mi">9</span>  <span class="p">[</span><span class="n">slave</span>  <span class="n">keyboard</span> <span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+</span><span class='line'>    <span class="err">↳</span> <span class="n">Video</span> <span class="n">Bus</span>                                  <span class="n">id</span><span class="o">=</span><span class="mi">10</span> <span class="p">[</span><span class="n">slave</span>  <span class="n">keyboard</span> <span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+</span><span class='line'>    <span class="err">↳</span> <span class="n">Lenovo</span> <span class="n">EasyCamera</span>                          <span class="n">id</span><span class="o">=</span><span class="mi">12</span> <span class="p">[</span><span class="n">slave</span>  <span class="n">keyboard</span> <span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+</span><span class='line'>    <span class="err">↳</span> <span class="n">AT</span> <span class="n">Translated</span> <span class="n">Set</span> <span class="mi">2</span> <span class="n">keyboard</span>             <span class="n">id</span><span class="o">=</span><span class="mi">13</span> <span class="p">[</span><span class="n">slave</span>  <span class="n">keyboard</span> <span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+</span><span class='line'>    <span class="err">↳</span> <span class="n">Ideapad</span> <span class="n">extra</span> <span class="n">buttons</span>                       <span class="n">id</span><span class="o">=</span><span class="mi">15</span> <span class="p">[</span><span class="n">slave</span>  <span class="n">keyboard</span> <span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+</span><span class='line'>    <span class="err">↳</span> <span class="n">ACPI</span> <span class="n">Virtual</span> <span class="n">Keyboard</span> <span class="n">Device</span>             <span class="n">id</span><span class="o">=</span><span class="mi">16</span> <span class="p">[</span><span class="n">slave</span>  <span class="n">keyboard</span> <span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这里面就是各个输入设备了，看名字就猜得出来。可以使用<code>xinput --get-button-map &lt;设备名&gt;</code>显示按键映射，显示如下：</p>
+
+<pre>
+young@Y470:~/Documents/octopress$xinput --get-button-map "SynPS/2 Synaptics TouchPad" 
+1 2 3 4 5 6 7 8 9 10 11 12 
+</pre>
+
+
+<p>于是下面要做的事就很明显了——改按键映射！既然有个<code>--get-button-map</code>参数肯定也有<code>--set-button-map</code>，没错，看了man手册发现真的有。经过测试各个按键的功能发现如下：
+4、5、6、7四个值是控制触摸板滚动方向的，修改如下：</p>
+
+<pre>
+young@Y470:~/Documents/octopress$xinput --set-button-map "SynPS/2 Synaptics TouchPad" 1 2 3 5 4 7 6 8 9 10 11 12
+</pre>
+
+
+<p>为了使命令开机自动执行，可以使用方法一中介绍的两个方法。</p>
+
+<p>当然方法二放在后面说是因为他有缺点——在一些少数程序比如文件管理器<code>nautilus</code>里面自然滚动失效的T^T。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[用git下载单个分支]]></title>
