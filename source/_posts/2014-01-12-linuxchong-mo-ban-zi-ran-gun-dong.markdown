@@ -17,7 +17,7 @@ categories: [linux]
 
 ###1. synaptics 触摸板
 首先要安装synapclient的驱动：`xserver-xorg-input-synaptics`。
-其实在大多数linux系统内动已经默认按装了。
+其实在大多数linux系统内都已经默认按装了。
 <pre>
 sudo apt-get install xserver-xorg-input-synaptics
 </pre>
