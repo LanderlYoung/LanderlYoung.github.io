@@ -4,7 +4,7 @@
   <title><![CDATA[Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-01-13T03:40:33+08:00</updated>
+  <updated>2014-01-13T03:44:48+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -379,7 +379,7 @@ v - 命令的参数通过一个数组`vector`传入
 <p><a name="appendix"></a>
 在<a href="#list">上面</a>说到arg0和可执行文件名不一样的情况。比如大家读知道的busybox就这一个例子。</p>
 
-<p>在c语言中main函数想使用命令行参数的话就得使用先面的声明方式：</p>
+<p>在c/c++语言中main函数想使用命令行参数的话就得使用下面的声明方式：</p>
 
 <pre>
 int main(int argc, char *argv[])

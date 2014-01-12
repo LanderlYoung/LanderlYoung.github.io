@@ -4,7 +4,7 @@
   <title><![CDATA[Category: linux | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-01-13T03:40:33+08:00</updated>
+  <updated>2014-01-13T03:44:48+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -265,7 +265,7 @@ from execvp pid: 11057</p>
 <p><a name="appendix"></a>
 在<a href="#list">上面</a>说到arg0和可执行文件名不一样的情况。比如大家读知道的busybox就这一个例子。</p>
 
-<p>在c语言中main函数想使用命令行参数的话就得使用先面的声明方式：</p>
+<p>在c/c++语言中main函数想使用命令行参数的话就得使用下面的声明方式：</p>
 
 <pre>
 int main(int argc, char *argv[])
@@ -409,7 +409,7 @@ synclient HorizScrollDelta=-103
 
 <h1>Author:           Landerl Young</h1>
 
-<h1>e-Mail:           <a href="&#109;&#97;&#x69;&#x6c;&#116;&#111;&#x3a;&#x4c;&#97;&#x6e;&#x64;&#x65;&#114;&#108;&#89;&#x6f;&#x75;&#x6e;&#103;&#x40;&#103;&#x6d;&#x61;&#x69;&#x6c;&#46;&#99;&#111;&#x6d;">&#x4c;&#x61;&#x6e;&#x64;&#101;&#114;&#x6c;&#89;&#x6f;&#x75;&#110;&#103;&#64;&#x67;&#x6d;&#97;&#x69;&#108;&#46;&#99;&#x6f;&#x6d;</a></h1>
+<h1>e-Mail:           <a href="&#x6d;&#x61;&#x69;&#x6c;&#116;&#111;&#x3a;&#x4c;&#97;&#x6e;&#x64;&#x65;&#x72;&#x6c;&#89;&#111;&#117;&#x6e;&#103;&#64;&#x67;&#109;&#97;&#x69;&#x6c;&#x2e;&#x63;&#x6f;&#x6d;">&#x4c;&#x61;&#110;&#100;&#101;&#114;&#108;&#x59;&#x6f;&#x75;&#x6e;&#103;&#x40;&#x67;&#x6d;&#97;&#x69;&#x6c;&#x2e;&#x63;&#x6f;&#x6d;</a></h1>
 
 <h1>Created Time:     Thu 31 Oct 2013 01:41:46 PM HST</h1>
 
