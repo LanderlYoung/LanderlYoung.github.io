@@ -1,24 +1,88 @@
-<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Young_Blog]]></title>
-  <link href="http://LanderlYoung.github.io/atom.xml" rel="self"/>
-  <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-01-13T03:40:33+08:00</updated>
-  <id>http://LanderlYoung.github.io/</id>
-  <author>
-    <name><![CDATA[LanderlYoung]]></name>
-    <email><![CDATA[landerlyoung@gmail.com]]></email>
-  </author>
-  <generator uri="http://octopress.org/">Octopress</generator>
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>linux fork和exec系列函数 - Young_Blog</title>
+	<meta name="author" content="LanderlYoung">
 
-  
-  <entry>
-    <title type="html"><![CDATA[linux fork和exec系列函数]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/01/13/linux-forkhe-execxi-lie-han-shu/"/>
-    <updated>2014-01-13T00:31:29+08:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/01/13/linux-forkhe-execxi-lie-han-shu</id>
-    <content type="html"><![CDATA[<p>linux 中的<a href="http://en.wikipedia.org/wiki/Fork_(system_call)">fork</a>和<a href="http://en.wikipedia.org/wiki/Exec_(operating_system)">exec</a>函数是进程相关的两个函数，最早在大二的操作系统课上了解到。今天要写个小东西偶尔用到就研究了一下。</p>
+	
+	<meta name="description" content="Linux Fork和exec系列函数 linux 中的fork和exec函数是进程相关的两个函数，最早在大二的操作系统课上了解到。今天要写个小东西偶尔用到就研究了一下。 1.fork fork的功能是创建一个和进程完全一样的子进程。完全的意思是指子进程的堆和栈和父进程是完全相同的。 &hellip;">
+	
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="Young_Blog" type="application/atom+xml">
+	
+	<link rel="canonical" href="http://LanderlYoung.github.io/blog/2014/01/13/linux-forkhe-execxi-lie-han-shu/">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,700' rel='stylesheet' type='text/css'>
+	
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+			<header id="header" class="inner"><div class="profilepic">	
+	<script src="/javascripts/md5.js"></script>
+	<script type="text/javascript">
+		document.write("<img src='http://www.gravatar.com/avatar/" + MD5("landerlyoung@gmail.com") + "?s=160' alt='Profile Picture' style='width: 160px;' />");
+	</script>
+</div>
+<h1><a href="/">Young_Blog</a></h1>
+<p class="subtitle"></p>
+<nav id="main-nav"><ul class="main">
+	<li><a href="/">Blog</a></li>
+	<li><a href="/blog/archives">Archives</a></li>
+	<li><a href="/about-me/">About Me</a></li>
+</ul>
+</nav>
+<nav id="sub-nav">
+	<div class="social">
+		
+		<a class="weibo" href="http://www.weibo.com/1863369094" title="Weibo">Weibo</a>
+		
+		
+		
+		<a class="google" href="https://plus.google.com/landerlyoung" rel="author" title="Google+">Google+</a>
+		
+		
+		
+		<a class="github" href="https://github.com/LanderlYoung" title="GitHub">GitHub</a>
+		
+		
+		
+		
+		
+		
+		
+		
+		<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+		
+	</div>
+</nav>
+
+</header>				
+			</div>
+		</div>	
+		<div class="slide">
+		</div>
+		<div class="mid-col">
+			
+				
+			
+			<div class="mid-col-container">
+				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+	<h1 class="title" itemprop="name">Linux Fork和exec系列函数</h1>
+	<div class="entry-content" itemprop="articleBody"><p>linux 中的<a href="http://en.wikipedia.org/wiki/Fork_(system_call)">fork</a>和<a href="http://en.wikipedia.org/wiki/Exec_(operating_system)">exec</a>函数是进程相关的两个函数，最早在大二的操作系统课上了解到。今天要写个小东西偶尔用到就研究了一下。</p>
 
 <h2>1.fork</h2>
 
@@ -505,566 +569,73 @@ int main(int argc, char *argv[])
 <p>busybox 的输出太长了，我删掉一部分用省略号标记了。可以看到ls的输出（夹杂在busybox之间，因为是两个进程的输出）。</p>
 
 <p>大功告成，没想到好好写一篇博客需要3个小时！！！困死我了，怒睡！</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[linux触摸板自然滚动]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/01/12/linuxchong-mo-ban-zi-ran-gun-dong/"/>
-    <updated>2014-01-12T20:11:36+08:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/01/12/linuxchong-mo-ban-zi-ran-gun-dong</id>
-    <content type="html"><![CDATA[<p>触摸板的自然滚动最早是乔帮主发明的。</p>
-
-<p>所谓自然滚动是指触摸板双指滚动的功能，当用两个手指向上滑动触摸板时，屏幕向上滚动，当双指向下化时，屏幕向下滚动。若是反过来就和鼠标一样了。自然滚动让人觉是得在用爽指控制屏幕而不是在控制触摸板。</p>
-
-<p>开始觉得反人类，谁知道用习惯了才知道那真的很爽！爽到不想再用鼠标了。但是在linux系统里面触摸板还不是自然滚动。</p>
-
-<!--more-->
-
-
-<p>我是synaptics的触摸板，方法一对其他触摸板不见得管用。如果不是synaptics的触摸板貌似也有利用xorg来改的方法，在文章后面再介绍。</p>
-
-<h3>1. synaptics 触摸板</h3>
-
-<p>首先要安装synapclient的驱动：<code>xserver-xorg-input-synaptics</code>。
-其实在大多数linux系统内都已经默认按装了。</p>
-
-<pre>
-sudo apt-get install xserver-xorg-input-synaptics
-</pre>
-
-
-<p>然后你可以用两个命令来设置垂直滚动和水平滚动的<code>速度</code>:</p>
-
-<pre>
-synclient VertScrollDelta=-103
-synclient HorizScrollDelta=-103
-</pre>
-
-
-<p>这里把速度设置成负值意思就是让触摸板按照与原来方向的相反方向移动。需要说明的是数值的绝对值越大滚动越慢。</p>
-
-<p>然后我们就达到目的了。为了让这两个命令开机的之后就能自动执行可以</p>
-
-<ol>
-<li>把他们加到home目录里的<code>.bashrc</code>文件里。</li>
-<li>或者在<code>/etc/profile.d/</code>里面创建一个脚本，比如我建立的是<br/>
-<code>/etc/profile.d/synaptics\_natural\_scrolling.sh</code></li>
-</ol>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="cp">###################################################################</span>
-</span><span class='line'><span class="cp"># File Name:     /etc/profile.d/synaptics_natural_scrolling.sh</span>
-</span><span class='line'><span class="cp"># Author:            Landerl Young</span>
-</span><span class='line'><span class="cp"># e-Mail:            LanderlYoung@gmail.com</span>
-</span><span class='line'><span class="cp"># Created Time:      Thu 31 Oct 2013 01:41:46 PM HST</span>
-</span><span class='line'><span class="cp">###################################################################</span>
-</span><span class='line'><span class="cp">#!/bin/bash</span>
-</span><span class='line'><span class="n">synclient</span> <span class="n">VertScrollDelta</span><span class="o">=-</span><span class="mi">103</span>
-</span><span class='line'><span class="n">synclient</span> <span class="n">HorizScrollDelta</span><span class="o">=-</span><span class="mi">103</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>最后别忘了加可执行权限</p>
-
-<pre>
-sudo chmod a+x /etc/profile.d/synaptics_natural_scrolling.sh
-</pre>
-
-
-<p>大功告成。</p>
-
-<h3>2. 其他方法（所有触摸板通用）</h3>
-
-<p>xorg有个<code>xinput</code>命令。如果，我是说如果，你没有这个命令的话，我帮你查好了它所在的软件包名——<code>xinput</code>：</p>
-
-<pre>
-young@Y470:~/Documents/octopress$dpkg -S /usr/bin/xinput 
-xinput: /usr/bin/xinput
-</pre>
-
-
-<p>输入之后（不加任何参数），有如下输出：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">young</span><span class="err">@</span><span class="nl">Y470:</span><span class="o">~/</span><span class="n">Documents</span><span class="o">/</span><span class="n">octopress</span><span class="err">$</span><span class="n">xinput</span>
-</span><span class='line'><span class="err">⎡</span> <span class="n">Virtual</span> <span class="n">core</span> <span class="n">pointer</span>                        <span class="n">id</span><span class="o">=</span><span class="mi">2</span>  <span class="p">[</span><span class="n">master</span> <span class="n">pointer</span>  <span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
-</span><span class='line'><span class="err">⎜</span>   <span class="err">↳</span> <span class="n">Virtual</span> <span class="n">core</span> <span class="n">XTEST</span> <span class="n">pointer</span>                <span class="n">id</span><span class="o">=</span><span class="mi">4</span>  <span class="p">[</span><span class="n">slave</span>  <span class="n">pointer</span>  <span class="p">(</span><span class="mi">2</span><span class="p">)]</span>
-</span><span class='line'><span class="err">⎜</span>   <span class="err">↳</span> <span class="n">SynPS</span><span class="o">/</span><span class="mi">2</span> <span class="n">Synaptics</span> <span class="n">TouchPad</span>                <span class="n">id</span><span class="o">=</span><span class="mi">14</span> <span class="p">[</span><span class="n">slave</span>  <span class="n">pointer</span>  <span class="p">(</span><span class="mi">2</span><span class="p">)]</span>
-</span><span class='line'><span class="err">⎣</span> <span class="n">Virtual</span> <span class="n">core</span> <span class="n">keyboard</span>                       <span class="n">id</span><span class="o">=</span><span class="mi">3</span>  <span class="p">[</span><span class="n">master</span> <span class="n">keyboard</span> <span class="p">(</span><span class="mi">2</span><span class="p">)]</span>
-</span><span class='line'>    <span class="err">↳</span> <span class="n">Virtual</span> <span class="n">core</span> <span class="n">XTEST</span> <span class="n">keyboard</span>              <span class="n">id</span><span class="o">=</span><span class="mi">5</span>  <span class="p">[</span><span class="n">slave</span>  <span class="n">keyboard</span> <span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
-</span><span class='line'>    <span class="err">↳</span> <span class="n">Power</span> <span class="n">Button</span>                               <span class="n">id</span><span class="o">=</span><span class="mi">6</span>  <span class="p">[</span><span class="n">slave</span>  <span class="n">keyboard</span> <span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
-</span><span class='line'>    <span class="err">↳</span> <span class="n">Video</span> <span class="n">Bus</span>                                  <span class="n">id</span><span class="o">=</span><span class="mi">7</span>  <span class="p">[</span><span class="n">slave</span>  <span class="n">keyboard</span> <span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
-</span><span class='line'>    <span class="err">↳</span> <span class="n">Power</span> <span class="n">Button</span>                               <span class="n">id</span><span class="o">=</span><span class="mi">8</span>  <span class="p">[</span><span class="n">slave</span>  <span class="n">keyboard</span> <span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
-</span><span class='line'>    <span class="err">↳</span> <span class="n">Sleep</span> <span class="n">Button</span>                               <span class="n">id</span><span class="o">=</span><span class="mi">9</span>  <span class="p">[</span><span class="n">slave</span>  <span class="n">keyboard</span> <span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
-</span><span class='line'>    <span class="err">↳</span> <span class="n">Video</span> <span class="n">Bus</span>                                  <span class="n">id</span><span class="o">=</span><span class="mi">10</span> <span class="p">[</span><span class="n">slave</span>  <span class="n">keyboard</span> <span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
-</span><span class='line'>    <span class="err">↳</span> <span class="n">Lenovo</span> <span class="n">EasyCamera</span>                          <span class="n">id</span><span class="o">=</span><span class="mi">12</span> <span class="p">[</span><span class="n">slave</span>  <span class="n">keyboard</span> <span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
-</span><span class='line'>    <span class="err">↳</span> <span class="n">AT</span> <span class="n">Translated</span> <span class="n">Set</span> <span class="mi">2</span> <span class="n">keyboard</span>             <span class="n">id</span><span class="o">=</span><span class="mi">13</span> <span class="p">[</span><span class="n">slave</span>  <span class="n">keyboard</span> <span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
-</span><span class='line'>    <span class="err">↳</span> <span class="n">Ideapad</span> <span class="n">extra</span> <span class="n">buttons</span>                       <span class="n">id</span><span class="o">=</span><span class="mi">15</span> <span class="p">[</span><span class="n">slave</span>  <span class="n">keyboard</span> <span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
-</span><span class='line'>    <span class="err">↳</span> <span class="n">ACPI</span> <span class="n">Virtual</span> <span class="n">Keyboard</span> <span class="n">Device</span>             <span class="n">id</span><span class="o">=</span><span class="mi">16</span> <span class="p">[</span><span class="n">slave</span>  <span class="n">keyboard</span> <span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>这里面就是各个输入设备了，看名字就猜得出来。可以使用<code>xinput --get-button-map &lt;设备名&gt;</code>显示按键映射，显示如下：</p>
-
-<pre>
-young@Y470:~/Documents/octopress$xinput --get-button-map "SynPS/2 Synaptics TouchPad" 
-1 2 3 4 5 6 7 8 9 10 11 12 
-</pre>
-
-
-<p>于是下面要做的事就很明显了——改按键映射！既然有个<code>--get-button-map</code>参数肯定也有<code>--set-button-map</code>，没错，看了man手册发现真的有。经过测试各个按键的功能发现如下：
-4、5、6、7四个值是控制触摸板滚动方向的，修改如下：</p>
-
-<pre>
-young@Y470:~/Documents/octopress$xinput --set-button-map "SynPS/2 Synaptics TouchPad" 1 2 3 5 4 7 6 8 9 10 11 12
-</pre>
-
-
-<p>为了使命令开机自动执行，可以使用方法一中介绍的两个方法。</p>
-
-<p>当然方法二放在后面说是因为他有缺点——在一些少数程序比如文件管理器<code>nautilus</code>里面自然滚动失效的T^T。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[用git下载单个分支]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/01/06/yong-gitxia-zai-dan-ge-fen-zhi/"/>
-    <updated>2014-01-06T16:45:34+08:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/01/06/yong-gitxia-zai-dan-ge-fen-zhi</id>
-    <content type="html"><![CDATA[<p>最近在玩octpress。开始一直在我的Debian系统里面玩的，后来因为一夹些软件必须在windows下面跑，只能在虚拟机里写博客了。然后就打算把github上的网页项目下载下来。但是这个项目有点不一样。github.io的博客项目有两个分支，master和source;其实他们根本不是分支的概念，没有什么交集的。在octpress项目文件夹里面是source分支里的内容，除了_deploy目录内的东西是用gitignore忽略的，_deploy里面的内容就是master分支的东西了。</p>
-
-<p>所以我的需求是把两个分支单独下载下来，开始的方案失败（其实是不完美），后来搜了好多东西在stackoverflow上面找到了解决方案。</p>
-
-<!--more-->
-
-
-<hr />
-
-<p> 1.新建一个文件夹，假设名字是blog</p>
-
-<p> 2.cd进去输入</p>
-
-<pre>
-    git init
-</pre>
-
-
-<p> 3.配置git，比如</p>
-
-<pre>
-    git remote add origin git@xxx
-</pre>
-
-
-<p> 4.然后是</p>
-
-<pre>
-    git fetch origin
-</pre>
-
-
-<p>   把仓库的状态取回来</p>
-
-<p> 5.因为_deploy目录里面也是这个项目，所以索性把.git目录复制进去</p>
-
-<pre>
-    cp -r .git _deploy/
-</pre>
-
-
-<p> 6.然后是下载分支，可以使用</p>
-
-<pre>
-    git branch -b branch_name origin/source
-</pre>
-
-
-<p>   从source分支新建一个分支。或者简单点，用：</p>
-
-<pre>
-    git branch -t origin/source
-</pre>
-
-
-<p>   直接吧source分支搞下来，其作用等同于</p>
-
-<pre>
-    git branch -b source origin/source
-</pre>
-
-
-<p> 7.cd 到_deploy目录，干同样的事</p>
-
-<pre>
-    git branch -t origin/source
-</pre>
-
-
-<p>这样两个分支就放到了不同的目录里面，接着按照octpress官方教程安装jekyll和rake等就可以开始博客了！</p>
-
-<p>对了，顺便提一句。Debian里不允许使用gem安装ruby软件，只能使用apt安装bundler之类的东西。不过我在fedoral和基于Ubuntu的Deepin Linux上都没发现这个问题。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[dictionary_Node.js-项目启航]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/01/05/dictionary-node-dot-js-xiang-mu-qi-hang/"/>
-    <updated>2014-01-05T22:32:13+08:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/01/05/dictionary-node-dot-js-xiang-mu-qi-hang</id>
-    <content type="html"><![CDATA[<p>&lt; 开场白 &gt;</p>
-
-<p><a href="https://github.com/LanderlYoung/Dictinoary_Node.js"><strong>基于Node.js的命令行词典应用</strong></a></p>
-
-<p>项目刚开始做，今天先做个铺垫吧。</p>
-
-<p>&lt;/ 开场白 &gt;</p>
-
-<p>一直以来都很想学习一下web技术，HTML5, CSS3, Javascript，前段时间算是终于闲下来了（其实是好多课没有意思，不想去上了），于是学习了一下，同时还写了一个Chrome 应用  <a href="https://github.com/LanderlYoung/Magnet2Torrent">Magent2Torrent</a>。了解javascript之后发现她真是一个灵活可爱的语言，也可能是我接触的第一个动态语言（或者叫弱类型语言），总觉得她有着无限的魅力。同时还喜欢上了JSON！</p>
-
-<p>前一段时间（在这个github博客搭建之前）玩了一下<a href="http://www.nodejs.org">Node.js</a>，发现这真是个好东西，我可以在本地执行javascript脚本了, 尽管Node.js的设计初衷并非如此……（我这是玩得有点偏了）虽然和python等本地执行的脚本语言在API上还有差距，鉴于Node.js可以使用C++模块（add on），也算是功能完备了。</p>
-
-<!--more-->
-
-
-<p>之前用过一个python写的脚本，可以请求有道网页版的词典，然后解析得到的html内容，行命令行输出单词解释，于是我冒出了用javascript+Node.js实现上述功能的想法。
-与之前的python脚本不同的是，我打算使用有到的API来查询单词。</p>
-
-<p>鉴于有到词典的查询API需要申请，且免费用户查询次数有限，我决定使用wireshark抓包来得到官方
-API。抓包的应用是win8上的有道词典。得到的数据如下：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">GET</span> <span class="o">/</span><span class="n">search</span><span class="o">?</span><span class="n">keyfrom</span><span class="o">=</span><span class="n">metrodict</span><span class="p">.</span><span class="n">main</span><span class="o">&amp;</span><span class="n">xmlDetail</span><span class="o">=</span><span class="kc">true</span><span class="o">&amp;</span><span class="n">doctype</span><span class="o">=</span><span class="n">xml</span><span class="o">&amp;</span><span class="n">xmlVersion</span><span class="o">=</span><span class="mf">8.1</span><span class="o">&amp;</span><span class="n">dogVersion</span><span class="o">=</span><span class="mf">1.0</span><span class="o">&amp;</span><span class="n">q</span><span class="o">=</span><span class="n">node</span><span class="o">&amp;</span><span class="n">le</span><span class="o">=</span><span class="n">eng</span><span class="o">&amp;</span><span class="n">keyfrom</span><span class="o">=</span><span class="n">metrodict</span><span class="p">.</span><span class="n">input</span><span class="o">&amp;</span><span class="n">client</span><span class="o">=</span><span class="n">metrodict</span><span class="o">&amp;</span><span class="n">id</span><span class="o">=</span><span class="mi">3019615280104595010663601040404140109040186114402823410158212201782429070109</span><span class="o">&amp;</span><span class="n">appVer</span><span class="o">=</span><span class="mf">1.1.49.6663</span><span class="p">.</span><span class="n">beta</span><span class="o">&amp;</span><span class="n">vendor</span><span class="o">=</span><span class="n">store</span> <span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
-</span><span class='line'>
-</span><span class='line'><span class="nl">Host:</span> <span class="n">dict</span><span class="p">.</span><span class="n">youdao</span><span class="p">.</span><span class="n">com</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">...</span> <span class="p">...</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>可以从中看到各个参数，其中参数q就是我们要查询的单词，此处是node。其他参数事实上并不需要考虑太多，不过秉承着geek精神还是看一下为好。</p>
-
-<hr />
-
-<ul>
-<li>keyfrom明显意思是数据来源，此处是metrodict.main和win8客户段吻合。</li>
-<li>xmlDetail看来是个bool类型，此处为true，可以猜测如果为false可能返回解释会比较简单。</li>
-<li>doctype肯定是文档类型，此处是xml。</li>
-<li>xmlVersion，xml文档的版本。</li>
-<li>dog.Version, 又是某个东西的版本。</li>
-<li><strong>q</strong>就是要查询的单词了。</li>
-<li>le看来是语言的意思，le = language，值是eng表示英语english。</li>
-<li>kerfrom和前文一样。client是客户端，这里是metrodict就是win8的词典啦。</li>
-<li>id，卧槽！这么长，估计申请到的id就是这样，这个id肯定是有道官方使用的id（绝对没有查询次数限制，哦吼吼！）</li>
-<li>appVersion指定客户端应用版本。</li>
-<li>vender不清楚什么意思，不管他啦。</li>
-</ul>
-
-
-<hr />
-
-<p>总结下来两个有用的参数xmlDetail和q。打开chrome验证一下看看是不是。</p>
-
-<p> 1.xmlDetail=true版的hello查询。<a href="http://dict.youdao.com/search?keyfrom=metrodict.main&amp;xmlDetail=true&amp;doctype=xml&amp;xmlVersion=8.1&amp;dogVersion=1.0&amp;q=node&amp;le=eng&amp;keyfrom=metrodict.input&amp;client=metrodict&amp;id=3019615280104595010663601040404140109040186114402823410158212201782429070109&amp;appVer=1.1.49.6663.beta&amp;vendor=stor">戳这里</a></p>
-
-<p> 2.xmlDetail=false版的hello查询。<a href="http://dict.youdao.com/search?keyfrom=metrodict.main&amp;xmlDetail=false&amp;doctype=xml&amp;xmlVersion=8.1&amp;dogVersion=1.0&amp;q=node&amp;le=eng&amp;keyfrom=metrodict.input&amp;client=metrodict&amp;id=3019615280104595010663601040404140109040186114402823410158212201782429070109&amp;appVer=1.1.49.6663.beta&amp;vendor=stor">戳这里</a></p>
-
-<p>额。。。有种坑爹的感觉，这TM不是一样的吗！！！ 嘛，嘛。淡定，就当他是一样的好啦。这么说来只有 <strong>q</strong> 参数有实际用处了。</p>
-
-<p>接下来再瞅瞅发音是怎么回事，老方法。wireshark抓包得到的结果是：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">GET</span> <span class="o">/</span><span class="n">dictvoice</span><span class="o">?</span><span class="n">audio</span><span class="o">=</span><span class="n">world</span><span class="o">&amp;</span><span class="n">type</span><span class="o">=</span><span class="mi">2</span> <span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
-</span><span class='line'><span class="nl">Accept:</span> <span class="err">*/</span><span class="o">*</span>
-</span><span class='line'><span class="n">If</span><span class="o">-</span><span class="n">Modified</span><span class="o">-</span><span class="nl">Since:</span> <span class="n">Sun</span><span class="p">,</span>  <span class="mo">05</span> <span class="n">Jan</span> <span class="mi">2014</span> <span class="mi">14</span><span class="o">:</span><span class="mo">04</span><span class="o">:</span><span class="mi">56</span> <span class="n">GMT</span>
-</span><span class='line'><span class="n">User</span><span class="o">-</span><span class="nl">Agent:</span> <span class="n">Mozilla</span><span class="o">/</span><span class="mf">5.0</span> <span class="p">(</span><span class="n">compatible</span><span class="p">;</span> <span class="n">MSIE</span> <span class="mf">10.0</span><span class="p">;</span> <span class="n">Windows</span> <span class="n">NT</span> <span class="mf">6.2</span><span class="p">;</span> <span class="n">Trident</span><span class="o">/</span><span class="mf">6.0</span><span class="p">;</span> <span class="n">MSAppHost</span><span class="o">/</span><span class="mf">1.0</span><span class="p">)</span>
-</span><span class='line'><span class="n">GetContentFeatures</span><span class="p">.</span><span class="n">DLNA</span><span class="p">.</span><span class="nl">ORG:</span> <span class="mi">1</span>
-</span><span class='line'><span class="nl">Pragma:</span> <span class="n">getIfoFileURI</span><span class="p">.</span><span class="n">dlna</span><span class="p">.</span><span class="n">org</span>
-</span><span class='line'><span class="n">Accept</span><span class="o">-</span><span class="nl">Language:</span> <span class="n">zh</span><span class="o">-</span><span class="n">Hans</span><span class="o">-</span><span class="n">CN</span><span class="p">,</span> <span class="n">zh</span><span class="o">-</span><span class="n">Hans</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">en</span><span class="o">-</span><span class="n">US</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">en</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.3</span>
-</span><span class='line'><span class="n">UA</span><span class="o">-</span><span class="nl">CPU:</span> <span class="n">AMD64</span>
-</span><span class='line'><span class="n">Accept</span><span class="o">-</span><span class="nl">Encoding:</span> <span class="n">gzip</span><span class="p">,</span>  <span class="n">deflate</span>
-</span><span class='line'><span class="nl">Host:</span> <span class="n">dict</span><span class="p">.</span><span class="n">youdao</span><span class="p">.</span><span class="n">com</span>
-</span><span class='line'><span class="nl">Connection:</span> <span class="n">Keep</span><span class="o">-</span><span class="n">Alive</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>蛮长的嘛。话说这个更简单了。只有两个参数audio和type。老衲闭着眼睛都能算出来audio参数是干嘛的：&#8221;那就是！要发音的单词！&#8221;。&#8221;喂！我说，你太聪明了吧&#8221;。唉，一不小心人格分裂症又犯了, 最近期末考试，药停了两天没办法。另一个type参数经过实验发现是英音和美音。当type == 1时是英音，等于2时是美音，其他情况我没试，猜测是默认发音（英音或美音）。
-然后再测试一下:</p>
-
-<p>tomato的英发音, <a href="http://dict.youdao.com/dictvoice?audio=tomato&amp;type=1">戳这里</a>。</p>
-
-<p>tomato的美发音, <a href="http://dict.youdao.com/dictvoice?audio=tomato&amp;type=2">戳这里</a>。</p>
-
-<p>恩，不错。这次就对了嘛。</p>
-
-<p>好吧，今天晚上刚考完智能卡的说。。。。这个项目这几天内估计不会有进展的，期待期末快结束吧。不知道下一篇什么时候写了。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[初探 MFC]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2013/12/28/chu-tan-mfc/"/>
-    <updated>2013-12-28T22:13:34+08:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2013/12/28/chu-tan-mfc</id>
-    <content type="html"><![CDATA[<p>这几天要写智能卡大作业，老师要求必须有图形界面。
-作业本身没什么难的，调用提供的API函数完成相应功能。倒是图形界面让我觉得比较有趣，以前一直用java写图形界面。但是java程序运行起来比较麻烦，首先得有jre，其次jar也不一定能双击运行，当时就萌生了写个MFC程序的念头，囿于时间有限一直没学习。这次倒是给了我一个大好机会。</p>
-
-<!--more-->
-
-
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-<span class='line-number'>67</span>
-<span class='line-number'>68</span>
-<span class='line-number'>69</span>
-<span class='line-number'>70</span>
-<span class='line-number'>71</span>
-<span class='line-number'>72</span>
-<span class='line-number'>73</span>
-<span class='line-number'>74</span>
-<span class='line-number'>75</span>
-<span class='line-number'>76</span>
-<span class='line-number'>77</span>
-<span class='line-number'>78</span>
-<span class='line-number'>79</span>
-<span class='line-number'>80</span>
-<span class='line-number'>81</span>
-<span class='line-number'>82</span>
-<span class='line-number'>83</span>
-<span class='line-number'>84</span>
-<span class='line-number'>85</span>
-<span class='line-number'>86</span>
-<span class='line-number'>87</span>
-<span class='line-number'>88</span>
-<span class='line-number'>89</span>
-<span class='line-number'>90</span>
-<span class='line-number'>91</span>
-<span class='line-number'>92</span>
-<span class='line-number'>93</span>
-<span class='line-number'>94</span>
-<span class='line-number'>95</span>
-<span class='line-number'>96</span>
-<span class='line-number'>97</span>
-<span class='line-number'>98</span>
-<span class='line-number'>99</span>
-<span class='line-number'>100</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="cp">#pragma once</span>
-</span><span class='line'><span class="cp">#include &lt;iostream&gt;</span>
-</span><span class='line'><span class="cp">#include &lt;Windows.h&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">CardManager</span> <span class="p">{</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">public</span><span class="o">:</span>
-</span><span class='line'>  <span class="k">enum</span> <span class="n">DATA_T</span> <span class="p">{</span>
-</span><span class='line'>      <span class="n">PUBLISHER</span><span class="p">,</span>
-</span><span class='line'>      <span class="n">CARD_ID</span><span class="p">,</span>
-</span><span class='line'>      <span class="n">USER_NAME</span><span class="p">,</span>
-</span><span class='line'>  <span class="p">};</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">private</span><span class="o">:</span>
-</span><span class='line'>  <span class="k">const</span> <span class="kt">short</span> <span class="n">PUBLISHER_ADDR</span> <span class="o">=</span> <span class="mh">0x30</span><span class="p">;</span>
-</span><span class='line'>  <span class="k">const</span> <span class="kt">short</span> <span class="n">PUBLISHER_LEN</span> <span class="o">=</span> <span class="mh">0x10</span><span class="p">;</span>
-</span><span class='line'>  <span class="k">const</span> <span class="kt">short</span> <span class="n">CARD_ID_ADDR</span> <span class="o">=</span>
-</span><span class='line'>      <span class="n">PUBLISHER_ADDR</span> <span class="o">+</span> <span class="n">PUBLISHER_LEN</span><span class="p">;</span>
-</span><span class='line'>  <span class="k">const</span> <span class="kt">short</span> <span class="n">CARD_ID_LEN</span> <span class="o">=</span> <span class="mh">0x10</span><span class="p">;</span>
-</span><span class='line'>  <span class="k">const</span> <span class="kt">short</span> <span class="n">USER_NAME_ADDR</span> <span class="o">=</span>
-</span><span class='line'>      <span class="n">CARD_ID_ADDR</span> <span class="o">+</span> <span class="n">CARD_ID_LEN</span><span class="p">;</span>
-</span><span class='line'>  <span class="k">const</span> <span class="kt">short</span> <span class="n">USER_NAME_LEN</span> <span class="o">=</span> <span class="mh">0x10</span><span class="p">;</span>
-</span><span class='line'>  <span class="k">const</span> <span class="kt">short</span> <span class="n">BALANCE_ADDR</span> <span class="o">=</span>
-</span><span class='line'>      <span class="n">USER_NAME_ADDR</span> <span class="o">+</span> <span class="n">USER_NAME_LEN</span><span class="p">;</span>
-</span><span class='line'>  <span class="k">const</span> <span class="kt">short</span> <span class="n">BALANCE_LEN</span> <span class="o">=</span> <span class="mh">0x04</span><span class="p">;</span> <span class="c1">//sizeof(float)</span>
-</span><span class='line'>  <span class="k">const</span> <span class="kt">short</span> <span class="n">BALANCE_BUF_ADDR</span> <span class="o">=</span>
-</span><span class='line'>      <span class="n">BALANCE_ADDR</span> <span class="o">+</span> <span class="n">BALANCE_LEN</span><span class="p">;</span>
-</span><span class='line'>  <span class="k">const</span> <span class="kt">short</span> <span class="n">BALANCE_BUF_LEN</span> <span class="o">=</span> <span class="n">BALANCE_LEN</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">HANDLE</span> <span class="n">m_icdev</span><span class="p">;</span>
-</span><span class='line'>  <span class="kt">bool</span> <span class="n">m_passwdChecked</span><span class="p">;</span>
-</span><span class='line'>  <span class="kt">void</span><span class="p">(</span><span class="o">*</span><span class="n">noPasswdFunc</span><span class="p">)(</span><span class="kt">void</span><span class="p">);</span>
-</span><span class='line'>  <span class="kt">void</span><span class="p">(</span><span class="o">*</span><span class="n">notInitFunc</span><span class="p">)(</span><span class="kt">void</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kr">inline</span> <span class="kt">bool</span> <span class="n">passWordConfirm</span><span class="p">()</span>
-</span><span class='line'>  <span class="p">{</span>
-</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="n">noPasswdFunc</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">m_passwdChecked</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>          <span class="n">noPasswdFunc</span><span class="p">();</span>
-</span><span class='line'>      <span class="p">}</span>
-</span><span class='line'>      <span class="k">return</span> <span class="n">m_passwdChecked</span><span class="p">;</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kr">inline</span> <span class="kt">bool</span> <span class="n">initConfirm</span><span class="p">()</span>
-</span><span class='line'>  <span class="p">{</span>
-</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="n">notInitFunc</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">m_icdev</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>          <span class="n">notInitFunc</span><span class="p">();</span>
-</span><span class='line'>      <span class="p">}</span>
-</span><span class='line'>      <span class="k">return</span> <span class="n">m_icdev</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'>  <span class="kt">bool</span> <span class="n">writeBalance</span><span class="p">(</span><span class="kt">float</span> <span class="n">num</span><span class="p">);</span>
-</span><span class='line'>  <span class="kt">bool</span> <span class="n">writeInfo</span><span class="p">(</span><span class="n">DATA_T</span> <span class="n">info_type</span><span class="p">,</span>
-</span><span class='line'>                 <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">data</span><span class="p">);</span>
-</span><span class='line'>  <span class="kt">float</span> <span class="n">getBuffer</span><span class="p">();</span>
-</span><span class='line'>  <span class="kt">bool</span> <span class="n">writeBuffer</span><span class="p">(</span><span class="kt">float</span> <span class="n">balance</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">static</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="n">float2bytes</span><span class="p">(</span><span class="kt">float</span> <span class="n">num</span><span class="p">);</span>
-</span><span class='line'>  <span class="k">static</span> <span class="kt">float</span> <span class="n">bytes2float</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">bytes</span><span class="p">);</span>
-</span><span class='line'><span class="k">public</span><span class="o">:</span>
-</span><span class='line'>  <span class="n">CardManager</span><span class="p">();</span>
-</span><span class='line'>  <span class="k">virtual</span> <span class="o">~</span><span class="n">CardManager</span><span class="p">();</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kr">inline</span> <span class="kt">bool</span> <span class="n">isInited</span><span class="p">()</span>
-</span><span class='line'>  <span class="p">{</span>
-</span><span class='line'>      <span class="k">return</span> <span class="n">m_icdev</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kr">inline</span> <span class="kt">void</span> <span class="n">setNoPasswdCallBack</span><span class="p">(</span><span class="kt">void</span><span class="p">(</span><span class="o">*</span><span class="n">callBack</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span>
-</span><span class='line'>  <span class="p">{</span>
-</span><span class='line'>      <span class="n">noPasswdFunc</span> <span class="o">=</span> <span class="n">callBack</span><span class="p">;</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kr">inline</span> <span class="kt">void</span> <span class="n">setNotInitCallBack</span><span class="p">(</span><span class="kt">void</span><span class="p">(</span><span class="o">*</span><span class="n">callback</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span>
-</span><span class='line'>  <span class="p">{</span>
-</span><span class='line'>      <span class="n">notInitFunc</span> <span class="o">=</span> <span class="n">callback</span><span class="p">;</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="cm">/*</span>
-</span><span class='line'><span class="cm"> return 0 for ok</span>
-</span><span class='line'><span class="cm"> 1 for init device error</span>
-</span><span class='line'><span class="cm"> 2 for no card</span>
-</span><span class='line'><span class="cm"> */</span>
-</span><span class='line'>  <span class="kt">int</span> <span class="n">init</span><span class="p">(</span><span class="kt">int</span> <span class="n">port</span><span class="p">,</span>  <span class="kt">long</span> <span class="n">baud</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kt">bool</span> <span class="n">disConnect</span><span class="p">();</span>
-</span><span class='line'>  <span class="kt">int</span> <span class="n">getInfo</span><span class="p">(</span><span class="n">DATA_T</span> <span class="n">data_type</span><span class="p">,</span>  <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">out</span><span class="p">);</span>
-</span><span class='line'>  <span class="kt">bool</span> <span class="n">checkPassWd</span><span class="p">(</span><span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">key</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="cm">/*</span>
-</span><span class='line'><span class="cm"> return 0 for ok</span>
-</span><span class='line'><span class="cm"> */</span>
-</span><span class='line'>  <span class="kt">int</span> <span class="n">release</span><span class="p">(</span><span class="kt">float</span> <span class="n">initialBalance</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="cm">/*</span>
-</span><span class='line'><span class="cm"> return 0 for ok</span>
-</span><span class='line'><span class="cm"> */</span>
-</span><span class='line'>  <span class="kt">int</span> <span class="n">consume</span><span class="p">(</span><span class="kt">float</span> <span class="n">costs</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kt">float</span> <span class="n">getBalance</span><span class="p">();</span>
-</span><span class='line'>  <span class="kt">int</span> <span class="n">charge</span><span class="p">(</span><span class="kt">float</span> <span class="n">amount</span><span class="p">);</span>
-</span><span class='line'><span class="p">};</span>
-</span></code></pre></td></tr></table></div></figure>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[shana]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2013/12/27/shana/"/>
-    <updated>2013-12-27T20:22:33+08:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2013/12/27/shana</id>
-    <content type="html"><![CDATA[<p><video controls>
-<source src="http://LanderlYoung.github.io/assets/media/shana_Final_FinalED.mp4" type="video/mp4"/>
-</video></p>
-]]></content>
-  </entry>
-  
-</feed>
+</div>
+
+</article>
+
+	
+
+<!--aThis Button BEGIN -->
+<div class="jiathis_style">
+	<span class="jiathis_txt">分享到：</span>
+	<a class="jiathis_button_tools_1"></a>
+	<a class="jiathis_button_tools_2"></a>
+	<a class="jiathis_button_tools_3"></a>
+	<a class="jiathis_button_tools_4"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+
+
+<section id="comment">
+    <h1 class="title">Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</div>
+			</div>
+			<footer id="footer" class="inner">
+<p>
+  Copyright &copy; 2014 - LanderlYoung -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+</footer>
+			<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+<!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'landerlyoung';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://LanderlYoung.github.io/blog/2014/01/13/linux-forkhe-execxi-lie-han-shu/';
+        var disqus_url = 'http://LanderlYoung.github.io/blog/2014/01/13/linux-forkhe-execxi-lie-han-shu/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+		</div>
+	</div>
+</body>
+</html>
