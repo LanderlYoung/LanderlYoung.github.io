@@ -23,9 +23,9 @@ footer: true
 **友情链接（我和我的小伙伴们）：**
 
  *  方爷的blog
-	* [technicrow.me]()
+	* [technicrow.me](http://www.technicrow.me/)
  * 我原来在sourceforge搭的wordpress（后被GFW无情墙掉）
-	* [landerlyoung.sf.net]() 
+	* [landerlyoung.sf.net](http://landerlyoung.sf.net) 
  
  <!--* [盼神的blog][3]-->
 
