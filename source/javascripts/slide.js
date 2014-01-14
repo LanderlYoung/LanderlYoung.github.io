@@ -5,7 +5,7 @@
 
 	hint.addEventListener("click", function() {
 		hint.style["display"] = "none";
-		move(slide, -23, 0, 0.5, 20);
+		move(slide, -23, 0, 0.5, 30);
 	});
 
 	container.addEventListener("click", function(){
@@ -16,13 +16,13 @@
 	container.addEventListener("click", function() {
 		ctn_old_click();
 		if(hint.style["display"] !== "block") {
-			move(slide, 0, -23, 0.5, 20);
+			move(slide, 0, -23, 0.5, 30);
 			hint.style["display"] = "block";
 		}
 	});
 
-	function move(obj, from, to, duration, steps) {
-		var step_len = (to - from) / steps;
+	function move(obj, from, to, duration, fps) {
+		var step_len = (to - from) / (duration * fps);
 		var pos = from;
 		var handle = window.setInterval(function() {
 			if(Math.abs(pos - to) < 0.1) {
@@ -30,6 +30,6 @@
 			}
 			obj.style["left"] = pos + "%";
 			pos += step_len;
-		}, duration / steps);
+		}, 1 / fps);
 	}
 })();
