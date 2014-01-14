@@ -219,20 +219,21 @@ body {
 }
 
 #slide {
-	position: absolute;
+	position: fixed;
 	top: 0%;
 	left: -23%;
 	width: 20%;
+	height:100%;
 	padding-left: 3%;
 	padding-top: 5%;
-	//background: #3d4349;
-	background: white;
+	background: #3d4349;
+//	background: white;
 
 	#hint {
 		position: fixed;
 		left: 10%;
-		bottom: 2em;
-		font-size: 3em;
+		bottom: 1em;
+		font-size: 4em;
 		color: #248dce;
 		opacity: .4;
 
@@ -319,5 +320,9 @@ body {
 				}
 			}
 		}
+	}
+	#slide {
+		display:none;
+		//FIXME
 	}
 }
