@@ -46,7 +46,7 @@
 				rotateTo(to);
 				window.clearInterval(intervalId);
 			}
-			console.log(deg);
+			//console.log(deg);
 			deg += step;
 			rotateTo(deg);
 		}, 1/fps);
