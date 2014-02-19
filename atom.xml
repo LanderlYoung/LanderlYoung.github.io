@@ -4,7 +4,7 @@
   <title><![CDATA[Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-02-19T11:16:28+08:00</updated>
+  <updated>2014-02-19T23:47:24+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -12,6 +12,173 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[dictionary_Node.js-版本v1.0]]></title>
+    <link href="http://LanderlYoung.github.io/blog/2014/02/19/dictionary-node-dot-js-ban-ben-v1-dot-0/"/>
+    <updated>2014-02-19T18:31:45+08:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2014/02/19/dictionary-node-dot-js-ban-ben-v1-dot-0</id>
+    <content type="html"><![CDATA[<p>&lt; 开场白 &gt;</p>
+
+<p><a href="https://github.com/LanderlYoung/Dictinoary_Node.js"><strong>基于Node.js的命令行词典应用</strong></a></p>
+
+<p>项目刚开始做，今天先做个铺垫吧。</p>
+
+<p>&lt;/ 开场白 &gt;</p>
+
+<p>这个小工具需要的功能有以下几个：</p>
+
+<ul>
+<li>解析命令行参数</li>
+<li>发送http请求并取得返回的xml</li>
+<li>解析xml并得到单词的解释</li>
+<li>输出结果</li>
+</ul>
+
+
+<!--more-->
+
+
+<p>最后还有一个，不过在v1.0中没有加入：</p>
+
+<ul>
+<li>发送http请求，获得单词发音，并播放出来</li>
+</ul>
+
+
+<p>下面一部分一部分的把各个功能实现说明一下：</p>
+
+<h3>1.解析命令行参数</h3>
+
+<p>这里的重点是获取命令行参数，在Node.js里面命令行参数可以从<code>process.argv</code>获取。
+得到的是一个string数组，数组的第一项是node解释器的调用名，一般是<code>node</code>;第二项是js脚本的绝对路径，后面的各项就是传进去的命令行参数。于是得到下面的解析命令行参数的代码。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="c1">//command line arguments</span>
+</span><span class='line'><span class="n">var</span> <span class="n">argv</span> <span class="o">=</span> <span class="n">process</span><span class="p">.</span><span class="n">argv</span><span class="p">.</span><span class="n">splice</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">(</span><span class="n">function</span><span class="p">(){</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="n">argv</span><span class="p">.</span><span class="n">length</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">argv</span><span class="p">.</span><span class="n">length</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="n">usage</span><span class="p">();</span>
+</span><span class='line'>      <span class="n">process</span><span class="p">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="n">argv</span><span class="p">.</span><span class="n">length</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="n">word</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+</span><span class='line'>  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>      <span class="n">var</span> <span class="n">swt</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+</span><span class='line'>      <span class="n">word</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+</span><span class='line'>      <span class="k">if</span><span class="p">(</span> <span class="n">swt</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="o">/</span><span class="n">e</span><span class="o">|</span><span class="n">E</span><span class="o">/</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>          <span class="n">ee</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>      <span class="k">if</span><span class="p">(</span> <span class="n">swt</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="o">/</span><span class="n">p</span><span class="o">|</span><span class="n">P</span><span class="o">/</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>          <span class="n">pnc</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>      <span class="k">if</span><span class="p">(</span> <span class="n">swt</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="o">/</span><span class="n">v</span><span class="o">/</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>          <span class="n">ee</span> <span class="o">=</span> <span class="n">cc</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>      <span class="k">if</span><span class="p">(</span><span class="n">swt</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="o">/</span><span class="n">V</span><span class="o">/</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>          <span class="n">pnc</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+</span><span class='line'>          <span class="n">ee</span> <span class="o">=</span> <span class="n">cc</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">})();</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>2.发送http请求并取得返回的xml</h3>
+
+<p>说到这个话题，最先想到的是AJAX，不过在Node.js里面对http request 有另一种封装。</p>
+
+<p>代码中的 http 来自于源代码最前面的 <code>var  http = require("http");</code></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">var</span> <span class="n">req</span> <span class="o">=</span> <span class="n">http</span><span class="p">.</span><span class="n">request</span><span class="p">(</span><span class="n">queryURL</span><span class="p">,</span>  <span class="n">function</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">var</span> <span class="n">chunks</span> <span class="o">=</span> <span class="p">[],</span> <span class="n">length</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">res</span><span class="p">.</span><span class="n">on</span><span class="p">(</span><span class="err">&#39;</span><span class="n">data</span><span class="err">&#39;</span><span class="p">,</span> <span class="n">function</span><span class="p">(</span><span class="n">trunk</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="n">length</span> <span class="o">+=</span> <span class="n">trunk</span><span class="p">.</span><span class="n">length</span><span class="p">;</span>
+</span><span class='line'>      <span class="n">chunks</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">trunk</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'>  <span class="n">res</span><span class="p">.</span><span class="n">on</span><span class="p">(</span><span class="err">&#39;</span><span class="n">end</span><span class="err">&#39;</span><span class="p">,</span> <span class="n">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>      <span class="n">var</span> <span class="n">data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Buffer</span><span class="p">(</span><span class="n">length</span><span class="p">),</span>
+</span><span class='line'>      <span class="n">pos</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span><span class='line'>      <span class="n">l</span> <span class="o">=</span> <span class="n">chunks</span><span class="p">.</span><span class="n">length</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">for</span> <span class="p">(</span><span class="n">var</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">l</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="n">chunks</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">copy</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">pos</span><span class="p">);</span>
+</span><span class='line'>      <span class="n">pos</span> <span class="o">+=</span> <span class="n">chunks</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">length</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="n">res</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">data</span><span class="p">;</span>
+</span><span class='line'>  <span class="c1">//TODO</span>
+</span><span class='line'>  <span class="c1">//console.log(data.toString());</span>
+</span><span class='line'>  <span class="n">var</span> <span class="n">output</span> <span class="o">=</span> <span class="n">genOutput</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">toString</span><span class="p">());</span>
+</span><span class='line'>  <span class="n">show</span><span class="p">(</span><span class="n">output</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'>  <span class="n">res</span><span class="p">.</span><span class="n">on</span><span class="p">(</span><span class="err">&#39;</span><span class="n">error</span><span class="err">&#39;</span><span class="p">,</span> <span class="n">function</span><span class="p">(</span><span class="n">err</span><span class="p">){</span>
+</span><span class='line'>      <span class="c1">//FIXME</span>
+</span><span class='line'>      <span class="n">console</span><span class="p">.</span><span class="n">log</span><span class="p">(</span><span class="s">&quot;requesr error&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'><span class="n">req</span><span class="p">.</span><span class="n">end</span><span class="p">();</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这里面主要做事的是三个回调函数，分别是当得到数据、数据下载结束、发生错误。
+代码所做的事是，把每次得到的数据缓存起来；当数据下载结束时把缓存的数据拼接起来。需要说明的是：在代码中用到了Node.js的Buffer类，其中on &lsquo;data&rsquo; 时的回调函数的参数就是Buffer类的实例。在一开始出现的问题是：设置了返回的xml的编码，然后就出现了乱码，猜测原因是每次on &lsquo;data&rsquo; 时传来的数据段把utf-8编码截断了。解决方法是先把返回数据当成二进制来处理，最后拼接起来再转成字符串。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[linux fork和exec系列函数]]></title>

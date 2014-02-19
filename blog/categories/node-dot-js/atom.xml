@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Node.js | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/blog/categories/node-dot-js/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-02-19T11:16:28+08:00</updated>
+  <updated>2014-02-19T23:47:24+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -12,6 +12,126 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[dictionary_Node.js-版本v1.0]]></title>
+    <link href="http://LanderlYoung.github.io/blog/2014/02/19/dictionary-node-dot-js-ban-ben-v1-dot-0/"/>
+    <updated>2014-02-19T18:31:45+08:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2014/02/19/dictionary-node-dot-js-ban-ben-v1-dot-0</id>
+    <content type="html"><![CDATA[<p>&lt; 开场白 &gt;</p>
+
+<p><a href="https://github.com/LanderlYoung/Dictinoary_Node.js"><strong>基于Node.js的命令行词典应用</strong></a></p>
+
+<p>项目刚开始做，今天先做个铺垫吧。</p>
+
+<p>&lt;/ 开场白 &gt;</p>
+
+<p>这个小工具需要的功能有以下几个：</p>
+
+<ul>
+<li>解析命令行参数</li>
+<li>发送http请求并取得返回的xml</li>
+<li>解析xml并得到单词的解释</li>
+<li>输出结果</li>
+</ul>
+
+
+<!--more-->
+
+
+<p>最后还有一个，不过在v1.0中没有加入：</p>
+
+<ul>
+<li>发送http请求，获得单词发音，并播放出来</li>
+</ul>
+
+
+<p>下面一部分一部分的把各个功能实现说明一下：</p>
+
+<h3>1.解析命令行参数</h3>
+
+<p>这里的重点是获取命令行参数，在Node.js里面命令行参数可以从<code>process.argv</code>获取。
+得到的是一个string数组，数组的第一项是node解释器的调用名，一般是<code>node</code>;第二项是js脚本的绝对路径，后面的各项就是传进去的命令行参数。于是得到下面的解析命令行参数的代码。</p>
+
+<p>``` cpp</p>
+
+<p>//command line arguments
+var argv = process.argv.splice(2);</p>
+
+<p>(function(){</p>
+
+<pre><code>if (argv.length == 0 || argv.length &gt; 2) {
+    usage();
+    process.exit(1);
+} else if( argv.length == 1) {
+    word = argv[0];
+} else {
+    var swt = argv[0];
+    word = argv[1];
+    if( swt.search(/e|E/) != -1) {
+        ee = true;
+    }
+    if( swt.search(/p|P/) != -1) {
+        pnc = true;
+    }
+    if( swt.search(/v/) != -1) {
+        ee = cc = true;
+    }
+    if(swt.search(/V/) != -1) {
+        pnc = true;
+        ee = cc = true;
+    }
+}
+</code></pre>
+
+<p>})();</p>
+
+<p>```</p>
+
+<h3>2.发送http请求并取得返回的xml</h3>
+
+<p>说到这个话题，最先想到的是AJAX，不过在Node.js里面对http request 有另一种封装。</p>
+
+<p>代码中的 http 来自于源代码最前面的 <code>var  http = require("http");</code></p>
+
+<p>``` cpp
+var req = http.request(queryURL,  function(res) {</p>
+
+<pre><code>var chunks = [], length = 0;
+res.on('data', function(trunk) {
+    length += trunk.length;
+    chunks.push(trunk);
+});
+res.on('end', function() {
+    var data = new Buffer(length),
+    pos = 0, 
+    l = chunks.length;
+for (var i = 0; i &lt; l; i++) {
+    chunks[i].copy(data, pos);
+    pos += chunks[i].length;
+}
+
+res.body = data;
+//TODO
+//console.log(data.toString());
+var output = genOutput(data.toString());
+show(output);
+
+});
+res.on('error', function(err){
+    //FIXME
+    console.log("requesr error");
+});
+</code></pre>
+
+<p>});
+req.end();</p>
+
+<p>```
+这里面主要做事的是三个回调函数，分别是当得到数据、数据下载结束、发生错误。
+代码所做的事是，把每次得到的数据缓存起来；当数据下载结束时把缓存的数据拼接起来。需要说明的是：在代码中用到了Node.js的Buffer类，其中on &lsquo;data&rsquo; 时的回调函数的参数就是Buffer类的实例。在一开始出现的问题是：设置了返回的xml的编码，然后就出现了乱码，猜测原因是每次on &lsquo;data&rsquo; 时传来的数据段把utf-8编码截断了。解决方法是先把返回数据当成二进制来处理，最后拼接起来再转成字符串。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[dictionary_Node.js-项目启航]]></title>
