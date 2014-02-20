@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Node.js | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/blog/categories/node-dot-js/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-02-20T15:54:38+08:00</updated>
+  <updated>2014-02-20T16:08:01+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -30,13 +30,10 @@
 
 <ul>
 <li>解析命令行参数</li>
-<li>发送http请求并取得返回的xml</li>
+<li>发送http请求并取得返回的xml <!--more--></li>
 <li>解析xml并得到单词的解释</li>
 <li>输出结果</li>
 </ul>
-
-
-<!--more-->
 
 
 <p>最后还有一个，不过在v1.0中没有加入：</p>
