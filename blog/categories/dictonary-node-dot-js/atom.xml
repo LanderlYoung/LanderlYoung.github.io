@@ -4,7 +4,7 @@
   <title><![CDATA[Category: dictonary_Node.js | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/blog/categories/dictonary-node-dot-js/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-02-24T22:31:03+08:00</updated>
+  <updated>2014-02-24T23:10:31+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -14,6 +14,123 @@
 
   
   <entry>
+    <title type="html"><![CDATA[dictionary_Node.js-版本v2.0]]></title>
+    <link href="http://LanderlYoung.github.io/blog/2014/02/24/dictionary-node-dot-js-ban-ben-v2-dot-0/"/>
+    <updated>2014-02-24T22:31:59+08:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2014/02/24/dictionary-node-dot-js-ban-ben-v2-dot-0</id>
+    <content type="html"><![CDATA[<p>&lt; 开场白 &gt;</p>
+
+<p><a href="https://github.com/LanderlYoung/Dictinoary_Node.js"><strong>基于Node.js的命令行词典应用</strong></a></p>
+
+<p>&lt;/ 开场白 &gt;</p>
+
+<p>版本2.0新加入发音功能，该功能的实现都在pnc.js文件内，分成一下几个功能模块：</p>
+
+<ol>
+<li>下载mp3格式的音频文件</li>
+<li>把文件存到临时文件里</li>
+<li>调用系统工具播放音频文件</li>
+</ol>
+
+
+<p>其中第一步下载文件和1.0版本的下载xml是完全一样的，不再赘述。</p>
+
+<p>首要说明存储文件这个。</p>
+
+<h2>保存临时文件</h2>
+
+<p>因为要保存到临时文件（播放完成之后还要删除），所以差了一下Node.js的文档，找到下面的方法。</p>
+
+<p>``` cpp
+var fa = require(&lsquo;fs&rsquo;);</p>
+
+<p>var count = 0;
+while (true) {</p>
+
+<pre><code>//avoid dead loop
+if( count++ &gt; 10) return null;
+
+var fileName = '/tmp/NodeDict.' + genRandomString(6) + '.mp3';
+try {
+    var fd = fs.openSync(fileName, 'wx');
+    //console.log('S file: ' + fileName );
+    return { fileName : fileName, fd : fd };
+} catch (e) {
+    //file alreadyExist
+    //console.log(e);
+}
+</code></pre>
+
+<p>}
+```</p>
+
+<p>其中<code>genRandomString(len)</code>返回长度为len的随机字符串。主要说明的是openSync方法，他是open方法的同步版，不过参数含义都是相同的。Node.js<a href="http://www.nodejs.org/api/fs.html#fs_fs_open_path_flags_mode_callback">官方文档</a>这么解释open的
+<blockquote><p>&hellip;</p></p><p><p>&lsquo;w&rsquo; &ndash; Open file for writing. The file is created (if it does not exist) or truncated (if it exists).<br/>&lsquo;wx&rsquo; &ndash; Like &lsquo;w&rsquo; but fails if path exists.<br/>&lsquo;w+&rsquo; &ndash; Open file for reading and writing. The file is created (if it does not exist) or truncated (if it exists).<br/>&lsquo;wx+&rsquo; &ndash; Like &lsquo;w+&rsquo; but fails if path exists.</p></p><p><p>&hellip;</p></blockquote></p>
+
+<p>也就是说当flags是'wx'时，如果文件已经存在会抛出异常（原文只说会fail，实验之后才确定是抛异常）。这样当检测到异常时在生成一个文件名看看能不能生成临时文件就行了。上诉代码就是这个思路。为了极端情况发生导致死循环，设置了循环的最大次数——10。</p>
+
+<p>然后就是把缓存里的mp3文件写道文件中，这个更简单了：</p>
+
+<p>``` cpp
+function saveFile(data) {</p>
+
+<pre><code>var file = makeTemp();
+if (!file) err_exit();
+fs.writeFileSync(file.fileName, data);
+fs.closeSync(file.fd);
+return file;
+</code></pre>
+
+<p>}
+```
+代码自解释，无需多言。</p>
+
+<h2>调用系统命令播放mp3文件</h2>
+
+<p>这里面用到了Node.js的child process技术。说来简单，还是先上代码:</p>
+
+<p>```cpp
+var spawn = require(&lsquo;child_process&rsquo;).spawn;
+function playAndClean(file) {</p>
+
+<pre><code>var play = spawn('play', [ file.fileName ]);
+play.on('exit', function (code, signal) {
+        //delete temp file
+        fs.unlinkSync(file.fileName);
+        });
+</code></pre>
+
+<p>}
+<code>``
+spawn函数的第一个参数是命令的名字，后面是一个数组存的是参数列表。假设这里的文件名是NodeDict.123456.mp3, 那么调用的系统命令就是</code>play NodeDict.123456.mp3`。这个play命令来自于sox软件包。然后给新进程添加退出时的事件，就是删除临时文件。</p>
+
+<h2>然后就是在主文件dict.js 中调用pnc.js</h2>
+
+<p>老规矩，先上代码:</p>
+
+<p>```cpp
+var cp = require(&lsquo;child_process&rsquo;);
+try {</p>
+
+<pre><code>var pncUrl = genPncURL(word, pnc);
+cp.fork(pnc_js_Path, [ pncUrl ]);
+</code></pre>
+
+<p>} catch(e) {</p>
+
+<pre><code>console.log('please set variable pnc_js_Path, which presents the absolute path of pnc.js');
+</code></pre>
+
+<p>}
+```
+这里使用了child process中的fork，于linux的fork不同，Node.js中的fork要指定运行的js脚本, 这里就指定了pnc.js脚本（要写绝对路径，因为要创建软链接，所以无奈只能手动制定了）。</p>
+
+<p>这样就可以开两个进程了，一个下载解析xml显示单词解释，另一个进程下载发音文件在播放（其实播放又开了一个进程）。<br/>
+恩，还不错。</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[dictionary_Node.js-版本v1.0]]></title>
     <link href="http://LanderlYoung.github.io/blog/2014/02/19/dictionary-node-dot-js-ban-ben-v1-dot-0/"/>
     <updated>2014-02-19T18:31:45+08:00</updated>
@@ -21,8 +138,6 @@
     <content type="html"><![CDATA[<p>&lt; 开场白 &gt;</p>
 
 <p><a href="https://github.com/LanderlYoung/Dictinoary_Node.js"><strong>基于Node.js的命令行词典应用</strong></a></p>
-
-<p>项目刚开始做，今天先做个铺垫吧。</p>
 
 <p>&lt;/ 开场白 &gt;</p>
 
