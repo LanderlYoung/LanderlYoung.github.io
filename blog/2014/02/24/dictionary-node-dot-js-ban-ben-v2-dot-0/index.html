@@ -7,7 +7,7 @@
 	<meta name="author" content="LanderlYoung">
 
 	
-	<meta name="description" content="dictionary_Node.js-版本v2.0 &lt; 开场白 &gt; 基于Node.js的命令行词典应用 &lt;/ 开场白 &gt; 版本2.0新加入发音功能，该功能的实现都在pnc.js文件内，分成一下几个功能模块： 下载mp3格式的音频文件
+	<meta name="description" content="dictionary_Node.js-版本v2.0 &lt; 开场白 &gt; [基于Node.js的命令行词典应用][0] &lt;/ 开场白 &gt; 版本2.0新加入发音功能，该功能的实现都在pnc.js文件内，分成一下几个功能模块： 下载mp3格式的音频文件
 把文件存到临时文件里 &hellip;">
 	
 
@@ -85,7 +85,7 @@
 	<h1 class="title" itemprop="name">dictionary_Node.js-版本v2.0</h1>
 	<div class="entry-content" itemprop="articleBody"><p>&lt; 开场白 &gt;</p>
 
-<p><a href="https://github.com/LanderlYoung/Dictinoary_Node.js"><strong>基于Node.js的命令行词典应用</strong></a></p>
+<p>[<strong>基于Node.js的命令行词典应用</strong>][0]</p>
 
 <p>&lt;/ 开场白 &gt;</p>
 
@@ -98,6 +98,8 @@
 </ol>
 
 
+<p><!--more--!></p>
+
 <p>其中第一步下载文件和1.0版本的下载xml是完全一样的，不再赘述。</p>
 
 <p>首要说明存储文件这个。</p>
@@ -106,7 +108,7 @@
 
 <p>因为要保存到临时文件（播放完成之后还要删除），所以差了一下Node.js的文档，找到下面的方法。</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -140,19 +142,16 @@
 </span><span class='line'>      <span class="c1">//console.log(e);</span>
 </span><span class='line'>  <span class="p">}</span>
 </span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></p>
 
-
-<p>其中<code>genRandomString(len)</code>返回长度为len的随机字符串。主要说明的是openSync方法，他是open方法的同步版，不过参数含义都是相同的。Node.js<a href="http://www.nodejs.org/api/fs.html#fs_fs_open_path_flags_mode_callback">官方文档</a>这么解释open的</p>
-
-<blockquote><p>&#8230;</p><p>&#8216;w&#8217; - Open file for writing. The file is created (if it does not exist) or truncated (if it exists).<br/>&#8216;wx&#8217; - Like &#8216;w&#8217; but fails if path exists.<br/>&#8216;w+&#8217; - Open file for reading and writing. The file is created (if it does not exist) or truncated (if it exists).<br/>&#8216;wx+&#8217; - Like &#8216;w+&#8217; but fails if path exists.</p><p>&#8230;</p></blockquote>
-
+<p>其中<code>genRandomString(len)</code>返回长度为len的随机字符串。主要说明的是openSync方法，他是open方法的同步版，不过参数含义都是相同的。Node.js[官方文档][1]这么解释open的
+<blockquote><p>&hellip;</p><p>&lsquo;w&rsquo; &ndash; Open file for writing. The file is created (if it does not exist) or truncated (if it exists).<br/>&lsquo;wx&rsquo; &ndash; Like &lsquo;w&rsquo; but fails if path exists.<br/>&lsquo;w+&rsquo; &ndash; Open file for reading and writing. The file is created (if it does not exist) or truncated (if it exists).<br/>&lsquo;wx+&rsquo; &ndash; Like &lsquo;w+&rsquo; but fails if path exists.</p><p>&hellip;</p></blockquote></p>
 
 <p>也就是说当flags是&#8217;wx&#8217;时，如果文件已经存在会抛出异常（原文只说会fail，实验之后才确定是抛异常）。这样当检测到异常时在生成一个文件名看看能不能生成临时文件就行了。上诉代码就是这个思路。为了极端情况发生导致死循环，设置了循环的最大次数——10。</p>
 
 <p>然后就是把缓存里的mp3文件写道文件中，这个更简单了：</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -167,15 +166,13 @@
 </span><span class='line'>  <span class="k">return</span> <span class="n">file</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
-
-
-<p>代码自解释，无需多言。</p>
+代码自解释，无需多言。</p>
 
 <h2>调用系统命令播放mp3文件</h2>
 
 <p>这里面用到了Node.js的child process技术。说来简单，还是先上代码:</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -192,15 +189,13 @@
 </span><span class='line'>          <span class="p">});</span>
 </span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
-
-
-<p>spawn函数的第一个参数是命令的名字，后面是一个数组存的是参数列表。假设这里的文件名是NodeDict.123456.mp3, 那么调用的系统命令就是<code>play NodeDict.123456.mp3</code>。这个play命令来自于sox软件包。然后给新进程添加退出时的事件，就是删除临时文件。</p>
+spawn函数的第一个参数是命令的名字，后面是一个数组存的是参数列表。假设这里的文件名是NodeDict.123456.mp3, 那么调用的系统命令就是<code>play NodeDict.123456.mp3</code>。这个play命令来自于sox软件包。然后给新进程添加退出时的事件，就是删除临时文件。</p>
 
 <h2>然后就是在主文件dict.js 中调用pnc.js</h2>
 
 <p>老规矩，先上代码:</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p><figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -215,12 +210,13 @@
 </span><span class='line'>  <span class="n">console</span><span class="p">.</span><span class="n">log</span><span class="p">(</span><span class="err">&#39;</span><span class="n">please</span> <span class="n">set</span> <span class="n">variable</span> <span class="n">pnc_js_Path</span><span class="p">,</span> <span class="n">which</span> <span class="n">presents</span> <span class="n">the</span> <span class="n">absolute</span> <span class="n">path</span> <span class="n">of</span> <span class="n">pnc</span><span class="p">.</span><span class="n">js</span><span class="err">&#39;</span><span class="p">);</span>
 </span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
-
-
-<p>这里使用了child process中的fork，于linux的fork不同，Node.js中的fork要指定运行的js脚本, 这里就指定了pnc.js脚本（要写绝对路径，因为要创建软链接，所以无奈只能手动制定了）。</p>
+这里使用了child process中的fork，于linux的fork不同，Node.js中的fork要指定运行的js脚本, 这里就指定了pnc.js脚本（要写绝对路径，因为要创建软链接，所以无奈只能手动制定了）。</p>
 
 <p>这样就可以开两个进程了，一个下载解析xml显示单词解释，另一个进程下载发音文件在播放（其实播放又开了一个进程）。<br/>
 恩，还不错。</p>
+
+<p>[0]:<a href="https://github.com/LanderlYoung/Dictinoary_Node.js">https://github.com/LanderlYoung/Dictinoary_Node.js</a>
+[1]:<a href="http://www.nodejs.org/api/fs.html#fs_fs_open_path_flags_mode_callback">http://www.nodejs.org/api/fs.html#fs_fs_open_path_flags_mode_callback</a></p>
 </div>
 
 </article>
