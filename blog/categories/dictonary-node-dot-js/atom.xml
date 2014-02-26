@@ -4,7 +4,7 @@
   <title><![CDATA[Category: dictonary_Node.js | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/blog/categories/dictonary-node-dot-js/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-02-26T14:15:55+08:00</updated>
+  <updated>2014-02-26T15:31:08+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -20,7 +20,7 @@
     <id>http://LanderlYoung.github.io/blog/2014/02/24/dictionary-node-dot-js-ban-ben-v2-dot-0</id>
     <content type="html"><![CDATA[<p>&lt; 开场白 &gt;</p>
 
-<p>[<strong>基于Node.js的命令行词典应用</strong>][0]</p>
+<p><a href="https://github.com/LanderlYoung/Dictinoary_Node.js"><strong>基于Node.js的命令行词典应用</strong></a></p>
 
 <p>&lt;/ 开场白 &gt;</p>
 
@@ -33,7 +33,8 @@
 </ol>
 
 
-<p><!--more--!></p>
+<!--more-->
+
 
 <p>其中第一步下载文件和1.0版本的下载xml是完全一样的，不再赘述。</p>
 
@@ -66,7 +67,7 @@ try {
 <p>}
 ```</p>
 
-<p>其中<code>genRandomString(len)</code>返回长度为len的随机字符串。主要说明的是openSync方法，他是open方法的同步版，不过参数含义都是相同的。Node.js[官方文档][1]这么解释open的
+<p>其中<code>genRandomString(len)</code>返回长度为len的随机字符串。主要说明的是openSync方法，他是open方法的同步版，不过参数含义都是相同的。Node.js<a href="http://www.nodejs.org/api/fs.html#fs_fs_open_path_flags_mode_callback">官方文档</a>这么解释open的
 <blockquote><p>&hellip;</p></p><p><p>&lsquo;w&rsquo; &ndash; Open file for writing. The file is created (if it does not exist) or truncated (if it exists).<br/>&lsquo;wx&rsquo; &ndash; Like &lsquo;w&rsquo; but fails if path exists.<br/>&lsquo;w+&rsquo; &ndash; Open file for reading and writing. The file is created (if it does not exist) or truncated (if it exists).<br/>&lsquo;wx+&rsquo; &ndash; Like &lsquo;w+&rsquo; but fails if path exists.</p></p><p><p>&hellip;</p></blockquote></p>
 
 <p>也就是说当flags是'wx'时，如果文件已经存在会抛出异常（原文只说会fail，实验之后才确定是抛异常）。这样当检测到异常时在生成一个文件名看看能不能生成临时文件就行了。上诉代码就是这个思路。为了极端情况发生导致死循环，设置了循环的最大次数——10。</p>
@@ -129,9 +130,6 @@ cp.fork(pnc_js_Path, [ pncUrl ]);
 
 <p>这样就可以开两个进程了，一个下载解析xml显示单词解释，另一个进程下载发音文件在播放（其实播放又开了一个进程）。<br/>
 恩，还不错。</p>
-
-<p>[0]:<a href="https://github.com/LanderlYoung/Dictinoary_Node.js">https://github.com/LanderlYoung/Dictinoary_Node.js</a>
-[1]:<a href="http://www.nodejs.org/api/fs.html#fs_fs_open_path_flags_mode_callback">http://www.nodejs.org/api/fs.html#fs_fs_open_path_flags_mode_callback</a></p>
 ]]></content>
   </entry>
   
