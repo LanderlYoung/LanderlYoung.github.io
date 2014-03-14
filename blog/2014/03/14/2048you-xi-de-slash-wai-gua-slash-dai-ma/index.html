@@ -3,18 +3,13 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>关于我 - Young_Blog</title>
+	<title>2048游戏的'外挂'代码 - Young_Blog</title>
 	<meta name="author" content="LanderlYoung">
 
 	
-	<meta name="description" content="一个带有典型极客精神的计算机狂热者。
-武汉大学本科生
-二次元中毒者
-野中萌、钉宫病 我的简历 html版
-pdf版 友情链接（我和我的小伙伴们）： 方爷的blog
-technicrow.me
-我原来在sourceforge搭的wordpress（后被GFW无情墙掉）
-landerlyoung. &hellip;">
+	<meta name="description" content="2048游戏的'外挂'代码 这两天‘2048’游戏很火，于是我秉承这学习的态度研究了一下他的代码。
+本以为使用canvas实现的，后来发现就是普通的html元素，突然觉得开发者还是很厉害的！
+说实话，这个游戏设计得的确很牛。牛的不是代码，是游戏创意！如果发到app &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -24,7 +19,7 @@ landerlyoung. &hellip;">
 
 	<link href="/atom.xml" rel="alternate" title="Young_Blog" type="application/atom+xml">
 	
-	<link rel="canonical" href="http://LanderlYoung.github.io/about-me/">
+	<link rel="canonical" href="http://LanderlYoung.github.io/blog/2014/03/14/2048you-xi-de-slash-wai-gua-slash-dai-ma/">
 	<link href="/favicon.png" rel="shortcut icon">
 	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
 	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
@@ -87,57 +82,51 @@ landerlyoung. &hellip;">
 				
 			
 			<div class="mid-col-container">
-				<div id="content" class="inner"><article class="page">
-    
-    <h1 class="title">关于我</h1>
-    
-    <div class="entry-content"><p><img class="right" src="/assets/images/kyoko.png" width="200" height="200"></p>
+				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+	<h1 class="title" itemprop="name">2048游戏的'外挂'代码</h1>
+	<div class="entry-content" itemprop="articleBody"><p>这两天<a href="http://gabrielecirulli.github.io/2048/">‘2048’</a>游戏很火，于是我秉承这学习的态度研究了一下他的代码。
+本以为使用canvas实现的，后来发现就是普通的html元素，突然觉得开发者还是很厉害的！<br/>
+说实话，这个游戏设计得的确很牛。牛的不是代码，是游戏创意！如果发到app store上估计会和flappy bird有的一拼吧。</p>
 
-<ul>
-<li>一个带有典型极客精神的计算机狂热者。</li>
-<li>武汉大学本科生</li>
-<li>二次元中毒者</li>
-<li>野中萌、钉宫病</li>
-</ul>
+<!--more-->
 
 
-<br/>
+<h2>我是邪恶的开始</h2>
+
+<p>因为研究了一下游戏的源代码，突然发现可以很简单的让游戏想开了外挂一样牛叉！</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="p">(</span><span class="n">function</span><span class="p">(</span><span class="n">initialNum</span><span class="p">){</span>
+</span><span class='line'>  <span class="n">var</span> <span class="n">a</span> <span class="o">=</span> <span class="k">new</span> <span class="n">GameManager</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">KeyboardInputManager</span><span class="p">,</span> <span class="n">HTMLActuator</span><span class="p">,</span> <span class="n">LocalScoreManager</span><span class="p">);</span>
+</span><span class='line'>  <span class="n">var</span> <span class="n">row</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">var</span> <span class="n">column</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+</span><span class='line'>  <span class="k">for</span><span class="p">(</span><span class="n">var</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">row</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="k">for</span><span class="p">(</span><span class="n">var</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">column</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>          <span class="n">tile</span> <span class="o">=</span>  <span class="k">new</span> <span class="n">Tile</span><span class="p">({</span><span class="nl">x:</span><span class="n">i</span><span class="p">,</span> <span class="nl">y:</span><span class="n">j</span><span class="p">},</span> <span class="n">initialNum</span><span class="p">);</span>
+</span><span class='line'>          <span class="n">a</span><span class="p">.</span><span class="n">grid</span><span class="p">.</span><span class="n">cells</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">tile</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">})(</span><span class="mi">128</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
 
 
-<br/>
+<p>这就是所有&#8217;外挂&#8217;代码，打开chrome的console。输入进去就可以看到奇迹。。。。</p>
 
+<h2>郑重生命</h2>
 
-<h2>我的简历</h2>
-
-<ul>
-<li><a href="/assets/documents/resume.html">html版</a></li>
-<li><a href="/assets/documents/resume.pdf">pdf版</a></li>
-</ul>
-
-
-<br/>
-
-
-<br/>
-
-
-<br/>
-
-
-<hr />
-
-<p><strong>友情链接（我和我的小伙伴们）：</strong></p>
-
-<ul>
-<li>方爷的blog</li>
-<li><a href="http://www.technicrow.me/">technicrow.me</a></li>
-<li>我原来在sourceforge搭的wordpress（后被GFW无情墙掉）</li>
-<li><a href="http://landerlyoung.sf.net">landerlyoung.sf.net</a></li>
-<li>xinyi的blog</li>
-<li><a href="http://xinyi.sf.net/">xinyi.sf.net</a></li>
-</ul>
-
+<p>这只是一个个人的无聊作品，如果因为这个东西让你丧失了对本游戏的兴趣，请无视这段代码！</p>
 </div>
+
 </article>
 
 	
@@ -162,7 +151,6 @@ landerlyoung. &hellip;">
     <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 </div>
 </section>
-
 </div>
 			</div>
 			<footer id="footer" class="inner">
@@ -187,8 +175,8 @@ landerlyoung. &hellip;">
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://LanderlYoung.github.io/about-me/index.html';
-        var disqus_url = 'http://LanderlYoung.github.io/about-me/index.html';
+        var disqus_identifier = 'http://LanderlYoung.github.io/blog/2014/03/14/2048you-xi-de-slash-wai-gua-slash-dai-ma/';
+        var disqus_url = 'http://LanderlYoung.github.io/blog/2014/03/14/2048you-xi-de-slash-wai-gua-slash-dai-ma/';
         var disqus_script = 'embed.js';
       
     (function () {
