@@ -18,4 +18,4 @@ categories:
  3. about的下落效果（其实在写chrome的插件的时候有用到）
 
 
-[1]:/assets/sotrage/2048
+[1]:/assets/storage/2048
