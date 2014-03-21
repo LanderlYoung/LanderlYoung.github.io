@@ -4,7 +4,7 @@
   <title><![CDATA[Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-03-22T01:27:02+08:00</updated>
+  <updated>2014-03-22T01:32:06+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -18,7 +18,7 @@
     <link href="http://LanderlYoung.github.io/blog/2014/03/22/2048you-xi-an-zhuo-yi-zhi-ban/"/>
     <updated>2014-03-22T00:51:51+08:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/03/22/2048you-xi-an-zhuo-yi-zhi-ban</id>
-    <content type="html"><![CDATA[<p>这几天一直在玩2048游戏，觉得这个游戏很有意思。上次研究了一下源代码于是就写了个‘外挂’(囧)。后来在手机上玩，发现网页版的玩着不爽，于是想着把这个游戏当成基于安卓的html5游戏。于是就看了一下怎么写android的html5游戏。的出结论是基于WebView——在应用中开一个区域显示网页内容，所以这个区域就是一个浏览器了。经过两天的努力算是弄了个<a href="http://LanderlYoung.github.io/assets/sotrage/2048">小样</a>出来。</p>
+    <content type="html"><![CDATA[<p>这几天一直在玩2048游戏，觉得这个游戏很有意思。上次研究了一下源代码于是就写了个‘外挂’(囧)。后来在手机上玩，发现网页版的玩着不爽，于是想着把这个游戏当成基于安卓的html5游戏。于是就看了一下怎么写android的html5游戏。的出结论是基于WebView——在应用中开一个区域显示网页内容，所以这个区域就是一个浏览器了。经过两天的努力算是弄了个<a href="http://LanderlYoung.github.io/assets/storage/2048">小样</a>出来。</p>
 
 <!--more-->
 
