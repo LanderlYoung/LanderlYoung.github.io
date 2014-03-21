@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+		<meta name="autohr" content="Landerl young">
+		<meta name="HandheldFriendly" content="True">
+		<meta name="MobileOptimized" content="1024">
+		<meta name="MobileOptimized" content="640">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<title>2048</title>
+		<link href="./2048_files/font-awesome.css" rel="stylesheet" type="text/css">
+		<link href="./2048_files/main.css" rel="stylesheet" type="text/css">
+		<link href="./2048_files/about.css" rel="stylesheet" type="text/css">
+	</head>
+	<body>
+
+		<div class="container">
+			<div class="game-container left-column">
+				<div class="game-message">
+					<p></p>
+					<div class="lower">
+						<a class="keep-playing-button">Keep going</a>
+						<a class="retry-button">Try again</a>
+						<div class="score-sharing"></div>
+					</div>
+				</div>
+				<div class="grid-container">
+					<div class="grid-row">
+						<div class="grid-cell"></div>
+						<div class="grid-cell"></div>
+						<div class="grid-cell"></div>
+						<div class="grid-cell"></div>
+					</div>
+					<div class="grid-row">
+						<div class="grid-cell"></div>
+						<div class="grid-cell"></div>
+						<div class="grid-cell"></div>
+						<div class="grid-cell"></div>
+					</div>
+					<div class="grid-row">
+						<div class="grid-cell"></div>
+						<div class="grid-cell"></div>
+						<div class="grid-cell"></div>
+						<div class="grid-cell"></div>
+					</div>
+					<div class="grid-row">
+						<div class="grid-cell"></div>
+						<div class="grid-cell"></div>
+						<div class="grid-cell"></div>
+						<div class="grid-cell"></div>
+					</div>
+				</div>
+				<div class="tile-container">
+					<div class="tile tile-2 tile-position-1-4 tile-new">
+						<div class="tile-inner">2</div>
+					</div>
+					<div class="tile tile-2 tile-position-2-2 tile-new">
+						<div class="tile-inner">2</div>
+					</div>
+				</div>
+			</div>
+			<div class="mid-column"></div>
+			<div class="right-column">
+				<div class="heading">
+					<h1 class="title">2048</h1>
+					<div class="scores-container">
+						<div class="score-container">0</div>
+						<div class="best-container">0</div>
+					</div>
+				</div>
+				<p class="game-intro">Join the numbers and get to the <strong>2048 tile!</strong></p>
+				<div class="controller">
+					<table>
+						<tr>
+							<td></td>
+							<td id="button-up" class="fa fa-long-arrow-up button"></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td class="fa fa-long-arrow-left button" id="button-left"></td>
+							<td></td>
+							<td class="fa fa-long-arrow-right button" id="button-right"></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td class="fa fa-long-arrow-down button" id="button-down"></td>
+							<td></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</div>
+
+        <div class="about" id="book-scroll">
+            <div class="about-page">
+                <h1>这是一个关于界面</h1>
+                <p>这是一个关于界面</p>
+                <p>这是一个关于界面</p>
+                <p>这是一个关于界面</p>
+                <p>这是一个关于界面</p>
+                <p>这是一个关于界面</p>
+                <p>这是一个关于界面</p>
+                <p>这是一个关于界面</p>
+            </div>
+            <p class="scroll-up fa fa-check-circle-o" id="scroll-up"></p>
+        </div>
+		<p class="menu fa fa-ellipsis-v" id="menu-button"></p>
+
+		<script src="./2048_files/animframe_polyfill.js"></script>
+		<script src="./2048_files/keyboard_input_manager.js"></script>
+		<script src="./2048_files/html_actuator.js"></script>
+		<script src="./2048_files/grid.js"></script>
+		<script src="./2048_files/tile.js"></script>
+		<script src="./2048_files/local_score_manager.js"></script>
+		<script src="./2048_files/game_manager.js"></script>
+		<script src="./2048_files/application.js"></script>
+		<script src="./2048_files/page.js"></script>
+	</body>
+</html>
