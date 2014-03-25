@@ -1,5 +1,4 @@
 //This is the main GREYSHADE css file.
-@import "custom/_fonts.scss";
 
 html {
 	height: 100%;
@@ -7,9 +6,12 @@ html {
 
 body {
 	background: #3D4349;
-	//font-family: "Open Sans", "HelveticaNeue-Light","Helvetica Neue Light","Helvetica Neue",Helvetica,Arial,sans-serif;
 	font-family: $sans;
 	height: 100%;
+
+	h1, h2, h3,  {
+		font-family: $header-title-font-family;
+	}
 }
 
 ::selection {
@@ -44,6 +46,7 @@ body {
 	}
 
 	h1 {
+		font-family: $header-title-font-family;
 		float: none;
 	}
 
@@ -116,6 +119,7 @@ body {
 						}
 						h2 {
 							font-size: 1.3em;
+							font-family: $header-title-font-family;
 							color: #574C4C;
 							border-bottom: none;
 						}
@@ -152,6 +156,7 @@ body {
 						}
 					}
 					h1.title{
+						font-family: $header-title-font-family;
 						a {
 							color: #333;
 							-webkit-transition: color 0.3s;
