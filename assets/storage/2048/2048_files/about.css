@@ -1,0 +1,30 @@
+.about {
+    background: #faf8ef;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 100;
+    display: none; 
+    width: 100%;
+    overflow: hidden;
+}
+
+.about .about-page {
+    position: relative;
+    width: 61.8%;
+    margin: 3% auto;
+    overflow: hidden;
+	padding: 0 1em 0 1em;
+
+    border-bottom: 3px solid green;
+    margin-bottom: 1em;
+}
+
+.about .scroll-up {
+    position: absolute;
+    right: 1em;
+    bottom: 1em;
+    font-size: 3em;
+    cursor: pointer;
+}
+
