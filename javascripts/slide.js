@@ -21,12 +21,14 @@
 		var step_len = (to - from) / (duration * fps);
 		var pos = from;
 		var handle = window.setInterval(function() {
-			if(Math.abs(pos - to) <= Math.abs(step_len)) {
-				window.clearInterval(handle);
-			}
-			obj.style["left"] = pos + "%";
-			pos += step_len;
-		}, 1 / fps);
+				obj.style["left"] = pos + "%";
+				pos += step_len;
+				if(Math.abs(pos - to) <= Math.abs(step_len)) {
+					window.clearInterval(handle);
+					obj.style["left"] = to + "%";
+				}
+
+			}, 1 / fps);
 	}
 
 	function rotate(obj, from, to, duration, fps) {
@@ -42,10 +44,10 @@
 		}
 
 		var intervalId = window.setInterval(function() {
-			if(Math.abs(deg - to) <= Math.abs(step)) {
-				rotateTo(to);
-				window.clearInterval(intervalId);
-			}
+				if(Math.abs(deg - to) <= Math.abs(step)) {
+					rotateTo(to);
+					window.clearInterval(intervalId);
+				}
 			//console.log(deg);
 			deg += step;
 			rotateTo(deg);
