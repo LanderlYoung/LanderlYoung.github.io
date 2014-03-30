@@ -283,7 +283,7 @@ body {
 	font-size: 4em;
 	color: #248dce;
 	opacity: .4;
-
+	display: block;
 	cursor: pointer;
 
 	&:hover {
@@ -353,6 +353,7 @@ body {
 		margin: 0 0;
 	}
 }
+
 @media screen and (max-width: 830px){
 	.container {
 		.credit-box {
