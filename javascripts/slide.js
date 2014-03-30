@@ -6,6 +6,12 @@
 	var leftCol = document.getElementsByClassName("left-col")[0];
 	var leftColHeight = leftCol.scrollHeight;
 	
+	var isMobile = false;
+	if(document.defaultView.getComputedStyle &&
+		document.defaultView.getComputedStyle(
+			hint).display === 'none') {
+		isMobile = true;
+	}
 	var isSlideOut = false;
 	var isDrawerDisplay = false;
 
@@ -16,10 +22,13 @@
 
 	function onscrollListener() {
 		var top = document.documentElement.scrollTop || document.body.scrollTop;
-		if (!isDrawerDisplay && top > leftColHeight) {
+		if (isMobile && 
+			!isDrawerDisplay && 
+			top > leftColHeight) {
 			drawer.style['opacity'] = '0.7';
 			isDrawerDisplay = true;
-		} else if(isDrawerDisplay && top < leftColHeight) {
+		} else if(isMobile &&
+			isDrawerDisplay && top < leftColHeight) {
 			drawer.style['opacity'] = '0';
 			isDrawerDisplay = false;
 		}
