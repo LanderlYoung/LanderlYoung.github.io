@@ -1,41 +1,27 @@
 (function(){
-	var hint = document.getElementById("hint");
-	var slide = document.getElementById("slide");
-	var touch = document.getElementById("touch");
-	var drawer = document.getElementById("drawer");
-	var leftCol = document.getElementsByClassName("left-col")[0];
-	var leftColHeight = leftCol.scrollHeight;
-	
-	var isMobile = false;
-	if(document.defaultView.getComputedStyle &&
-		document.defaultView.getComputedStyle(
-			hint).display === 'none') {
-		isMobile = true;
-	}
-	var isSlideOut = false;
-	var isDrawerDisplay = false;
+		var hint = document.getElementById("hint");
+		var slide = document.getElementById("slide");
+		var touch = document.getElementById("touch");
+		var drawer = document.getElementById("drawer");
+		var leftCol = document.getElementsByClassName("left-col")[0];
+		var leftColHeight = leftCol.scrollHeight;
 
-	//add event listener
-	hint.addEventListener("click", slideInAndOut);
-	touch.addEventListener("click", slideInAndOut);
-	window.onscroll = onscrollListener;
-
-	function onscrollListener() {
-		var top = document.documentElement.scrollTop || document.body.scrollTop;
-		if (isMobile && 
-			!isDrawerDisplay && 
-			top > leftColHeight) {
-			drawer.style['opacity'] = '0.7';
-			isDrawerDisplay = true;
-		} else if(isMobile &&
-			isDrawerDisplay && top < leftColHeight) {
-			drawer.style['opacity'] = '0';
-			isDrawerDisplay = false;
+		var isMobile = false;
+		if(document.defaultView.getComputedStyle &&
+			document.defaultView.getComputedStyle(
+				hint).display === 'none') {
+			isMobile = true;
 		}
-	}
+		var isSlideOut = false;
+		var isDrawerDisplay = false;
 
-	//call back functions
-	function slideInAndOut() {
+		//add event listener
+		hint.addEventListener("click", slideInAndOut);
+		touch.addEventListener("click", slideInAndOut);
+		window.onscroll = onscrollListener;
+
+		//call back functions
+		function slideInAndOut() {
 			var width = slide.scrollWidth + 5;
 			if(!isSlideOut) {
 				isSlideOut = true;
@@ -48,41 +34,58 @@
 			}
 		};
 
+		function onscrollListener() {
+			var top = document.documentElement.scrollTop ||
+					document.body.scrollTop;
+			if (isMobile && 
+				!isDrawerDisplay && 
+				top > leftColHeight) {
+				drawer.style['opacity'] = '0.7';
+				isDrawerDisplay = true;
+			} else if(isMobile &&
+				isDrawerDisplay && 
+				!isSlideOut &&
+				top < leftColHeight) {
+				drawer.style['opacity'] = '0';
+				isDrawerDisplay = false;
+			}
+		}
 
-	function move(obj, from, to, duration, fps, unit) {
-		var step_len = (to - from) / (duration * fps);
-		var pos = from;
-		var handle = window.setInterval(function() {
-				obj.style["left"] = pos + unit;
-				pos += step_len;
-				if(Math.abs(pos - to) <= Math.abs(step_len)) {
-					window.clearInterval(handle);
-					obj.style["left"] = to + unit;
-				}
 
-			}, 1 / fps);
-	}
+		function move(obj, from, to, duration, fps, unit) {
+			var step_len = (to - from) / (duration * fps);
+			var pos = from;
+			var handle = window.setInterval(function() {
+					obj.style["left"] = pos + unit;
+					pos += step_len;
+					if(Math.abs(pos - to) <= Math.abs(step_len)) {
+						window.clearInterval(handle);
+						obj.style["left"] = to + unit;
+					}
 
-	function rotate(obj, from, to, duration, fps) {
-		var deg = from;
-		var step = (to - from) / (duration * fps);
-		function rotateTo(deg) {
-			var value =  "rotate("+deg+"deg)";
-		obj.style["transform"] = value;
-		obj.style["-webkit-transform"] = value;
-		obj.style["-moz-transform"] = value;
-		obj.style["-ms-transform"] = value;
-		obj.style["-o-transform"] = value;
-	}
+				}, 1 / fps);
+		}
 
-	var intervalId = window.setInterval(function() {
-				if(Math.abs(deg - to) <= Math.abs(step)) {
-					rotateTo(to);
-					window.clearInterval(intervalId);
-				}
-			//console.log(deg);
-			deg += step;
-			rotateTo(deg);
-		}, 1/fps);
-	}
-})();
+		function rotate(obj, from, to, duration, fps) {
+			var deg = from;
+			var step = (to - from) / (duration * fps);
+			function rotateTo(deg) {
+				var value =  "rotate("+deg+"deg)";
+				obj.style["transform"] = value;
+				obj.style["-webkit-transform"] = value;
+				obj.style["-moz-transform"] = value;
+				obj.style["-ms-transform"] = value;
+				obj.style["-o-transform"] = value;
+			}
+
+			var intervalId = window.setInterval(function() {
+					if(Math.abs(deg - to) <= Math.abs(step)) {
+						rotateTo(to);
+						window.clearInterval(intervalId);
+					}
+					//console.log(deg);
+					deg += step;
+					rotateTo(deg);
+				}, 1/fps);
+		}
+	})();
