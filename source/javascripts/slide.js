@@ -31,12 +31,13 @@
 				isSlideOut = false;
 				move(slide, 0, -width, 0.5, 60, 'px');
 				rotate(hint, -180, 0, .3, 60);
-			}
-		};
+
+			};
+		}
 
 		function onscrollListener() {
 			var top = document.documentElement.scrollTop ||
-					document.body.scrollTop;
+			document.body.scrollTop;
 			if (isMobile && 
 				!isDrawerDisplay && 
 				top > leftColHeight) {

@@ -3,7 +3,7 @@ layout: post
 title: "2048游戏的'外挂'代码"
 date: 2014-03-14 22:12:35 +0800
 comments: true
-categories: 
+categories: [ "html5", "android" ]
 ---
 这两天[‘2048’][1]游戏很火，于是我秉承这学习的态度研究了一下他的代码。 
 本以为使用canvas实现的，后来发现就是普通的html元素，突然觉得开发者还是很厉害的！  
