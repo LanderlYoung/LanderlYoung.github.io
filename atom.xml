@@ -4,7 +4,7 @@
   <title><![CDATA[Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-04-02T23:54:59+08:00</updated>
+  <updated>2014-04-02T23:57:00+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -18,7 +18,12 @@
     <link href="http://LanderlYoung.github.io/blog/2014/04/02/piao-liang-de-svgbei-jing/"/>
     <updated>2014-04-02T21:48:10+08:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/04/02/piao-liang-de-svgbei-jing</id>
-    <content type="html"><![CDATA[<script>
+    <content type="html"><![CDATA[<p>收集的SVG背景</p>
+
+<!--more-->
+
+
+<script>
 var head = document.getElementsByTagName('HEAD').item(0);
 var style = document.createElement('link');
 style.href = '/stylesheets/post/svg.css';
