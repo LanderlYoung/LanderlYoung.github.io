@@ -1,0 +1,40 @@
+.gallery {
+	width: 100%;
+	margin: 0 auto;
+}
+.gallery div {
+	border-radius: 1em;
+	width: 60%;
+	height: 14em;
+	margin-top: 0;
+	margin-left:auto;
+	margin-right:auto;
+	margin-bottom: 2em;
+	position: relative;
+}
+
+.gallery div .src {
+	border-radius: 0.5em;
+	width: 94%;
+	height: 94%;
+	max-width: 94%;
+	max-height: 94%;
+	top: 3%;
+	left: 3%;
+	margin: 0 auto;
+	position: absolute;
+	display: none;
+	background: #3d4349;
+	overflow: auto;
+}
+
+.gallery div:hover .src {
+	display: block;
+
+}
+
+
+.gallery div .src p {
+	padding: 0 1em;
+	word-wrap: break-word;
+}
