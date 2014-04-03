@@ -7,9 +7,9 @@ function addNode(style) {
 	var p = document.createElement('p');
 	var str = '';
 	if( style.bgcolor) {
-		str += 'background-color:' + style.bgcolor;
+		str += 'background-color:' + style.bgcolor + ';';
 	}
-	str += ';background-image:' + style.bgimage + ';';
+	str += 'background-image:' + style.bgimage + ';';
 	var text = document.createTextNode(str);
 	bg.style['background-color'] = style.bgcolor;
 	bg.style['background-image'] = style.bgimage;
