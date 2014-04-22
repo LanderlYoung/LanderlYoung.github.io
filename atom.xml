@@ -4,7 +4,7 @@
   <title><![CDATA[Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-04-22T13:35:11+08:00</updated>
+  <updated>2014-04-22T14:42:00+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -12,15 +12,6 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
-  
-  <entry>
-    <title type="html"><![CDATA[test]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/04/22/test/"/>
-    <updated>2014-04-22T13:35:05+08:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/04/22/test</id>
-    <content type="html"><![CDATA[
-]]></content>
-  </entry>
   
   <entry>
     <title type="html"><![CDATA[漂亮的svg背景]]></title>
