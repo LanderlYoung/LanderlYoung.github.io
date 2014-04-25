@@ -30,7 +30,7 @@ module Jekyll
 
     def initialize(name, params, tokens)
       # initialize default values
-      @size_min, @size_max, @precision, @unit = 80, 150, 0, '%'
+      @size_min, @size_max, @precision, @unit = 70, 120, 0, '%'
       @threshold                              = 1
       @limit                                  = 0
       @sort, @order                           = 'freq', 'asc'

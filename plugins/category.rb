@@ -64,7 +64,7 @@ module Jekyll
 			count=0
 
 			categories.keys.sort_by{ |str| str.downcase }.each do |category|
-				if count < 5
+				if count < 8
 					html << "<li><a href='/#{category_dir}/#{category.to_url}/'>#{category}"
 					if @opts['counter']
 						html << " (#{categories[category].count})"
