@@ -230,6 +230,7 @@ body {
 	width: 100%;
 
 	opacity: 0;
+	display: none;
 	-webkit-transition: opacity .2s ease-in;
 	transition: opacity .2s ease-in;
 
@@ -411,6 +412,5 @@ body {
 	}
 
 	#drawer {
-		opacity: 0;
 	}
 }

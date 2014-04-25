@@ -41,6 +41,7 @@
 			if (isMobile && 
 				!isDrawerDisplay && 
 				top > leftColHeight) {
+				drawer.style['display'] = 'block';
 				drawer.style['opacity'] = '0.7';
 				isDrawerDisplay = true;
 			} else if(isMobile &&
@@ -48,6 +49,7 @@
 				!isSlideOut &&
 				top < leftColHeight) {
 				drawer.style['opacity'] = '0';
+				drawer.style['display'] = 'none';
 				isDrawerDisplay = false;
 			}
 		}
