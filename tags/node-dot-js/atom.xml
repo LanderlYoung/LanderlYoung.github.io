@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: dictonary_Node.js | Young_Blog]]></title>
-  <link href="http://LanderlYoung.github.io/blog/categories/dictonary-node-dot-js/atom.xml" rel="self"/>
+  <title><![CDATA[Tag: Node.js | Young_Blog]]></title>
+  <link href="http://LanderlYoung.github.io/tags/node-dot-js/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-04-22T14:58:47+08:00</updated>
+  <updated>2014-04-25T22:37:44+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>

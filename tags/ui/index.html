@@ -3,11 +3,11 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>2048游戏安卓移植版 - Young_Blog</title>
+	<title>Tag: UI - Young_Blog</title>
 	<meta name="author" content="LanderlYoung">
 
 	
-	<meta name="description" content="2048游戏安卓移植版 这几天一直在玩2048游戏，觉得这个游戏很有意思。上次研究了一下源代码于是就写了个‘外挂’(囧)。后来在手机上玩，发现网页版的玩着不爽，于是想着把这个游戏当成基于安卓的html5游戏。于是就看了一下怎么写android的html5游戏。的出结论是基于WebView—— &hellip;">
+	<meta name="description" content="Tag: UI">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -17,7 +17,7 @@
 
 	<link href="/atom.xml" rel="alternate" title="Young_Blog" type="application/atom+xml">
 	
-	<link rel="canonical" href="http://LanderlYoung.github.io/blog/2014/03/22/2048you-xi-an-zhuo-yi-zhi-ban/">
+	<link rel="canonical" href="http://LanderlYoung.github.iotags/ui/">
 	<link href="/favicon.png" rel="shortcut icon">
 	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
 	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
@@ -75,25 +75,39 @@
 			
 			
 			<div class="mid-col-container">
-				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
-	<h1 class="title" itemprop="name">2048游戏安卓移植版</h1>
-	<div class="entry-content" itemprop="articleBody"><p>这几天一直在玩2048游戏，觉得这个游戏很有意思。上次研究了一下源代码于是就写了个‘外挂’(囧)。后来在手机上玩，发现网页版的玩着不爽，于是想着把这个游戏当成基于安卓的html5游戏。于是就看了一下怎么写android的html5游戏。的出结论是基于WebView——在应用中开一个区域显示网页内容，所以这个区域就是一个浏览器了。经过两天的努力算是弄了个<a href="/assets/storage/2048">小样</a>出来。最后还是利用WebView移植到<a href="https://github.com/LanderlYoung/2048_android">安卓平台</a>，使用起来和native app没啥区别。</p>
+				<div id="content" class="inner"><article class="page">
+    
+    <h1 class="title">Tag: UI</h1>
+    
+    <div class="entry-content">
+	
 
-<!--more-->
+
+	
+	
+	<section class="archives"><h1 class="year">2014</h1>
+
+<article itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<span class="date"><time datetime="2014-04-02T21:48:10+08:00" itemprop="datePublished">Apr  2</time></span>
+		<br>
+		<span class="tags">
 
 
-<p>不过同时发现一个问题——Android的WebView性能不高。html5游戏用手机的浏览器直接打开一点都不卡，要多流畅就多流畅，一旦打包成apk装到手机上就不行了，越玩越卡。后来加了一个about的页面，这个页面是从页面上面‘落’下来的效果。当这个‘落’的动作变成幻灯片的时候我终于知道了一定是WebView的javascript定时器的问题，WebView的javascript频率有问题。</p>
+	<a class='category' href='/blog/categories/html5/'>html5</a>
 
-<p>移植神马的最烦的是浏览器兼容问题，针对每一种分辨路都得写一套css出来。今天有点玩了，列出来写这个小应用学到的东西，具体细节有机会再补充吧。</p>
 
-<ol>
-<li>font awesome 的使用，利用font awesome显示矢量图标</li>
-<li>div的垂直居中（利用javascript）</li>
-<li>about的下落效果（其实在写chrome的插件的时候有用到）</li>
-</ol>
+</span>
+	    
+	    <span class="comments"><a href="/blog/2014/04/02/piao-liang-de-svgbei-jing/#disqus_thread">Comments</a></span>
+	    
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2014/04/02/piao-liang-de-svgbei-jing/">漂亮的svg背景</a></h1>
+</article>
+
+
 
 </div>
-
 </article>
 
 	
@@ -113,11 +127,6 @@
 
 
 
-<section id="comment">
-    <h1 class="title">Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
-</section>
 </div>
 			</div>
 			<footer id="footer" class="inner">
@@ -141,10 +150,7 @@
       var disqus_shortname = 'landerlyoung';
       
         
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://LanderlYoung.github.io/blog/2014/03/22/2048you-xi-an-zhuo-yi-zhi-ban/';
-        var disqus_url = 'http://LanderlYoung.github.io/blog/2014/03/22/2048you-xi-an-zhuo-yi-zhi-ban/';
-        var disqus_script = 'embed.js';
+        var disqus_script = 'count.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
@@ -196,19 +202,19 @@
 <section>
 	<h1>Tags</h1>
 	<ul class="tag-cloud">
-		<li><a style="font-size: 91.4%" href="/tags/node-dot-js/">Node.js</a></li>
-<li><a style="font-size: 108.1%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
-<li><a style="font-size: 109.5%" href="/tags/html5/">html5</a></li>
-<li><a style="font-size: 82.8%" href="/tags/linux/">linux</a></li>
-<li><a style="font-size: 111.2%" href="/tags/android/">android</a></li>
-<li><a style="font-size: 93.7%" href="/tags/git/">git</a></li>
-<li><a style="font-size: 104.6%" href="/tags/helloworld/">HelloWorld</a></li>
-<li><a style="font-size: 111.5%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">octpress搬迁编辑位置</a></li>
-<li><a style="font-size: 106.7%" href="/tags/inputmethod/">inputMethod</a></li>
-<li><a style="font-size: 112.8%" href="/tags/svg/">svg</a></li>
-<li><a style="font-size: 119.9%" href="/tags/ui/">UI</a></li>
-<li><a style="font-size: 119.4%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
-<li><a style="font-size: 78.1%" href="/tags/linux/">Linux</a></li>
+		<li><a style="font-size: 79.9%" href="/tags/node-dot-js/">Node.js</a></li>
+<li><a style="font-size: 73.2%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
+<li><a style="font-size: 84.6%" href="/tags/html5/">html5</a></li>
+<li><a style="font-size: 112.7%" href="/tags/linux/">linux</a></li>
+<li><a style="font-size: 88.7%" href="/tags/android/">android</a></li>
+<li><a style="font-size: 78.6%" href="/tags/git/">git</a></li>
+<li><a style="font-size: 113.6%" href="/tags/helloworld/">HelloWorld</a></li>
+<li><a style="font-size: 77.5%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">octpress搬迁编辑位置</a></li>
+<li><a style="font-size: 70.8%" href="/tags/inputmethod/">inputMethod</a></li>
+<li><a style="font-size: 75.4%" href="/tags/svg/">svg</a></li>
+<li><a style="font-size: 87.2%" href="/tags/ui/">UI</a></li>
+<li><a style="font-size: 101.8%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
+<li><a style="font-size: 80.6%" href="/tags/linux/">Linux</a></li>
 
 	</ul>
 </section>
