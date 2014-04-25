@@ -3,7 +3,8 @@ layout: post
 title: "dictionary_Node.js-版本v2.0"
 date: 2014-02-24 22:31:59 +0800
 comments: true
-categories: [Node.js, dictonary_Node.js]
+tags: [Node.js, dictonary_Node.js]
+categories: [JavaScript]
 ---
 
 &lt; 开场白 &gt;

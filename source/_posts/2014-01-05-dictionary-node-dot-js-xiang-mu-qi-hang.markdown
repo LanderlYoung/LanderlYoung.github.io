@@ -3,7 +3,8 @@ layout: post
 title: "dictionary_Node.js-项目启航"
 date: 2014-01-05 22:32:13 +0800
 comments: true
-categories: [Node.js, dictonary_Node.js]
+categories: [JavaScript]
+tags: [Node.js, dictonary_Node.js]
 ---
 
 &lt; 开场白 &gt;

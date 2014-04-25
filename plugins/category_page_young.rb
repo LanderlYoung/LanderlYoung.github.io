@@ -28,7 +28,6 @@ module Jekyll
       html
     end
   end
-
 end
 
 Liquid::Template.register_tag('category_page', Jekyll::CategoryPage)

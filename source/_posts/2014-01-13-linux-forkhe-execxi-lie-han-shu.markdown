@@ -4,6 +4,7 @@ title: "linux fork和exec系列函数"
 date: 2014-01-13 00:31:29 +0800
 comments: true
 categories: [ linux ]
+tags: [linux]
 ---
 linux 中的[fork][0]和[exec][2]函数是进程相关的两个函数，最早在大二的操作系统课上了解到。今天要写个小东西偶尔用到就研究了一下。
 ## 1.fork
