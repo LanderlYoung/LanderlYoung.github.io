@@ -1,0 +1,11 @@
+.tag-cloud {
+	color: red;
+	list-style-type: none;
+
+	& li {
+		float: left;
+		line-height: 1.5em;
+		padding: 0 0.2em;
+
+	}
+}
