@@ -62,15 +62,16 @@ module Jekyll
 			category_dir = config['category_dir']
 			categories = context.registers[:site].categories
 			count=0
+			count_limit = 8
 
 			categories.keys.sort_by{ |str| str.downcase }.each do |category|
-				if count < 8
+				if count < count_limit
 					html << "<li><a href='/#{category_dir}/#{category.to_url}/'>#{category}"
 					if @opts['counter']
 						html << " (#{categories[category].count})"
 					end
 					html << "</a></li>"
-				elsif count == 5
+				elsif count == count_limit
 					html << "<li><a href ='/#{category_dir}/'>more...</a></li>"
 				end
 				count = count + 1
