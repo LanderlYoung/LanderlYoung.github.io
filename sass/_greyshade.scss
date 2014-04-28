@@ -237,12 +237,13 @@ body {
 	#touch {
 		width: 10%;
 		&:before{
-			content: "\f0c9";
+			content: "\f0c9\f002";
 			font: 2em $font-icon;
 			line-height: 1.3em;
 			position: absolute;
 			left: -0.3em;
-			padding-right: 1.5em;
+			padding-right: 0.7em;
+			letter-spacing: 0.2em;
 		}
 	}
 
