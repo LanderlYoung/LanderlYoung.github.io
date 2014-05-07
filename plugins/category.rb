@@ -61,6 +61,7 @@ module Jekyll
 			config = context.registers[:site].config
 			category_dir = config['category_dir']
 			categories = context.registers[:site].categories
+
 			count=0
 			count_limit = 8
 

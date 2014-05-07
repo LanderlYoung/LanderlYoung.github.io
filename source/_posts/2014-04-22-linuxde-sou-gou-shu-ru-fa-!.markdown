@@ -3,7 +3,7 @@ layout: post
 title: "linux的搜狗输入法！"
 date: 2014-04-22 14:52:39 +0800
 comments: true
-categories: [ linux ]
+categories: [ Linux ]
 tags: [ Linux, 搜狗输入法 ]
 ---
 

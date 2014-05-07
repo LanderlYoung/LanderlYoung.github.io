@@ -3,7 +3,7 @@ layout: post
 title: "linux触摸板自然滚动"
 date: 2014-01-12 20:11:36 +0800
 comments: true
-categories: [linux]
+categories: [Linux]
 tags: [linux]
 ---
 
