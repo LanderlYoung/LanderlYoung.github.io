@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tag: Vim | Young_Blog]]></title>
+  <link href="http://LanderlYoung.github.io/tags/vim/atom.xml" rel="self"/>
+  <link href="http://LanderlYoung.github.io/"/>
+  <updated>2014-05-07T15:18:30+08:00</updated>
+  <id>http://LanderlYoung.github.io/</id>
+  <author>
+    <name><![CDATA[LanderlYoung]]></name>
+    <email><![CDATA[landerlyoung@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Vim插件全攻略]]></title>
+    <link href="http://LanderlYoung.github.io/blog/2014/05/07/vimcha-jian-quan-gong-lue/"/>
+    <updated>2014-05-07T11:42:23+08:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2014/05/07/vimcha-jian-quan-gong-lue</id>
+    <content type="html"><![CDATA[<p>原来配置vim插件的时候因为总是要下载解压，试用然后把.vim目录弄得乱七八糟。所以也就用了那几个插件，本着够用就好的原则。今天才发现Vim也有自己的插件管理工具<a href="https://github.com/gmarik/Vundle.vim">Vundle</a>真的是太开心了。然后又发现了有大神共享的<a href="https://github.com/humiaozuzu/dot-vimrc">插件列表</a>，于是我就开始了开开心心的Vim插件攻略。</p>
+
+<!--more-->
+
+
+<p>除了上面共享的插件列表我还装了另外几个插件：
+* TagList
+* A.vim</p>
+
+<p><em>hell0</em></p>
+]]></content>
+  </entry>
+  
+</feed>
