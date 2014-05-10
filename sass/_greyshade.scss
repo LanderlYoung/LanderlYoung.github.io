@@ -369,9 +369,11 @@ body {
 				margin: auto auto;
 			}
 			#header {
-				padding: 40px 0px;
+				padding: 20px 0px;
 				text-align: center;
 				#sub-nav{
+          margin-top: 0px;
+          top: 20px;
 					display: block;
 				}
 				#main-nav {
