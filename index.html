@@ -7,8 +7,7 @@
 	<meta name="author" content="LanderlYoung">
 
 	
-	<meta name="description" content="2014/05/07 Linux Comments Vim Quick Reference quickref.txt For Vim version 7.4. Last change: 2013 Jun 29
-VIM REFERENCE MANUAL by Bram Moolenaar &hellip;">
+	<meta name="description" content="2014/05/12 git Comments Git中创建tag和release 今天开始学习Android Design，也详细了解一下Android的应用开发，方便暑假的实习。于是打算创建一个github的仓库，记录学习的过程。然后想到没学习一个新功能都应该有一个tag（ &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +77,44 @@ VIM REFERENCE MANUAL by Bram Moolenaar &hellip;">
 			<div class="mid-col-container">
 				<div id="content" class="inner">
 <div itemscope itemtype="http://schema.org/Blog">
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-12T21:28:57+08:00" data-updated="true" itemprop="datePublished">2014/05/12</time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/git/'>git</a>
+
+
+</div>
+		
+			<span class="comments"><a href="/blog/2014/05/12/gitzhong-chuang-jian-taghe-release/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2014/05/12/gitzhong-chuang-jian-taghe-release/" itemprop="url">Git中创建tag和release</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<p>今天开始学习Android Design，也详细了解一下Android的应用开发，方便暑假的实习。于是打算创建一个github的仓库，记录学习的过程。然后想到没学习一个新功能都应该有一个tag（或者叫release）不然别人看你的仓库的时候怎么知道一学习的步步过程。然后就学习了一下git tag的相关内容，如下：</p>
+
+
+		
+		<a href="/blog/2014/05/12/gitzhong-chuang-jian-taghe-release/" class="more-link">Read on &rarr;</a>
+	</div>
+
+</article>
 
 
     <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
@@ -452,48 +489,6 @@ VIM REFERENCE MANUAL by Bram Moolenaar &hellip;">
 
 </article>
 
-
-    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-13T00:31:29+08:00" data-updated="true" itemprop="datePublished">2014/01/13</time></div>
-		<div class="tags">
-
-
-	<a class='category' href='/blog/categories/linux/'>Linux</a>
-
-
-</div>
-		
-			<span class="comments"><a href="/blog/2014/01/13/linux-forkhe-execxi-lie-han-shu/#disqus_thread">Comments</a></span>
-		
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2014/01/13/linux-forkhe-execxi-lie-han-shu/" itemprop="url">Linux Fork和exec系列函数</a></h1>
-	<div class="entry-content" itemprop="articleBody">
-		<p>linux 中的<a href="http://en.wikipedia.org/wiki/Fork_(system_call)">fork</a>和<a href="http://en.wikipedia.org/wiki/Exec_(operating_system)">exec</a>函数是进程相关的两个函数，最早在大二的操作系统课上了解到。今天要写个小东西偶尔用到就研究了一下。</p>
-
-<h2>1.fork</h2>
-
-<p>fork的功能是创建一个和进程完全一样的子进程。完全的意思是指子进程的堆和栈和父进程是完全相同的。在子进程创建完成时，子进程和父进程共享内存。但是一旦共享的内存区域要被写入时（不管是父进程要写还是子进程要写）这块区域就会从父进程的进程空间复制到子进程，然后再执行写入。这就是通常说的<a href="http://en.wikipedia.org/wiki/Fork_(system_call)">copy on write</a>，目的很明显，就是要节省不必要的内存消耗 。</p>
-
-
-		
-		<a href="/blog/2014/01/13/linux-forkhe-execxi-lie-han-shu/" class="more-link">Read on &rarr;</a>
-	</div>
-
-</article>
-
 </div>
 <nav id="pagenavi">
     
@@ -548,6 +543,10 @@ VIM REFERENCE MANUAL by Bram Moolenaar &hellip;">
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/05/12/gitzhong-chuang-jian-taghe-release/">Git中创建tag和release</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/05/07/vim-quick-reference/">Vim Quick Reference</a>
       </li>
     
@@ -563,32 +562,28 @@ VIM REFERENCE MANUAL by Bram Moolenaar &hellip;">
         <a href="/blog/2014/04/22/linuxde-sou-gou-shu-ru-fa-%21/">Linux的搜狗输入法！</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/04/02/piao-liang-de-svgbei-jing/">漂亮的svg背景</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/git/'>git (1)</a></li><li><a href='/blog/categories/html5/'>html5 (3)</a></li><li><a href='/blog/categories/javascript/'>JavaScript (3)</a></li><li><a href='/blog/categories/linux/'>Linux (6)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/git/'>git (2)</a></li><li><a href='/blog/categories/html5/'>html5 (3)</a></li><li><a href='/blog/categories/javascript/'>JavaScript (3)</a></li><li><a href='/blog/categories/linux/'>Linux (6)</a></li></ul>
 </section>
 <section>
 	<h1>Tags</h1>
 	<ul class="tag-cloud">
-		<li><a style="font-size: 115.4%" href="/tags/html5/">html5</a></li>
-<li><a style="font-size: 72.6%" href="/tags/node-dot-js/">Node.js</a></li>
-<li><a style="font-size: 87.1%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
-<li><a style="font-size: 78.0%" href="/tags/linux/">linux</a></li>
-<li><a style="font-size: 94.0%" href="/tags/vim/">Vim</a></li>
-<li><a style="font-size: 75.6%" href="/tags/linux/">Linux</a></li>
-<li><a style="font-size: 118.0%" href="/tags/android/">android</a></li>
-<li><a style="font-size: 73.8%" href="/tags/zhuan-tie/">转贴</a></li>
-<li><a style="font-size: 87.9%" href="/tags/git/">git</a></li>
-<li><a style="font-size: 86.3%" href="/tags/svg/">svg</a></li>
-<li><a style="font-size: 94.8%" href="/tags/ui/">UI</a></li>
-<li><a style="font-size: 77.5%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
-<li><a style="font-size: 109.5%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">octpress搬迁编辑位置</a></li>
+		<li><a style="font-size: 96.9%" href="/tags/html5/">html5</a></li>
+<li><a style="font-size: 84.9%" href="/tags/node-dot-js/">Node.js</a></li>
+<li><a style="font-size: 75.3%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
+<li><a style="font-size: 97.5%" href="/tags/linux/">linux</a></li>
+<li><a style="font-size: 72.1%" href="/tags/vim/">Vim</a></li>
+<li><a style="font-size: 114.0%" href="/tags/git/">git</a></li>
+<li><a style="font-size: 84.0%" href="/tags/linux/">Linux</a></li>
+<li><a style="font-size: 83.0%" href="/tags/android/">android</a></li>
+<li><a style="font-size: 72.7%" href="/tags/zhuan-tie/">转贴</a></li>
+<li><a style="font-size: 76.4%" href="/tags/svg/">svg</a></li>
+<li><a style="font-size: 87.2%" href="/tags/ui/">UI</a></li>
+<li><a style="font-size: 119.3%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
+<li><a style="font-size: 81.3%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">octpress搬迁编辑位置</a></li>
 
 	</ul>
 </section>
