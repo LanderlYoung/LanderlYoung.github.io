@@ -9,7 +9,7 @@ tags: [git]
 今天开始学习Android Design，也详细了解一下Android的应用开发，方便暑假的实习。于是打算创建一个github的仓库，记录学习的过程。然后想到每学习一个新功能都应该有一个tag（或者叫release）不然别人看你的仓库的时候怎么知道学习的步步过程。然后就学习了一下git tag的相关内容，如下：
 
 ##创建
- * 这个很简单`git tag -a <tagname> -m "comment"` 或者`git tag -a <tagname>`和commit差不多只是多了一个tagname，使用后面那个命令会打开一个文本编辑器写入comment信息。总的来说 和commit是一样的。
+ * `git tag -a <tagname> -m "comment"` 或者`git tag -a <tagname>`和commit差不多只是多了一个tagname，使用后面那个命令会打开一个文本编辑器写入comment信息。总的来说 和commit是一样的。
  * 轻量级tag，输入`git tag <tagname>`。
 
 <!--more-->
@@ -22,7 +22,8 @@ tags: [git]
  * `git show <tagname>`会列出tag的相关信息，包括tagname，打tag时写入的comment信息，以及diff信息。
 
 ##push tag
- * `git push origin --tags`
+ * `git push origin <tagname>`
+ * `git push origin --tags`push 所有tags
 
 ##删除tag
  1. 删除本地tag`git tag -d <tagname>`。
