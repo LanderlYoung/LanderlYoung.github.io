@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: Java | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/tags/java/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-05-13T12:58:59+08:00</updated>
+  <updated>2014-05-13T13:22:01+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -18,7 +18,18 @@
     <link href="http://LanderlYoung.github.io/blog/2014/05/13/stepbystepandroid-di-%5B%3F%5D-ke/"/>
     <updated>2014-05-13T12:04:19+08:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/05/13/stepbystepandroid-di-[?]-ke</id>
-    <content type="html"><![CDATA[<p>梳理一下第一课学到的内容:</p>
+    <content type="html"><![CDATA[<p>&lt;资源></p>
+
+<ul>
+<li>git项目<a href="https://github.com/LanderlYoung/stepByStepAndroid">github</a></li>
+<li>详见<a href="https://github.com/LanderlYoung/stepByStepAndroid/releases">release note</a></li>
+<li><a href="https://github.com/LanderlYoung/stepByStepAndroid/wiki">项目wiki</a></li>
+</ul>
+
+
+<p>&lt;/资源></p>
+
+<p>梳理一下第一课学到的内容:</p>
 
 <ol>
 <li>创建简单的用户界面
