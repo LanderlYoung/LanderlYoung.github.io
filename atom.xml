@@ -4,7 +4,7 @@
   <title><![CDATA[Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-05-12T22:52:03+08:00</updated>
+  <updated>2014-05-13T11:52:24+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -23,7 +23,7 @@
 <h2>创建</h2>
 
 <ul>
-<li>这个很简单<code>git tag -a &lt;tagname&gt; -m "comment"</code> 或者<code>git tag -a &lt;tagname&gt;</code>和commit差不多只是多了一个tagname，使用后面那个命令会打开一个文本编辑器写入comment信息。总的来说 和commit是一样的。</li>
+<li><code>git tag -a &lt;tagname&gt; -m "comment"</code> 或者<code>git tag -a &lt;tagname&gt;</code>和commit差不多只是多了一个tagname，使用后面那个命令会打开一个文本编辑器写入comment信息。总的来说 和commit是一样的。</li>
 <li>轻量级tag，输入<code>git tag &lt;tagname&gt;</code>。</li>
 </ul>
 
@@ -49,7 +49,8 @@
 <h2>push tag</h2>
 
 <ul>
-<li><code>git push origin --tags</code></li>
+<li><code>git push origin &lt;tagname&gt;</code></li>
+<li><code>git push origin --tags</code>push 所有tags</li>
 </ul>
 
 
