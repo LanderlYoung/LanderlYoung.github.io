@@ -4,7 +4,7 @@ title: "linux触摸板自然滚动"
 date: 2014-01-12 20:11:36 +0800
 comments: true
 categories: [Linux]
-tags: [linux]
+tags: [Linux]
 ---
 
 触摸板的自然滚动最早是乔帮主发明的。 

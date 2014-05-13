@@ -3,8 +3,8 @@ layout: post
 title: "Git中创建tag和release"
 date: 2014-05-12 21:28:57 +0800
 comments: true
-categories: [git]
-tags: [git]
+categories: [Git]
+tags: [Git]
 ---
 今天开始学习Android Design，也详细了解一下Android的应用开发，方便暑假的实习。于是打算创建一个github的仓库，记录学习的过程。然后想到每学习一个新功能都应该有一个tag（或者叫release）不然别人看你的仓库的时候怎么知道学习的步步过程。然后就学习了一下git tag的相关内容，如下：
 

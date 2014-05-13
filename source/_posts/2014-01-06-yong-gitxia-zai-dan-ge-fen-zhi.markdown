@@ -3,8 +3,8 @@ layout: post
 title: "用git下载单个分支"
 date: 2014-01-06 16:45:34 +0800
 comments: true
-categories: [git]
-tags: [git, octpress搬迁编辑位置]
+categories: [Git]
+tags: [Git, Octpress搬迁编辑位置]
 ---
 
 最近在玩octpress。开始一直在我的Debian系统里面玩的，后来因为一夹些软件必须在windows下面跑，只能在虚拟机里写博客了。然后就打算把github上的网页项目下载下来。但是这个项目有点不一样。github.io的博客项目有两个分支，master和source;其实他们根本不是分支的概念，没有什么交集的。在octpress项目文件夹里面是source分支里的内容，除了\_deploy目录内的东西是用gitignore忽略的，\_deploy里面的内容就是master分支的东西了。

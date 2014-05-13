@@ -3,8 +3,8 @@ layout: post
 title: "漂亮的svg背景"
 date: 2014-04-02 21:48:10 +0800
 comments: true
-categories: [html5]
-tags: [html5, svg, UI]
+categories: [HTML5]
+tags: [HTML5, SVG, UI]
 ---
 
 今天很巧合的遇到了两次很漂亮的svg背景，于是打算把他们收集下来。  

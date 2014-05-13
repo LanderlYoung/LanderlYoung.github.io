@@ -4,7 +4,7 @@ title: "[转]Linux初始配置"
 date: 2014-04-29 10:11:07 +0800
 comments: true
 categories: [Linux]
-tags: [转贴]
+tags: [转贴,Linux]
 ---
 转载自：<a target="_blank" href="http://www.2cto.com/Article/201304/200418.html">http://www.2cto.com/Article/201304/200418.html</a>
 

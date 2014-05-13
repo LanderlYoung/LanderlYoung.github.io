@@ -6,10 +6,15 @@ comments: true
 categories: [Android]
 tags: [Android, Java]
 ---
-;lt资源;gt
-项目[github](https://github.com/LanderlYoung/stepByStepAndroid)
-详见[release note](https://github.com/LanderlYoung/stepByStepAndroid/releases) 和 [wiki](https://github.com/LanderlYoung/stepByStepAndroid/wiki)
-;lt/资源;gt
+
+<资源>  
+
+ * git项目[github](https://github.com/LanderlYoung/stepByStepAndroid)
+ * 详见[release note](https://github.com/LanderlYoung/stepByStepAndroid/releases) 
+ * [项目wiki](https://github.com/LanderlYoung/stepByStepAndroid/wiki)
+
+</资源>
+
 梳理一下第一课学到的内容:
 
  1. 创建简单的用户界面
