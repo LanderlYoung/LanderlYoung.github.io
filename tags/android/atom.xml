@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Tag: android | Young_Blog]]></title>
+  <title><![CDATA[Tag: Android | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/tags/android/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-05-13T13:22:01+08:00</updated>
+  <updated>2014-05-13T13:26:57+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -12,6 +12,165 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[stepByStepAndroid-第一课]]></title>
+    <link href="http://LanderlYoung.github.io/blog/2014/05/13/stepbystepandroid-di-%5B%3F%5D-ke/"/>
+    <updated>2014-05-13T12:04:19+08:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2014/05/13/stepbystepandroid-di-[?]-ke</id>
+    <content type="html"><![CDATA[<p>&lt;资源></p>
+
+<ul>
+<li>git项目<a href="https://github.com/LanderlYoung/stepByStepAndroid">github</a></li>
+<li>详见<a href="https://github.com/LanderlYoung/stepByStepAndroid/releases">release note</a></li>
+<li><a href="https://github.com/LanderlYoung/stepByStepAndroid/wiki">项目wiki</a></li>
+</ul>
+
+
+<p>&lt;/资源></p>
+
+<p>梳理一下第一课学到的内容:</p>
+
+<ol>
+<li>创建简单的用户界面
+
+<ul>
+<li>简单的布局控制</li>
+</ul>
+</li>
+<li>启动另一个Activity
+
+<ul>
+<li>给button添加回调函数</li>
+<li>使用Intent</li>
+</ul>
+</li>
+</ol>
+
+
+<!--more-->
+
+
+<h3>创建用户界面</h3>
+
+<p>修改原来的fragment_main.xml文件，使用LinearLayout：
+``` xml
+&lt;LinearLayout xmlns:android=&ldquo;<a href="http://schemas.android.com/apk/res/android">http://schemas.android.com/apk/res/android</a>&rdquo;</p>
+
+<pre><code>xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="horizontal" &gt;
+</code></pre>
+
+<p></LinearLayout>
+<code>
+上面的android:orientation属性把LinearLayout设置成水平线性布局，所有元素水平排列。
+然后在LinearLayout中添加控件EditText和Button
+</code> xml</p>
+
+<pre><code>&lt;EditText 
+    android:id="@+id/edit_message"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:hint="@string/edit_message" /&gt;
+</code></pre>
+
+<p>  &lt;Button</p>
+
+<pre><code>    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/button_send" /&gt;
+</code></pre>
+
+<p>```
+然后在相应的strings.xml中添加string值。
+效果如图：</p>
+
+<p><img src="https://cloud.githubusercontent.com/assets/5700847/2953445/c8028f00-da59-11e3-9800-89a5c859064b.png" width="360" alt="device-2014-05-12-231827" /></p>
+
+<p>接着控制一下布局：让EditText占据LinearLayout横向的剩余空间。只需要调整两个方面<code>android:layout_weight="1"</code>和<code>android:layout_width="0dp"</code>，其中layout_weight=1可以让它占据剩下的空间，layout_width=0改善性能。
+看一下效果：</p>
+
+<p><img src="https://cloud.githubusercontent.com/assets/5700847/2953442/b9d4597c-da59-11e3-886d-08d3f8e667a9.png" width="360" alt="device-2014-05-12-235041" /></p>
+
+<h2>为button添加click事件处理</h2>
+
+<p>在Button中添加一行<code>android:onClick="sendMessage"</code>这样就指定了button的click事件由<code>public void onClick(View view)</code>这样方法签名的方法来处理。
+所以对应的去MainActicity.java中添加该函数：
+``` java
+//call back of the button
+public void sendMessage(View view) {</p>
+
+<pre><code>Intent intent = new Intent(getApplication(),DisplayMessageActivity.class);
+EditText editText = (EditText)findViewById(R.id.edit_message);
+String message = editText.getText().toString();
+intent.putExtra(EXTRA_MESSAGE,message);
+startActivity(intent);
+</code></pre>
+
+<p>}
+```
+上面的DisplayMessageActivity类是使用向导创建的新Activity。</p>
+
+<h3>创建新Activity</h3>
+
+<p>使用向导创建新的Activity，然后需要在AndroidManifest.xml里注册Activity</p>
+
+<p>``` xml
+   &lt;application</p>
+
+<pre><code>   ......
+    &lt;activity
+        android:name="com.young.stepbystepandroid.DisplayMessageActivity"
+        android:label="@string/title_activity_display_message"
+        android:parentActivityName="com.young.stepbystepandroid.MainActivity" &gt;
+        &lt;meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.young.stepbystepandroid.MainActivity" /&gt;
+    &lt;/activity&gt;
+&lt;/application&gt;
+</code></pre>
+
+<p>```</p>
+
+<h3>使用Intent</h3>
+
+<p><em>启动Intent</em>
+``` java</p>
+
+<pre><code>Intent intent = new Intent(getApplication(),DisplayMessageActivity.class);
+EditText editText = (EditText)findViewById(R.id.edit_message);
+String message = editText.getText().toString();
+intent.putExtra(EXTRA_MESSAGE,message);
+startActivity(intent);
+</code></pre>
+
+<p><code>
+其中`public static final String EXTRA_MESSAGE = "com.young.stepByStepAndroid.MESSAGE";`
+这个是一个显示Intent构造函数第一个参数是Context，可以使用this，因为Activity继承Context；但是推荐使用ApplicationContext防止内存泄漏。
+*接收Intent*
+</code> java</p>
+
+<pre><code>Intent intent = getIntent();
+String message = intent.getStringExtra(
+        MainActivity.EXTRA_MESSAGE);
+
+TextView textView = new TextView(this);
+textView.setTextSize(40);
+textView.setText(message);
+</code></pre>
+
+<p>```
+代码很明显，不多说什么了。当然在Intent里面附加信息推荐使用<a href="http://developer.android.com/reference/android/os/Bundle.html">Bundle</a>。</p>
+
+<p>看看成果：</p>
+
+<p><img src="https://cloud.githubusercontent.com/assets/5700847/2953446/d6257c5a-da59-11e3-8e67-80bbecb4640f.png" width="360" alt="device-2014-05-13-002646" /></p>
+
+<p><img src="https://cloud.githubusercontent.com/assets/5700847/2953447/d71cdef0-da59-11e3-9d39-e3e5d4de150d.png" width="360" alt="device-2014-05-13-002651" /></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[2048游戏安卓移植版]]></title>

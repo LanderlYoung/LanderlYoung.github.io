@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Tag: linux | Young_Blog]]></title>
+  <title><![CDATA[Tag: Linux | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/tags/linux/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-05-13T13:22:01+08:00</updated>
+  <updated>2014-05-13T13:26:57+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -12,6 +12,432 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Vim插件全攻略]]></title>
+    <link href="http://LanderlYoung.github.io/blog/2014/05/07/vimcha-jian-quan-gong-lue/"/>
+    <updated>2014-05-07T11:42:23+08:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2014/05/07/vimcha-jian-quan-gong-lue</id>
+    <content type="html"><![CDATA[<p>原来配置vim插件的时候因为总是要下载解压，试用然后把.vim目录弄得乱七八糟。所以也就用了那几个插件，本着够用就好的原则。今天才发现Vim也有自己的插件管理工具<a href="https://github.com/gmarik/Vundle.vim">Vundle</a>真的是太开心了。然后又发现了有大神共享的<a href="https://github.com/humiaozuzu/dot-vimrc">插件列表</a>，于是我就开始了开开心心的Vim插件攻略。</p>
+
+<!--more-->
+
+
+<p>除了上面共享的插件列表我还装了另外几个插件：
+* TagList
+* A.vim</p>
+
+<p><em>hell0</em></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[[转]Linux初始配置]]></title>
+    <link href="http://LanderlYoung.github.io/blog/2014/04/29/zhuan-linuxchu-shi-pei-zhi/"/>
+    <updated>2014-04-29T10:11:07+08:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2014/04/29/zhuan-linuxchu-shi-pei-zhi</id>
+    <content type="html"><![CDATA[<p>转载自：<a target="_blank" href="http://www.2cto.com/Article/201304/200418.html"><a href="http://www.2cto.com/Article/201304/200418.html">http://www.2cto.com/Article/201304/200418.html</a></a></p>
+
+<p>昨天折腾了 Kali Linux 1.0，把大概的配置过程记录下来，希望对想接触或使用Kali Linux的同学有所帮助。</p>
+
+<!--more-->
+
+
+<p>请注意：</p>
+
+<p>1.本文为<strong>面向新手的教程</strong>，没技术含量，没事瞎折腾，感觉好玩…..如果您可以熟练使用Debian Linux或者使用过Arch Linux、Gentoo或者是自己LFS你完全可以无视本文。</p>
+
+<p>2.如果您使用kali Linux只作为渗透测试之用，rootoorotor建议您在kali.org直接<a target="_blank" href="http://www.2cto.com/soft" class="keylink" style="color:rgb(51, 51, 51); text-decoration:none">下载</a>Kali Linux VMware版本在虚拟机里使用（当然双系统也可以）。</p>
+
+<p>3.如果您只是想试用或者感受Linux桌面环境，我建议您先使用Ubuntu 、LinuxMint、Deepin Linux 、 Fedora、Debian、OpenSUSE这几个发行版。</p>
+
+<p>4.如果您是一名信息安全爱好者，并且对GNU/Linux有过一点点使用经验，<strong>想使用Kali Linux作为日常学习和使用</strong>，那么本文你适合你参考哦~</p>
+
+<p>5.rootoorotor接触GNU/Linux发行版的时间不长，也是个新手。如果发现本文有疏漏，欢迎提醒！在下感激不尽~</p>
+
+<p>6.kali Linux中的各种hacking软件本文不做讨论</p>
+
+<p>Kali Linux 介绍：</p>
+
+<p><a href="http://cn.docs.kali.org/category/introduction-cn">http://cn.docs.kali.org/category/introduction-cn</a></p>
+
+<p>（官方文档）</p>
+
+<p>Kali Linux 下载：</p>
+
+<p><a href="http://www.kali.org/downloads/">http://www.kali.org/downloads/</a></p>
+
+<p>安装Kali Linux：</p>
+
+<p>请参考官方文档，以及在线搜索“Deiban Linux安装教程”或者 “Debian windows 双系统”。</p>
+
+<p>比如： <a href="http://wenku.baidu.com/view/2b5b3149767f5acfa1c7cd51.html">http://wenku.baidu.com/view/2b5b3149767f5acfa1c7cd51.html</a></p>
+
+<p>强烈建议参考官方在线文档：</p>
+
+<p><a href="http://cn.docs.kali.org/category/installing-kali-linux-cn">http://cn.docs.kali.org/category/installing-kali-linux-cn</a></p>
+
+<p>没有Linux安装经验的朋友建议先用虚拟机折腾</p>
+
+<p>rootoorotor下载的是kali Linux 1.0 64位版本，在安装好之后就会进入kali linux默认的桌面环境(gnome-fallback)，如图所示：</p>
+
+<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053037648.png">http://www.2cto.com/uploadfile/2013/0405/20130405053037648.png</a>" width="345" height="614"></p>
+
+<p>然后打开终端，输入</p>
+
+<p><code>cat /etc/apt/sources.list</code></p>
+
+<p>看看里面有没有一下三行kali官方源的地址（如果是断网安装，kali的默认源可能不会写入到这个文件里），如果没有，请在<code>/etc/apt/sources.list</code>中入这三行。</p>
+
+<p><code>cpp
+deb http://http.kali.org/kali kali main non-free contrib
+deb-src http://http.kali.org/kali kali main non-free contrib
+deb http://security.kali.org/kali-security kali/updates main contrib non-free
+</code></p>
+
+<p>加入之后就可以对系统进行更新了，终端中输入：</p>
+
+<p><code>cpp
+apt-get update &amp;amp;&amp;amp; apt-get dist-upgrade
+</code></p>
+
+<p>安装BCM43XX系列无线网卡驱动：</p>
+
+<p>由于我的本本比较渣，kali 默认不识别我的无线网卡（博通 BCM 4312）</p>
+
+<p><code>cpp
+aptitude install firmware-b43-lpphy-installer
+</code></p>
+
+<p>关于BCM43XX系列的无线网卡驱动请参考Debian官方文档：</p>
+
+<p><a href="http://wiki.debian.org/bcm43xx">http://wiki.debian.org/bcm43xx</a></p>
+
+<p>安装完成之后重启在终端中输入：</p>
+
+<p><em>iwconfig</em></p>
+
+<p>看无线网卡是不是已经识别</p>
+
+<p>安装英伟达显卡驱动请参考我上一篇博文：</p>
+
+<p>Kali Linux 1.0安装NVIDIA显卡驱动</p>
+
+<p><strong>中文化：</strong></p>
+
+<p>Kali Linux的国际化做得真心不错，安装时如果你选择了中文语言，进入系统之后已经发现汉化完成了。如果安装时没有选择中文那么请参考一下的方法吧系统语言设置成中文：</p>
+
+<p>点击右上角root —— System Settings —— Region and Language —— 点击“+”按键 —— Chinese（china） —— Select —— Chinese（simplified），重启电脑即可。</p>
+
+<p>如果还不行也有可能是中文包没有安装，在终端中运行：</p>
+
+<p><code>cpp
+dpkg-reconfigure locales
+</code></p>
+
+<p>汉化浏iceweasel<a target="_blank" href="http://www.2cto.com/os/liulanqi/" class="keylink" style="color:rgb(51, 51, 51); text-decoration:none">浏览器</a>（Firefox）</p>
+
+<p><code>cpp
+apt-get install iceweasel-l10n-zh-cn
+</code></p>
+
+<p>在提示框中往下拉，开头位zh_CN的全部选择，然后确定，r然后在设置本地中文语言环境时选择 zh_CN.GBK 或者 zh_CN.UTF-8 确定，如果提示已经安装请，按照第一步的办法进入System Settings设置为中文。</p>
+
+<p><strong>输入法安装：</strong></p>
+
+<p>ibus:</p>
+
+<p><code>cpp
+apt-get install ibus ibus-pinyin
+</code></p>
+
+<p>或者</p>
+
+<p>fcitx</p>
+
+<p><code>cpp
+apt-get install fcitx fcitx-pinyin fcitx-module-cloudpinyin fcitx-googlepinyin
+</code></p>
+
+<p>安装完成之后，打开终端输入：</p>
+
+<p><code>cpp
+im-config
+</code></p>
+
+<p>确认手工配置，选择你喜欢的输入法，如图：</p>
+
+<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053039870.png">http://www.2cto.com/uploadfile/2013/0405/20130405053039870.png</a>" width="440" height="610">
+然后重启系统~</p>
+
+<p>如果你使用的是ibus：</p>
+
+<p>右键点击右上角的输入法图标 —— 首选项 —— 输入法+中文 —— 高级——勾上所有程序共享使用同一个输入法</p>
+
+<p>如果你使用的是fcitx（小企鹅）：</p>
+
+<p>小企鹅无需做过多配置，重启过后即可用。当然你也可以点击小企鹅输入法的托盘图标，做一些输入法的配置，比如字体、皮肤和云输入提示等</p>
+
+<p>我个人比较喜欢fcitx，因为带云输入，感觉也比ibus流畅。</p>
+
+<p><strong>建立普通用户<span style="color:rgb(255, 0, 0)">（非必要）：</span></strong></p>
+
+<p>Kali Linux 与 Backtrack Linux一样，默认直接使用root用户，如果你想和其他Linux发行版一样使用普通用户请按照下面的步骤操作：</p>
+
+<p><strong>1、建立一个普通用户：</strong></p>
+
+<p>打开终端：</p>
+
+<p><code>cpp
+adduser 用户名
+</code></p>
+
+<p>如图所示：</p>
+
+<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053040253.png">http://www.2cto.com/uploadfile/2013/0405/20130405053040253.png</a>" width="415" height="745"></p>
+
+<p>在终端下输入：</p>
+
+<p><code>cpp
+visudo
+</code></p>
+
+<p>按i之后进入编辑模式（插入），然后在文件的 root ALL=(ALL:ALL) ALL 的下方添加一个新的sudo用户例如XXX用户：XXX&nbsp;&nbsp; ALL=(ALL:ALL)</p>
+
+<p>（ALL在文件visudo中被定义授予用户所有的命令权限）</p>
+
+<p>如图所示：</p>
+
+<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053041263.png">http://www.2cto.com/uploadfile/2013/0405/20130405053041263.png</a>" width="514" height="659"></p>
+
+<p>完成后按Esc键进入命令行模式，键入:w来保存</p>
+
+<p>保存之后新建立就可以使用sudo命令了，重启或者注销来切换成新建立的用户即可。</p>
+
+<p>（注意：使用普通用户时，默认的权限是比较低的，以至于一些程序无法正常运行，这是需要使用sudo命令来执行，比如sudo apt-get update，或者使用su命令在终端中切换至root用户之后执行）</p>
+
+<p>然后把原有/root/目录下的配置文件复制到新建立的用户目录下（/home/新建立的用户名），并修改所有者为新建立的用户</p>
+
+<p>终端中输入（root权限）：</p>
+
+<p>``` cpp
+cp -rf /root/. /home/新用户名</p>
+
+<p>chown -R 新用户名:新用户名 /home/新用户名
+```</p>
+
+<p>这样普通用户的配置就完成了。</p>
+
+<p>开启Gnome 3的标准模式：</p>
+
+<p>Kali Linux的桌面环境已经升级为Gnome 3，但默认运行在fallback模式。想<strong>临时</strong>切换成gnome3的标准模式请在终端输入：</p>
+
+<p>``` cpp
+gnome-shell –replace</p>
+
+<p>```</p>
+
+<p>gnome 3的标准模式支持一些桌面特效开启还有很多gnome-shell插件，如果您觉得比较好用请输入下面的命令使系统在启动时，自动进入gnome-shell的标准模式。</p>
+
+<p><code>cpp
+gsettings set org.gnome.desktop.session session-name gnome
+</code></p>
+
+<p>若想还原默认的桌面请输入：</p>
+
+<p><code>cpp
+gsettings set org.gnome.desktop.session session-name gnome-fallback
+</code></p>
+
+<p>注销或者重启之后进入桌面即可直接进入您要切换的模式。</p>
+
+<p>关于如何定制gnome，请参考：</p>
+
+<p><a href="https://wiki.archlinux.org/index.php/GNOME_%28%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87%29">archlinux wiki</a></p>
+
+<p>另外，如果您实在不喜欢gnome-shell桌面环境，可以参考这里或者自行上网搜索</p>
+
+<p><a href="http://cn.docs.kali.org/live-build-cn/%E5%AE%9A%E5%88%B6kali%E7%9A%84%E6%A1%8C%E9%9D%A2%E7%B3%BB%E7%BB%9F">kali linux doc</a></p>
+
+<p><strong>一些常用软件：</strong></p>
+
+<p>1.官方源中的软件（可以通过apt-get install直接安装）：</p>
+
+<p>``` cpp
+apt-get install gnome-tweak-tool</p>
+
+<p>（gnome-shell管理软件可以修改字体、管理插件、管理桌面主题。必备！）</p>
+
+<p>apt-get install gdebi</p>
+
+<p>(有了这个安装软件就不用在终端中dpkg -i 安装了，提供图形化软件安装方式)</p>
+
+<p>apt-get install nautilus-open-terminal</p>
+
+<p>(鼠标右键在当前目录打开终端)</p>
+
+<p>apt-get install flashplugin-nonfree</p>
+
+<p>（浏览器flash插件）</p>
+
+<p>apt-get install synaptic</p>
+
+<p>（新立得软件包管理器）</p>
+
+<p>apt-get install file-roller</p>
+
+<p>（压缩文件管理工具）</p>
+
+<p>apt-get install amule</p>
+
+<p>（电骡）</p>
+
+<p>apt-get install remmina*</p>
+
+<p>（远程桌面+扩展）</p>
+
+<p>apt-get install geany</p>
+
+<p>（一个轻巧的IDE，如果您喜欢折腾emacs或者VIM就不用安装这个了）</p>
+
+<p>apt-get install bluefish</p>
+
+<p>（一个强大的Web编辑器）</p>
+
+<p>apt-get install&nbsp; meld</p>
+
+<p>（一款可视化的文件及目录对比、合并工具）</p>
+
+<p>apt-get install audacious<br>
+（一个轻量级音乐播放器）
+```</p>
+
+<p>3.安装QQ2012：</p>
+
+<p>Kali Linux 1.0 （64位）安装 QQ2012</p>
+
+<p>4.安装WPS office for Linux：</p>
+
+<p>Kali Linux 1.0 （64位）安装WPS office for Linux</p>
+
+<p>5.Virtualbox<a target="_blank" href="http://www.2cto.com/os/xuniji/" class="keylink" style="color:rgb(51, 51, 51); text-decoration:none">虚拟机</a>：</p>
+
+<p>使用前要先</p>
+
+<p><code>cpp
+apt-get install libqt4-opengl
+</code></p>
+
+<p><a href="https://www.virtualbox.org/wiki/Linux_Downloads">https://www.virtualbox.org/wiki/Linux_Downloads</a></p>
+
+<p>Gnome3有扩展系统，可以在线安装扩展，</p>
+
+<p>Gnome Extensions网站</p>
+
+<p><strong>一些美化工作：</strong></p>
+
+<p>进入标准模式之后，鼠标往屏幕左上角一戳即可打开程序窗口，点击全部程序会看到很多满屏幕的黑龙图标，感觉略丑</p>
+
+<p>如图：</p>
+
+<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053042483.png">http://www.2cto.com/uploadfile/2013/0405/20130405053042483.png</a>" width="440" height="614"></p>
+
+<p>如果想隐藏图标，可以打开系统工具——主菜单 来选择隐藏，如果您再使用这个工具时没有看见Kali Linux菜单, 请下载我修改好的文件放入 /home/你的用户名/.config/menus 文件夹，然后使用组合键alt+F2输入r ——回车，既可重启gome-shell</p>
+
+<p>然后在重新打开系统工具——主菜单即可，去掉构√即可隐藏图标：</p>
+
+<p>下载地址：<a href="http://dl.vmall.com/c09noj4d81">http://dl.vmall.com/c09noj4d81</a></p>
+
+<p>（注意：“.”开头的目录或文件是隐藏的，按ctrl+H才可查看，或者在终端中输入 ls -a）</p>
+
+<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053044953.png">http://www.2cto.com/uploadfile/2013/0405/20130405053044953.png</a>" width="364" height="446"></p>
+
+<h2>安装Faenza图标：</h2>
+
+<p>``` cpp
+wget <a href="http://faenza-icon-theme.googlecode.com/files/faenza-icon-theme_1.3.zip">http://faenza-icon-theme.googlecode.com/files/faenza-icon-theme_1.3.zip</a></p>
+
+<p>unzip faenza-icon-theme_1.3.zip</p>
+
+<p>chmod u+x INSTALL</p>
+
+<p>./INSTALL
+```</p>
+
+<p>然后根据提示安装即可，安装完成之后使用gnome-tweak-tool工具更换图标：</p>
+
+<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053045872.png">http://www.2cto.com/uploadfile/2013/0405/20130405053045872.png</a>" width="499" height="643"></p>
+
+<p><strong>优化字体显示：</strong></p>
+
+<p>Kali Linux的默认中文字体显示已经比较不错了，但我个人还是喜欢文泉驿的字体。</p>
+
+<p><code>apt-get install ttf-wqy-microhei ttf-wqy-zenhei xfonts-wqy</code></p>
+
+<p>安装完成之后打开这个网页</p>
+
+<p><a href="">http://wenq.org/cloud/fcdesigner.html</a></p>
+
+<p>把你喜欢的字体优先级调到最高，然后点击”生成“保存成.fonts.conf文件放入home/你的用户名目录下，最好root目录下也拷贝一份，因为有些程序是以root账户来运行的。</p>
+
+<p>最后在gnome-tweak-tool工具中更改字体</p>
+
+<p>关于Deiban字体显示优化，可以看看 <a href="http://edyfox.codecarver.org/html/debian_testing_chinese.html">这里</a></p>
+
+<p>如果通过以上设置的字体显示效果还无法满足你的需求，你可以折腾Debian的字体渲染Infinality补丁（在Fedora下很出名的字体渲染补丁，渲染效果极好）</p>
+
+<p>使用这个补丁之前，请先apt-get install devscripts 安装包构建脚本 ，然后根据dpkg-checkbuilddeps中显示缺少什么依赖就用apt-get 安装什么，步骤比较简单本文就不做详细描述了</p>
+
+<p><a href="http://forums.debian.net/viewtopic.php?f=16&amp;t=88545">debian forums</a></p>
+
+<p>渲染之后的显示效果截图：</p>
+
+<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053046521.png">http://www.2cto.com/uploadfile/2013/0405/20130405053046521.png</a>"" width="544" height="587"></p>
+
+<p><strong>修改启动分辨率：</strong></p>
+
+<p>感觉启动引导菜单和tty的分辨率比较蛋疼？按照如下方法修改即可：</p>
+
+<p>（root权限运行）</p>
+
+<p>1.使用编辑器编辑/etc/default/grub 这个文件</p>
+
+<p>比如我使用vim</p>
+
+<p><code>vim /etc/default/grub</code></p>
+
+<p>找到 #GRUB_GFXMODE=640×480&nbsp; 取消这一行前面的注释符“#”并将后面的数字修改为一个合适的值，不需要太高，比如1024×768。这个值同时会影响grub启动菜单和控制台里文字的分辨率。</p>
+
+<p>2.修改 /etc/grub.d/00_header 这个文件</p>
+
+<p><code>vim /etc/grub.d/00_header</code>
+查找关键字<code>set gfxmode=${GRUB_GFXMODE}</code>，然后在这行下面添加新行， 内容是：<code>set gfxpayload=keep</code></p>
+
+<p>3.更新Grub配置</p>
+
+<p><code>update-grub</code></p>
+
+<p><strong>总结：</strong></p>
+
+<p>如果使用Kali&nbsp;<a target="_blank" href="http://www.2cto.com/os/linux/" class="keylink" style="color:rgb(51, 51, 51); text-decoration:none">Linux</a>用与日常使用统，按照以上的配置也差不多了，以后我会继续补充。</p>
+
+<p>到此为止，Kali Linux的桌面环境基本折腾完成，上图：</p>
+
+<p><img class="center  <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053047828.png">http://www.2cto.com/uploadfile/2013/0405/20130405053047828.png</a>" width="345" height="614"></p>
+
+<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053049272.png">http://www.2cto.com/uploadfile/2013/0405/20130405053049272.png</a>" width="345" height="614"></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[linux的搜狗输入法！]]></title>
+    <link href="http://LanderlYoung.github.io/blog/2014/04/22/linuxde-sou-gou-shu-ru-fa-%21/"/>
+    <updated>2014-04-22T14:52:39+08:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2014/04/22/linuxde-sou-gou-shu-ru-fa-!</id>
+    <content type="html"><![CDATA[<p>貌似好久之前就知道搜狗输入法推出了linux版本，但是当时用的是Debian74系统。Debian的特点就是软件版本比较老（考虑的是稳定性之类的原因，毕竟Debian更多的是用在服务器上的）。而且搜狗输入法又不是开源的，不能自己编译，所以出现的libc6的版本不兼容问题很是蛋疼。昨天还是决定装上Ubuntu14.04，然后装上了搜狗输入法，那感觉真是一个爽啊。从此Linux打字也有了飞一般的感觉，也不用担心满篇的错别字了。
+附带一个链接吧<a href="http://pinyin.sogou.com/linux/">伟大的搜狗输入法</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[linux fork和exec系列函数]]></title>
@@ -411,7 +837,7 @@ synclient HorizScrollDelta=-103
 
 <h1>Author:           Landerl Young</h1>
 
-<h1>e-Mail:           <a href="&#x6d;&#x61;&#105;&#x6c;&#116;&#111;&#x3a;&#x4c;&#x61;&#110;&#100;&#x65;&#x72;&#108;&#89;&#x6f;&#x75;&#x6e;&#x67;&#x40;&#x67;&#x6d;&#x61;&#105;&#x6c;&#46;&#99;&#111;&#x6d;">&#76;&#x61;&#110;&#100;&#x65;&#x72;&#108;&#x59;&#x6f;&#x75;&#110;&#x67;&#x40;&#x67;&#109;&#97;&#105;&#x6c;&#x2e;&#x63;&#111;&#109;</a></h1>
+<h1>e-Mail:           <a href="&#x6d;&#97;&#105;&#108;&#x74;&#x6f;&#x3a;&#76;&#97;&#110;&#x64;&#101;&#x72;&#x6c;&#x59;&#111;&#x75;&#110;&#103;&#x40;&#x67;&#109;&#x61;&#105;&#108;&#x2e;&#x63;&#111;&#109;">&#76;&#x61;&#110;&#100;&#x65;&#114;&#x6c;&#89;&#111;&#x75;&#110;&#103;&#x40;&#x67;&#x6d;&#97;&#105;&#x6c;&#46;&#99;&#111;&#x6d;</a></h1>
 
 <h1>Created Time:     Thu 31 Oct 2013 01:41:46 PM HST</h1>
 
