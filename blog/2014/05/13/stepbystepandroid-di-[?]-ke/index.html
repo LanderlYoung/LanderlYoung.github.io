@@ -1,0 +1,402 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>stepByStepAndroid-第一课 - Young_Blog</title>
+	<meta name="author" content="LanderlYoung">
+
+	
+	<meta name="description" content="stepByStepAndroid-第一课 梳理一下第一课学到的内容: 创建简单的用户界面 简单的布局控制 启动另一个Activity 给button添加回调函数
+使用Intent 创建用户界面 修改原来的fragment_main.xml文件，使用LinearLayout： 1
+2
+3
+4
+5 &hellip;">
+	
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="Young_Blog" type="application/atom+xml">
+	
+	<link rel="canonical" href="http://LanderlYoung.github.io/blog/2014/05/13/stepbystepandroid-di-%5B%3F%5D-ke/">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+				<header id="header" class="inner"><div class="profilepic">	
+	 
+	<img src="/images/profile.png" width=160px />
+</div>
+<h1><a href="/">Young_Blog</a></h1>
+<p class="subtitle">Life with Passion<br/>Code with Creativity</p>
+<nav id="main-nav"><ul class="main">
+	<li><a href="/">Blog</a></li>
+	<li><a href="/blog/archives">Archives</a></li>
+	<li><a href="/about-me/">About Me</a></li>
+</ul>
+</nav>
+<nav id="sub-nav">
+	<div class="social">
+		
+		<a class="weibo" href="http://www.weibo.com/1863369094" title="Weibo">Weibo</a>
+		
+		
+		
+		<a class="google" href="https://plus.google.com/101237485378321820376/posts" rel="author" title="Google+">Google+</a>
+		
+		
+		
+		<a class="github" href="https://github.com/LanderlYoung" title="GitHub">GitHub</a>
+		
+		
+		
+		
+		
+		
+		
+		
+		<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+		
+	</div>
+</nav>
+
+</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			
+			
+			
+			<div class="mid-col-container">
+				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+	<h1 class="title" itemprop="name">stepByStepAndroid-第一课</h1>
+	<div class="entry-content" itemprop="articleBody"><p>梳理一下第一课学到的内容:</p>
+
+<ol>
+<li>创建简单的用户界面
+
+<ul>
+<li>简单的布局控制</li>
+</ul>
+</li>
+<li>启动另一个Activity
+
+<ul>
+<li>给button添加回调函数</li>
+<li>使用Intent</li>
+</ul>
+</li>
+</ol>
+
+
+<!--more-->
+
+
+<h3>创建用户界面</h3>
+
+<p>修改原来的fragment_main.xml文件，使用LinearLayout：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;LinearLayout</span> <span class="na">xmlns:android=</span><span class="s">&quot;http://schemas.android.com/apk/res/android&quot;</span>
+</span><span class='line'>    <span class="na">xmlns:tools=</span><span class="s">&quot;http://schemas.android.com/tools&quot;</span>
+</span><span class='line'>    <span class="na">android:layout_width=</span><span class="s">&quot;match_parent&quot;</span>
+</span><span class='line'>    <span class="na">android:layout_height=</span><span class="s">&quot;match_parent&quot;</span>
+</span><span class='line'>    <span class="na">android:orientation=</span><span class="s">&quot;horizontal&quot;</span> <span class="nt">&gt;</span>
+</span><span class='line'><span class="nt">&lt;/LinearLayout&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上面的android:orientation属性把LinearLayout设置成水平线性布局，所有元素水平排列。
+然后在LinearLayout中添加控件EditText和Button</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;EditText</span>
+</span><span class='line'>    <span class="na">android:id=</span><span class="s">&quot;@+id/edit_message&quot;</span>
+</span><span class='line'>    <span class="na">android:layout_width=</span><span class="s">&quot;wrap_content&quot;</span>
+</span><span class='line'>    <span class="na">android:layout_height=</span><span class="s">&quot;wrap_content&quot;</span>
+</span><span class='line'>    <span class="na">android:hint=</span><span class="s">&quot;@string/edit_message&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;Button</span>
+</span><span class='line'>    <span class="na">android:layout_width=</span><span class="s">&quot;wrap_content&quot;</span>
+</span><span class='line'>    <span class="na">android:layout_height=</span><span class="s">&quot;wrap_content&quot;</span>
+</span><span class='line'>    <span class="na">android:text=</span><span class="s">&quot;@string/button_send&quot;</span> <span class="nt">/&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>然后在相应的strings.xml中添加string值。
+效果如图：</p>
+
+<p><img src="https://cloud.githubusercontent.com/assets/5700847/2953445/c8028f00-da59-11e3-9800-89a5c859064b.png" width="360" alt="device-2014-05-12-231827" /></p>
+
+<p>接着控制一下布局：让EditText占据LinearLayout横向的剩余空间。只需要调整两个方面<code>android:layout_weight="1"</code>和<code>android:layout_width="0dp"</code>，其中layout_weight=1可以让它占据剩下的空间，layout_width=0改善性能。
+看一下效果：</p>
+
+<p><img src="https://cloud.githubusercontent.com/assets/5700847/2953442/b9d4597c-da59-11e3-886d-08d3f8e667a9.png" width="360" alt="device-2014-05-12-235041" /></p>
+
+<h2>为button添加click事件处理</h2>
+
+<p>在Button中添加一行<code>android:onClick="sendMessage"</code>这样就指定了button的click事件由<code>public void onClick(View view)</code>这样方法签名的方法来处理。
+所以对应的去MainActicity.java中添加该函数：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//call back of the button</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">sendMessage</span><span class="o">(</span><span class="n">View</span> <span class="n">view</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">Intent</span> <span class="n">intent</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Intent</span><span class="o">(</span><span class="n">getApplication</span><span class="o">(),</span><span class="n">DisplayMessageActivity</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">EditText</span> <span class="n">editText</span> <span class="o">=</span> <span class="o">(</span><span class="n">EditText</span><span class="o">)</span><span class="n">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">edit_message</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">String</span> <span class="n">message</span> <span class="o">=</span> <span class="n">editText</span><span class="o">.</span><span class="na">getText</span><span class="o">().</span><span class="na">toString</span><span class="o">();</span>
+</span><span class='line'>  <span class="n">intent</span><span class="o">.</span><span class="na">putExtra</span><span class="o">(</span><span class="n">EXTRA_MESSAGE</span><span class="o">,</span><span class="n">message</span><span class="o">);</span>
+</span><span class='line'>  <span class="n">startActivity</span><span class="o">(</span><span class="n">intent</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上面的DisplayMessageActivity类是使用向导创建的新Activity。</p>
+
+<h3>创建新Activity</h3>
+
+<p>使用向导创建新的Activity，然后需要在AndroidManifest.xml里注册Activity</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'>   <span class="nt">&lt;application</span>
+</span><span class='line'>       <span class="err">......</span>
+</span><span class='line'>        <span class="err">&lt;activity</span>
+</span><span class='line'>            <span class="na">android:name=</span><span class="s">&quot;com.young.stepbystepandroid.DisplayMessageActivity&quot;</span>
+</span><span class='line'>            <span class="na">android:label=</span><span class="s">&quot;@string/title_activity_display_message&quot;</span>
+</span><span class='line'>            <span class="na">android:parentActivityName=</span><span class="s">&quot;com.young.stepbystepandroid.MainActivity&quot;</span> <span class="nt">&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;meta-data</span>
+</span><span class='line'>                <span class="na">android:name=</span><span class="s">&quot;android.support.PARENT_ACTIVITY&quot;</span>
+</span><span class='line'>                <span class="na">android:value=</span><span class="s">&quot;com.young.stepbystepandroid.MainActivity&quot;</span> <span class="nt">/&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/activity&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/application&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>使用Intent</h3>
+
+<p><em>启动Intent</em></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">Intent</span> <span class="n">intent</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Intent</span><span class="o">(</span><span class="n">getApplication</span><span class="o">(),</span><span class="n">DisplayMessageActivity</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+</span><span class='line'><span class="n">EditText</span> <span class="n">editText</span> <span class="o">=</span> <span class="o">(</span><span class="n">EditText</span><span class="o">)</span><span class="n">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">edit_message</span><span class="o">);</span>
+</span><span class='line'><span class="n">String</span> <span class="n">message</span> <span class="o">=</span> <span class="n">editText</span><span class="o">.</span><span class="na">getText</span><span class="o">().</span><span class="na">toString</span><span class="o">();</span>
+</span><span class='line'><span class="n">intent</span><span class="o">.</span><span class="na">putExtra</span><span class="o">(</span><span class="n">EXTRA_MESSAGE</span><span class="o">,</span><span class="n">message</span><span class="o">);</span>
+</span><span class='line'><span class="n">startActivity</span><span class="o">(</span><span class="n">intent</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>其中<code>public static final String EXTRA_MESSAGE = "com.young.stepByStepAndroid.MESSAGE";</code>
+这个是一个显示Intent构造函数第一个参数是Context，可以使用this，因为Activity继承Context；但是推荐使用ApplicationContext防止内存泄漏。
+<em>接收Intent</em></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">Intent</span> <span class="n">intent</span> <span class="o">=</span> <span class="n">getIntent</span><span class="o">();</span>
+</span><span class='line'><span class="n">String</span> <span class="n">message</span> <span class="o">=</span> <span class="n">intent</span><span class="o">.</span><span class="na">getStringExtra</span><span class="o">(</span>
+</span><span class='line'>      <span class="n">MainActivity</span><span class="o">.</span><span class="na">EXTRA_MESSAGE</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">TextView</span> <span class="n">textView</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TextView</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+</span><span class='line'><span class="n">textView</span><span class="o">.</span><span class="na">setTextSize</span><span class="o">(</span><span class="mi">40</span><span class="o">);</span>
+</span><span class='line'><span class="n">textView</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="n">message</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>代码很明显，不多说什么了。当然在Intent里面附加信息推荐使用<a href="http://developer.android.com/reference/android/os/Bundle.html">Bundle</a>。</p>
+
+<p>看看成果：</p>
+
+<p><img src="https://cloud.githubusercontent.com/assets/5700847/2953446/d6257c5a-da59-11e3-8e67-80bbecb4640f.png" width="360" alt="device-2014-05-13-002646" /></p>
+
+<p><img src="https://cloud.githubusercontent.com/assets/5700847/2953447/d71cdef0-da59-11e3-9d39-e3e5d4de150d.png" width="360" alt="device-2014-05-13-002651" /></p>
+</div>
+
+</article>
+
+	
+
+<!--aThis Button BEGIN -->
+<div class="jiathis_style">
+	<span class="jiathis_txt">分享到：</span>
+	<a class="jiathis_button_tools_1"></a>
+	<a class="jiathis_button_tools_2"></a>
+	<a class="jiathis_button_tools_3"></a>
+	<a class="jiathis_button_tools_4"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+
+
+<section id="comment">
+    <h1 class="title">Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</div>
+			</div>
+			<footer id="footer" class="inner">
+<p>
+  Copyright &copy; 2014 - LanderlYoung -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+</footer>
+			<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+<!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'landerlyoung';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://LanderlYoung.github.io/blog/2014/05/13/stepbystepandroid-di-%5B%3F%5D-ke/';
+        var disqus_url = 'http://LanderlYoung.github.io/blog/2014/05/13/stepbystepandroid-di-%5B%3F%5D-ke/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+		</div>
+	</div>
+
+	<div id="slide">
+		<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/05/13/stepbystepandroid-di-%5B%3F%5D-ke/">stepByStepAndroid-第一课</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/05/12/gitzhong-chuang-jian-taghe-release/">Git中创建tag和release</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/05/07/vim-quick-reference/">Vim Quick Reference</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/05/07/vimcha-jian-quan-gong-lue/">Vim插件全攻略</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/04/29/zhuan-linuxchu-shi-pei-zhi/">[转]Linux初始配置</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li><a href='/blog/categories/android/'>Android (1)</a></li><li><a href='/blog/categories/git/'>git (2)</a></li><li><a href='/blog/categories/html5/'>html5 (3)</a></li><li><a href='/blog/categories/javascript/'>JavaScript (3)</a></li><li><a href='/blog/categories/linux/'>Linux (6)</a></li></ul>
+</section>
+<section>
+	<h1>Tags</h1>
+	<ul class="tag-cloud">
+		<li><a style="font-size: 112.6%" href="/tags/html5/">html5</a></li>
+<li><a style="font-size: 119.3%" href="/tags/node-dot-js/">Node.js</a></li>
+<li><a style="font-size: 89.2%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
+<li><a style="font-size: 82.9%" href="/tags/linux/">linux</a></li>
+<li><a style="font-size: 109.6%" href="/tags/vim/">Vim</a></li>
+<li><a style="font-size: 118.6%" href="/tags/git/">git</a></li>
+<li><a style="font-size: 89.1%" href="/tags/linux/">Linux</a></li>
+<li><a style="font-size: 105.7%" href="/tags/android/">android</a></li>
+<li><a style="font-size: 113.2%" href="/tags/android/">Android</a></li>
+<li><a style="font-size: 118.4%" href="/tags/java/">Java</a></li>
+<li><a style="font-size: 96.4%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">octpress搬迁编辑位置</a></li>
+<li><a style="font-size: 115.9%" href="/tags/svg/">svg</a></li>
+<li><a style="font-size: 89.8%" href="/tags/ui/">UI</a></li>
+<li><a style="font-size: 78.3%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
+<li><a style="font-size: 109.7%" href="/tags/zhuan-tie/">转贴</a></li>
+
+	</ul>
+</section>
+
+	</div>
+	<div id="hint">&gt;</div>
+
+	<div id="drawer">
+		<div id="touch"></div>
+		<div id="bar">
+			<div class="info">
+				<ul class="main">
+	<li><a href="/">Blog</a></li>
+	<li><a href="/blog/archives">Archives</a></li>
+	<li><a href="/about-me/">About Me</a></li>
+</ul>
+
+			</div>
+		</div>
+	</div>
+	<script src="/javascripts/slide.js"></script>
+
+</body>
+</html>
