@@ -22,11 +22,12 @@
 	max-width: 800px;
 }
 #readInner a {
-	color:#003399;
+	color: inherit;
 	text-decoration:none;
+  border-bottom: 1px dashed;
 }
 #readInner a:hover {
-	text-decoration:underline;
+  border-bottom: 1px solid;
 }
 #readInner * {
 	margin-bottom: 16px;
@@ -51,6 +52,7 @@
 #readFooter {
 	display: block;
 	border-top: 1px solid #333;
+  padding: 3px 1em 0 1em;
 	text-align: center;
 	clear: both;
 }
@@ -59,7 +61,6 @@ div.footer-right {
 	line-height: 1;
 	text-align: right;
 	font-size: .75em;
-	margin-top: 18px
 }
 a.footer-twitterLink {
 	clear: both;
@@ -69,7 +70,11 @@ a.footer-twitterLink {
 	margin-top: -32px;
 }
 span.version {
-	display: none;
+  display: none;
+}
+span.version a, a:hover {
+  text-decoration: none !important;
+  color: #333  !important;
 }
 
 /* Article Tools */
@@ -96,13 +101,13 @@ span.version {
     background: url(../images/read-kindle.png) no-repeat left top;
 }
 #email-page{
-    background: url(http://lab.arc90.com/experiments/readability/images/read-email.png) no-repeat left top;
+    background: url(../images/read-email.png) no-repeat left top;
 }
 #reload-page{
-    background: url(http://lab.arc90.com/experiments/readability/images/read-refresh.png) no-repeat left top;
+    background: url(../images/read-refresh.png) no-repeat left top;
 }
 #print-page{
-    background: url(http://lab.arc90.com/experiments/readability/images/read-print.png) no-repeat left top;
+    background: url(../images/read-print.png) no-repeat left top;
 }
 #readTools a:hover{
     opacity: 1;
