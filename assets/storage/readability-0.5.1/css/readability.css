@@ -35,7 +35,7 @@
 	background: none;
 }
 #readInner img {
-	float: left;
+  max-width: 100%;
 	margin-right: 12px;
 	margin-bottom: 12px;
 }
@@ -49,9 +49,10 @@
 	margin-left: 3em;
 	margin-right: 3em;
 }
+
 #readFooter {
 	display: block;
-	border-top: 1px solid #333;
+	border-top: 3px solid #333;
   padding: 3px 1em 0 1em;
 	text-align: center;
 	clear: both;
