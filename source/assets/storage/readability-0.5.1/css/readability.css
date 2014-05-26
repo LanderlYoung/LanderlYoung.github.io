@@ -22,11 +22,12 @@
 	max-width: 800px;
 }
 #readInner a {
-	color:#003399;
+	color: inherit;
 	text-decoration:none;
+  border-bottom: 1px dashed;
 }
 #readInner a:hover {
-	text-decoration:underline;
+  border-bottom: 1px solid;
 }
 #readInner * {
 	margin-bottom: 16px;

@@ -28,7 +28,8 @@ var iframeLoads = 0;
   ";
 
   objinnerDiv.appendChild(grabArticle());		// Get the article and place it inside the inner Div
-  objOverlay.appendChild(articleTools);
+  //delete read tools
+  //objOverlay.appendChild(articleTools);
   objOverlay.appendChild(objinnerDiv);		// Insert the inner div into the overlay
 
   // For totally hosed HTML, add body node that can't be found because of bad HTML or something.
