@@ -33,6 +33,7 @@
 	margin-bottom: 16px;
 	border: none;
 	background: none;
+  word-wrap: break-word;
 }
 #readInner img {
   max-width: 100%;
