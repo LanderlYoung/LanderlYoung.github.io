@@ -43,10 +43,6 @@ var iframeLoads = 0;
 
     // Inserts the new content :
     document.body.insertBefore(objOverlay, document.body.firstChild);
-
-    //add by young
-    //clean original css and js 
-    cleanCssAndScripts();
 })()
 
 function grabArticle() {
@@ -66,7 +62,6 @@ function grabArticle() {
   // Grab the title from the <title> tag and inject it as the title.
   articleTitle.innerHTML = document.title;
   articleContent.appendChild(articleTitle);
-
 
   // Study all the paragraphs and find the chunk that has the best score.
   // A score is determined by things like: Number of <p>'s, commas, special classes, etc.
@@ -110,6 +105,18 @@ function grabArticle() {
       topDiv.innerHTML = 'Sorry, readability was unable to parse this page for content. If you feel like it should have been able to, please <a href="http://code.google.com/p/arc90labs-readability/issues/entry">let us know by submitting an issue.</a>';
     }
 
+    // REMOVES ALL STYLESHEETS ...
+    for (var k=0;k < document.styleSheets.length; k++) {
+      if (document.styleSheets[k].href != null && document.styleSheets[k].href.lastIndexOf("readability") == -1) {
+        document.styleSheets[k].disabled = true;
+      }
+    }
+
+    // Remove all style tags in head (not doing this on IE) :
+    var styleTags = document.getElementsByTagName("style");
+    for (var j=0;j < styleTags.length; j++)
+    if (navigator.appName != "Microsoft Internet Explorer")
+      styleTags[j].textContent = "";
 
     cleanStyles(topDiv);					// Removes all style attributes
     topDiv = killDivs(topDiv);				// Goes in and removes DIV's that have more non <p> stuff than <p> stuff
@@ -127,13 +134,13 @@ function grabArticle() {
     // Add the footer and contents:
     articleFooter.id = "readFooter";
     /*
-       articleFooter.innerHTML = "\
-       <a href='http://www.arc90.com'><img src='http://www.arc90.com/images/favicon.png'></a>\
-       <div class='footer-right' >\
-       <span class='version'>Powered by <a href='http://https://code.google.com/p/arc90labs-readability/'>Readability version " + readabilityVersion + "</a></span>\
-       </div>\
-       ";
-       */
+    articleFooter.innerHTML = "\
+    <a href='http://www.arc90.com'><img src='http://www.arc90.com/images/favicon.png'></a>\
+    <div class='footer-right' >\
+    <span class='version'>Powered by <a href='http://https://code.google.com/p/arc90labs-readability/'>Readability version " + readabilityVersion + "</a></span>\
+    </div>\
+    ";
+    */
 
     articleContent.appendChild(topDiv);
     articleContent.appendChild(articleFooter);
@@ -164,17 +171,14 @@ function cleanStyles( e ) {
     return;
 
   // Remove any root styles, if we're able.
-  if(typeof e.removeAttribute == 'function') {
+  if(typeof e.removeAttribute == 'function')
     e.removeAttribute('style');
-    e.removeAttribute('class');
-  }
 
   // Go until there are no more child nodes
   while ( cur != null ) {
     if ( cur.nodeType == 1 ) {
       // Remove style attribute(s) :
       cur.removeAttribute("style");
-      cur.removeAttribute("class");
       cleanStyles( cur );
     }
     cur = cur.nextSibling;
@@ -250,57 +254,4 @@ function removeFrame()
       // reset the count
       iframeLoads = 0;
     }
-}
-
-
-
-
-function cleanCssAndScripts(e) {
-  e = e || document;
-  var scripts = e.getElementsByTagName("script");
-  var max_limit = 512;
-
-  function noMatch(str, pattern) {
-    return typeof str != 'string' || !str.match(pattern);
-  }
-
-  var len = 0;
-  var count = 0;//avoid dead loop
-  while(scripts.length > len && count < max_limit) {
-    var script = scripts[len];
-    if(noMatch(script.src, /readability/i)) {
-      script.parentNode.removeChild(script);
-    } else {
-      len++;
-    }
-    count++;
-  }
-
-  var styles = document.getElementsByTagName('style');
-  len = 0;
-  count = 0;
-  while (styles.length > len && count < max_limit) {
-    var style = styles[len];
-    if (noMatch(style.href, /readability/i)) {
-      style.parentNode.removeChild(style);
-    } else {
-      len++;
-    }
-    count++;
-  }
-
-  styles = document.getElementsByTagName("link");
-  len = 0;
-  count = 0;
-  while (styles.length > len && count < max_limit) {
-    var style = styles[len];
-    if(noMatch(style.href, /readability/i) &&
-       typeof style.rel == 'string' &&
-         style.rel.match(/stylesheet|css/i)) {
-      style.parentNode.removeChild(style);
-    } else {
-      len++;
-    }
-    count++;
-  }
 }
