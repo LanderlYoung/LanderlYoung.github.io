@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Android | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/blog/categories/android/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-06-23T15:04:12+08:00</updated>
+  <updated>2014-06-23T16:00:54+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -20,8 +20,6 @@
     <id>http://LanderlYoung.github.io/blog/2014/06/20/sngmi-ni-xiang-mu-gan-wu</id>
     <content type="html"><![CDATA[<p>来腾讯实习有半个月来，刚进来公司统一培训了一天半，闲扯了点东西。然后SNG部门培训了3天时间，讲解一些业务流程。然后就是重头戏，所谓的迷你项目。我擦，虽然今天做完了，但是我还是想说这个巨坑啊！</p>
 
-<p>==========标准割===========</p>
-
 <!--more-->
 
 
@@ -32,13 +30,12 @@
 <p>因为我做和服务器端的接口工作，当时一边商量一边改。一开始觉得商量接口真麻烦，后来才发现没有事先定义好接口才是做苦逼的。最荒唐的一件事是今天上午mini项目要测评了，结果昨天下午还在找后台的同学加接口。所以说：
 <blockquote><p></p></p><p><h2>概要设计真的很重要</h2></p><p><br/><p></p></blockquote></p>
 
-<p>前天晚上的问题是在电脑上调试完毕的net接口整合到Android上却得不到返回数据，比较奇怪的是有一个房屋信息POST请求能上传，而且数据库里会出现相应信息，但是返回值却是空的。一开始怀疑是没有申请网络访问权限，后来发现不是。后来sponsor Lewis 过来帮我调试，教会了我一套安卓单步调试的方法，但是问题还是没能轻松解决。当天晚上熬了一夜，睡醒了4点，突然灵机医现决定把所有的JSON返回值都Log出来，同时所有的Exeption也要Log出来。后来慢慢调试才发现是NetworkOnMainThreadException！网络跑在主UI线程！所以每次执行到connect的时候android系统都会抛出这个异常，但是我却Too young， sometimes too naive！把所有可能抛出异常的地方都catch (Exception e) {}。就是说catch了所有Exception的父类并且什么也不做！对！就是不作为！后来跟我的导师raez说这件事，他说：
+<p>前天晚上的问题是在电脑上调试完毕的net接口整合到Android上却得不到返回数据，比较奇怪的是有一个房屋信息POST请求能上传，而且数据库里会出现相应信息，但是返回值却是空的。一开始怀疑是没有申请网络访问权限，后来发现不是。后来sponsor Lewis 过来帮我调试，教会了我一套安卓单步调试的方法，但是问题还是没能轻松解决。当天晚上熬了一夜，睡醒了4点，突然灵机医现决定把所有的JSON返回值都Log出来，同时所有的Exeption也要Log出来。后来慢慢调试才发现是<code>NetworkOnMainThreadException</code>！网络跑在主UI线程！所以每次执行到connect的时候android系统都会抛出这个异常，但是我却Too young， sometimes too naive！把所有可能抛出异常的地方都catch (Exception e) {}。就是说catch了所有Exception的父类并且什么也不做！对！就是不作为！后来跟我的导师raez说这件事，他说：
 <blockquote><p></p></p><p><h2>异常本来是用来发现问题的，不能随便catch。</h2></p><p><br/><p></p></blockquote></p>
 
-<p>对此我的理解是，需要catch一个exception的时候<em>尽量精准catch</em>。比如一个方法可能抛出IOException就不要懒懒的去直接catch Exception，同时如果抛出多种异常也要一个一个catch;
-``` java</p>
-
-<p>try {</p>
+<p>对此我的理解是，需要catch一个exception的时候<strong>尽量精准catch</strong>。比如一个方法可能抛出IOException就不要懒懒的去直接catch Exception，同时如果抛出多种异常也要一个一个catch;
+``` java
+try {</p>
 
 <pre><code>...
 } catch (IOException e) {
@@ -50,8 +47,25 @@
 }
 </code></pre>
 
-<p>```
-同时<em>捕获一个异常之后不能什么都不做</em>，至少应该printStackTrace或者是Log出来，否则出现问题之后很难排查出来。另外NullPointerException 原则上不允许catch，OutOfMemoryError除了在大量消耗内存的代码片段上（比图图片处理，或者字符串拼接等）不允许catch。还有就是捕获异常是一定<em>精准捕获</em>。</p>
+<p><code>``
+同时**捕获一个异常之后不能什么都不做**，至少应该</code>printStackTrace<code>或者是Log出来，否则出现问题之后很难排查出来。另外</code>NullPointerException<code>原则上不允许catch，</code>OutOfMemoryError`除了在大量消耗内存的代码片段上（比图图片处理，或者字符串拼接等）不允许catch。还有就是捕获异常是一定<strong>精准捕获</strong>。</p>
+
+<p>另外关于安卓多线程的使用，学习到了两种方式：Activity的<code>runOnUiThread(Runnable)</code>方法，还有使用AsyncTask类, 另外还有是用Handler之类的方法，当时没有还没有学习。在这个项目里面有一个登陆之后向服务器拉取用户信息的代码是这么写的：
+``` java
+new Thread() {</p>
+
+<pre><code>    @Override
+    public viod run() {
+            NetworkImpl.getInstance().requestUserInfo();
+        }
+}.start();
+</code></pre>
+
+<p>```</p>
+
+<p>做迷你项目的另一个感觉是组里的同学都很厉害的！秋航对安卓比较熟悉，在一些界面方面是他帮我写好xml大致布局的，同时整个地图方面都是他在做。虾米的吴尚对后台很熟悉，迷你项目的第二天就设计好数据库并创建完了各个table，后来很快就写出了接口对应的php文件。一开始不了解测试做的是哪方面内容，后来认识欧阳亚觉得她很厉害呀，各种测试数据，内存泄露测试，CPU测试。还有代码中的bug都给我们指了出来。</p>
+
+<p>另外一方面是缺少大型软开发的经验，原来自己写过的代码，最多也就一两千行。导致我们缺乏大型软件框架方面的知识。mini项目的Android端事实上来说就分了两个部分，UI和后台。今天听Wii讲了我们组的项目的大致构架，各个模块的分工功能，模块之间怎么通信回调，瞬间觉得高达上！真的是很开眼界。</p>
 ]]></content>
   </entry>
   
