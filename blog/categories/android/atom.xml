@@ -4,7 +4,7 @@
   <title><![CDATA[Category: android | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/blog/categories/android/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-06-24T17:59:15+08:00</updated>
+  <updated>2014-06-24T19:57:46+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -43,7 +43,7 @@ private Handler handler = new Handler() {</p>
 
 <p>然后开启新的线程，在新的线程里面完成后台任务，任务完成后给这个handler发一个消息让它来处理。因为Handler是在主线程实例化(并且在实例化的时候没有指明Looper)，因此handler的handleMessage方法也是在主线程被调用的。</p>
 
-<p>// 使用Handler Message MessageQueue Looper等方式去访问网络资源的时候，我们必须要开启一个子线程</p>
+<p>使用Handler Message MessageQueue Looper等方式去访问网络资源的时候，我们必须要开启一个子线程</p>
 
 <p>```
 public class MyThread implements Runnable{</p>
@@ -55,10 +55,10 @@ public class MyThread implements Runnable{</p>
         HttpGet httpGet = new HttpGet(imgPath);
         HttpResponse httpResponse = null;
         try {
-            Log.v("debug", "start download picture in thread:" +
+            Log.v("debug", "start download picture in thread:" + 
                     Thread.currentThread().getName());
             httpResponse = httpClient.execute(httpGet);
-            Log.v("debug", "download complete with status code" +
+            Log.v("debug", "download complete with status code" + 
                     httpResponse.getStatusLine().getStatusCode());
             if(200 == httpResponse.getStatusLine().getStatusCode()){
                 byte[] data = EntityUtils.toByteArray(httpResponse.getEntity());
@@ -135,7 +135,7 @@ mCallback = null;
 <p>}
 ```</p>
 
-<p>含参构造函数使用提供的消息队列，而不是使用默认的。</p>
+<p>当然也可以含参构造函数使用提供的消息队列，而不是使用默认的。</p>
 
 <p>``` java
 /<em>*
@@ -151,11 +151,12 @@ mCallback = null;
 <p>}
 ```</p>
 
-<p>从上面两个函数可以看出来消息队列是Looper的一个成员变量，handler的sendMessage方法只是把Message加到了消息队列去。接着去看看Looper对消息对了mQueue做了什么。</p>
+<p>从上面两个函数可以看出来消息队列是Looper的一个成员变量，handler的sendMessage方法只是把Message加到了消息队列去。接着去看看Looper对消息队列mQueue做了什么。</p>
 
 <p>Looper中的MessageQueue的定义如下：</p>
 
 <p><code>java
+...
 final MessageQueue mQueue;
 final Thread mThread;
 ...
@@ -221,10 +222,10 @@ for (;;) {
 ```</p>
 
 <p>注意到中间的死循环 <code>for(;;;){...}</code>
-以及关键的这一句：
-<code>msg.target.dispatchMessage(msg)</code>
+以及关键的这一句：<br/>
+<code>msg.target.dispatchMessage(msg)</code><br/>
 猜测target就是这个message对应处理他的handler，于是我圆润的滚过去看看：
-Message中的target是这么定义的：</p>
+<strong>Message</strong>中的target是这么定义的：</p>
 
 <p><code>java
 Handler target;
@@ -264,10 +265,14 @@ public void dispatchMessage(Message msg) {</p>
 
 <p>如果msg的callback不为null就调用callback，否则就看看Handler 的mCallback有没有设置，如果有的话就让mCallback来处理消息，如果没有就是用默认的处理方法handleMessage。默认的处理方法是什么都不多，但是子类如果覆盖了handleMessage方法就可以执行子类想要做的代码了。</p>
 
-<p>所以整理一下流程是这样的：
- 1.  实例化一个Handler或Handler的子类，可以在Looper参数内传入需要处理消息的那个线程对应的looper，如果没有传入就会使用当前线程默认的looper。
- 2. 在另一个线程中处理事物，完成之后构造一个存储结果的Message，使用handler发送构造的Message。handler发送Message的时候会把Message的target属性设置成他自己，这样looper在处理到这个消息的时候就能调用这个handler来处理这个message。
- 3. handler发送完消息之后message就进入了looper的消息队列，然后looper会处理该消息队列。当取到了刚才发送的message的时候，looper就会调用该message制定的处理者（target）来处理这个消息。</p>
+<p>所以整理一下流程是这样的：</p>
+
+<ol>
+<li><p> 实例化一个Handler或Handler的子类，可以在Looper参数内传入需要处理消息的那个线程对应的looper，如果没有传入就会使用当前线程默认的looper。</p></li>
+<li><p>在另一个线程中处理事物，完成之后构造一个存储结果的Message，使用handler发送构造的Message。handler发送Message的时候会把Message的target属性设置成他自己，这样looper在处理到这个消息的时候就能调用这个handler来处理这个message。</p></li>
+<li><p>handler发送完消息之后message就进入了looper的消息队列，然后looper会处理该消息队列。当取到了刚才发送的message的时候，looper就会调用该message制定的处理者（target）来处理这个消息。</p></li>
+</ol>
+
 
 <h2>说明</h2>
 
