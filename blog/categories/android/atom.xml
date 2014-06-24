@@ -4,7 +4,7 @@
   <title><![CDATA[Category: android | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/blog/categories/android/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-06-24T20:57:10+08:00</updated>
+  <updated>2014-06-24T20:59:29+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -79,10 +79,8 @@ public class MyThread implements Runnable{</p>
 
 <p>分析一下整个过程的大致流程,首先从Handler的sendMessage下手：从源代码中看，sendMessage最终会调用到Handler中的sendMessageAtTime。</p>
 
-<pre><code>```
-</code></pre>
-
-<p>public boolean sendMessageAtTime(Message msg, long uptimeMillis)
+<p>``` java
+public boolean sendMessageAtTime(Message msg, long uptimeMillis)
 {</p>
 
 <pre><code>boolean sent = false;
@@ -316,10 +314,10 @@ return new Message();
 <p>```</p>
 
 <p>如果池中有的话就取最后一个出来，如果没有就new一个。可以看到这些Message在pool是以单链表的形式组织的。<br/>
-然后看一下回收：
-``` java</p>
+然后看一下回收：</p>
 
-<p>/<em>*
+<p>``` java
+/<em>*
  * Return a Message instance to the global pool.  You MUST NOT touch
  * the Message after calling this function &mdash; it has effectively been
  * freed.
