@@ -4,7 +4,7 @@
   <title><![CDATA[Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-06-24T17:09:36+08:00</updated>
+  <updated>2014-06-24T17:59:15+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -53,7 +53,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>然后开启新的线程，在新的线程里面完成后台任务，任务完成后给这个handler发一个消息让它来处理。因为Handler是在主线程实例化，因此handler的handleMessage方法也是在主线程被调用的。</p>
+<p>然后开启新的线程，在新的线程里面完成后台任务，任务完成后给这个handler发一个消息让它来处理。因为Handler是在主线程实例化(并且在实例化的时候没有指明Looper)，因此handler的handleMessage方法也是在主线程被调用的。</p>
 
 <p>// 使用Handler Message MessageQueue Looper等方式去访问网络资源的时候，我们必须要开启一个子线程</p>
 
@@ -81,6 +81,8 @@
 <span class='line-number'>22</span>
 <span class='line-number'>23</span>
 <span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
 </pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyThread</span> <span class="kd">implements</span> <span class="n">Runnable</span><span class="o">{</span>
 </span><span class='line'>    <span class="c1">// 在run方法中完成网络耗时的操作</span>
 </span><span class='line'>    <span class="nd">@Override</span>
@@ -89,9 +91,11 @@
 </span><span class='line'>            <span class="n">HttpGet</span> <span class="n">httpGet</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HttpGet</span><span class="o">(</span><span class="n">imgPath</span><span class="o">);</span>
 </span><span class='line'>            <span class="n">HttpResponse</span> <span class="n">httpResponse</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
 </span><span class='line'>            <span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>                <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="s">&quot;debug&quot;</span><span class="o">,</span> <span class="s">&quot;start download picture in thread:&quot;</span> <span class="o">+</span> <span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">());</span>
+</span><span class='line'>                <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="s">&quot;debug&quot;</span><span class="o">,</span> <span class="s">&quot;start download picture in thread:&quot;</span> <span class="o">+</span>
+</span><span class='line'>                        <span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">());</span>
 </span><span class='line'>                <span class="n">httpResponse</span> <span class="o">=</span> <span class="n">httpClient</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">httpGet</span><span class="o">);</span>
-</span><span class='line'>                <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="s">&quot;debug&quot;</span><span class="o">,</span> <span class="s">&quot;download complete with status code&quot;</span> <span class="o">+</span> <span class="n">httpResponse</span><span class="o">.</span><span class="na">getStatusLine</span><span class="o">().</span><span class="na">getStatusCode</span><span class="o">());</span>
+</span><span class='line'>                <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="s">&quot;debug&quot;</span><span class="o">,</span> <span class="s">&quot;download complete with status code&quot;</span> <span class="o">+</span>
+</span><span class='line'>                        <span class="n">httpResponse</span><span class="o">.</span><span class="na">getStatusLine</span><span class="o">().</span><span class="na">getStatusCode</span><span class="o">());</span>
 </span><span class='line'>                <span class="k">if</span><span class="o">(</span><span class="mi">200</span> <span class="o">==</span> <span class="n">httpResponse</span><span class="o">.</span><span class="na">getStatusLine</span><span class="o">().</span><span class="na">getStatusCode</span><span class="o">()){</span>
 </span><span class='line'>                    <span class="kt">byte</span><span class="o">[]</span> <span class="n">data</span> <span class="o">=</span> <span class="n">EntityUtils</span><span class="o">.</span><span class="na">toByteArray</span><span class="o">(</span><span class="n">httpResponse</span><span class="o">.</span><span class="na">getEntity</span><span class="o">());</span>
 </span><span class='line'>                    <span class="c1">// 这里的数据data我们必须发送给UI的主线程，所以我们通过Message的方式来做桥梁。</span>
@@ -108,57 +112,94 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>分析一下整个过程的大致流程：</p>
+<p>分析一下整个过程的大致流程,首先从Handler的sendMessage下手：从源代码中看，sendMessage最终会调用到Handler中的sendMessageAtTime。</p>
 
-<pre><code>首先从Handler的sendMessage下手：从源代码中看，sendMessage最终会调用到Handler中的sendMessageAtTime：
-</code></pre>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">sendMessageAtTime</span><span class="o">(</span><span class="n">Message</span> <span class="n">msg</span><span class="o">,</span> <span class="kt">long</span> <span class="n">uptimeMillis</span><span class="o">)</span>
+</span><span class='line'><span class="o">{</span>
+</span><span class='line'>    <span class="kt">boolean</span> <span class="n">sent</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+</span><span class='line'>    <span class="n">MessageQueue</span> <span class="n">queue</span> <span class="o">=</span> <span class="n">mQueue</span><span class="o">;</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">queue</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="c1">//注意这两句</span>
+</span><span class='line'>        <span class="n">msg</span><span class="o">.</span><span class="na">target</span> <span class="o">=</span> <span class="k">this</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">sent</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="na">enqueueMessage</span><span class="o">(</span><span class="n">msg</span><span class="o">,</span> <span class="n">uptimeMillis</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">RuntimeException</span> <span class="n">e</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RuntimeException</span><span class="o">(</span>
+</span><span class='line'>                <span class="k">this</span> <span class="o">+</span> <span class="s">&quot; sendMessageAtTime() called with no mQueue&quot;</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">Log</span><span class="o">.</span><span class="na">w</span><span class="o">(</span><span class="s">&quot;Looper&quot;</span><span class="o">,</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">(),</span> <span class="n">e</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">sent</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
-<p>public boolean sendMessageAtTime(Message msg, long uptimeMillis)
-{</p>
-
-<pre><code>boolean sent = false;
-MessageQueue queue = mQueue;
-if (queue != null) {
-    msg.target = this;
-    sent = queue.enqueueMessage(msg, uptimeMillis);
-}
-else {
-    RuntimeException e = new RuntimeException(
-            this + " sendMessageAtTime() called with no mQueue");
-    Log.w("Looper", e.getMessage(), e);
-}
-return sent;
-</code></pre>
-
-<p>}</p>
 
 <p>看得出来主要做的事情就是把消息的target设置成自己，然后把消息存入到消息队列MessageQueue中去，
-接着首先去看看MessageQueue mQueue的定义</p>
+接着首先去看看Handler 中的MessageQueue mQueue的定义:</p>
 
-<p>在Handler类的最后，既然是final的那初始化一定在构造函数了：
-默认构造函数，代码中的注释写道“默认构造函数，把这个handler和当前线程的消息队列联系起来，如果没有（当前线程的消息队列），这个handler就不能接收消息了。</p>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">final</span> <span class="n">MessageQueue</span> <span class="n">mQueue</span><span class="o">;</span>
+</span><span class='line'><span class="kd">final</span> <span class="n">Looper</span> <span class="n">mLooper</span><span class="o">;</span>
+</span><span class='line'><span class="o">...</span>
+</span></code></pre></td></tr></table></div></figure>
 
-<p>/<em>*
- * Default constructor associates this handler with the queue for the
- * current thread.
- *
- * If there isn&rsquo;t one, this handler won&rsquo;t be able to receive messages.
- </em>/
-public Handler() {</p>
 
-<pre><code>...
-    mLooper = Looper.myLooper();
-if (mLooper == null) {
-    throw new RuntimeException(
-            "Can't create handler inside thread that has not called Looper.prepare()");
-}
-mQueue = mLooper.mQueue;
-mCallback = null;
-</code></pre>
+<p>定义在Handler类的最后，既然是final的那初始化一定在构造函数了：
+默认构造函数，代码中的注释写道“默认构造函数把这个handler和当前线程的消息队列联系起来，如果没有（当前线程的消息队列），这个handler就不能接收消息了。“</p>
 
-<p>}</p>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="cm">/**</span>
+</span><span class='line'><span class="cm"> * Default constructor associates this handler with the queue for the</span>
+</span><span class='line'><span class="cm"> * current thread.</span>
+</span><span class='line'><span class="cm"> *</span>
+</span><span class='line'><span class="cm"> * If there isn&#39;t one, this handler won&#39;t be able to receive messages.</span>
+</span><span class='line'><span class="cm"> */</span>
+</span><span class='line'><span class="kd">public</span> <span class="nf">Handler</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="o">...</span>
+</span><span class='line'>        <span class="n">mLooper</span> <span class="o">=</span> <span class="n">Looper</span><span class="o">.</span><span class="na">myLooper</span><span class="o">();</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">mLooper</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span>
+</span><span class='line'>                <span class="s">&quot;Can&#39;t create handler inside thread that has not called Looper.prepare()&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="n">mQueue</span> <span class="o">=</span> <span class="n">mLooper</span><span class="o">.</span><span class="na">mQueue</span><span class="o">;</span>
+</span><span class='line'>    <span class="n">mCallback</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
 
-<p>使用提供的消息队列，而不是使用默认的。</p>
+
+<p>含参构造函数使用提供的消息队列，而不是使用默认的。</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -179,11 +220,20 @@ mCallback = null;
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>从上面两个函数可以看出来消息队列是Looper的，handler的sendMessage只是把Message加到了消息队列去。接着去看看Looper对消息对了mQueue做了什么。</p>
+<p>从上面两个函数可以看出来消息队列是Looper的一个成员变量，handler的sendMessage方法只是把Message加到了消息队列去。接着去看看Looper对消息对了mQueue做了什么。</p>
 
 <p>Looper中的MessageQueue的定义如下：</p>
 
-<p>然后是Looper 中的loop方法</p>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">final</span> <span class="n">MessageQueue</span> <span class="n">mQueue</span><span class="o">;</span>
+</span><span class='line'><span class="kd">final</span> <span class="n">Thread</span> <span class="n">mThread</span><span class="o">;</span>
+</span><span class='line'><span class="o">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>然后看到了Looper 中的loop方法</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -235,6 +285,7 @@ mCallback = null;
 <span class='line-number'>48</span>
 <span class='line-number'>49</span>
 <span class='line-number'>50</span>
+<span class='line-number'>51</span>
 </pre></td><td class='code'><pre><code class='java'><span class='line'><span class="cm">/**</span>
 </span><span class='line'><span class="cm"> * Run the message queue in this thread. Be sure to call</span>
 </span><span class='line'><span class="cm"> * {@link #quit()} to end the loop.</span>
@@ -265,6 +316,7 @@ mCallback = null;
 </span><span class='line'>                    <span class="n">msg</span><span class="o">.</span><span class="na">callback</span> <span class="o">+</span> <span class="s">&quot;: &quot;</span> <span class="o">+</span> <span class="n">msg</span><span class="o">.</span><span class="na">what</span><span class="o">);</span>
 </span><span class='line'>        <span class="o">}</span>
 </span><span class='line'>
+</span><span class='line'>        <span class="c1">//注意这一句</span>
 </span><span class='line'>        <span class="n">msg</span><span class="o">.</span><span class="na">target</span><span class="o">.</span><span class="na">dispatchMessage</span><span class="o">(</span><span class="n">msg</span><span class="o">);</span>
 </span><span class='line'>
 </span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">logging</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
@@ -289,12 +341,26 @@ mCallback = null;
 
 
 <p>注意到中间的死循环 <code>for(;;;){...}</code>
-以及关键的这一句：</p>
-
-<p>猜测target就是这个message对应处理他的handler，于是我圆润的滚过去看看：
+以及关键的这一句：
+<code>msg.target.dispatchMessage(msg)</code>
+猜测target就是这个message对应处理他的handler，于是我圆润的滚过去看看：
 Message中的target是这么定义的：</p>
 
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">Handler</span> <span class="n">target</span><span class="o">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
 <p>看来八九不离十了。继续看target赋值的语句：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">setTarget</span><span class="o">(</span><span class="n">Handler</span> <span class="n">target</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">target</span> <span class="o">=</span> <span class="n">target</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>当然还有各种带有Handler参数的obtain方法，都会给target赋值。
 于是看看Handler.dispatchMessage(Message)是做什么的：</p>
@@ -326,9 +392,16 @@ Message中的target是这么定义的：</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>如果msg的callback不为null就调用callback，否则如果就看看mCallback有没有设置，如果有的话就让callback来处理消息，如果没有就是用默认的处理方法。默认的处理方法是什么都不多，但是子类如果覆盖了handleMessage方法就可以执行子类想要做的代码了。</p>
+<p>如果msg的callback不为null就调用callback，否则就看看Handler 的mCallback有没有设置，如果有的话就让mCallback来处理消息，如果没有就是用默认的处理方法handleMessage。默认的处理方法是什么都不多，但是子类如果覆盖了handleMessage方法就可以执行子类想要做的代码了。</p>
 
-<p>但是 事情没有那么简单！还有一个无参数的obtain方法，那么没有指定target的message是怎么成功发送到相应的handler的呢？还是圆润的滚过去看Looper的代码吧。</p>
+<p>所以整理一下流程是这样的：
+ 1.  实例化一个Handler或Handler的子类，可以在Looper参数内传入需要处理消息的那个线程对应的looper，如果没有传入就会使用当前线程默认的looper。
+ 2. 在另一个线程中处理事物，完成之后构造一个存储结果的Message，使用handler发送构造的Message。handler发送Message的时候会把Message的target属性设置成他自己，这样looper在处理到这个消息的时候就能调用这个handler来处理这个message。
+ 3. handler发送完消息之后message就进入了looper的消息队列，然后looper会处理该消息队列。当取到了刚才发送的message的时候，looper就会调用该message制定的处理者（target）来处理这个消息。</p>
+
+<h2>说明</h2>
+
+<p>因为消息处理的回调是在Looper里面调用的，因此处理消息的线程就是looper所在的那个线程。不一定就是Handerl所在的线程，因为Handerl 可以指定Looper。只有Handler没有指定Looper的情况下消息处理线程才是handler所在的那个线程，因为此时handler的looper就是handler所在的线程对应的looper。</p>
 ]]></content>
   </entry>
   
@@ -3975,7 +4048,7 @@ Message中的target是这么定义的：</p>
   
   <entry>
     <title type="html"><![CDATA[linux的搜狗输入法！]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/04/22/linuxde-sou-gou-shu-ru-fa-%21/"/>
+    <link href="http://LanderlYoung.github.io/blog/2014/04/22/linuxde-sou-gou-shu-ru-fa-!/"/>
     <updated>2014-04-22T14:52:39+08:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/04/22/linuxde-sou-gou-shu-ru-fa-!</id>
     <content type="html"><![CDATA[<p>貌似好久之前就知道搜狗输入法推出了linux版本，但是当时用的是Debian74系统。Debian的特点就是软件版本比较老（考虑的是稳定性之类的原因，毕竟Debian更多的是用在服务器上的）。而且搜狗输入法又不是开源的，不能自己编译，所以出现的libc6的版本不兼容问题很是蛋疼。昨天还是决定装上Ubuntu14.04，然后装上了搜狗输入法，那感觉真是一个爽啊。从此Linux打字也有了飞一般的感觉，也不用担心满篇的错别字了。
