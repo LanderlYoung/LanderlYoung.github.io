@@ -130,16 +130,16 @@ div#margin {
 /* ---------------- USER-CONFIGURABLE STYLING --------------------- */
 /* Size options */
 .size-small {
-	font-size: 12px;
+	font-size: 0.75em;
 }
 .size-medium {
-	font-size: 18px;	
+	font-size: 1em;	
 }
 .size-large {
-	font-size: 26px;
+	font-size: 1.5em;
 }
 .size-x-large {
-	font-size: 34px;
+	font-size: 2em;
 }
 
 /* Style options */
@@ -161,7 +161,7 @@ div#margin {
 
 .style-newspaper {
 	font-family:"Times New Roman", Times, serif;
-	background: #F7F7F7;
+	background: #FFF;
 	color: #222;
 }
 .style-newspaper h1 {
