@@ -4,7 +4,7 @@
   <title><![CDATA[Category: android | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/blog/categories/android/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-06-24T19:57:46+08:00</updated>
+  <updated>2014-06-24T20:57:10+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -79,8 +79,10 @@ public class MyThread implements Runnable{</p>
 
 <p>分析一下整个过程的大致流程,首先从Handler的sendMessage下手：从源代码中看，sendMessage最终会调用到Handler中的sendMessageAtTime。</p>
 
-<p>```
-public boolean sendMessageAtTime(Message msg, long uptimeMillis)
+<pre><code>```
+</code></pre>
+
+<p>public boolean sendMessageAtTime(Message msg, long uptimeMillis)
 {</p>
 
 <pre><code>boolean sent = false;
@@ -105,13 +107,15 @@ return sent;
 接着首先去看看Handler 中的MessageQueue mQueue的定义:</p>
 
 <p><code>java
+...
 final MessageQueue mQueue;
 final Looper mLooper;
 ...
 </code></p>
 
-<p>定义在Handler类的最后，既然是final的那初始化一定在构造函数了：
-默认构造函数，代码中的注释写道“默认构造函数把这个handler和当前线程的消息队列联系起来，如果没有（当前线程的消息队列），这个handler就不能接收消息了。“</p>
+<p>定义在Handler类的最后，既然是final的那初始化一定在构造函数了：</p>
+
+<p>默认构造函数，代码中的注释写道<code>默认构造函数把这个handler和当前线程的消息队列联系起来，如果没有（当前线程的消息队列），这个handler就不能接收消息了。</code></p>
 
 <p>```
 /<em>*
@@ -135,7 +139,7 @@ mCallback = null;
 <p>}
 ```</p>
 
-<p>当然也可以含参构造函数使用提供的消息队列，而不是使用默认的。</p>
+<p>当然也可以通过含参构造函数提供消息队列，而不是使用默认的。</p>
 
 <p>``` java
 /<em>*
@@ -156,6 +160,7 @@ mCallback = null;
 <p>Looper中的MessageQueue的定义如下：</p>
 
 <p><code>java
+...
 ...
 final MessageQueue mQueue;
 final Thread mThread;
@@ -228,7 +233,9 @@ for (;;) {
 <strong>Message</strong>中的target是这么定义的：</p>
 
 <p><code>java
+...
 Handler target;
+...
 </code></p>
 
 <p>看来八九不离十了。继续看target赋值的语句：</p>
@@ -236,7 +243,7 @@ Handler target;
 <p>``` java
 public void setTarget(Handler target) {</p>
 
-<pre><code>    this.target = target;
+<pre><code>this.target = target;
 </code></pre>
 
 <p>}
@@ -268,15 +275,88 @@ public void dispatchMessage(Message msg) {</p>
 <p>所以整理一下流程是这样的：</p>
 
 <ol>
-<li><p> 实例化一个Handler或Handler的子类，可以在Looper参数内传入需要处理消息的那个线程对应的looper，如果没有传入就会使用当前线程默认的looper。</p></li>
+<li><p>实例化一个Handler或Handler的子类，可以在Looper参数内传入需要处理消息的那个线程对应的looper，如果没有传入就会使用当前线程默认的looper(如果有的话，否则handler会无法收到消息)。</p></li>
 <li><p>在另一个线程中处理事物，完成之后构造一个存储结果的Message，使用handler发送构造的Message。handler发送Message的时候会把Message的target属性设置成他自己，这样looper在处理到这个消息的时候就能调用这个handler来处理这个message。</p></li>
-<li><p>handler发送完消息之后message就进入了looper的消息队列，然后looper会处理该消息队列。当取到了刚才发送的message的时候，looper就会调用该message制定的处理者（target）来处理这个消息。</p></li>
+<li><p>handler发送完消息之后message就进入了looper的消息队列，然后looper会处理该消息队列。当取到了刚才发送的message的时候，looper就会调用该message指定的处理他的Handler（target）来处理这个消息。</p></li>
 </ol>
 
 
 <h2>说明</h2>
 
-<p>因为消息处理的回调是在Looper里面调用的，因此处理消息的线程就是looper所在的那个线程。不一定就是Handerl所在的线程，因为Handerl 可以指定Looper。只有Handler没有指定Looper的情况下消息处理线程才是handler所在的那个线程，因为此时handler的looper就是handler所在的线程对应的looper。</p>
+<p>因为消息处理的回调是在Looper里面调用的，因此处理消息的线程就是looper所在的那个线程。不一定就是实例化Handerl时所在的线程，因为Handler 可以指定Looper。只有Handler没有指定Looper的情况下消息处理线程才是handler所在的那个线程，因为此时handler的默认looper就是handler所在的线程对应的looper。</p>
+
+<h1>附录</h1>
+
+<p>最后说说###Message中的回收机制###
+因为Message是用来传输信息的经常会重复利用，所以维护一个Message pool减少每次new的开销。源代码中是这么做的：<br/>
+首先是obtain方法</p>
+
+<p>``` java</p>
+
+<p>/<em>*
+ * Return a new Message instance from the global pool. Allows us to
+ * avoid allocating new objects in many cases.
+ </em>/
+public static Message obtain() {</p>
+
+<pre><code>synchronized (sPoolSync) {
+    if (sPool != null) {
+        Message m = sPool;
+        sPool = m.next;
+        m.next = null;
+        sPoolSize--;
+        return m;
+    }
+}
+return new Message();
+</code></pre>
+
+<p>}</p>
+
+<p>```</p>
+
+<p>如果池中有的话就取最后一个出来，如果没有就new一个。可以看到这些Message在pool是以单链表的形式组织的。<br/>
+然后看一下回收：
+``` java</p>
+
+<p>/<em>*
+ * Return a Message instance to the global pool.  You MUST NOT touch
+ * the Message after calling this function &mdash; it has effectively been
+ * freed.
+ </em>/
+public void recycle() {</p>
+
+<pre><code>clearForRecycle();
+
+synchronized (sPoolSync) {
+    if (sPoolSize &lt; MAX_POOL_SIZE) {
+        next = sPool;
+        sPool = this;
+        sPoolSize++;
+    }
+}
+</code></pre>
+
+<p>}</p>
+
+<p>/<em>package</em>/ void clearForRecycle() {</p>
+
+<pre><code>flags = 0;
+what = 0;
+arg1 = 0;
+arg2 = 0;
+obj = null;
+replyTo = null;
+when = 0;
+target = null;
+callback = null;
+data = null;
+</code></pre>
+
+<p>}</p>
+
+<p>```
+可以看到回收的时候先清空成员变量，然后把这个message加到pool这个单向链表的最前面，并更新链表头为当前message。如果pool已经满了就直接丢弃这个message等待垃圾回收。</p>
 ]]></content>
   </entry>
   
