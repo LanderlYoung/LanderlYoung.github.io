@@ -7,7 +7,7 @@
 	<meta name="author" content="LanderlYoung">
 
 	
-	<meta name="description" content="2014/06/24 android Comments Android 中的Handler相关源代码浅析 简单用法示例： 1
+	<meta name="description" content="2014/06/24 Android Comments Android 中的Handler相关源代码浅析 简单用法示例： 1
 2
 3
 4
@@ -116,7 +116,7 @@ private Handler handler = new Handler &hellip;">
 		<div class="tags">
 
 
-	<a class='category' href='/blog/categories/android/'>android</a>
+	<a class='category' href='/blog/categories/android/'>Android</a>
 
 
 </div>
@@ -161,480 +161,9 @@ private Handler handler = new Handler &hellip;">
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>然后开启新的线程，在新的线程里面完成后台任务，任务完成后给这个handler发一个消息让它来处理。因为Handler是在主线程实例化(并且在实例化的时候没有指明Looper)，因此handler的handleMessage方法也是在主线程被调用的。</p>
-
-<p>使用Handler Message MessageQueue Looper等方式去访问网络资源的时候，我们必须要开启一个子线程</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyThread</span> <span class="kd">implements</span> <span class="n">Runnable</span><span class="o">{</span>
-</span><span class='line'>    <span class="c1">// 在run方法中完成网络耗时的操作</span>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">HttpClient</span> <span class="n">httpClient</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DefaultHttpClient</span><span class="o">();</span>
-</span><span class='line'>            <span class="n">HttpGet</span> <span class="n">httpGet</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HttpGet</span><span class="o">(</span><span class="n">imgPath</span><span class="o">);</span>
-</span><span class='line'>            <span class="n">HttpResponse</span> <span class="n">httpResponse</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-</span><span class='line'>            <span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>                <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="s">&quot;debug&quot;</span><span class="o">,</span> <span class="s">&quot;start download picture in thread:&quot;</span> <span class="o">+</span>
-</span><span class='line'>                        <span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">());</span>
-</span><span class='line'>                <span class="n">httpResponse</span> <span class="o">=</span> <span class="n">httpClient</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">httpGet</span><span class="o">);</span>
-</span><span class='line'>                <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="s">&quot;debug&quot;</span><span class="o">,</span> <span class="s">&quot;download complete with status code&quot;</span> <span class="o">+</span>
-</span><span class='line'>                        <span class="n">httpResponse</span><span class="o">.</span><span class="na">getStatusLine</span><span class="o">().</span><span class="na">getStatusCode</span><span class="o">());</span>
-</span><span class='line'>                <span class="k">if</span><span class="o">(</span><span class="mi">200</span> <span class="o">==</span> <span class="n">httpResponse</span><span class="o">.</span><span class="na">getStatusLine</span><span class="o">().</span><span class="na">getStatusCode</span><span class="o">()){</span>
-</span><span class='line'>                    <span class="kt">byte</span><span class="o">[]</span> <span class="n">data</span> <span class="o">=</span> <span class="n">EntityUtils</span><span class="o">.</span><span class="na">toByteArray</span><span class="o">(</span><span class="n">httpResponse</span><span class="o">.</span><span class="na">getEntity</span><span class="o">());</span>
-</span><span class='line'>                    <span class="c1">// 这里的数据data我们必须发送给UI的主线程，所以我们通过Message的方式来做桥梁。</span>
-</span><span class='line'>                    <span class="n">Message</span> <span class="n">message</span> <span class="o">=</span> <span class="n">Message</span><span class="o">.</span><span class="na">obtain</span><span class="o">();</span>
-</span><span class='line'>                    <span class="n">message</span><span class="o">.</span><span class="na">obj</span> <span class="o">=</span> <span class="n">data</span><span class="o">;</span>
-</span><span class='line'>                    <span class="n">message</span><span class="o">.</span><span class="na">what</span> <span class="o">=</span> <span class="n">DOWNLOAD_IMG</span><span class="o">;</span>
-</span><span class='line'>                    <span class="n">handler</span><span class="o">.</span><span class="na">sendMessage</span><span class="o">(</span><span class="n">message</span><span class="o">);</span>
-</span><span class='line'>                <span class="o">}</span>
-</span><span class='line'>            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>                <span class="c1">// TODO: handle exception</span>
-</span><span class='line'>            <span class="o">}</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>分析一下整个过程的大致流程,首先从Handler的sendMessage下手：从源代码中看，sendMessage最终会调用到Handler中的sendMessageAtTime。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">sendMessageAtTime</span><span class="o">(</span><span class="n">Message</span> <span class="n">msg</span><span class="o">,</span> <span class="kt">long</span> <span class="n">uptimeMillis</span><span class="o">)</span>
-</span><span class='line'><span class="o">{</span>
-</span><span class='line'>    <span class="kt">boolean</span> <span class="n">sent</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
-</span><span class='line'>    <span class="n">MessageQueue</span> <span class="n">queue</span> <span class="o">=</span> <span class="n">mQueue</span><span class="o">;</span>
-</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">queue</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="c1">//注意这两句</span>
-</span><span class='line'>        <span class="n">msg</span><span class="o">.</span><span class="na">target</span> <span class="o">=</span> <span class="k">this</span><span class="o">;</span>
-</span><span class='line'>        <span class="n">sent</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="na">enqueueMessage</span><span class="o">(</span><span class="n">msg</span><span class="o">,</span> <span class="n">uptimeMillis</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>    <span class="k">else</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">RuntimeException</span> <span class="n">e</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RuntimeException</span><span class="o">(</span>
-</span><span class='line'>                <span class="k">this</span> <span class="o">+</span> <span class="s">&quot; sendMessageAtTime() called with no mQueue&quot;</span><span class="o">);</span>
-</span><span class='line'>        <span class="n">Log</span><span class="o">.</span><span class="na">w</span><span class="o">(</span><span class="s">&quot;Looper&quot;</span><span class="o">,</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">(),</span> <span class="n">e</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">sent</span><span class="o">;</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>看得出来主要做的事情就是把消息的target设置成自己，然后把消息存入到消息队列MessageQueue中去，
-接着首先去看看Handler 中的MessageQueue mQueue的定义:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">...</span>
-</span><span class='line'><span class="kd">final</span> <span class="n">MessageQueue</span> <span class="n">mQueue</span><span class="o">;</span>
-</span><span class='line'><span class="kd">final</span> <span class="n">Looper</span> <span class="n">mLooper</span><span class="o">;</span>
-</span><span class='line'><span class="o">...</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>定义在Handler类的最后，既然是final的那初始化一定在构造函数了：</p>
-
-<p>默认构造函数，代码中的注释写道<code>默认构造函数把这个handler和当前线程的消息队列联系起来，如果没有（当前线程的消息队列），这个handler就不能接收消息了。</code></p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="cm">/**</span>
-</span><span class='line'><span class="cm"> * Default constructor associates this handler with the queue for the</span>
-</span><span class='line'><span class="cm"> * current thread.</span>
-</span><span class='line'><span class="cm"> *</span>
-</span><span class='line'><span class="cm"> * If there isn&#39;t one, this handler won&#39;t be able to receive messages.</span>
-</span><span class='line'><span class="cm"> */</span>
-</span><span class='line'><span class="kd">public</span> <span class="nf">Handler</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>    <span class="o">...</span>
-</span><span class='line'>        <span class="n">mLooper</span> <span class="o">=</span> <span class="n">Looper</span><span class="o">.</span><span class="na">myLooper</span><span class="o">();</span>
-</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">mLooper</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span>
-</span><span class='line'>                <span class="s">&quot;Can&#39;t create handler inside thread that has not called Looper.prepare()&quot;</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>    <span class="n">mQueue</span> <span class="o">=</span> <span class="n">mLooper</span><span class="o">.</span><span class="na">mQueue</span><span class="o">;</span>
-</span><span class='line'>    <span class="n">mCallback</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>当然也可以通过含参构造函数提供消息队列，而不是使用默认的。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="cm">/**</span>
-</span><span class='line'><span class="cm"> * Use the provided queue instead of the default one.</span>
-</span><span class='line'><span class="cm"> */</span>
-</span><span class='line'><span class="kd">public</span> <span class="nf">Handler</span><span class="o">(</span><span class="n">Looper</span> <span class="n">looper</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">mLooper</span> <span class="o">=</span> <span class="n">looper</span><span class="o">;</span>
-</span><span class='line'>    <span class="n">mQueue</span> <span class="o">=</span> <span class="n">looper</span><span class="o">.</span><span class="na">mQueue</span><span class="o">;</span>
-</span><span class='line'>    <span class="n">mCallback</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>从上面两个函数可以看出来消息队列是Looper的一个成员变量，handler的sendMessage方法只是把Message加到了消息队列去。接着去看看Looper对消息队列mQueue做了什么。</p>
-
-<p>Looper中的MessageQueue的定义如下：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">...</span>
-</span><span class='line'><span class="o">...</span>
-</span><span class='line'><span class="kd">final</span> <span class="n">MessageQueue</span> <span class="n">mQueue</span><span class="o">;</span>
-</span><span class='line'><span class="kd">final</span> <span class="n">Thread</span> <span class="n">mThread</span><span class="o">;</span>
-</span><span class='line'><span class="o">...</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>然后看到了Looper 中的loop方法</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="cm">/**</span>
-</span><span class='line'><span class="cm"> * Run the message queue in this thread. Be sure to call</span>
-</span><span class='line'><span class="cm"> * {@link #quit()} to end the loop.</span>
-</span><span class='line'><span class="cm"> */</span>
-</span><span class='line'><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">loop</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">final</span> <span class="n">Looper</span> <span class="n">me</span> <span class="o">=</span> <span class="n">myLooper</span><span class="o">();</span>
-</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">me</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">throw</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span><span class="s">&quot;No Looper; Looper.prepare() wasn&#39;t called on this thread.&quot;</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>    <span class="kd">final</span> <span class="n">MessageQueue</span> <span class="n">queue</span> <span class="o">=</span> <span class="n">me</span><span class="o">.</span><span class="na">mQueue</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="c1">// Make sure the identity of this thread is that of the local process,</span>
-</span><span class='line'>    <span class="c1">// and keep track of what that identity token actually is.</span>
-</span><span class='line'>    <span class="n">Binder</span><span class="o">.</span><span class="na">clearCallingIdentity</span><span class="o">();</span>
-</span><span class='line'>    <span class="kd">final</span> <span class="kt">long</span> <span class="n">ident</span> <span class="o">=</span> <span class="n">Binder</span><span class="o">.</span><span class="na">clearCallingIdentity</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">for</span> <span class="o">(;;)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">Message</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="na">next</span><span class="o">();</span> <span class="c1">// might block</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">msg</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="c1">// No message indicates that the message queue is quitting.</span>
-</span><span class='line'>            <span class="k">return</span><span class="o">;</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="c1">// This must be in a local variable, in case a UI event sets the logger</span>
-</span><span class='line'>        <span class="n">Printer</span> <span class="n">logging</span> <span class="o">=</span> <span class="n">me</span><span class="o">.</span><span class="na">mLogging</span><span class="o">;</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">logging</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">logging</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;&gt;&gt;&gt;&gt;&gt; Dispatching to &quot;</span> <span class="o">+</span> <span class="n">msg</span><span class="o">.</span><span class="na">target</span> <span class="o">+</span> <span class="s">&quot; &quot;</span> <span class="o">+</span>
-</span><span class='line'>                    <span class="n">msg</span><span class="o">.</span><span class="na">callback</span> <span class="o">+</span> <span class="s">&quot;: &quot;</span> <span class="o">+</span> <span class="n">msg</span><span class="o">.</span><span class="na">what</span><span class="o">);</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="c1">//注意这一句</span>
-</span><span class='line'>        <span class="n">msg</span><span class="o">.</span><span class="na">target</span><span class="o">.</span><span class="na">dispatchMessage</span><span class="o">(</span><span class="n">msg</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">logging</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">logging</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;&lt;&lt;&lt;&lt;&lt; Finished to &quot;</span> <span class="o">+</span> <span class="n">msg</span><span class="o">.</span><span class="na">target</span> <span class="o">+</span> <span class="s">&quot; &quot;</span> <span class="o">+</span> <span class="n">msg</span><span class="o">.</span><span class="na">callback</span><span class="o">);</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="c1">// Make sure that during the course of dispatching the</span>
-</span><span class='line'>        <span class="c1">// identity of the thread wasn&#39;t corrupted.</span>
-</span><span class='line'>        <span class="kd">final</span> <span class="kt">long</span> <span class="n">newIdent</span> <span class="o">=</span> <span class="n">Binder</span><span class="o">.</span><span class="na">clearCallingIdentity</span><span class="o">();</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">ident</span> <span class="o">!=</span> <span class="n">newIdent</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">Log</span><span class="o">.</span><span class="na">wtf</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="s">&quot;Thread identity changed from 0x&quot;</span>
-</span><span class='line'>                    <span class="o">+</span> <span class="n">Long</span><span class="o">.</span><span class="na">toHexString</span><span class="o">(</span><span class="n">ident</span><span class="o">)</span> <span class="o">+</span> <span class="s">&quot; to 0x&quot;</span>
-</span><span class='line'>                    <span class="o">+</span> <span class="n">Long</span><span class="o">.</span><span class="na">toHexString</span><span class="o">(</span><span class="n">newIdent</span><span class="o">)</span> <span class="o">+</span> <span class="s">&quot; while dispatching to &quot;</span>
-</span><span class='line'>                    <span class="o">+</span> <span class="n">msg</span><span class="o">.</span><span class="na">target</span><span class="o">.</span><span class="na">getClass</span><span class="o">().</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot; &quot;</span>
-</span><span class='line'>                    <span class="o">+</span> <span class="n">msg</span><span class="o">.</span><span class="na">callback</span> <span class="o">+</span> <span class="s">&quot; what=&quot;</span> <span class="o">+</span> <span class="n">msg</span><span class="o">.</span><span class="na">what</span><span class="o">);</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>        <span class="n">msg</span><span class="o">.</span><span class="na">recycle</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>注意到中间的死循环 <code>for(;;;){...}</code>
-以及关键的这一句：<br/>
-<code>msg.target.dispatchMessage(msg)</code><br/>
-猜测target就是这个message对应处理他的handler，于是我圆润的滚过去看看：
-<strong>Message</strong>中的target是这么定义的：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">...</span>
-</span><span class='line'><span class="n">Handler</span> <span class="n">target</span><span class="o">;</span>
-</span><span class='line'><span class="o">...</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>看来八九不离十了。继续看target赋值的语句：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">setTarget</span><span class="o">(</span><span class="n">Handler</span> <span class="n">target</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">this</span><span class="o">.</span><span class="na">target</span> <span class="o">=</span> <span class="n">target</span><span class="o">;</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>当然还有各种带有Handler参数的obtain方法，都会给target赋值。
-于是看看Handler.dispatchMessage(Message)是做什么的：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">dispatchMessage</span><span class="o">(</span><span class="n">Message</span> <span class="n">msg</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">msg</span><span class="o">.</span><span class="na">callback</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">handleCallback</span><span class="o">(</span><span class="n">msg</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">mCallback</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">mCallback</span><span class="o">.</span><span class="na">handleMessage</span><span class="o">(</span><span class="n">msg</span><span class="o">))</span> <span class="o">{</span>
-</span><span class='line'>                <span class="k">return</span><span class="o">;</span>
-</span><span class='line'>            <span class="o">}</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>        <span class="n">handleMessage</span><span class="o">(</span><span class="n">msg</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>如果msg的callback不为null就调用callback，否则就看看Handler 的mCallback有没有设置，如果有的话就让mCallback来处理消息，如果没有就是用默认的处理方法handleMessage。默认的处理方法是什么都不多，但是子类如果覆盖了handleMessage方法就可以执行子类想要做的代码了。</p>
-
-<p>所以整理一下流程是这样的：</p>
-
-<ol>
-<li><p>实例化一个Handler或Handler的子类，可以在Looper参数内传入需要处理消息的那个线程对应的looper，如果没有传入就会使用当前线程默认的looper(如果有的话，否则handler会无法收到消息)。</p></li>
-<li><p>在另一个线程中处理事物，完成之后构造一个存储结果的Message，使用handler发送构造的Message。handler发送Message的时候会把Message的target属性设置成他自己，这样looper在处理到这个消息的时候就能调用这个handler来处理这个message。</p></li>
-<li><p>handler发送完消息之后message就进入了looper的消息队列，然后looper会处理该消息队列。当取到了刚才发送的message的时候，looper就会调用该message指定的处理他的Handler（target）来处理这个消息。</p></li>
-</ol>
-
-
-<h2>说明</h2>
-
-<p>因为消息处理的回调是在Looper里面调用的，因此处理消息的线程就是looper所在的那个线程。不一定就是实例化Handerl时所在的线程，因为Handler 可以指定Looper。只有Handler没有指定Looper的情况下消息处理线程才是handler所在的那个线程，因为此时handler的默认looper就是handler所在的线程对应的looper。</p>
-
-<h1>附录</h1>
-
-<p>最后说说###Message中的回收机制###
-因为Message是用来传输信息的经常会重复利用，所以维护一个Message pool减少每次new的开销。源代码中是这么做的：<br/>
-首先是obtain方法</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="cm">/**</span>
-</span><span class='line'><span class="cm"> * Return a new Message instance from the global pool. Allows us to</span>
-</span><span class='line'><span class="cm"> * avoid allocating new objects in many cases.</span>
-</span><span class='line'><span class="cm"> */</span>
-</span><span class='line'><span class="kd">public</span> <span class="kd">static</span> <span class="n">Message</span> <span class="nf">obtain</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">synchronized</span> <span class="o">(</span><span class="n">sPoolSync</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">sPool</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">Message</span> <span class="n">m</span> <span class="o">=</span> <span class="n">sPool</span><span class="o">;</span>
-</span><span class='line'>            <span class="n">sPool</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
-</span><span class='line'>            <span class="n">m</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-</span><span class='line'>            <span class="n">sPoolSize</span><span class="o">--;</span>
-</span><span class='line'>            <span class="k">return</span> <span class="n">m</span><span class="o">;</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>    <span class="k">return</span> <span class="k">new</span> <span class="nf">Message</span><span class="o">();</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>如果池中有的话就取最后一个出来，如果没有就new一个。可以看到这些Message在pool是以单链表的形式组织的。<br/>
-然后看一下回收：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="cm">/**</span>
-</span><span class='line'><span class="cm"> * Return a Message instance to the global pool.  You MUST NOT touch</span>
-</span><span class='line'><span class="cm"> * the Message after calling this function -- it has effectively been</span>
-</span><span class='line'><span class="cm"> * freed.</span>
-</span><span class='line'><span class="cm"> */</span>
-</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">recycle</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">clearForRecycle</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">synchronized</span> <span class="o">(</span><span class="n">sPoolSync</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">sPoolSize</span> <span class="o">&lt;</span> <span class="n">MAX_POOL_SIZE</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">next</span> <span class="o">=</span> <span class="n">sPool</span><span class="o">;</span>
-</span><span class='line'>            <span class="n">sPool</span> <span class="o">=</span> <span class="k">this</span><span class="o">;</span>
-</span><span class='line'>            <span class="n">sPoolSize</span><span class="o">++;</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="cm">/*package*/</span> <span class="kt">void</span> <span class="n">clearForRecycle</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">flags</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-</span><span class='line'>    <span class="n">what</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-</span><span class='line'>    <span class="n">arg1</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-</span><span class='line'>    <span class="n">arg2</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-</span><span class='line'>    <span class="n">obj</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-</span><span class='line'>    <span class="n">replyTo</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-</span><span class='line'>    <span class="n">when</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-</span><span class='line'>    <span class="n">target</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-</span><span class='line'>    <span class="n">callback</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-</span><span class='line'>    <span class="n">data</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>可以看到回收的时候先清空成员变量，然后把这个message加到pool这个单向链表的最前面，并更新链表头为当前message。如果pool已经满了就直接丢弃这个message等待垃圾回收。</p>
 
 		
-		
+		<a href="/blog/2014/06/24/android-zhong-de-handlerxiang-guan-yuan-dai-ma-qian-xi/" class="more-link">Read on &rarr;</a>
 	</div>
 
 </article>
@@ -658,7 +187,7 @@ private Handler handler = new Handler &hellip;">
 		<div class="tags">
 
 
-	<a class='category' href='/blog/categories/android/'>android</a>
+	<a class='category' href='/blog/categories/android/'>Android</a>
 
 
 </div>
@@ -696,7 +225,7 @@ private Handler handler = new Handler &hellip;">
 		<div class="tags">
 
 
-	<a class='category' href='/blog/categories/html5/'>html5</a>
+	<a class='category' href='/blog/categories/html5/'>HTML5</a>
 
 
 </div>
@@ -734,7 +263,7 @@ private Handler handler = new Handler &hellip;">
 		<div class="tags">
 
 
-	<a class='category' href='/blog/categories/html5/'>html5</a>
+	<a class='category' href='/blog/categories/html5/'>HTML5</a>
 
 
 </div>
@@ -772,7 +301,7 @@ private Handler handler = new Handler &hellip;">
 		<div class="tags">
 
 
-	<a class='category' href='/blog/categories/android/'>android</a>
+	<a class='category' href='/blog/categories/android/'>Android</a>
 
 
 </div>
@@ -838,7 +367,7 @@ private Handler handler = new Handler &hellip;">
 		<div class="tags">
 
 
-	<a class='category' href='/blog/categories/git/'>git</a>
+	<a class='category' href='/blog/categories/git/'>Git</a>
 
 
 </div>
@@ -884,7 +413,7 @@ private Handler handler = new Handler &hellip;">
 		<div class="tags">
 
 
-	<a class='category' href='/blog/categories/linux/'>linux</a>
+	<a class='category' href='/blog/categories/linux/'>Linux</a>
 
 
 </div>
@@ -927,7 +456,7 @@ private Handler handler = new Handler &hellip;">
 		<div class="tags">
 
 
-	<a class='category' href='/blog/categories/linux/'>linux</a>
+	<a class='category' href='/blog/categories/linux/'>Linux</a>
 
 
 </div>
@@ -965,7 +494,7 @@ private Handler handler = new Handler &hellip;">
 		<div class="tags">
 
 
-	<a class='category' href='/blog/categories/linux/'>linux</a>
+	<a class='category' href='/blog/categories/linux/'>Linux</a>
 
 
 </div>
@@ -1005,15 +534,15 @@ private Handler handler = new Handler &hellip;">
 		<div class="tags">
 
 
-	<a class='category' href='/blog/categories/linux/'>linux</a>
+	<a class='category' href='/blog/categories/linux/'>Linux</a>
 
 
 </div>
 		
-			<span class="comments"><a href="/blog/2014/04/22/linuxde-sou-gou-shu-ru-fa-!/#disqus_thread">Comments</a></span>
+			<span class="comments"><a href="/blog/2014/04/22/linuxde-sou-gou-shu-ru-fa-%21/#disqus_thread">Comments</a></span>
 		
 	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2014/04/22/linuxde-sou-gou-shu-ru-fa-!/" itemprop="url">Linux的搜狗输入法！</a></h1>
+	<h1 class="title" itemprop="name"><a href="/blog/2014/04/22/linuxde-sou-gou-shu-ru-fa-%21/" itemprop="url">Linux的搜狗输入法！</a></h1>
 	<div class="entry-content" itemprop="articleBody">
 		<p>貌似好久之前就知道搜狗输入法推出了linux版本，但是当时用的是Debian74系统。Debian的特点就是软件版本比较老（考虑的是稳定性之类的原因，毕竟Debian更多的是用在服务器上的）。而且搜狗输入法又不是开源的，不能自己编译，所以出现的libc6的版本不兼容问题很是蛋疼。昨天还是决定装上Ubuntu14.04，然后装上了搜狗输入法，那感觉真是一个爽啊。从此Linux打字也有了飞一般的感觉，也不用担心满篇的错别字了。
 附带一个链接吧<a href="http://pinyin.sogou.com/linux/">伟大的搜狗输入法</a></p>
@@ -1028,7 +557,7 @@ private Handler handler = new Handler &hellip;">
 <nav id="pagenavi">
     
     
-        <a href="2" class="next">Next</a>
+        <a href="/blog/page/2/" class="next">Next</a>
     
     <div class="center"><a href="/blog/archives">Blog Archives</a></div>
 </nav></div>
@@ -1101,26 +630,26 @@ private Handler handler = new Handler &hellip;">
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/android/'>android (3)</a></li><li><a href='/blog/categories/git/'>git (2)</a></li><li><a href='/blog/categories/html5/'>html5 (5)</a></li><li><a href='/blog/categories/javascript/'>javascript (3)</a></li><li><a href='/blog/categories/linux/'>linux (6)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/android/'>Android (3)</a></li><li><a href='/blog/categories/git/'>Git (2)</a></li><li><a href='/blog/categories/html5/'>HTML5 (5)</a></li><li><a href='/blog/categories/javascript/'>JavaScript (3)</a></li><li><a href='/blog/categories/linux/'>Linux (6)</a></li></ul>
 </section>
 <section>
 	<h1>Tags</h1>
 	<ul class="tag-cloud">
-		<li><a style="font-size: 86.6%" href="/tags/android/">Android</a></li>
-<li><a style="font-size: 97.9%" href="/tags/linux/">Linux</a></li>
-<li><a style="font-size: 97.8%" href="/tags/html5/">HTML5</a></li>
-<li><a style="font-size: 117.8%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
-<li><a style="font-size: 95.1%" href="/tags/node-dot-js/">Node.js</a></li>
-<li><a style="font-size: 115.9%" href="/tags/git/">Git</a></li>
-<li><a style="font-size: 76.3%" href="/tags/vim/">Vim</a></li>
-<li><a style="font-size: 111.9%" href="/tags/svg/">SVG</a></li>
-<li><a style="font-size: 118.2%" href="/tags/ui/">UI</a></li>
-<li><a style="font-size: 82.5%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
-<li><a style="font-size: 77.2%" href="/tags/zhuan-tie/">转贴</a></li>
-<li><a style="font-size: 73.0%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
-<li><a style="font-size: 75.1%" href="/tags/java/">Java</a></li>
-<li><a style="font-size: 88.4%" href="/tags/tencent/">tencent</a></li>
-<li><a style="font-size: 98.8%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
+		<li><a style="font-size: 74.8%" href="/tags/android/">Android</a></li>
+<li><a style="font-size: 87.4%" href="/tags/html5/">HTML5</a></li>
+<li><a style="font-size: 109.6%" href="/tags/linux/">Linux</a></li>
+<li><a style="font-size: 104.1%" href="/tags/node-dot-js/">Node.js</a></li>
+<li><a style="font-size: 118.1%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
+<li><a style="font-size: 85.0%" href="/tags/vim/">Vim</a></li>
+<li><a style="font-size: 116.6%" href="/tags/git/">Git</a></li>
+<li><a style="font-size: 71.1%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
+<li><a style="font-size: 77.3%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
+<li><a style="font-size: 111.7%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
+<li><a style="font-size: 91.7%" href="/tags/zhuan-tie/">转贴</a></li>
+<li><a style="font-size: 92.2%" href="/tags/ui/">UI</a></li>
+<li><a style="font-size: 75.6%" href="/tags/tencent/">tencent</a></li>
+<li><a style="font-size: 94.3%" href="/tags/java/">Java</a></li>
+<li><a style="font-size: 86.4%" href="/tags/svg/">SVG</a></li>
 
 	</ul>
 </section>

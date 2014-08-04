@@ -131,9 +131,12 @@ private Handler handler = new Handler() { // 处理子线程给我们发送的�
 </span></code></pre></td></tr></table></div></figure>
 
 
+<!--more-->
+
+
 <p>然后开启新的线程，在新的线程里面完成后台任务，任务完成后给这个handler发一个消息让它来处理。因为Handler是在主线程实例化(并且在实例化的时候没有指明Looper)，因此handler的handleMessage方法也是在主线程被调用的。</p>
 
-<p>使用Handler Message MessageQueue Looper等方式去访问网络资源的时候，我们必须要开启一个子线程</p>
+<p>// 使用Handler Message MessageQueue Looper等方式去访问网络资源的时候，我们必须要开启一个子线程</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -207,13 +210,11 @@ private Handler handler = new Handler() { // 处理子线程给我们发送的�
 <span class='line-number'>13</span>
 <span class='line-number'>14</span>
 <span class='line-number'>15</span>
-<span class='line-number'>16</span>
 </pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">sendMessageAtTime</span><span class="o">(</span><span class="n">Message</span> <span class="n">msg</span><span class="o">,</span> <span class="kt">long</span> <span class="n">uptimeMillis</span><span class="o">)</span>
 </span><span class='line'><span class="o">{</span>
 </span><span class='line'>    <span class="kt">boolean</span> <span class="n">sent</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
 </span><span class='line'>    <span class="n">MessageQueue</span> <span class="n">queue</span> <span class="o">=</span> <span class="n">mQueue</span><span class="o">;</span>
 </span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">queue</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="c1">//注意这两句</span>
 </span><span class='line'>        <span class="n">msg</span><span class="o">.</span><span class="na">target</span> <span class="o">=</span> <span class="k">this</span><span class="o">;</span>
 </span><span class='line'>        <span class="n">sent</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="na">enqueueMessage</span><span class="o">(</span><span class="n">msg</span><span class="o">,</span> <span class="n">uptimeMillis</span><span class="o">);</span>
 </span><span class='line'>    <span class="o">}</span>
@@ -228,22 +229,10 @@ private Handler handler = new Handler() { // 处理子线程给我们发送的�
 
 
 <p>看得出来主要做的事情就是把消息的target设置成自己，然后把消息存入到消息队列MessageQueue中去，
-接着首先去看看Handler 中的MessageQueue mQueue的定义:</p>
+接着首先去看看MessageQueue mQueue的定义</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">...</span>
-</span><span class='line'><span class="kd">final</span> <span class="n">MessageQueue</span> <span class="n">mQueue</span><span class="o">;</span>
-</span><span class='line'><span class="kd">final</span> <span class="n">Looper</span> <span class="n">mLooper</span><span class="o">;</span>
-</span><span class='line'><span class="o">...</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>定义在Handler类的最后，既然是final的那初始化一定在构造函数了：</p>
-
-<p>默认构造函数，代码中的注释写道<code>默认构造函数把这个handler和当前线程的消息队列联系起来，如果没有（当前线程的消息队列），这个handler就不能接收消息了。</code></p>
+<p>在Handler类的最后，既然是final的那初始化一定在构造函数了：
+默认构造函数，代码中的注释写道“默认构造函数，把这个handler和当前线程的消息队列联系起来，如果没有（当前线程的消息队列），这个handler就不能接收消息了。</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -280,7 +269,7 @@ private Handler handler = new Handler() { // 处理子线程给我们发送的�
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>当然也可以通过含参构造函数提供消息队列，而不是使用默认的。</p>
+<p>使用提供的消息队列，而不是使用默认的。</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -301,24 +290,11 @@ private Handler handler = new Handler() { // 处理子线程给我们发送的�
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>从上面两个函数可以看出来消息队列是Looper的一个成员变量，handler的sendMessage方法只是把Message加到了消息队列去。接着去看看Looper对消息队列mQueue做了什么。</p>
+<p>从上面两个函数可以看出来消息队列是Looper的，handler的sendMessage只是把Message加到了消息队列去。接着去看看Looper对消息对了mQueue做了什么。</p>
 
 <p>Looper中的MessageQueue的定义如下：</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">...</span>
-</span><span class='line'><span class="o">...</span>
-</span><span class='line'><span class="kd">final</span> <span class="n">MessageQueue</span> <span class="n">mQueue</span><span class="o">;</span>
-</span><span class='line'><span class="kd">final</span> <span class="n">Thread</span> <span class="n">mThread</span><span class="o">;</span>
-</span><span class='line'><span class="o">...</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>然后看到了Looper 中的loop方法</p>
+<p>然后是Looper 中的loop方法</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -370,7 +346,6 @@ private Handler handler = new Handler() { // 处理子线程给我们发送的�
 <span class='line-number'>48</span>
 <span class='line-number'>49</span>
 <span class='line-number'>50</span>
-<span class='line-number'>51</span>
 </pre></td><td class='code'><pre><code class='java'><span class='line'><span class="cm">/**</span>
 </span><span class='line'><span class="cm"> * Run the message queue in this thread. Be sure to call</span>
 </span><span class='line'><span class="cm"> * {@link #quit()} to end the loop.</span>
@@ -401,7 +376,6 @@ private Handler handler = new Handler() { // 处理子线程给我们发送的�
 </span><span class='line'>                    <span class="n">msg</span><span class="o">.</span><span class="na">callback</span> <span class="o">+</span> <span class="s">&quot;: &quot;</span> <span class="o">+</span> <span class="n">msg</span><span class="o">.</span><span class="na">what</span><span class="o">);</span>
 </span><span class='line'>        <span class="o">}</span>
 </span><span class='line'>
-</span><span class='line'>        <span class="c1">//注意这一句</span>
 </span><span class='line'>        <span class="n">msg</span><span class="o">.</span><span class="na">target</span><span class="o">.</span><span class="na">dispatchMessage</span><span class="o">(</span><span class="n">msg</span><span class="o">);</span>
 </span><span class='line'>
 </span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">logging</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
@@ -426,30 +400,12 @@ private Handler handler = new Handler() { // 处理子线程给我们发送的�
 
 
 <p>注意到中间的死循环 <code>for(;;;){...}</code>
-以及关键的这一句：<br/>
-<code>msg.target.dispatchMessage(msg)</code><br/>
-猜测target就是这个message对应处理他的handler，于是我圆润的滚过去看看：
-<strong>Message</strong>中的target是这么定义的：</p>
+以及关键的这一句：</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">...</span>
-</span><span class='line'><span class="n">Handler</span> <span class="n">target</span><span class="o">;</span>
-</span><span class='line'><span class="o">...</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<p>猜测target就是这个message对应处理他的handler，于是我圆润的滚过去看看：
+Message中的target是这么定义的：</p>
 
 <p>看来八九不离十了。继续看target赋值的语句：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">setTarget</span><span class="o">(</span><span class="n">Handler</span> <span class="n">target</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">this</span><span class="o">.</span><span class="na">target</span> <span class="o">=</span> <span class="n">target</span><span class="o">;</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
 
 <p>当然还有各种带有Handler参数的obtain方法，都会给target赋值。
 于是看看Handler.dispatchMessage(Message)是做什么的：</p>
@@ -481,127 +437,9 @@ private Handler handler = new Handler() { // 处理子线程给我们发送的�
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>如果msg的callback不为null就调用callback，否则就看看Handler 的mCallback有没有设置，如果有的话就让mCallback来处理消息，如果没有就是用默认的处理方法handleMessage。默认的处理方法是什么都不多，但是子类如果覆盖了handleMessage方法就可以执行子类想要做的代码了。</p>
+<p>如果msg的callback不为null就调用callback，否则如果就看看mCallback有没有设置，如果有的话就让callback来处理消息，如果没有就是用默认的处理方法。默认的处理方法是什么都不多，但是子类如果覆盖了handleMessage方法就可以执行子类想要做的代码了。</p>
 
-<p>所以整理一下流程是这样的：</p>
-
-<ol>
-<li><p>实例化一个Handler或Handler的子类，可以在Looper参数内传入需要处理消息的那个线程对应的looper，如果没有传入就会使用当前线程默认的looper(如果有的话，否则handler会无法收到消息)。</p></li>
-<li><p>在另一个线程中处理事物，完成之后构造一个存储结果的Message，使用handler发送构造的Message。handler发送Message的时候会把Message的target属性设置成他自己，这样looper在处理到这个消息的时候就能调用这个handler来处理这个message。</p></li>
-<li><p>handler发送完消息之后message就进入了looper的消息队列，然后looper会处理该消息队列。当取到了刚才发送的message的时候，looper就会调用该message指定的处理他的Handler（target）来处理这个消息。</p></li>
-</ol>
-
-
-<h2>说明</h2>
-
-<p>因为消息处理的回调是在Looper里面调用的，因此处理消息的线程就是looper所在的那个线程。不一定就是实例化Handerl时所在的线程，因为Handler 可以指定Looper。只有Handler没有指定Looper的情况下消息处理线程才是handler所在的那个线程，因为此时handler的默认looper就是handler所在的线程对应的looper。</p>
-
-<h1>附录</h1>
-
-<p>最后说说###Message中的回收机制###
-因为Message是用来传输信息的经常会重复利用，所以维护一个Message pool减少每次new的开销。源代码中是这么做的：<br/>
-首先是obtain方法</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="cm">/**</span>
-</span><span class='line'><span class="cm"> * Return a new Message instance from the global pool. Allows us to</span>
-</span><span class='line'><span class="cm"> * avoid allocating new objects in many cases.</span>
-</span><span class='line'><span class="cm"> */</span>
-</span><span class='line'><span class="kd">public</span> <span class="kd">static</span> <span class="n">Message</span> <span class="nf">obtain</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">synchronized</span> <span class="o">(</span><span class="n">sPoolSync</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">sPool</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">Message</span> <span class="n">m</span> <span class="o">=</span> <span class="n">sPool</span><span class="o">;</span>
-</span><span class='line'>            <span class="n">sPool</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="na">next</span><span class="o">;</span>
-</span><span class='line'>            <span class="n">m</span><span class="o">.</span><span class="na">next</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-</span><span class='line'>            <span class="n">sPoolSize</span><span class="o">--;</span>
-</span><span class='line'>            <span class="k">return</span> <span class="n">m</span><span class="o">;</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>    <span class="k">return</span> <span class="k">new</span> <span class="nf">Message</span><span class="o">();</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>如果池中有的话就取最后一个出来，如果没有就new一个。可以看到这些Message在pool是以单链表的形式组织的。<br/>
-然后看一下回收：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="cm">/**</span>
-</span><span class='line'><span class="cm"> * Return a Message instance to the global pool.  You MUST NOT touch</span>
-</span><span class='line'><span class="cm"> * the Message after calling this function -- it has effectively been</span>
-</span><span class='line'><span class="cm"> * freed.</span>
-</span><span class='line'><span class="cm"> */</span>
-</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">recycle</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">clearForRecycle</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">synchronized</span> <span class="o">(</span><span class="n">sPoolSync</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">sPoolSize</span> <span class="o">&lt;</span> <span class="n">MAX_POOL_SIZE</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">next</span> <span class="o">=</span> <span class="n">sPool</span><span class="o">;</span>
-</span><span class='line'>            <span class="n">sPool</span> <span class="o">=</span> <span class="k">this</span><span class="o">;</span>
-</span><span class='line'>            <span class="n">sPoolSize</span><span class="o">++;</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="cm">/*package*/</span> <span class="kt">void</span> <span class="n">clearForRecycle</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>    <span class="n">flags</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-</span><span class='line'>    <span class="n">what</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-</span><span class='line'>    <span class="n">arg1</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-</span><span class='line'>    <span class="n">arg2</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-</span><span class='line'>    <span class="n">obj</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-</span><span class='line'>    <span class="n">replyTo</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-</span><span class='line'>    <span class="n">when</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-</span><span class='line'>    <span class="n">target</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-</span><span class='line'>    <span class="n">callback</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-</span><span class='line'>    <span class="n">data</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>可以看到回收的时候先清空成员变量，然后把这个message加到pool这个单向链表的最前面，并更新链表头为当前message。如果pool已经满了就直接丢弃这个message等待垃圾回收。</p>
+<p>但是 事情没有那么简单！还有一个无参数的obtain方法，那么没有指定target的message是怎么成功发送到相应的handler的呢？还是圆润的滚过去看Looper的代码吧。</p>
 </div>
 
 </article>
@@ -701,26 +539,26 @@ private Handler handler = new Handler() { // 处理子线程给我们发送的�
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/android/'>android (3)</a></li><li><a href='/blog/categories/git/'>git (2)</a></li><li><a href='/blog/categories/html5/'>html5 (5)</a></li><li><a href='/blog/categories/javascript/'>javascript (3)</a></li><li><a href='/blog/categories/linux/'>linux (6)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/android/'>Android (3)</a></li><li><a href='/blog/categories/git/'>Git (2)</a></li><li><a href='/blog/categories/html5/'>HTML5 (5)</a></li><li><a href='/blog/categories/javascript/'>JavaScript (3)</a></li><li><a href='/blog/categories/linux/'>Linux (6)</a></li></ul>
 </section>
 <section>
 	<h1>Tags</h1>
 	<ul class="tag-cloud">
-		<li><a style="font-size: 108.6%" href="/tags/android/">Android</a></li>
-<li><a style="font-size: 76.4%" href="/tags/linux/">Linux</a></li>
-<li><a style="font-size: 112.9%" href="/tags/html5/">HTML5</a></li>
-<li><a style="font-size: 88.0%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
-<li><a style="font-size: 102.2%" href="/tags/node-dot-js/">Node.js</a></li>
-<li><a style="font-size: 90.7%" href="/tags/git/">Git</a></li>
-<li><a style="font-size: 70.9%" href="/tags/vim/">Vim</a></li>
-<li><a style="font-size: 90.0%" href="/tags/svg/">SVG</a></li>
-<li><a style="font-size: 102.5%" href="/tags/ui/">UI</a></li>
-<li><a style="font-size: 118.6%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
-<li><a style="font-size: 96.4%" href="/tags/zhuan-tie/">转贴</a></li>
-<li><a style="font-size: 93.9%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
-<li><a style="font-size: 94.5%" href="/tags/java/">Java</a></li>
-<li><a style="font-size: 119.5%" href="/tags/tencent/">tencent</a></li>
-<li><a style="font-size: 116.4%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
+		<li><a style="font-size: 75.0%" href="/tags/android/">Android</a></li>
+<li><a style="font-size: 100.7%" href="/tags/html5/">HTML5</a></li>
+<li><a style="font-size: 76.8%" href="/tags/linux/">Linux</a></li>
+<li><a style="font-size: 99.0%" href="/tags/node-dot-js/">Node.js</a></li>
+<li><a style="font-size: 76.9%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
+<li><a style="font-size: 94.1%" href="/tags/vim/">Vim</a></li>
+<li><a style="font-size: 117.2%" href="/tags/git/">Git</a></li>
+<li><a style="font-size: 82.8%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
+<li><a style="font-size: 118.3%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
+<li><a style="font-size: 100.6%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
+<li><a style="font-size: 82.1%" href="/tags/zhuan-tie/">转贴</a></li>
+<li><a style="font-size: 82.3%" href="/tags/ui/">UI</a></li>
+<li><a style="font-size: 107.8%" href="/tags/tencent/">tencent</a></li>
+<li><a style="font-size: 109.2%" href="/tags/java/">Java</a></li>
+<li><a style="font-size: 98.5%" href="/tags/svg/">SVG</a></li>
 
 	</ul>
 </section>
