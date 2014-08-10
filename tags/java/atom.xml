@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: Java | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/tags/java/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-08-10T14:17:31+08:00</updated>
+  <updated>2014-08-10T14:21:31+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -114,8 +114,9 @@ Outer.this
 <p>这个说来话长，因为方法的参数，乃至方法内的局部变量都是临时性的，他们储存在栈（stack）中。当方法return的时候他们便不复存在。所以匿名类不可能通过外部类的引用来获取局部变量。
 而final修饰的变量是不能修改的，因此内部类并不「引用」这个变量，而是在内部直接copy一下！反正她是不会变的，我copy一下也不会导致不一致的问题。（这里需要说明一个事实，copy一个实例的引用时，并不会copy这个实例，只是copy了「指针」而已！）</p>
 
-<p>所以，结论是：
-<blockquote><p><strong>final的作用就是告诉编译器，这个变量不会修改的，内部类想用的话可以自己copy一份过去</strong></p></p><p><p></p></blockquote></p>
+<p>所以，结论是：</p>
+
+<blockquote><p><strong>final的作用就是告诉编译器，这个变量不会修改的，内部类想用的话可以自己copy一份过去</strong></p></blockquote>
 
 <p>对于上述的解决方案，因为我们使用了一个final变量代替成员变量，因此内部类会直接使用该final变量的copy，而不像原来那样每次都去resolve外部类的成员，这就保证了这个变量在内部类是「定死」的！</p>
 

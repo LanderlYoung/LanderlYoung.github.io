@@ -4,7 +4,7 @@
   <title><![CDATA[Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-08-10T14:17:31+08:00</updated>
+  <updated>2014-08-10T14:21:31+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -149,8 +149,7 @@
 
 <p>所以，结论是：</p>
 
-<blockquote><p>**final的作用就是告诉编译器，这个变量不会修改的，内部类想用的话可以自己copy一份过去**</p></blockquote>
-
+<blockquote><p><strong>final的作用就是告诉编译器，这个变量不会修改的，内部类想用的话可以自己copy一份过去</strong></p></blockquote>
 
 <p>对于上述的解决方案，因为我们使用了一个final变量代替成员变量，因此内部类会直接使用该final变量的copy，而不像原来那样每次都去resolve外部类的成员，这就保证了这个变量在内部类是「定死」的！</p>
 
