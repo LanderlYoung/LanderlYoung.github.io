@@ -26,6 +26,7 @@ private Handler handler = new Handler() {
         }
 }
 ```
+<!--more-->
 
 然后开启新的线程，在新的线程里面完成后台任务，任务完成后给这个handler发一个消息让它来处理。因为Handler是在主线程实例化(并且在实例化的时候没有指明Looper)，因此handler的handleMessage方法也是在主线程被调用的。
 
