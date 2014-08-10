@@ -7,23 +7,7 @@
 	<meta name="author" content="LanderlYoung">
 
 	
-	<meta name="description" content="2014/06/24 Android Comments Android 中的Handler相关源代码浅析 简单用法示例： 1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-//在主线程中
-private Handler handler = new Handler &hellip;">
+	<meta name="description" content="2014/08/10 Android Comments 一次对非静态内部类引用final变量的研究 前几天遇到一个奇怪的问题，问题的起因是我把以前的RingfriendDialogBuilder（以下简称builder，没有IDE的自动补全打完全名还是很长的。。）修改了一下，添加了一个clear &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -96,6 +80,44 @@ private Handler handler = new Handler &hellip;">
 			<div class="mid-col-container">
 				<div id="content" class="inner">
 <div itemscope itemtype="http://schema.org/Blog">
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-08-10T13:57:38+08:00" data-updated="true" itemprop="datePublished">2014/08/10</time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/android/'>Android</a>
+
+
+</div>
+		
+			<span class="comments"><a href="/blog/2014/08/10/yi-ci-dui-fei-jing-tai-nei-bu-lei-yin-yong-finalbian-liang-de-yan-jiu/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2014/08/10/yi-ci-dui-fei-jing-tai-nei-bu-lei-yin-yong-finalbian-liang-de-yan-jiu/" itemprop="url">一次对非静态内部类引用final变量的研究</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<p>前几天遇到一个奇怪的问题，问题的起因是我把以前的RingfriendDialogBuilder（以下简称builder，没有IDE的自动补全打完全名还是很长的。。）修改了一下，添加了一个clear()方法。目的是避免每次创建一个Dialog都new一个builder的实例，这样一个builder可以用于创建多个dialog，以提高效率。接下来的问题就是因为这个修改导致的。</p>
+
+
+		
+		<a href="/blog/2014/08/10/yi-ci-dui-fei-jing-tai-nei-bu-lei-yin-yong-finalbian-liang-de-yan-jiu/" class="more-link">Read on &rarr;</a>
+	</div>
+
+</article>
 
 
     <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
@@ -515,44 +537,6 @@ private Handler handler = new Handler &hellip;">
 
 </article>
 
-
-    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-04-22T14:52:39+08:00" data-updated="true" itemprop="datePublished">2014/04/22</time></div>
-		<div class="tags">
-
-
-	<a class='category' href='/blog/categories/linux/'>Linux</a>
-
-
-</div>
-		
-			<span class="comments"><a href="/blog/2014/04/22/linuxde-sou-gou-shu-ru-fa-%21/#disqus_thread">Comments</a></span>
-		
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2014/04/22/linuxde-sou-gou-shu-ru-fa-%21/" itemprop="url">Linux的搜狗输入法！</a></h1>
-	<div class="entry-content" itemprop="articleBody">
-		<p>貌似好久之前就知道搜狗输入法推出了linux版本，但是当时用的是Debian74系统。Debian的特点就是软件版本比较老（考虑的是稳定性之类的原因，毕竟Debian更多的是用在服务器上的）。而且搜狗输入法又不是开源的，不能自己编译，所以出现的libc6的版本不兼容问题很是蛋疼。昨天还是决定装上Ubuntu14.04，然后装上了搜狗输入法，那感觉真是一个爽啊。从此Linux打字也有了飞一般的感觉，也不用担心满篇的错别字了。
-附带一个链接吧<a href="http://pinyin.sogou.com/linux/">伟大的搜狗输入法</a></p>
-
-		
-		
-	</div>
-
-</article>
-
 </div>
 <nav id="pagenavi">
     
@@ -607,6 +591,10 @@ private Handler handler = new Handler &hellip;">
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/08/10/yi-ci-dui-fei-jing-tai-nei-bu-lei-yin-yong-finalbian-liang-de-yan-jiu/">一次对非静态内部类引用final变量的研究</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/06/24/android-zhong-de-handlerxiang-guan-yuan-dai-ma-qian-xi/">Android 中的Handler相关源代码浅析</a>
       </li>
     
@@ -622,34 +610,30 @@ private Handler handler = new Handler &hellip;">
         <a href="/blog/2014/05/26/wang-ye-zhong-shi-xian-yue-du-mo-shi/">网页中实现阅读模式</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/05/13/stepbystepandroid-di-%5B%3F%5D-ke/">stepByStepAndroid-第一课</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/android/'>Android (3)</a></li><li><a href='/blog/categories/git/'>Git (2)</a></li><li><a href='/blog/categories/html5/'>HTML5 (5)</a></li><li><a href='/blog/categories/javascript/'>JavaScript (3)</a></li><li><a href='/blog/categories/linux/'>Linux (6)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/android/'>Android (4)</a></li><li><a href='/blog/categories/git/'>Git (2)</a></li><li><a href='/blog/categories/html5/'>HTML5 (5)</a></li><li><a href='/blog/categories/javascript/'>JavaScript (3)</a></li><li><a href='/blog/categories/linux/'>Linux (6)</a></li></ul>
 </section>
 <section>
 	<h1>Tags</h1>
 	<ul class="tag-cloud">
-		<li><a style="font-size: 74.8%" href="/tags/android/">Android</a></li>
-<li><a style="font-size: 87.4%" href="/tags/html5/">HTML5</a></li>
-<li><a style="font-size: 109.6%" href="/tags/linux/">Linux</a></li>
-<li><a style="font-size: 104.1%" href="/tags/node-dot-js/">Node.js</a></li>
-<li><a style="font-size: 118.1%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
-<li><a style="font-size: 85.0%" href="/tags/vim/">Vim</a></li>
-<li><a style="font-size: 116.6%" href="/tags/git/">Git</a></li>
-<li><a style="font-size: 71.1%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
-<li><a style="font-size: 77.3%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
-<li><a style="font-size: 111.7%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
-<li><a style="font-size: 91.7%" href="/tags/zhuan-tie/">转贴</a></li>
-<li><a style="font-size: 92.2%" href="/tags/ui/">UI</a></li>
-<li><a style="font-size: 75.6%" href="/tags/tencent/">tencent</a></li>
-<li><a style="font-size: 94.3%" href="/tags/java/">Java</a></li>
-<li><a style="font-size: 86.4%" href="/tags/svg/">SVG</a></li>
+		<li><a style="font-size: 98.5%" href="/tags/android/">Android</a></li>
+<li><a style="font-size: 100.7%" href="/tags/linux/">Linux</a></li>
+<li><a style="font-size: 92.4%" href="/tags/html5/">HTML5</a></li>
+<li><a style="font-size: 85.2%" href="/tags/node-dot-js/">Node.js</a></li>
+<li><a style="font-size: 109.7%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
+<li><a style="font-size: 81.3%" href="/tags/vim/">Vim</a></li>
+<li><a style="font-size: 94.8%" href="/tags/java/">Java</a></li>
+<li><a style="font-size: 104.0%" href="/tags/git/">Git</a></li>
+<li><a style="font-size: 105.6%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
+<li><a style="font-size: 73.6%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
+<li><a style="font-size: 88.8%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
+<li><a style="font-size: 105.0%" href="/tags/ui/">UI</a></li>
+<li><a style="font-size: 101.7%" href="/tags/tencent/">tencent</a></li>
+<li><a style="font-size: 81.3%" href="/tags/zhuan-tie/">转贴</a></li>
+<li><a style="font-size: 109.9%" href="/tags/svg/">SVG</a></li>
 
 	</ul>
 </section>
