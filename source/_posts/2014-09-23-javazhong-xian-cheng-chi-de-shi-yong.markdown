@@ -8,7 +8,7 @@ tags: [java, android]
 ---
 
 java SE5提供了`java.util.concurrent.Executors`类来实现线程池的功能。
-Thing in Java 中这么解释Executors：
+*Thinking in Java* 中这么解释Executors：
 
 >`Executors`允许你执行异步的任务（task）而不用显式的去管理线程的生命周期。 
 
