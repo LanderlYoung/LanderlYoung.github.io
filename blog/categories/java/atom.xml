@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Tag: java | Young_Blog]]></title>
-  <link href="http://LanderlYoung.github.io/tags/java/atom.xml" rel="self"/>
+  <title><![CDATA[Category: java | Young_Blog]]></title>
+  <link href="http://LanderlYoung.github.io/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
   <updated>2014-09-28T17:20:35+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>

@@ -1,0 +1,326 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Java(Android)中线程池的使用 - Young_Blog</title>
+	<meta name="author" content="LanderlYoung">
+
+	
+	<meta name="description" content="Java(Android)中线程池的使用 java SE5提供了java.util.concurrent.Executors类来实现线程池的功能。
+Thing in Java 中这么解释Executors： Executors允许你执行异步的任务（task）而不用显式的去管理线程的生命周期。 &hellip;">
+	
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="Young_Blog" type="application/atom+xml">
+	
+	<link rel="canonical" href="http://LanderlYoung.github.io/blog/2014/09/23/javazhong-xian-cheng-chi-de-shi-yong/">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  
+  <script src="/javascripts/libs/jquery.min.js"></script>
+
+	
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+				<header id="header" class="inner"><div class="profilepic">	
+	 
+	<img src="/images/profile.png" width=160px />
+</div>
+<h1><a href="/">Young_Blog</a></h1>
+<p class="subtitle">Life with Passion<br/>Code with Creativity</p>
+<nav id="main-nav"><ul class="main">
+	<li><a href="/">Blog</a></li>
+	<li><a href="/blog/archives">Archives</a></li>
+	<li><a href="/about-me/">About Me</a></li>
+</ul>
+</nav>
+<nav id="sub-nav">
+	<div class="social">
+		
+		<a class="weibo" href="http://www.weibo.com/1863369094" title="Weibo">Weibo</a>
+		
+		
+		
+		<a class="google" href="https://plus.google.com/101237485378321820376/posts" rel="author" title="Google+">Google+</a>
+		
+		
+		
+		<a class="github" href="https://github.com/LanderlYoung" title="GitHub">GitHub</a>
+		
+		
+		
+		
+		
+		
+		
+		
+		<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+		
+	</div>
+</nav>
+
+</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			
+			
+			
+			<div class="mid-col-container">
+				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+	<h1 class="title" itemprop="name">Java(Android)中线程池的使用</h1>
+	<div class="entry-content" itemprop="articleBody"><p>java SE5提供了<code>java.util.concurrent.Executors</code>类来实现线程池的功能。
+Thing in Java 中这么解释Executors：</p>
+
+<blockquote><p><code>Executors</code>允许你执行异步的任务（task）而不用显式的去管理线程的生命周期。</p></blockquote>
+
+<p>可以说Executors是线程们的管理者，让线程们的生存方式从<strong>放养</strong>变成了<strong>圈养</strong>。Executors来处理一次能同时运行多少个线程，哪个线程在哪个线程的后面执行。总的来说Executors之于线程就像操作系统止于进程一样——管理者与被管理者的关系。</p>
+
+<!--more-->
+
+
+<blockquote><p>new Thread的弊端如下：
+ 1. 每次new Thread新建对象性能差。
+ 2. 线程缺乏统一管理，可能无限制新建线程，相互之间竞争，及可能占用过多系统资源导致死机或oom。
+ 3. 缺乏更多功能，如定时执行、定期执行、线程中断。</p>
+
+<p>相比new Thread，Java提供的四种线程池的好处在于：
+1. 重用存在的线程，减少对象创建、消亡的开销，性能佳。
+2. 可有效控制最大并发线程数，提高系统资源的使用率，同时避免过多资源竞争，避免堵塞。
+3. 提供定时执行、定期执行、单线程、并发数控制等功能。</p></blockquote>
+
+<p>（上述比较摘自：<a href="http://www.trinea.cn/android/java-android-thread-pool/">http://www.trinea.cn/android/java-android-thread-pool/</a> ）</p>
+
+<p>Executors的使用静态方法来创建相应的<code>ExecutorService</code>接口实现，如下：</p>
+
+<ul>
+<li><code>Executors.newCachedThreadPool()</code></li>
+<li><code>Executors.newFixedThreadPool()</code></li>
+<li><code>Executors.newScheduledThreadPool()</code></li>
+<li><code>Executors.newSingleThreadExecutor()</code></li>
+</ul>
+
+
+<p> 这些线程池分别具有不同的能力：
+ （Java Concurrency in Pratice——java编程实践，如下解释）</p>
+
+<ul>
+<li><p>newFixedThreadPool：创建一个定长的线程池，每提交一个任务就创建一个线程，直到达到池的最大长度，这时线程池会保持长度不再变化（如果一个线程由于未预期的Exception而结束，线程池会补充一个新线程）。</p></li>
+<li><p>newCachedThreadPool：创建一个可缓存的线程池，如果当前线程池的长度超过了处理的需要时，它可以灵活的回收空闲的线程，当需要增加时，它可以灵活的添加新的线程，而不会对池的长度作任何限制。</p></li>
+<li><p>newSingleThreadExecutor：创建一个单线程化的executor，它只创建唯一的worker线程来执行任务，如果这个线程异常结束，会有另一个取代它。executor会保证任务依照任务队列规定的顺序（FIFO，LIFO，优先级）执行。</p></li>
+<li><p>newScheduledThreadPool：创建一个定长的线程池，而且支持定时的以及周期性的任务执行，类似于Timer。</p></li>
+</ul>
+
+
+<h3>ExecutorService的使用</h3>
+
+<p><code>ExecutorService</code>接口继承自Executor的接口定义，他提供了一个线程池应该实现的方法定义，包括运行/提交新任务的方法，结束任务的方法，等等。
+<code>ExecutorService</code>的接口有：</p>
+
+<p><strong>提交任务</strong>：</p>
+
+<ul>
+<li><p><code>execute</code>（该方法继承自Executor）提交一个runnable接口封装的task，没有返回值</p></li>
+<li><p><code>submit</code> 提交一个Callable或者Runnable接口封装的任务，返回一个Feature。</p></li>
+<li><p><code>invokeAll</code>传入一个task的容器，执行其包含的所有task。</p></li>
+<li><p><code>invokeAny</code>传入一个task的容器，只要其中一个task异常终止，就结束其他task（如果还没执行就不再执行）。</p></li>
+</ul>
+
+
+<p><strong>终止线程池</strong>：</p>
+
+<ul>
+<li><p><code>shotdown</code>线程池停止接受新的task，所有已有task执行完后线程池随即关闭</p></li>
+<li><p><code>shutdownNow</code>立即终止线程池内的所有task，关闭线程池</p></li>
+</ul>
+
+
+<p>所以向ExecutorService提交的任务可以是通过<code>Runnable</code>或者<code>Callable</code>接口封装的，其中Callable接口带有一个类型参数，表示返回值的类型。Runable可以使用execute方法，提交。但是Runnable和Callable都可以使用submit方法提交。execute方法没有返回值，submit方法会返回一个Future<T>类型，可以查看任务的执行状态以及获取任务的返回）。所以当你想要一个任务完成时返回一个返回值，submit将是你的不二之选（不要三四千，不要一两千，只要998，submit抱回家）。</p>
+
+<p><strong>关于Future<T></strong></p>
+
+<p>Future功能强大，提供了对任务的各种操作：</p>
+
+<ul>
+<li><p><code>isDone()</code> 返回任务是否已经执行完成</p></li>
+<li><p><code>get()</code>返回任务的返回值，如果调用get的时候任务还没有完成，则会阻塞知道任务完成</p></li>
+<li><p><code>get(long timeout, TimeUnit unit)</code>同上，但是多了个参数，表示阻塞的最大时长。如果在设定的最大阻塞时长内没有指定任务没有顺利结束并返回结果，该方法会抛出一个<code>java.util.concurrent.TimeoutException</code>。</p></li>
+<li><p><code>cancel(boolean mayInterruptIfRunning)</code> 尝试去取消一个任务的执行，如果一个任务已经结束，或者已经被取消，或者因为一些什么原因不能够取消，则会取消失败，同时返回false。如果一个任务还没有开始执行就被取消了，那么它将不再执行。如果这个方法被调用的时候，任务正在执行，则将由参数<code>mayInterruptIfRunning</code>决定是否终止正在运行的task。</p></li>
+<li><p><code>isCancelled()</code> 返回任务是否已经被取消</p></li>
+</ul>
+
+
+<p>了解过强大的Future是否觉得execute可以去死了，连个Future都返回不了，事实上并非如此，因为submit最终调用的还是execute-_-其实现方法是给execute传入一个RunnableFuture接口的实例（在标准库里有一个很好的实现叫FutureTask），RunnableFuteure接口定义了一个觉有Future功能的Runnalbe。想自定义Future就可以通过这种方式。</p>
+
+<p>submit也是可以传入Runnable的，当传入Runnable时会怎样呢：</p>
+
+<ul>
+<li><p>当使用 <code>submit(Runnable)</code>时，返回一个<code>Future&lt;?&gt;</code>，它的get方法会返回null，除此之外其他方法调用表现正常。</p></li>
+<li><p>当使用<code>submit(Runnable task, T result)</code>时，返回一个Future<T>，它的get方法会返回result。就好比task是一个会返回result的Callable。</p></li>
+</ul>
+
+
+<p>另外一个小tip就是Executors提供了Runnable转Callabe的静态方法：</p>
+
+<ul>
+<li><p><code>public static &lt;T&gt; Callable&lt;T&gt; callable(Runnable task, T result)</code>将Runnable转换成能返回result的Callable接口</p></li>
+<li><p><code>public static Callable&lt;Object&gt; callable(Runnable task)</code>将Runnable转换成返回null的Callable接口</p></li>
+</ul>
+
+</div>
+
+</article>
+
+	
+
+<!--aThis Button BEGIN -->
+<div class="jiathis_style">
+	<span class="jiathis_txt">分享到：</span>
+	<a class="jiathis_button_tools_1"></a>
+	<a class="jiathis_button_tools_2"></a>
+	<a class="jiathis_button_tools_3"></a>
+	<a class="jiathis_button_tools_4"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+
+
+<section id="comment">
+    <h1 class="title">Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</div>
+			</div>
+			<footer id="footer" class="inner">
+<p>
+  Copyright &copy; 2014 - LanderlYoung -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+</footer>
+			<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+<!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'landerlyoung';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://LanderlYoung.github.io/blog/2014/09/23/javazhong-xian-cheng-chi-de-shi-yong/';
+        var disqus_url = 'http://LanderlYoung.github.io/blog/2014/09/23/javazhong-xian-cheng-chi-de-shi-yong/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+		</div>
+	</div>
+
+	<div id="slide">
+		<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/09/23/javazhong-xian-cheng-chi-de-shi-yong/">Java(Android)中线程池的使用</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/08/10/yi-ci-dui-fei-jing-tai-nei-bu-lei-yin-yong-finalbian-liang-de-yan-jiu/">一次对非静态内部类引用final变量的研究</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/06/24/android-zhong-de-handlerxiang-guan-yuan-dai-ma-qian-xi/">Android 中的Handler相关源代码浅析</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/06/20/sngmi-ni-xiang-mu-gan-wu/">SNG迷你项目感悟</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/05/27/cssdong-hua-lian-jie-te-xiao/">Css动画链接特效</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li><a href='/blog/categories/android/'>Android (4)</a></li><li><a href='/blog/categories/git/'>Git (2)</a></li><li><a href='/blog/categories/html5/'>HTML5 (5)</a></li><li><a href='/blog/categories/java/'>java (1)</a></li><li><a href='/blog/categories/javascript/'>JavaScript (3)</a></li><li><a href='/blog/categories/linux/'>Linux (6)</a></li></ul>
+</section>
+<section>
+	<h1>Tags</h1>
+	<ul class="tag-cloud">
+		<li><a style="font-size: 77.3%" href="/tags/android/">Android</a></li>
+<li><a style="font-size: 92.7%" href="/tags/html5/">HTML5</a></li>
+<li><a style="font-size: 111.7%" href="/tags/linux/">Linux</a></li>
+<li><a style="font-size: 99.5%" href="/tags/node-dot-js/">Node.js</a></li>
+<li><a style="font-size: 72.9%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
+<li><a style="font-size: 92.7%" href="/tags/vim/">Vim</a></li>
+<li><a style="font-size: 78.9%" href="/tags/java/">Java</a></li>
+<li><a style="font-size: 80.0%" href="/tags/git/">Git</a></li>
+<li><a style="font-size: 79.5%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
+<li><a style="font-size: 73.9%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
+<li><a style="font-size: 81.4%" href="/tags/svg/">SVG</a></li>
+<li><a style="font-size: 83.3%" href="/tags/ui/">UI</a></li>
+<li><a style="font-size: 112.8%" href="/tags/tencent/">tencent</a></li>
+<li><a style="font-size: 105.6%" href="/tags/zhuan-tie/">转贴</a></li>
+<li><a style="font-size: 81.3%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
+<li><a style="font-size: 109.4%" href="/tags/java/">java</a></li>
+<li><a style="font-size: 108.6%" href="/tags/android/">android</a></li>
+
+	</ul>
+</section>
+
+	</div>
+	<div id="hint">&gt;</div>
+
+	<div id="drawer">
+		<div id="touch"></div>
+		<div id="bar">
+			<div class="info">
+				<ul class="main">
+	<li><a href="/">Blog</a></li>
+	<li><a href="/blog/archives">Archives</a></li>
+	<li><a href="/about-me/">About Me</a></li>
+</ul>
+
+			</div>
+		</div>
+	</div>
+	<script src="/javascripts/slide.js"></script>
+
+</body>
+</html>

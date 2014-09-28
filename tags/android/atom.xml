@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Tag: Android | Young_Blog]]></title>
+  <title><![CDATA[Tag: android | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/tags/android/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-08-10T14:21:31+08:00</updated>
+  <updated>2014-09-28T17:20:35+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -14,615 +14,107 @@
 
   
   <entry>
-    <title type="html"><![CDATA[一次对非静态内部类引用final变量的研究]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/08/10/yi-ci-dui-fei-jing-tai-nei-bu-lei-yin-yong-finalbian-liang-de-yan-jiu/"/>
-    <updated>2014-08-10T13:57:38+08:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/08/10/yi-ci-dui-fei-jing-tai-nei-bu-lei-yin-yong-finalbian-liang-de-yan-jiu</id>
-    <content type="html"><![CDATA[<p>前几天遇到一个奇怪的问题，问题的起因是我把以前的RingfriendDialogBuilder（以下简称builder，没有IDE的自动补全打完全名还是很长的。。）修改了一下，添加了一个clear()方法。目的是避免每次创建一个Dialog都new一个builder的实例，这样一个builder可以用于创建多个dialog，以提高效率。接下来的问题就是因为这个修改导致的。</p>
+    <title type="html"><![CDATA[Java(Android)中线程池的使用]]></title>
+    <link href="http://LanderlYoung.github.io/blog/2014/09/23/javazhong-xian-cheng-chi-de-shi-yong/"/>
+    <updated>2014-09-23T17:39:40+08:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2014/09/23/javazhong-xian-cheng-chi-de-shi-yong</id>
+    <content type="html"><![CDATA[<p>java SE5提供了<code>java.util.concurrent.Executors</code>类来实现线程池的功能。
+Thing in Java 中这么解释Executors：</p>
+
+<blockquote><p><code>Executors</code>允许你执行异步的任务（task）而不用显式的去管理线程的生命周期。</p></blockquote>
+
+<p>可以说Executors是线程们的管理者，让线程们的生存方式从<strong>放养</strong>变成了<strong>圈养</strong>。Executors来处理一次能同时运行多少个线程，哪个线程在哪个线程的后面执行。总的来说Executors之于线程就像操作系统止于进程一样——管理者与被管理者的关系。</p>
 
 <!--more-->
 
 
-<h2>描述现象</h2>
-
-<p>这个DialogBuilder允许构建Dialog，set其中的标题，监听器之类的变量。然后clear掉所有设置，重新再重新构建一个Dialog。问题出现在构建的多个（> 1）Dialog之后，当某个Dialog显示出来时，点击其按钮时，会出现NullPointerException。</p>
-
-<h2>定位Bug：</h2>
-
-<p>起初我觉得这很奇怪，因为每一个Dialog明明都设置了回调函数的呀。然后看到create方法其中一个setOnClickListener的代码段。
-因为Dialong中的内容是普通的View，而Dialog的Listener与View的Listener不同，因此代码中做了如下adapt：</p>
-
-<p><a name="anonymousClass"></a>
-```java
-if (mNegativeButtonLinstener != null) {</p>
-
-<pre><code>negBtn.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View v) {
-    mNegativeButtonLinstener.onClick(mDialog, DialogInterface.BUTTON_NEGATIVE);
-    }
-});
-</code></pre>
-
-<p>}
-```
-因为dialog的onclick需要传入dialog自身的引用，所以就很 「随意」的把builder的mDialog成员传了过来，这个mDialog是在create的时候new出来的新的Dialog：</p>
-
-<p><code>java
-//定义
-private Dialog mDialog;
-//创建
-mDialog = new Dialog(mContext, mTheme);
-</code>
-此时我突然明白了，因为内部匿名类的onClick回调函数使用了外部类（《java编程思想》中称作 enclosing object that made it）的成员变量 mDialog，所以每次onClick，内部类都会resolve外部类的这个成员变量。然而这是不应该发生的，因为：</p>
-
-<blockquote><p><strong>当一个dialog被create之后，builder还有可能再创建一个dialog，或者builder的clear方法可能被调用，其会恢复所有成员变量至默认值，包括设置mDialog为null。所以当某个dialog的按钮被按下时，外部类的mDialog成员可能已经被修改，而不再对应这个dialog。</strong></p></blockquote>
-
-<h2>解决方案</h2>
-
-<p>解决的思路很简单，就是在onClick的<a href="#anonymousClass">内部类</a>中把dialog「定死」，不因成员变量mDialog的变化为转移！这时突然想起来匿名类引用局部变量是必须给局部变量加final修饰符的问题，于是就有了以下解决方案：</p>
-
-<p>在create中声明一个变量
-<code>java
-final Dialog d = mDialog;
-</code>
-然后下面需要传入mDialog的地方全部使用d代替。于是问题就顺利的解决了！</p>
-
-<h2>思考</h2>
-
-<p>对于上面解决方案为什么生效，首先说一下<strong>匿名类引用局部变量为什么必须声明final，为什么引用外部类的成员变量又不需要是final</strong>。</p>
-
-<p>首先：
- 1. static修饰的内部类和外部类是不能相互引用的，即内部类不能直接引用外部类的任何非static成员变量。因为static内部类不依赖于外部类就可以创建比如<code>new AlertDialog.Builder</code>是可以成功执行的。
- 2. 然内非static的内部类是不能这样new出来的，比如：</p>
-
-<p>```java
-public class Outer {</p>
-
-<pre><code>public A() {
-}
-public class Inner {
-    public Inner() {
-    }
-}
-</code></pre>
-
-<p>}
-```
-Inner想要被new出来必须这样做：</p>
-
-<p>```java
-Outer outer  = new Outer();
-Outer.Inner inner = outer.new Inner();</p>
-
-<p>/<em>
- * can not pass compile, the compiler would complain
- </em>/
- //Outer.Inner inner = new Outer.Inner();
-<code>
-那么为什么非静态内部类就可以使用外部类的成员变量了呢，那是因为**内部类会保存一个外部类的引用**。可以通过如下方式在内部类中获取该引用。
-</code>java
-//in inner class
-Outer.this
-```
-怎么样！是不是好熟悉，是不是觉得我用过！没错，就是他！</p>
-
-<p>问题逐渐明朗了，需要说明一件事：<strong>anonymous class肯定全都是非static内部类</strong>。</p>
-
-<p>那么匿名类就可以访问外部类的成员变量，这一点和常识想通。但是匿名类一般是在方法体内被创建的，当匿名类想引用方法体内的变量或者方法的参数时该变量必须声明final才行。这是为什么呢？！</p>
-
-<p>这个说来话长，因为方法的参数，乃至方法内的局部变量都是临时性的，他们储存在栈（stack）中。当方法return的时候他们便不复存在。所以匿名类不可能通过外部类的引用来获取局部变量。
-而final修饰的变量是不能修改的，因此内部类并不「引用」这个变量，而是在内部直接copy一下！反正她是不会变的，我copy一下也不会导致不一致的问题。（这里需要说明一个事实，copy一个实例的引用时，并不会copy这个实例，只是copy了「指针」而已！）</p>
-
-<p>所以，结论是：</p>
-
-<blockquote><p><strong>final的作用就是告诉编译器，这个变量不会修改的，内部类想用的话可以自己copy一份过去</strong></p></blockquote>
-
-<p>对于上述的解决方案，因为我们使用了一个final变量代替成员变量，因此内部类会直接使用该final变量的copy，而不像原来那样每次都去resolve外部类的成员，这就保证了这个变量在内部类是「定死」的！</p>
-
-<h2>优化升级</h2>
-
-<p>该才说到，非静态内部类会保留一个外部类的引用。在builder这个实例中，dialog的onclick Listener是builder的内部类，因此该listener会保留Builder的引用。但是builder只是辅助构建Dialog用的，当dialog构造出来之后不应该在和builder保有引用。否则会导致builder不能被垃圾回收掉！
-因此做一个修改，把dialog的onclick listener改成静态类，如下：</p>
-
-<p>```java
- if (mPositiveButtonLinstener != null) {</p>
-
-<pre><code>        final DialogInterface.OnClickListener listener = mPositiveButtonLinstener;
-        posBtn.setOnClickListener(new DialogButtonOnClickListener(dialog,
-                DialogInterface.BUTTON_POSITIVE,
-                listener));
-    }
-</code></pre>
-
-<p><code>
-其中`DialogButtonOnClickListener`定义如下：
-</code>java
-private static class DialogButtonOnClickListener implements View.OnClickListener {</p>
-
-<pre><code>    private Dialog mDialog;
-    private int mWhich;
-    private DialogInterface.OnClickListener mListener;
-
-    public DialogButtonOnClickListener(
-            Dialog dialog,
-            int whichButton,
-            DialogInterface.OnClickListener l) {
-
-        mDialog = dialog;
-        mWhich = whichButton;
-        mListener = l;
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (mListener != null &amp;&amp; mDialog != null) {
-            mListener.onClick(mDialog, mWhich);
-
-        }
-
-    }
-}
-</code></pre>
-
-<p>```</p>
-
-<h3>[完]</h3>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Android 中的Handler相关源代码浅析]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/06/24/android-zhong-de-handlerxiang-guan-yuan-dai-ma-qian-xi/"/>
-    <updated>2014-06-24T17:01:09+08:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/06/24/android-zhong-de-handlerxiang-guan-yuan-dai-ma-qian-xi</id>
-    <content type="html"><![CDATA[<p>简单用法示例：</p>
-
-<p>``` java
-//在主线程中
-private Handler handler = new Handler() {</p>
-
-<pre><code>// 处理子线程给我们发送的消息。
-@Override
-    public void handleMessage(android.os.Message msg) {
-        byte[] data = (byte[])msg.obj;
-        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-        imageView.setImageBitmap(bitmap);
-        Log.v("handler", "thread:" + Thread.currentThread().getName() +
-                " msg.target=" msg.getTarget());
-        if(msg.what == DOWNLOAD_IMG){
-            dialog.dismiss();
-        }
-    }
-</code></pre>
-
-<p>}
-```</p>
-
-<!--more-->
-
-
-<p>然后开启新的线程，在新的线程里面完成后台任务，任务完成后给这个handler发一个消息让它来处理。因为Handler是在主线程实例化(并且在实例化的时候没有指明Looper)，因此handler的handleMessage方法也是在主线程被调用的。</p>
-
-<p>// 使用Handler Message MessageQueue Looper等方式去访问网络资源的时候，我们必须要开启一个子线程</p>
-
-<p>```
-public class MyThread implements Runnable{</p>
-
-<pre><code>// 在run方法中完成网络耗时的操作
-@Override
-    public void run() {
-        HttpClient httpClient = new DefaultHttpClient();
-        HttpGet httpGet = new HttpGet(imgPath);
-        HttpResponse httpResponse = null;
-        try {
-            Log.v("debug", "start download picture in thread:" +
-                    Thread.currentThread().getName());
-            httpResponse = httpClient.execute(httpGet);
-            Log.v("debug", "download complete with status code" +
-                    httpResponse.getStatusLine().getStatusCode());
-            if(200 == httpResponse.getStatusLine().getStatusCode()){
-                byte[] data = EntityUtils.toByteArray(httpResponse.getEntity());
-                // 这里的数据data我们必须发送给UI的主线程，所以我们通过Message的方式来做桥梁。
-                Message message = Message.obtain();
-                message.obj = data;
-                message.what = DOWNLOAD_IMG;
-                handler.sendMessage(message);
-            }
-        } catch (Exception e) {
-            // TODO: handle exception
-        }
-    }
-</code></pre>
-
-<p>}
-```</p>
-
-<p>分析一下整个过程的大致流程,首先从Handler的sendMessage下手：从源代码中看，sendMessage最终会调用到Handler中的sendMessageAtTime。</p>
-
-<p>``` java
-public boolean sendMessageAtTime(Message msg, long uptimeMillis)
-{</p>
-
-<pre><code>boolean sent = false;
-MessageQueue queue = mQueue;
-if (queue != null) {
-    msg.target = this;
-    sent = queue.enqueueMessage(msg, uptimeMillis);
-}
-else {
-    RuntimeException e = new RuntimeException(
-            this + " sendMessageAtTime() called with no mQueue");
-    Log.w("Looper", e.getMessage(), e);
-}
-return sent;
-</code></pre>
-
-<p>}
-```</p>
-
-<p>看得出来主要做的事情就是把消息的target设置成自己，然后把消息存入到消息队列MessageQueue中去，
-接着首先去看看MessageQueue mQueue的定义</p>
-
-<p>在Handler类的最后，既然是final的那初始化一定在构造函数了：
-默认构造函数，代码中的注释写道“默认构造函数，把这个handler和当前线程的消息队列联系起来，如果没有（当前线程的消息队列），这个handler就不能接收消息了。</p>
-
-<p>```
-/<em>*
- * Default constructor associates this handler with the queue for the
- * current thread.
- *
- * If there isn&rsquo;t one, this handler won&rsquo;t be able to receive messages.
- </em>/
-public Handler() {</p>
-
-<pre><code>...
-    mLooper = Looper.myLooper();
-if (mLooper == null) {
-    throw new RuntimeException(
-            "Can't create handler inside thread that has not called Looper.prepare()");
-}
-mQueue = mLooper.mQueue;
-mCallback = null;
-</code></pre>
-
-<p>}
-```</p>
-
-<p>使用提供的消息队列，而不是使用默认的。</p>
-
-<p>``` java
-/<em>*
- * Use the provided queue instead of the default one.
- </em>/
-public Handler(Looper looper) {</p>
-
-<pre><code>mLooper = looper;
-mQueue = looper.mQueue;
-mCallback = null;
-</code></pre>
-
-<p>}
-```</p>
-
-<p>从上面两个函数可以看出来消息队列是Looper的，handler的sendMessage只是把Message加到了消息队列去。接着去看看Looper对消息对了mQueue做了什么。</p>
-
-<p>Looper中的MessageQueue的定义如下：</p>
-
-<p>然后是Looper 中的loop方法</p>
-
-<p>``` java
-/<em>*
- * Run the message queue in this thread. Be sure to call
- * {@link #quit()} to end the loop.
- </em>/
-public static void loop() {</p>
-
-<pre><code>final Looper me = myLooper();
-if (me == null) {
-    throw new RuntimeException("No Looper; Looper.prepare() wasn't called on this thread.");
-}
-final MessageQueue queue = me.mQueue;
-
-// Make sure the identity of this thread is that of the local process,
-// and keep track of what that identity token actually is.
-Binder.clearCallingIdentity();
-final long ident = Binder.clearCallingIdentity();
-
-for (;;) {
-    Message msg = queue.next(); // might block
-    if (msg == null) {
-        // No message indicates that the message queue is quitting.
-        return;
-    }
-
-    // This must be in a local variable, in case a UI event sets the logger
-    Printer logging = me.mLogging;
-    if (logging != null) {
-        logging.println("&gt;&gt;&gt;&gt;&gt; Dispatching to " + msg.target + " " +
-                msg.callback + ": " + msg.what);
-    }
-
-    msg.target.dispatchMessage(msg);
-
-    if (logging != null) {
-        logging.println("&lt;&lt;&lt;&lt;&lt; Finished to " + msg.target + " " + msg.callback);
-    }
-
-    // Make sure that during the course of dispatching the
-    // identity of the thread wasn't corrupted.
-    final long newIdent = Binder.clearCallingIdentity();
-    if (ident != newIdent) {
-        Log.wtf(TAG, "Thread identity changed from 0x"
-                + Long.toHexString(ident) + " to 0x"
-                + Long.toHexString(newIdent) + " while dispatching to "
-                + msg.target.getClass().getName() + " "
-                + msg.callback + " what=" + msg.what);
-    }
-
-    msg.recycle();
-}
-</code></pre>
-
-<p>}
-```</p>
-
-<p>注意到中间的死循环 <code>for(;;;){...}</code>
-以及关键的这一句：</p>
-
-<p>猜测target就是这个message对应处理他的handler，于是我圆润的滚过去看看：
-Message中的target是这么定义的：</p>
-
-<p>看来八九不离十了。继续看target赋值的语句：</p>
-
-<p>当然还有各种带有Handler参数的obtain方法，都会给target赋值。
-于是看看Handler.dispatchMessage(Message)是做什么的：</p>
-
-<p>``` java
-public void dispatchMessage(Message msg) {</p>
-
-<pre><code>if (msg.callback != null) {
-    handleCallback(msg);
-} else {
-    if (mCallback != null) {
-        if (mCallback.handleMessage(msg)) {
-            return;
-        }
-    }
-    handleMessage(msg);
-}
-</code></pre>
-
-<p>}
-```</p>
-
-<p>如果msg的callback不为null就调用callback，否则如果就看看mCallback有没有设置，如果有的话就让callback来处理消息，如果没有就是用默认的处理方法。默认的处理方法是什么都不多，但是子类如果覆盖了handleMessage方法就可以执行子类想要做的代码了。</p>
-
-<p>但是 事情没有那么简单！还有一个无参数的obtain方法，那么没有指定target的message是怎么成功发送到相应的handler的呢？还是圆润的滚过去看Looper的代码吧。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[SNG迷你项目感悟]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/06/20/sngmi-ni-xiang-mu-gan-wu/"/>
-    <updated>2014-06-20T16:38:32+08:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/06/20/sngmi-ni-xiang-mu-gan-wu</id>
-    <content type="html"><![CDATA[<p>来腾讯实习有半个月来，刚进来公司统一培训了一天半，闲扯了点东西。然后SNG部门培训了3天时间，讲解一些业务流程。然后就是重头戏，所谓的迷你项目。我擦，虽然今天做完了，但是我还是想说这个巨坑啊！</p>
-
-<!--more-->
-
-
-<p>做这个迷你项目首先要说的是，还真的有点累的。。。每天早上做班车从酒店到公司，然后晚上一边九点走，到最后两天就更夸张了。前天在公司通宵了一夜，昨天夜里也是十二点多才走，欣慰的是腾大东侧的路上出租车排排停，估计我鹅长的员工加班都很积极吧。一个安卓应用，7天时间，两个人做，看这数据都觉得恐怖。</p>
-
-<p>不过最后还是搞定了，尽管没拿奖，但是自己仍然很有成就感。做项目期间还是受到导师同事们的很大帮助的。最后一晚要不是wii帮qiuhang调了一个多小时的bug估计就得继续通宵了，而且说不定通宵了也搞不，那就苦逼了。</p>
-
-<p>因为我做和服务器端的接口工作，当时一边商量一边改。一开始觉得商量接口真麻烦，后来才发现没有事先定义好接口才是做苦逼的。最荒唐的一件事是今天上午mini项目要测评了，结果昨天下午还在找后台的同学加接口。所以说：
-<blockquote><p></p></p><p><h2>概要设计真的很重要</h2></p><p><br/><p></p></blockquote></p>
-
-<p>前天晚上的问题是在电脑上调试完毕的net接口整合到Android上却得不到返回数据，比较奇怪的是有一个房屋信息POST请求能上传，而且数据库里会出现相应信息，但是返回值却是空的。一开始怀疑是没有申请网络访问权限，后来发现不是。后来sponsor Lewis 过来帮我调试，教了我安卓单步调试的方法，但是问题还是没能轻松解决。当天晚上熬了一夜，睡醒了4点，突然灵机一现决定把所有的JSON返回值都Log出来，同时所有的Exeption也要Log出来。后来慢慢调试才发现是<code>NetworkOnMainThreadException</code>！网络跑在主UI线程！所以每次执行到connect的时候android系统都会抛出这个异常，但是我却Too young， sometimes too naive！把所有可能抛出异常的地方都catch (Exception e) {}。就是说catch了所有Exception的父类并且什么也不做！对！就是不作为！后来跟我的导师raez说这件事，他说：
-<blockquote><p></p></p><p><h2>异常本来是用来发现问题的，不能随便catch。</h2></p><p><br/><p></p></blockquote></p>
-
-<p>对此我的理解是，需要catch一个exception的时候<strong>尽量精准catch</strong>。比如一个方法可能抛出IOException就不要懒懒的去直接catch Exception，同时如果抛出多种异常也要一个一个catch;
-``` java
-try {</p>
-
-<pre><code>...
-} catch (IOException e) {
-        e.printStackTrace();
-        ...
-} catch (FileNotFoundException ex) {
-        e.printStackTrace();
-        ...
-}
-</code></pre>
-
-<p><code>``
-同时**捕获一个异常之后不能什么都不做**，至少应该</code>printStackTrace<code>或者是Log出来，否则出现问题之后很难排查出来。另外</code>NullPointerException<code>原则上不允许catch，</code>OutOfMemoryError`除了在大量消耗内存的代码片段上（比图图片处理，或者字符串拼接等）不允许catch。还有就是捕获异常是一定<strong>精准捕获</strong>。</p>
-
-<p>另外关于安卓多线程的使用，学习到了两种方式：Activity的<code>runOnUiThread(Runnable)</code>方法，还有使用AsyncTask类, 另外还有是用Handler之类的方法，当时没有还没有学习。</p>
-
-<p>另外一方面是缺少大型软开发的经验，原来自己写过的代码，最多也就一两千行。导致我们缺乏大型软件框架方面的知识。mini项目的Android端事实上来说就分了两个部分，UI和后台。今天听Wii讲了我们组的项目的大致构架，各个模块的分工功能，模块之间怎么通信回调，瞬间觉得高达上！真的是很开眼界。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[stepByStepAndroid-第一课]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/05/13/stepbystepandroid-di-%5B%3F%5D-ke/"/>
-    <updated>2014-05-13T12:04:19+08:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/05/13/stepbystepandroid-di-[?]-ke</id>
-    <content type="html"><![CDATA[<p>&lt;资源></p>
+<blockquote><p>new Thread的弊端如下：
+ 1. 每次new Thread新建对象性能差。
+ 2. 线程缺乏统一管理，可能无限制新建线程，相互之间竞争，及可能占用过多系统资源导致死机或oom。
+ 3. 缺乏更多功能，如定时执行、定期执行、线程中断。</p>
+
+<p>相比new Thread，Java提供的四种线程池的好处在于：
+1. 重用存在的线程，减少对象创建、消亡的开销，性能佳。
+2. 可有效控制最大并发线程数，提高系统资源的使用率，同时避免过多资源竞争，避免堵塞。
+3. 提供定时执行、定期执行、单线程、并发数控制等功能。</p></blockquote>
+
+<p>（上述比较摘自：<a href="http://www.trinea.cn/android/java-android-thread-pool/">http://www.trinea.cn/android/java-android-thread-pool/</a> ）</p>
+
+<p>Executors的使用静态方法来创建相应的<code>ExecutorService</code>接口实现，如下：</p>
 
 <ul>
-<li>git项目<a href="https://github.com/LanderlYoung/stepByStepAndroid">github</a></li>
-<li>详见<a href="https://github.com/LanderlYoung/stepByStepAndroid/releases">release note</a></li>
-<li><a href="https://github.com/LanderlYoung/stepByStepAndroid/wiki">项目wiki</a></li>
+<li><code>Executors.newCachedThreadPool()</code></li>
+<li><code>Executors.newFixedThreadPool()</code></li>
+<li><code>Executors.newScheduledThreadPool()</code></li>
+<li><code>Executors.newSingleThreadExecutor()</code></li>
 </ul>
 
 
-<p>&lt;/资源></p>
-
-<p>梳理一下第一课学到的内容:</p>
-
-<ol>
-<li>创建简单的用户界面
+<p> 这些线程池分别具有不同的能力：
+ （Java Concurrency in Pratice——java编程实践，如下解释）</p>
 
 <ul>
-<li>简单的布局控制</li>
+<li><p>newFixedThreadPool：创建一个定长的线程池，每提交一个任务就创建一个线程，直到达到池的最大长度，这时线程池会保持长度不再变化（如果一个线程由于未预期的Exception而结束，线程池会补充一个新线程）。</p></li>
+<li><p>newCachedThreadPool：创建一个可缓存的线程池，如果当前线程池的长度超过了处理的需要时，它可以灵活的回收空闲的线程，当需要增加时，它可以灵活的添加新的线程，而不会对池的长度作任何限制。</p></li>
+<li><p>newSingleThreadExecutor：创建一个单线程化的executor，它只创建唯一的worker线程来执行任务，如果这个线程异常结束，会有另一个取代它。executor会保证任务依照任务队列规定的顺序（FIFO，LIFO，优先级）执行。</p></li>
+<li><p>newScheduledThreadPool：创建一个定长的线程池，而且支持定时的以及周期性的任务执行，类似于Timer。</p></li>
 </ul>
-</li>
-<li>启动另一个Activity
+
+
+<h3>ExecutorService的使用</h3>
+
+<p><code>ExecutorService</code>接口继承自Executor的接口定义，他提供了一个线程池应该实现的方法定义，包括运行/提交新任务的方法，结束任务的方法，等等。
+<code>ExecutorService</code>的接口有：</p>
+
+<p><strong>提交任务</strong>：</p>
 
 <ul>
-<li>给button添加回调函数</li>
-<li>使用Intent</li>
+<li><p><code>execute</code>（该方法继承自Executor）提交一个runnable接口封装的task，没有返回值</p></li>
+<li><p><code>submit</code> 提交一个Callable或者Runnable接口封装的任务，返回一个Feature。</p></li>
+<li><p><code>invokeAll</code>传入一个task的容器，执行其包含的所有task。</p></li>
+<li><p><code>invokeAny</code>传入一个task的容器，只要其中一个task异常终止，就结束其他task（如果还没执行就不再执行）。</p></li>
 </ul>
-</li>
-</ol>
 
 
-<!--more-->
+<p><strong>终止线程池</strong>：</p>
+
+<ul>
+<li><p><code>shotdown</code>线程池停止接受新的task，所有已有task执行完后线程池随即关闭</p></li>
+<li><p><code>shutdownNow</code>立即终止线程池内的所有task，关闭线程池</p></li>
+</ul>
 
 
-<h3>创建用户界面</h3>
+<p>所以向ExecutorService提交的任务可以是通过<code>Runnable</code>或者<code>Callable</code>接口封装的，其中Callable接口带有一个类型参数，表示返回值的类型。Runable可以使用execute方法，提交。但是Runnable和Callable都可以使用submit方法提交。execute方法没有返回值，submit方法会返回一个Future<T>类型，可以查看任务的执行状态以及获取任务的返回）。所以当你想要一个任务完成时返回一个返回值，submit将是你的不二之选（不要三四千，不要一两千，只要998，submit抱回家）。</p>
 
-<p>修改原来的fragment_main.xml文件，使用LinearLayout：
-``` xml
-&lt;LinearLayout xmlns:android=&ldquo;<a href="http://schemas.android.com/apk/res/android">http://schemas.android.com/apk/res/android</a>&rdquo;</p>
+<p><strong>关于Future<T></strong></p>
 
-<pre><code>xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:orientation="horizontal" &gt;
-</code></pre>
+<p>Future功能强大，提供了对任务的各种操作：</p>
 
-<p></LinearLayout>
-<code>
-上面的android:orientation属性把LinearLayout设置成水平线性布局，所有元素水平排列。
-然后在LinearLayout中添加控件EditText和Button
-</code> xml</p>
-
-<pre><code>&lt;EditText 
-    android:id="@+id/edit_message"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:hint="@string/edit_message" /&gt;
-</code></pre>
-
-<p>  &lt;Button</p>
-
-<pre><code>    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="@string/button_send" /&gt;
-</code></pre>
-
-<p>```
-然后在相应的strings.xml中添加string值。
-效果如图：</p>
-
-<p><img src="https://cloud.githubusercontent.com/assets/5700847/2953445/c8028f00-da59-11e3-9800-89a5c859064b.png" width="360" alt="device-2014-05-12-231827" /></p>
-
-<p>接着控制一下布局：让EditText占据LinearLayout横向的剩余空间。只需要调整两个方面<code>android:layout_weight="1"</code>和<code>android:layout_width="0dp"</code>，其中layout_weight=1可以让它占据剩下的空间，layout_width=0改善性能。
-看一下效果：</p>
-
-<p><img src="https://cloud.githubusercontent.com/assets/5700847/2953442/b9d4597c-da59-11e3-886d-08d3f8e667a9.png" width="360" alt="device-2014-05-12-235041" /></p>
-
-<h2>为button添加click事件处理</h2>
-
-<p>在Button中添加一行<code>android:onClick="sendMessage"</code>这样就指定了button的click事件由<code>public void onClick(View view)</code>这样方法签名的方法来处理。
-所以对应的去MainActicity.java中添加该函数：
-``` java
-//call back of the button
-public void sendMessage(View view) {</p>
-
-<pre><code>Intent intent = new Intent(getApplication(),DisplayMessageActivity.class);
-EditText editText = (EditText)findViewById(R.id.edit_message);
-String message = editText.getText().toString();
-intent.putExtra(EXTRA_MESSAGE,message);
-startActivity(intent);
-</code></pre>
-
-<p>}
-```
-上面的DisplayMessageActivity类是使用向导创建的新Activity。</p>
-
-<h3>创建新Activity</h3>
-
-<p>使用向导创建新的Activity，然后需要在AndroidManifest.xml里注册Activity</p>
-
-<p>``` xml
-   &lt;application</p>
-
-<pre><code>   ......
-    &lt;activity
-        android:name="com.young.stepbystepandroid.DisplayMessageActivity"
-        android:label="@string/title_activity_display_message"
-        android:parentActivityName="com.young.stepbystepandroid.MainActivity" &gt;
-        &lt;meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value="com.young.stepbystepandroid.MainActivity" /&gt;
-    &lt;/activity&gt;
-&lt;/application&gt;
-</code></pre>
-
-<p>```</p>
-
-<h3>使用Intent</h3>
-
-<p><em>启动Intent</em>
-``` java</p>
-
-<pre><code>Intent intent = new Intent(getApplication(),DisplayMessageActivity.class);
-EditText editText = (EditText)findViewById(R.id.edit_message);
-String message = editText.getText().toString();
-intent.putExtra(EXTRA_MESSAGE,message);
-startActivity(intent);
-</code></pre>
-
-<p><code>
-其中`public static final String EXTRA_MESSAGE = "com.young.stepByStepAndroid.MESSAGE";`
-这个是一个显示Intent构造函数第一个参数是Context，可以使用this，因为Activity继承Context；但是推荐使用ApplicationContext防止内存泄漏。
-*接收Intent*
-</code> java</p>
-
-<pre><code>Intent intent = getIntent();
-String message = intent.getStringExtra(
-        MainActivity.EXTRA_MESSAGE);
-
-TextView textView = new TextView(this);
-textView.setTextSize(40);
-textView.setText(message);
-</code></pre>
-
-<p>```
-代码很明显，不多说什么了。当然在Intent里面附加信息推荐使用<a href="http://developer.android.com/reference/android/os/Bundle.html">Bundle</a>。</p>
-
-<p>看看成果：</p>
-
-<p><img src="https://cloud.githubusercontent.com/assets/5700847/2953446/d6257c5a-da59-11e3-8e67-80bbecb4640f.png" width="360" alt="device-2014-05-13-002646" /></p>
-
-<p><img src="https://cloud.githubusercontent.com/assets/5700847/2953447/d71cdef0-da59-11e3-9d39-e3e5d4de150d.png" width="360" alt="device-2014-05-13-002651" /></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[2048游戏安卓移植版]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/03/22/2048you-xi-an-zhuo-yi-zhi-ban/"/>
-    <updated>2014-03-22T00:51:51+08:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/03/22/2048you-xi-an-zhuo-yi-zhi-ban</id>
-    <content type="html"><![CDATA[<p>这几天一直在玩2048游戏，觉得这个游戏很有意思。上次研究了一下源代码于是就写了个‘外挂’(囧)。后来在手机上玩，发现网页版的玩着不爽，于是想着把这个游戏当成基于安卓的html5游戏。于是就看了一下怎么写android的html5游戏。的出结论是基于WebView——在应用中开一个区域显示网页内容，所以这个区域就是一个浏览器了。经过两天的努力算是弄了个<a href="/assets/storage/2048">小样</a>出来。最后还是利用WebView移植到<a href="https://github.com/LanderlYoung/2048_android">安卓平台</a>，使用起来和native app没啥区别。</p>
-
-<!--more-->
+<ul>
+<li><p><code>isDone()</code> 返回任务是否已经执行完成</p></li>
+<li><p><code>get()</code>返回任务的返回值，如果调用get的时候任务还没有完成，则会阻塞知道任务完成</p></li>
+<li><p><code>get(long timeout, TimeUnit unit)</code>同上，但是多了个参数，表示阻塞的最大时长。如果在设定的最大阻塞时长内没有指定任务没有顺利结束并返回结果，该方法会抛出一个<code>java.util.concurrent.TimeoutException</code>。</p></li>
+<li><p><code>cancel(boolean mayInterruptIfRunning)</code> 尝试去取消一个任务的执行，如果一个任务已经结束，或者已经被取消，或者因为一些什么原因不能够取消，则会取消失败，同时返回false。如果一个任务还没有开始执行就被取消了，那么它将不再执行。如果这个方法被调用的时候，任务正在执行，则将由参数<code>mayInterruptIfRunning</code>决定是否终止正在运行的task。</p></li>
+<li><p><code>isCancelled()</code> 返回任务是否已经被取消</p></li>
+</ul>
 
 
-<p>不过同时发现一个问题——Android的WebView性能不高。html5游戏用手机的浏览器直接打开一点都不卡，要多流畅就多流畅，一旦打包成apk装到手机上就不行了，越玩越卡。后来加了一个about的页面，这个页面是从页面上面‘落’下来的效果。当这个‘落’的动作变成幻灯片的时候我终于知道了一定是WebView的javascript定时器的问题，WebView的javascript频率有问题。</p>
+<p>了解过强大的Future是否觉得execute可以去死了，连个Future都返回不了，事实上并非如此，因为submit最终调用的还是execute-_-其实现方法是给execute传入一个RunnableFuture接口的实例（在标准库里有一个很好的实现叫FutureTask），RunnableFuteure接口定义了一个觉有Future功能的Runnalbe。想自定义Future就可以通过这种方式。</p>
 
-<p>移植神马的最烦的是浏览器兼容问题，针对每一种分辨路都得写一套css出来。今天有点玩了，列出来写这个小应用学到的东西，具体细节有机会再补充吧。</p>
+<p>submit也是可以传入Runnable的，当传入Runnable时会怎样呢：</p>
 
-<ol>
-<li>font awesome 的使用，利用font awesome显示矢量图标</li>
-<li>div的垂直居中（利用javascript）</li>
-<li>about的下落效果（其实在写chrome的插件的时候有用到）</li>
-</ol>
+<ul>
+<li><p>当使用 <code>submit(Runnable)</code>时，返回一个<code>Future&lt;?&gt;</code>，它的get方法会返回null，除此之外其他方法调用表现正常。</p></li>
+<li><p>当使用<code>submit(Runnable task, T result)</code>时，返回一个Future<T>，它的get方法会返回result。就好比task是一个会返回result的Callable。</p></li>
+</ul>
+
+
+<p>另外一个小tip就是Executors提供了Runnable转Callabe的静态方法：</p>
+
+<ul>
+<li><p><code>public static &lt;T&gt; Callable&lt;T&gt; callable(Runnable task, T result)</code>将Runnable转换成能返回result的Callable接口</p></li>
+<li><p><code>public static Callable&lt;Object&gt; callable(Runnable task)</code>将Runnable转换成返回null的Callable接口</p></li>
+</ul>
 
 ]]></content>
   </entry>
