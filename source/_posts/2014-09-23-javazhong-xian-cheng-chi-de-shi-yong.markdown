@@ -73,7 +73,9 @@ Executors的使用静态方法来创建相应的`ExecutorService`接口实现，
  * `shotdown`线程池停止接受新的task，所有已有task执行完后线程池随即关闭
 
  * `shutdownNow`立即终止线程池内的所有task，关闭线程池
- 
+
+**重要的一点**：因为只要有一个非Daemon线程运行着，就会阻止JVM的正常退出。所以线程池一定要记得shutdown！ 
+
 所以向ExecutorService提交的任务可以是通过`Runnable`或者`Callable`接口封装的，其中Callable接口带有一个类型参数，表示返回值的类型。Runable可以使用execute方法，提交。但是Runnable和Callable都可以使用submit方法提交。execute方法没有返回值，submit方法会返回一个Future<T>类型，可以查看任务的执行状态以及获取任务的返回）。所以当你想要一个任务完成时返回一个返回值，submit将是你的不二之选（不要三四千，不要一两千，只要998，submit抱回家）。
 
 **关于Future<T>**
