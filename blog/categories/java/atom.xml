@@ -4,7 +4,7 @@
   <title><![CDATA[Category: java | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-09-28T17:20:35+08:00</updated>
+  <updated>2014-09-28T17:26:30+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -28,15 +28,23 @@ Thing in Java 中这么解释Executors：</p>
 <!--more-->
 
 
-<blockquote><p>new Thread的弊端如下：
- 1. 每次new Thread新建对象性能差。
- 2. 线程缺乏统一管理，可能无限制新建线程，相互之间竞争，及可能占用过多系统资源导致死机或oom。
- 3. 缺乏更多功能，如定时执行、定期执行、线程中断。</p>
+<p><strong>new Thread的弊端如下：</strong></p>
 
-<p>相比new Thread，Java提供的四种线程池的好处在于：
-1. 重用存在的线程，减少对象创建、消亡的开销，性能佳。
-2. 可有效控制最大并发线程数，提高系统资源的使用率，同时避免过多资源竞争，避免堵塞。
-3. 提供定时执行、定期执行、单线程、并发数控制等功能。</p></blockquote>
+<ol>
+<li><p>每次new Thread新建对象性能差。</p></li>
+<li><p>线程缺乏统一管理，可能无限制新建线程，相互之间竞争，及可能占用过多系统资源导致死机或oom。</p></li>
+<li><p>缺乏更多功能，如定时执行、定期执行、线程中断。</p></li>
+</ol>
+
+
+<p><strong>相比new Thread，Java提供的四种线程池的好处在于：</strong></p>
+
+<ol>
+<li><p>重用存在的线程，减少对象创建、消亡的开销，性能佳。</p></li>
+<li><p>可有效控制最大并发线程数，提高系统资源的使用率，同时避免过多资源竞争，避免堵塞。</p></li>
+<li><p>提供定时执行、定期执行、单线程、并发数控制等功能。</p></li>
+</ol>
+
 
 <p>（上述比较摘自：<a href="http://www.trinea.cn/android/java-android-thread-pool/">http://www.trinea.cn/android/java-android-thread-pool/</a> ）</p>
 

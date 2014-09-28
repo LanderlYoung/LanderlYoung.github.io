@@ -91,15 +91,23 @@ Thing in Java 中这么解释Executors：</p>
 <!--more-->
 
 
-<blockquote><p>new Thread的弊端如下：
- 1. 每次new Thread新建对象性能差。
- 2. 线程缺乏统一管理，可能无限制新建线程，相互之间竞争，及可能占用过多系统资源导致死机或oom。
- 3. 缺乏更多功能，如定时执行、定期执行、线程中断。</p>
+<p><strong>new Thread的弊端如下：</strong></p>
 
-<p>相比new Thread，Java提供的四种线程池的好处在于：
-1. 重用存在的线程，减少对象创建、消亡的开销，性能佳。
-2. 可有效控制最大并发线程数，提高系统资源的使用率，同时避免过多资源竞争，避免堵塞。
-3. 提供定时执行、定期执行、单线程、并发数控制等功能。</p></blockquote>
+<ol>
+<li><p>每次new Thread新建对象性能差。</p></li>
+<li><p>线程缺乏统一管理，可能无限制新建线程，相互之间竞争，及可能占用过多系统资源导致死机或oom。</p></li>
+<li><p>缺乏更多功能，如定时执行、定期执行、线程中断。</p></li>
+</ol>
+
+
+<p><strong>相比new Thread，Java提供的四种线程池的好处在于：</strong></p>
+
+<ol>
+<li><p>重用存在的线程，减少对象创建、消亡的开销，性能佳。</p></li>
+<li><p>可有效控制最大并发线程数，提高系统资源的使用率，同时避免过多资源竞争，避免堵塞。</p></li>
+<li><p>提供定时执行、定期执行、单线程、并发数控制等功能。</p></li>
+</ol>
+
 
 <p>（上述比较摘自：<a href="http://www.trinea.cn/android/java-android-thread-pool/">http://www.trinea.cn/android/java-android-thread-pool/</a> ）</p>
 
@@ -283,23 +291,23 @@ Thing in Java 中这么解释Executors：</p>
 <section>
 	<h1>Tags</h1>
 	<ul class="tag-cloud">
-		<li><a style="font-size: 77.3%" href="/tags/android/">Android</a></li>
-<li><a style="font-size: 92.7%" href="/tags/html5/">HTML5</a></li>
-<li><a style="font-size: 111.7%" href="/tags/linux/">Linux</a></li>
-<li><a style="font-size: 99.5%" href="/tags/node-dot-js/">Node.js</a></li>
-<li><a style="font-size: 72.9%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
-<li><a style="font-size: 92.7%" href="/tags/vim/">Vim</a></li>
-<li><a style="font-size: 78.9%" href="/tags/java/">Java</a></li>
-<li><a style="font-size: 80.0%" href="/tags/git/">Git</a></li>
-<li><a style="font-size: 79.5%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
-<li><a style="font-size: 73.9%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
-<li><a style="font-size: 81.4%" href="/tags/svg/">SVG</a></li>
-<li><a style="font-size: 83.3%" href="/tags/ui/">UI</a></li>
-<li><a style="font-size: 112.8%" href="/tags/tencent/">tencent</a></li>
-<li><a style="font-size: 105.6%" href="/tags/zhuan-tie/">转贴</a></li>
-<li><a style="font-size: 81.3%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
-<li><a style="font-size: 109.4%" href="/tags/java/">java</a></li>
-<li><a style="font-size: 108.6%" href="/tags/android/">android</a></li>
+		<li><a style="font-size: 73.8%" href="/tags/android/">Android</a></li>
+<li><a style="font-size: 84.4%" href="/tags/html5/">HTML5</a></li>
+<li><a style="font-size: 104.1%" href="/tags/linux/">Linux</a></li>
+<li><a style="font-size: 117.6%" href="/tags/node-dot-js/">Node.js</a></li>
+<li><a style="font-size: 77.6%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
+<li><a style="font-size: 78.3%" href="/tags/vim/">Vim</a></li>
+<li><a style="font-size: 115.9%" href="/tags/java/">Java</a></li>
+<li><a style="font-size: 95.3%" href="/tags/git/">Git</a></li>
+<li><a style="font-size: 102.1%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
+<li><a style="font-size: 92.0%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
+<li><a style="font-size: 96.5%" href="/tags/svg/">SVG</a></li>
+<li><a style="font-size: 73.5%" href="/tags/ui/">UI</a></li>
+<li><a style="font-size: 99.8%" href="/tags/tencent/">tencent</a></li>
+<li><a style="font-size: 92.8%" href="/tags/zhuan-tie/">转贴</a></li>
+<li><a style="font-size: 76.6%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
+<li><a style="font-size: 112.7%" href="/tags/java/">java</a></li>
+<li><a style="font-size: 113.4%" href="/tags/android/">android</a></li>
 
 	</ul>
 </section>
