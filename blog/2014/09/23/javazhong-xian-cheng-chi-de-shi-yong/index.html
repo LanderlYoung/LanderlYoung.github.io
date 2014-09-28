@@ -155,6 +155,8 @@ Thing in Java 中这么解释Executors：</p>
 </ul>
 
 
+<p><strong>重要的一点</strong>：因为只要有一个非Daemon线程运行着，就会阻止JVM的正常退出。所以线程池一定要记得shutdown！</p>
+
 <p>所以向ExecutorService提交的任务可以是通过<code>Runnable</code>或者<code>Callable</code>接口封装的，其中Callable接口带有一个类型参数，表示返回值的类型。Runable可以使用execute方法，提交。但是Runnable和Callable都可以使用submit方法提交。execute方法没有返回值，submit方法会返回一个Future<T>类型，可以查看任务的执行状态以及获取任务的返回）。所以当你想要一个任务完成时返回一个返回值，submit将是你的不二之选（不要三四千，不要一两千，只要998，submit抱回家）。</p>
 
 <p><strong>关于Future<T></strong></p>
@@ -291,23 +293,23 @@ Thing in Java 中这么解释Executors：</p>
 <section>
 	<h1>Tags</h1>
 	<ul class="tag-cloud">
-		<li><a style="font-size: 73.8%" href="/tags/android/">Android</a></li>
-<li><a style="font-size: 84.4%" href="/tags/html5/">HTML5</a></li>
-<li><a style="font-size: 104.1%" href="/tags/linux/">Linux</a></li>
-<li><a style="font-size: 117.6%" href="/tags/node-dot-js/">Node.js</a></li>
-<li><a style="font-size: 77.6%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
-<li><a style="font-size: 78.3%" href="/tags/vim/">Vim</a></li>
-<li><a style="font-size: 115.9%" href="/tags/java/">Java</a></li>
-<li><a style="font-size: 95.3%" href="/tags/git/">Git</a></li>
-<li><a style="font-size: 102.1%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
-<li><a style="font-size: 92.0%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
-<li><a style="font-size: 96.5%" href="/tags/svg/">SVG</a></li>
-<li><a style="font-size: 73.5%" href="/tags/ui/">UI</a></li>
-<li><a style="font-size: 99.8%" href="/tags/tencent/">tencent</a></li>
-<li><a style="font-size: 92.8%" href="/tags/zhuan-tie/">转贴</a></li>
-<li><a style="font-size: 76.6%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
-<li><a style="font-size: 112.7%" href="/tags/java/">java</a></li>
-<li><a style="font-size: 113.4%" href="/tags/android/">android</a></li>
+		<li><a style="font-size: 95.6%" href="/tags/android/">Android</a></li>
+<li><a style="font-size: 108.8%" href="/tags/html5/">HTML5</a></li>
+<li><a style="font-size: 76.7%" href="/tags/linux/">Linux</a></li>
+<li><a style="font-size: 80.6%" href="/tags/node-dot-js/">Node.js</a></li>
+<li><a style="font-size: 108.7%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
+<li><a style="font-size: 78.7%" href="/tags/vim/">Vim</a></li>
+<li><a style="font-size: 87.0%" href="/tags/java/">Java</a></li>
+<li><a style="font-size: 94.0%" href="/tags/git/">Git</a></li>
+<li><a style="font-size: 83.3%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
+<li><a style="font-size: 91.5%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
+<li><a style="font-size: 76.1%" href="/tags/svg/">SVG</a></li>
+<li><a style="font-size: 98.4%" href="/tags/ui/">UI</a></li>
+<li><a style="font-size: 105.0%" href="/tags/tencent/">tencent</a></li>
+<li><a style="font-size: 91.3%" href="/tags/zhuan-tie/">转贴</a></li>
+<li><a style="font-size: 71.4%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
+<li><a style="font-size: 112.4%" href="/tags/java/">java</a></li>
+<li><a style="font-size: 70.2%" href="/tags/android/">android</a></li>
 
 	</ul>
 </section>
