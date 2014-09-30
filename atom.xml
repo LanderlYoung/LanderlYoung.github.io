@@ -4,7 +4,7 @@
   <title><![CDATA[Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-09-28T19:51:09+08:00</updated>
+  <updated>2014-09-30T12:00:55+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -12,6 +12,144 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[安卓监听新收到短信]]></title>
+    <link href="http://LanderlYoung.github.io/blog/2014/09/30/an-zhuo-jian-ting-xin-shou-dao-duan-xin/"/>
+    <updated>2014-09-30T11:52:25+08:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2014/09/30/an-zhuo-jian-ting-xin-shou-dao-duan-xin</id>
+    <content type="html"><![CDATA[<p>安卓收到短信的事件是由系统发一个有序广播的，所以这里需要一个BroadcastReceiver。receiver收到的Intent里面并不是直接存储的短信内容，而是短信的原始数据。所以我们需要自己解码。</p>
+
+<p><strong>获取短信的原始数据：</strong>
+原始数据被叫做<a href="http://en.wikipedia.org/wiki/Protocol_data_unit">PDU</a>，一个PDU就是一个数据段，如果短信比较长的话可能是由几个PDU组成的。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Override</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">onReceive</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">,</span> <span class="n">Intent</span> <span class="n">intent</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="c1">//监听到验证码短信后自动填写验证码</span>
+</span><span class='line'>    <span class="n">Log</span><span class="o">.</span><span class="na">i</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="s">&quot;SMSBroadcastReceiver SMS_RECEIVED&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">Bundle</span> <span class="n">smsBundle</span> <span class="o">=</span> <span class="n">intent</span><span class="o">.</span><span class="na">getExtras</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">smsBundle</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Object</span><span class="o">[]</span> <span class="n">pdus</span> <span class="o">=</span> <span class="o">(</span><span class="n">Object</span><span class="o">[])</span> <span class="n">smsBundle</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;pdus&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+<!--more-->
+
+
+<p>上面的<code>smsBundle.get("pdus")</code>返回的实际类型是<code>byte[][]</code>，二位数组的每一个子数组就是一个pdu。</p>
+
+<p><strong>解码短信内容：</strong>
+这里主要使用到的是<a href="http://developer.android.com/reference/android/telephony/SmsMessage.html#createFromPdu(byte[])"><code>SmsMessage.createFromPdu</code></a>方法。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">private</span> <span class="n">String</span> <span class="nf">parseMessageFromRawData</span><span class="o">(</span><span class="n">Object</span><span class="o">[]</span> <span class="n">pdus</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">pdus</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>      <span class="n">StringBuilder</span> <span class="n">message</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuilder</span><span class="o">();</span>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="n">Object</span> <span class="n">pdu</span> <span class="o">:</span> <span class="n">pdus</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">SmsMessage</span> <span class="n">smsMessage</span> <span class="o">=</span> <span class="n">SmsMessage</span><span class="o">.</span><span class="na">createFromPdu</span><span class="o">((</span><span class="kt">byte</span><span class="o">[])</span> <span class="n">pdu</span><span class="o">);</span>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">smsMessage</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">continue</span><span class="o">;</span>
+</span><span class='line'>            <span class="n">message</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">smsMessage</span><span class="o">.</span><span class="na">getDisplayMessageBody</span><span class="o">());</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="n">message</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Log</span><span class="o">.</span><span class="na">e</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="s">&quot;SMSBroadcastReceiver read sms failed&quot;</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">OutOfMemoryError</span> <span class="n">oom</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Log</span><span class="o">.</span><span class="na">e</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="s">&quot;SMSBroadcastReceiver caused OOM =_=!&quot;</span><span class="o">,</span> <span class="n">oom</span><span class="o">);</span>
+</span><span class='line'>        <span class="c1">//为了避免后续操作出现问题，gc一下</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">gc</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">gc</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上面的重点就是<code>SmsMessage smsMessage = SmsMessage.createFromPdu((byte[]) pdu);</code>这一句了。需要注意的是这个操作容易导致OOM（已经有好多Crash上报了。。。），所以要特别处理一下。</p>
+
+<p><strong>另外：</strong>
+上面的<a href="http://developer.android.com/reference/android/telephony/SmsMessage.html#createFromPdu(byte[])"><code>SmsMessage.createFromPdu</code></a>方法已经被官方文档说明即将被废弃（deprecated）原因是为了同时支持<a href="http://en.wikipedia.org/wiki/3GPP">3GPP</a>和<a href="http://en.wikipedia.org/wiki/3GPP2">3GPP2</a>，他们是移动系统通信标准的拟定组织分别拟定了<code>GSM/UMTS/LTE</code>标准和<code>CDMA/LTE</code>标准。因此推荐是用的方法是<code>createFromPdu(byte[] pdu, String format)</code>其中fotmat可以是<code>SmsConstants.FORMAT_3GPP</code>或者<code>SmsConstants.FORMAT_3GPP2</code>。</p>
+
+<p>出于好奇我看了一眼<a href="http://developer.android.com/reference/android/telephony/SmsMessage.html#createFromPdu(byte[])"><code>SmsMessage.createFromPdu</code></a>的代码实现，发现他本身就做了制式判断的（=_=!），代码写的还是不错的，粘出来。万一以后这个方法被废弃了，还有个参考。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">static</span> <span class="n">SmsMessage</span> <span class="nf">createFromPdu</span><span class="o">(</span><span class="kt">byte</span><span class="o">[]</span> <span class="n">pdu</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>     <span class="n">SmsMessage</span> <span class="n">message</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// cdma(3gpp2) vs gsm(3gpp) format info was not given,</span>
+</span><span class='line'>    <span class="c1">// guess from active voice phone type</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">activePhone</span> <span class="o">=</span> <span class="n">TelephonyManager</span><span class="o">.</span><span class="na">getDefault</span><span class="o">().</span><span class="na">getCurrentPhoneType</span><span class="o">();</span>
+</span><span class='line'>    <span class="n">String</span> <span class="n">format</span> <span class="o">=</span> <span class="o">(</span><span class="n">PHONE_TYPE_CDMA</span> <span class="o">==</span> <span class="n">activePhone</span><span class="o">)</span> <span class="o">?</span>
+</span><span class='line'>            <span class="n">SmsConstants</span><span class="o">.</span><span class="na">FORMAT_3GPP2</span> <span class="o">:</span> <span class="n">SmsConstants</span><span class="o">.</span><span class="na">FORMAT_3GPP</span><span class="o">;</span>
+</span><span class='line'>    <span class="n">message</span> <span class="o">=</span> <span class="n">createFromPdu</span><span class="o">(</span><span class="n">pdu</span><span class="o">,</span> <span class="n">format</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="kc">null</span> <span class="o">==</span> <span class="n">message</span> <span class="o">||</span> <span class="kc">null</span> <span class="o">==</span> <span class="n">message</span><span class="o">.</span><span class="na">mWrappedSmsMessage</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="c1">// decoding pdu failed based on activePhone type, must be other format</span>
+</span><span class='line'>        <span class="n">format</span> <span class="o">=</span> <span class="o">(</span><span class="n">PHONE_TYPE_CDMA</span> <span class="o">==</span> <span class="n">activePhone</span><span class="o">)</span> <span class="o">?</span>
+</span><span class='line'>                <span class="n">SmsConstants</span><span class="o">.</span><span class="na">FORMAT_3GPP</span> <span class="o">:</span> <span class="n">SmsConstants</span><span class="o">.</span><span class="na">FORMAT_3GPP2</span><span class="o">;</span>
+</span><span class='line'>        <span class="n">message</span> <span class="o">=</span> <span class="n">createFromPdu</span><span class="o">(</span><span class="n">pdu</span><span class="o">,</span> <span class="n">format</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">message</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Java(Android)中线程池的使用]]></title>
@@ -5626,86 +5764,6 @@ young@Y470:~/Documents/octopress$xinput --set-button-map "SynPS/2 Synaptics Touc
 <p>为了使命令开机自动执行，可以使用方法一中介绍的两个方法。</p>
 
 <p>当然方法二放在后面说是因为他有缺点——在一些少数程序比如文件管理器<code>nautilus</code>里面自然滚动失效的T^T。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[用git下载单个分支]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/01/06/yong-gitxia-zai-dan-ge-fen-zhi/"/>
-    <updated>2014-01-06T16:45:34+08:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/01/06/yong-gitxia-zai-dan-ge-fen-zhi</id>
-    <content type="html"><![CDATA[<p>最近在玩octpress。开始一直在我的Debian系统里面玩的，后来因为一夹些软件必须在windows下面跑，只能在虚拟机里写博客了。然后就打算把github上的网页项目下载下来。但是这个项目有点不一样。github.io的博客项目有两个分支，master和source;其实他们根本不是分支的概念，没有什么交集的。在octpress项目文件夹里面是source分支里的内容，除了_deploy目录内的东西是用gitignore忽略的，_deploy里面的内容就是master分支的东西了。</p>
-
-<p>所以我的需求是把两个分支单独下载下来，开始的方案失败（其实是不完美），后来搜了好多东西在stackoverflow上面找到了解决方案。</p>
-
-<!--more-->
-
-
-<hr />
-
-<p> 1.新建一个文件夹，假设名字是blog</p>
-
-<p> 2.cd进去输入</p>
-
-<pre>
-    git init
-</pre>
-
-
-<p> 3.配置git，比如</p>
-
-<pre>
-    git remote add origin git@xxx
-</pre>
-
-
-<p> 4.然后是</p>
-
-<pre>
-    git fetch origin
-</pre>
-
-
-<p>   把仓库的状态取回来</p>
-
-<p> 5.因为_deploy目录里面也是这个项目，所以索性把.git目录复制进去</p>
-
-<pre>
-    cp -r .git _deploy/
-</pre>
-
-
-<p> 6.然后是下载分支，可以使用</p>
-
-<pre>
-    git branch -b branch_name origin/source
-</pre>
-
-
-<p>   从source分支新建一个分支。或者简单点，用：</p>
-
-<pre>
-    git branch -t origin/source
-</pre>
-
-
-<p>   直接吧source分支搞下来，其作用等同于</p>
-
-<pre>
-    git branch -b source origin/source
-</pre>
-
-
-<p> 7.cd 到_deploy目录，干同样的事</p>
-
-<pre>
-    git branch -t origin/source
-</pre>
-
-
-<p>这样两个分支就放到了不同的目录里面，接着按照octpress官方教程安装jekyll和rake等就可以开始博客了！</p>
-
-<p>对了，顺便提一句。Debian里不允许使用gem安装ruby软件，只能使用apt安装bundler之类的东西。不过我在fedoral和基于Ubuntu的Deepin Linux上都没发现这个问题。</p>
 ]]></content>
   </entry>
   

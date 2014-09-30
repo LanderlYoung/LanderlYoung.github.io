@@ -7,8 +7,7 @@
 	<meta name="author" content="LanderlYoung">
 
 	
-	<meta name="description" content="2014/09/23 java Comments Java(Android)中线程池的使用 java SE5提供了java.util.concurrent.Executors类来实现线程池的功能。
-Thinking in Java 中这么解释Executors： &hellip;">
+	<meta name="description" content="2014/09/30 Android Comments 安卓监听新收到短信 安卓收到短信的事件是由系统发一个有序广播的，所以这里需要一个BroadcastReceiver。receiver收到的Intent里面并不是直接存储的短信内容，而是短信的原始数据。所以我们需要自己解码。 &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +80,72 @@ Thinking in Java 中这么解释Executors： &hellip;">
 			<div class="mid-col-container">
 				<div id="content" class="inner">
 <div itemscope itemtype="http://schema.org/Blog">
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-09-30T11:52:25+08:00" data-updated="true" itemprop="datePublished">2014/09/30</time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/android/'>Android</a>
+
+
+</div>
+		
+			<span class="comments"><a href="/blog/2014/09/30/an-zhuo-jian-ting-xin-shou-dao-duan-xin/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2014/09/30/an-zhuo-jian-ting-xin-shou-dao-duan-xin/" itemprop="url">安卓监听新收到短信</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<p>安卓收到短信的事件是由系统发一个有序广播的，所以这里需要一个BroadcastReceiver。receiver收到的Intent里面并不是直接存储的短信内容，而是短信的原始数据。所以我们需要自己解码。</p>
+
+<p><strong>获取短信的原始数据：</strong>
+原始数据被叫做<a href="http://en.wikipedia.org/wiki/Protocol_data_unit">PDU</a>，一个PDU就是一个数据段，如果短信比较长的话可能是由几个PDU组成的。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Override</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">onReceive</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">,</span> <span class="n">Intent</span> <span class="n">intent</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="c1">//监听到验证码短信后自动填写验证码</span>
+</span><span class='line'>    <span class="n">Log</span><span class="o">.</span><span class="na">i</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="s">&quot;SMSBroadcastReceiver SMS_RECEIVED&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">Bundle</span> <span class="n">smsBundle</span> <span class="o">=</span> <span class="n">intent</span><span class="o">.</span><span class="na">getExtras</span><span class="o">();</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">smsBundle</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">Object</span><span class="o">[]</span> <span class="n">pdus</span> <span class="o">=</span> <span class="o">(</span><span class="n">Object</span><span class="o">[])</span> <span class="n">smsBundle</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;pdus&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+
+		
+		<a href="/blog/2014/09/30/an-zhuo-jian-ting-xin-shou-dao-duan-xin/" class="more-link">Read on &rarr;</a>
+	</div>
+
+</article>
 
 
     <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
@@ -503,44 +568,6 @@ Thinking in Java 中这么解释Executors： &hellip;">
 
 </article>
 
-
-    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-05-07T11:42:23+08:00" data-updated="true" itemprop="datePublished">2014/05/07</time></div>
-		<div class="tags">
-
-
-	<a class='category' href='/blog/categories/linux/'>Linux</a>
-
-
-</div>
-		
-			<span class="comments"><a href="/blog/2014/05/07/vimcha-jian-quan-gong-lue/#disqus_thread">Comments</a></span>
-		
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2014/05/07/vimcha-jian-quan-gong-lue/" itemprop="url">Vim插件全攻略</a></h1>
-	<div class="entry-content" itemprop="articleBody">
-		<p>原来配置vim插件的时候因为总是要下载解压，试用然后把.vim目录弄得乱七八糟。所以也就用了那几个插件，本着够用就好的原则。今天才发现Vim也有自己的插件管理工具<a href="https://github.com/gmarik/Vundle.vim">Vundle</a>真的是太开心了。然后又发现了有大神共享的<a href="https://github.com/humiaozuzu/dot-vimrc">插件列表</a>，于是我就开始了开开心心的Vim插件攻略。</p>
-
-
-		
-		<a href="/blog/2014/05/07/vimcha-jian-quan-gong-lue/" class="more-link">Read on &rarr;</a>
-	</div>
-
-</article>
-
 </div>
 <nav id="pagenavi">
     
@@ -595,6 +622,10 @@ Thinking in Java 中这么解释Executors： &hellip;">
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2014/09/30/an-zhuo-jian-ting-xin-shou-dao-duan-xin/">安卓监听新收到短信</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/09/23/javazhong-xian-cheng-chi-de-shi-yong/">Java(Android)中线程池的使用</a>
       </li>
     
@@ -610,36 +641,32 @@ Thinking in Java 中这么解释Executors： &hellip;">
         <a href="/blog/2014/06/20/sngmi-ni-xiang-mu-gan-wu/">SNG迷你项目感悟</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/05/27/cssdong-hua-lian-jie-te-xiao/">Css动画链接特效</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/android/'>Android (4)</a></li><li><a href='/blog/categories/git/'>Git (2)</a></li><li><a href='/blog/categories/html5/'>HTML5 (5)</a></li><li><a href='/blog/categories/java/'>java (1)</a></li><li><a href='/blog/categories/javascript/'>JavaScript (3)</a></li><li><a href='/blog/categories/linux/'>Linux (6)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/android/'>Android (5)</a></li><li><a href='/blog/categories/git/'>Git (2)</a></li><li><a href='/blog/categories/html5/'>HTML5 (5)</a></li><li><a href='/blog/categories/java/'>java (1)</a></li><li><a href='/blog/categories/javascript/'>JavaScript (3)</a></li><li><a href='/blog/categories/linux/'>Linux (6)</a></li></ul>
 </section>
 <section>
 	<h1>Tags</h1>
 	<ul class="tag-cloud">
-		<li><a style="font-size: 84.5%" href="/tags/android/">Android</a></li>
-<li><a style="font-size: 79.4%" href="/tags/html5/">HTML5</a></li>
-<li><a style="font-size: 78.6%" href="/tags/linux/">Linux</a></li>
-<li><a style="font-size: 82.4%" href="/tags/node-dot-js/">Node.js</a></li>
-<li><a style="font-size: 102.8%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
-<li><a style="font-size: 119.6%" href="/tags/vim/">Vim</a></li>
-<li><a style="font-size: 75.0%" href="/tags/java/">Java</a></li>
-<li><a style="font-size: 73.1%" href="/tags/git/">Git</a></li>
-<li><a style="font-size: 114.6%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
-<li><a style="font-size: 73.6%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
-<li><a style="font-size: 102.5%" href="/tags/svg/">SVG</a></li>
-<li><a style="font-size: 97.5%" href="/tags/ui/">UI</a></li>
-<li><a style="font-size: 98.1%" href="/tags/tencent/">tencent</a></li>
-<li><a style="font-size: 91.0%" href="/tags/zhuan-tie/">转贴</a></li>
-<li><a style="font-size: 88.0%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
-<li><a style="font-size: 106.5%" href="/tags/java/">java</a></li>
-<li><a style="font-size: 78.9%" href="/tags/android/">android</a></li>
+		<li><a style="font-size: 104.7%" href="/tags/android/">Android</a></li>
+<li><a style="font-size: 111.6%" href="/tags/html5/">HTML5</a></li>
+<li><a style="font-size: 73.3%" href="/tags/linux/">Linux</a></li>
+<li><a style="font-size: 74.7%" href="/tags/node-dot-js/">Node.js</a></li>
+<li><a style="font-size: 104.1%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
+<li><a style="font-size: 117.9%" href="/tags/vim/">Vim</a></li>
+<li><a style="font-size: 106.2%" href="/tags/java/">Java</a></li>
+<li><a style="font-size: 77.6%" href="/tags/git/">Git</a></li>
+<li><a style="font-size: 95.3%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
+<li><a style="font-size: 92.9%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
+<li><a style="font-size: 87.2%" href="/tags/svg/">SVG</a></li>
+<li><a style="font-size: 78.8%" href="/tags/ui/">UI</a></li>
+<li><a style="font-size: 88.7%" href="/tags/tencent/">tencent</a></li>
+<li><a style="font-size: 93.3%" href="/tags/zhuan-tie/">转贴</a></li>
+<li><a style="font-size: 90.3%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
+<li><a style="font-size: 82.9%" href="/tags/java/">java</a></li>
+<li><a style="font-size: 112.0%" href="/tags/android/">android</a></li>
 
 	</ul>
 </section>
