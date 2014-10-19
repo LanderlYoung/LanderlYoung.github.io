@@ -15,14 +15,11 @@ tags: [tencent ,  Android ]
 不过最后还是搞定了，尽管没拿奖，但是自己仍然很有成就感。做项目期间还是受到导师同事们的很大帮助的。最后一晚要不是wii帮qiuhang调了一个多小时的bug估计就得继续通宵了，而且说不定通宵了也搞不，那就苦逼了。
 
 因为我做和服务器端的接口工作，当时一边商量一边改。一开始觉得商量接口真麻烦，后来才发现没有事先定义好接口才是做苦逼的。最荒唐的一件事是今天上午mini项目要测评了，结果昨天下午还在找后台的同学加接口。所以说：
-{%blockquote %}
-<h2>概要设计真的很重要</h2>
-{% endblockquote  %}
+> 概要设计真的很重要
 
 前天晚上的问题是在电脑上调试完毕的net接口整合到Android上却得不到返回数据，比较奇怪的是有一个房屋信息POST请求能上传，而且数据库里会出现相应信息，但是返回值却是空的。一开始怀疑是没有申请网络访问权限，后来发现不是。后来sponsor Lewis 过来帮我调试，教了我安卓单步调试的方法，但是问题还是没能轻松解决。当天晚上熬了一夜，睡醒了4点，突然灵机一现决定把所有的JSON返回值都Log出来，同时所有的Exeption也要Log出来。后来慢慢调试才发现是`NetworkOnMainThreadException`！网络跑在主UI线程！所以每次执行到connect的时候android系统都会抛出这个异常，但是我却Too young， sometimes too naive！把所有可能抛出异常的地方都catch (Exception e) {}。就是说catch了所有Exception的父类并且什么也不做！对！就是不作为！后来跟我的导师raez说这件事，他说：
-{%blockquote %}
-<h2>异常本来是用来发现问题的，不能随便catch。</h2>
-{% endblockquote  %}
+
+> 异常本来是用来发现问题的，不能随便catch。
 
 对此我的理解是，需要catch一个exception的时候**尽量精准catch**。比如一个方法可能抛出IOException就不要懒懒的去直接catch Exception，同时如果抛出多种异常也要一个一个catch;
 ``` java

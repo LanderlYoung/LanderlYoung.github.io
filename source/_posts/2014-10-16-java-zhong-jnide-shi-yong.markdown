@@ -78,25 +78,25 @@ javah生成的头文件里面使用的类型都是jni.h定义的，目的是做�
 
 **基本对应关系如下：**
  
- |  jni 类型 | JAVA类型 | 对应本地类型  |  类型[签名][signature] |
- | :------: | :------: | :--------: | :----------------: |
-   jboolean | boolean | uint8_t | Z
-   jbyte | byte | char | B 
-   jcahr | char | uint16_t | C 
-   jshort | short | int16_t | S 
-   jint | int | int32_t | I 
-   jlong | long | int64_t | J 
-   jfloat | float | float | F 
-   jdouble | double | double | D 
-   void | void | void | V 
+|  jni 类型 | JAVA类型 | 对应本地类型  |  类型[签名][signature] |
+| :------: | :------: | :--------: | :----------------: |
+|  jboolean | boolean | uint8_t | Z|
+|  jbyte | byte | char | B |
+|  jcahr | char | uint16_t | C |
+|  jshort | short | int16_t | S |
+|  jint | int | int32_t | I |
+|  jlong | long | int64_t | J |
+|  jfloat | float | float | F |
+|  jdouble | double | double | D |
+|  void | void | void | V |
 
 **引用类型对应关系：**
 
 | java类型 |  JNI 类型 | java类型 |  JNI 类型 |
 | :-----: | :------: | :------: | :------: |
-  所有的实例引用 | jobject |java.lang.Class |  jclass 
-  java.lang.String | jstring | Ocject[] | jobjectArray 
-  java.lang.Throwable | jthrowable | 基本类型[] | jxxxArray 
+| 所有的实例引用 | jobject |java.lang.Class |  jclass |
+| java.lang.String | jstring | Ocject[] | jobjectArray |
+| java.lang.Throwable | jthrowable | 基本类型[] | jxxxArray |
 
 通过表格发现，除了上面定义的`String`，`Class`，`Throwable`，其他的类（除了数组）都是以`jobject`的形式出现的！事实上jstring， jclass也都是object的子类。所以这里还是和java层一样，一切皆jobject。（当然，如果jni在C语言中编译的话是没有继承的概念的，此时jstring，jclass等其实就是jobject！用了typedef转换而已！！）
 
@@ -186,17 +186,29 @@ typedef union jvalue {
  6.  使用完之后，释放数组：`void Release<type>ArrayElements(jshortArray array, jshort *elems, jint mode)`  
 
 有点要说明的：  
+
  1. 上面的3中的isCopy：当你调用getArrayElements时JVM（Runtime）可以直接返回数组的原始指针，或者是copy一份，返回给你，这是由JVM决定的。所以isCopy就是用来记录这个的。他的值是`JNI_TURE`或者`JNI_FALSE`。  
- 2. 6释放数组。**一定要释放你所获得数组**。其中有一个`mode`参数，其有三个可选值，分别表示：  
-	 * 0
-		 - 原始数组：允许原数组被垃圾回收。  
-		 - copy： 数据会从get返回的buffer copy回去，同时buffer也会被释放。  
-	 * JNI_COMMIT  
-		- 原始数组：什么也不做  
-		- copy： 数据会从get返回的buffer copy回去，同时buffer**不会**被释放。  
-	 * JNI_ABORT  
-		 - 原始数组：允许原数组被垃圾回收。之前由JNI_COMMIT提交的对数组的修改将得以保留。  
-		 - copy： buffer会被释放，同时buffer中的修改将不会copy回数组！  
+
+ 2. 6释放数组。**一定要释放你所获得数组**。其中有一个`mode`参数，其有三个可选值，分别表示：   
+
+   * 0  
+
+     - 原始数组：允许原数组被垃圾回收。    
+
+	 - copy： 数据会从get返回的buffer copy回去，同时buffer也会被释放。    	
+
+   * JNI_COMMIT    
+
+     - 原始数组：什么也不做    
+
+     - copy： 数据会从get返回的buffer copy回去，同时buffer**不会**被释放。    
+
+   * JNI_ABORT    
+
+     - 原始数组：允许原数组被垃圾回收。之前由JNI_COMMIT提交的对数组的修改将得以保留。    
+
+     - copy： buffer会被释放，同时buffer中的修改将不会copy回数组！    
+
 	
 ####关于引用与垃圾回收
 比如上面有个方法传了一个jobject进来，然后我把她保存下来，方便以后使用。这样做是**不行哒**！因为他是一个LocalReference，所以不能保证jobject指向的真正的实例不被回收。也就是说有可能你用的时候那个指针已经是个野指针的。然后你的程序就直接Segment Fault了，呵呵。。。
@@ -384,16 +396,16 @@ JAVA中的函数签名包括了函数的参数类型，返回值类型。因此�
 1.基本类型都对应一个大写字母，如下：
 
 | JAVA类型 |  类型签名 |
- | :------: | :------:  |
- | boolean | Z |
- |byte | B | 
- | char  | C |
- | short | S |
- | int | I |
- | long | J | 
- | float | F | 
- | double | D |
- | void | V |
+| :------: | :------:  |
+| boolean | Z |
+|byte | B | 
+| char  | C |
+| short | S |
+| int | I |
+| long | J | 
+| float | F | 
+| double | D |
+| void | V |
 
 2.如果是类则是：
 L + 类全名（报名中的点(.)用(/)代替）+ ；
