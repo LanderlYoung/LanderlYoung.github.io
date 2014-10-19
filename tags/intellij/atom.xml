@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: IntelliJ | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/tags/intellij/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-10-16T21:30:16+08:00</updated>
+  <updated>2014-10-19T21:37:49+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -26,7 +26,7 @@
 <p>Here is the solution:</p>
 
 <ol>
-<li>Run &ndash;> Editor configuration</li>
+<li>Run -> Editor configuration</li>
 <li>Select on of you build configuration in the left side of the dialog.</li>
 <li>On the right side there is an area marked as <strong>Before Launch</strong></li>
 <li>Click the &ldquo;plus&rdquo; button, choose <code>Run External Tool</code> in the popup menu.</li>

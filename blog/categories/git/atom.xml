@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: Git | Young_Blog]]></title>
+  <title><![CDATA[Category: git | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/blog/categories/git/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-10-16T21:30:16+08:00</updated>
+  <updated>2014-10-19T21:37:49+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>

@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: 转贴 | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/tags/zhuan-tie/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-10-16T21:30:16+08:00</updated>
+  <updated>2014-10-19T21:37:49+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -63,7 +63,7 @@
 
 <p>rootoorotor下载的是kali Linux 1.0 64位版本，在安装好之后就会进入kali linux默认的桌面环境(gnome-fallback)，如图所示：</p>
 
-<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053037648.png">http://www.2cto.com/uploadfile/2013/0405/20130405053037648.png</a>" width="345" height="614"></p>
+<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053037648.png">http://www.2cto.com/uploadfile/2013/0405/20130405053037648.png</a>&#8221; width=&#8221;345&#8221; height=&#8221;614&#8221;></p>
 
 <p>然后打开终端，输入</p>
 
@@ -71,25 +71,22 @@
 
 <p>看看里面有没有一下三行kali官方源的地址（如果是断网安装，kali的默认源可能不会写入到这个文件里），如果没有，请在<code>/etc/apt/sources.list</code>中入这三行。</p>
 
-<p><code>cpp
-deb http://http.kali.org/kali kali main non-free contrib
+<pre><code class="cpp">deb http://http.kali.org/kali kali main non-free contrib
 deb-src http://http.kali.org/kali kali main non-free contrib
 deb http://security.kali.org/kali-security kali/updates main contrib non-free
-</code></p>
+</code></pre>
 
 <p>加入之后就可以对系统进行更新了，终端中输入：</p>
 
-<p><code>cpp
-apt-get update &amp;amp;&amp;amp; apt-get dist-upgrade
-</code></p>
+<pre><code class="cpp">apt-get update &amp;amp;&amp;amp; apt-get dist-upgrade
+</code></pre>
 
 <p>安装BCM43XX系列无线网卡驱动：</p>
 
 <p>由于我的本本比较渣，kali 默认不识别我的无线网卡（博通 BCM 4312）</p>
 
-<p><code>cpp
-aptitude install firmware-b43-lpphy-installer
-</code></p>
+<pre><code class="cpp">aptitude install firmware-b43-lpphy-installer
+</code></pre>
 
 <p>关于BCM43XX系列的无线网卡驱动请参考Debian官方文档：</p>
 
@@ -113,15 +110,13 @@ aptitude install firmware-b43-lpphy-installer
 
 <p>如果还不行也有可能是中文包没有安装，在终端中运行：</p>
 
-<p><code>cpp
-dpkg-reconfigure locales
-</code></p>
+<pre><code class="cpp">dpkg-reconfigure locales
+</code></pre>
 
 <p>汉化浏iceweasel<a target="_blank" href="http://www.2cto.com/os/liulanqi/" class="keylink" style="color:rgb(51, 51, 51); text-decoration:none">浏览器</a>（Firefox）</p>
 
-<p><code>cpp
-apt-get install iceweasel-l10n-zh-cn
-</code></p>
+<pre><code class="cpp">apt-get install iceweasel-l10n-zh-cn
+</code></pre>
 
 <p>在提示框中往下拉，开头位zh_CN的全部选择，然后确定，r然后在设置本地中文语言环境时选择 zh_CN.GBK 或者 zh_CN.UTF-8 确定，如果提示已经安装请，按照第一步的办法进入System Settings设置为中文。</p>
 
@@ -129,27 +124,24 @@ apt-get install iceweasel-l10n-zh-cn
 
 <p>ibus:</p>
 
-<p><code>cpp
-apt-get install ibus ibus-pinyin
-</code></p>
+<pre><code class="cpp">apt-get install ibus ibus-pinyin
+</code></pre>
 
 <p>或者</p>
 
 <p>fcitx</p>
 
-<p><code>cpp
-apt-get install fcitx fcitx-pinyin fcitx-module-cloudpinyin fcitx-googlepinyin
-</code></p>
+<pre><code class="cpp">apt-get install fcitx fcitx-pinyin fcitx-module-cloudpinyin fcitx-googlepinyin
+</code></pre>
 
 <p>安装完成之后，打开终端输入：</p>
 
-<p><code>cpp
-im-config
-</code></p>
+<pre><code class="cpp ">im-config
+</code></pre>
 
 <p>确认手工配置，选择你喜欢的输入法，如图：</p>
 
-<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053039870.png">http://www.2cto.com/uploadfile/2013/0405/20130405053039870.png</a>" width="440" height="610">
+<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053039870.png">http://www.2cto.com/uploadfile/2013/0405/20130405053039870.png</a>&#8221; width=&#8221;440&#8221; height=&#8221;610&#8221;>
 然后重启系统~</p>
 
 <p>如果你使用的是ibus：</p>
@@ -170,19 +162,17 @@ im-config
 
 <p>打开终端：</p>
 
-<p><code>cpp
-adduser 用户名
-</code></p>
+<pre><code class="cpp">adduser 用户名
+</code></pre>
 
 <p>如图所示：</p>
 
-<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053040253.png">http://www.2cto.com/uploadfile/2013/0405/20130405053040253.png</a>" width="415" height="745"></p>
+<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053040253.png">http://www.2cto.com/uploadfile/2013/0405/20130405053040253.png</a>&#8221; width=&#8221;415&#8221; height=&#8221;745&#8221;></p>
 
 <p>在终端下输入：</p>
 
-<p><code>cpp
-visudo
-</code></p>
+<pre><code class="cpp">visudo
+</code></pre>
 
 <p>按i之后进入编辑模式（插入），然后在文件的 root ALL=(ALL:ALL) ALL 的下方添加一个新的sudo用户例如XXX用户：XXX&nbsp;&nbsp; ALL=(ALL:ALL)</p>
 
@@ -190,7 +180,7 @@ visudo
 
 <p>如图所示：</p>
 
-<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053041263.png">http://www.2cto.com/uploadfile/2013/0405/20130405053041263.png</a>" width="514" height="659"></p>
+<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053041263.png">http://www.2cto.com/uploadfile/2013/0405/20130405053041263.png</a>&#8221; width=&#8221;514&#8221; height=&#8221;659&#8221;></p>
 
 <p>完成后按Esc键进入命令行模式，键入:w来保存</p>
 
@@ -202,11 +192,10 @@ visudo
 
 <p>终端中输入（root权限）：</p>
 
-<p>``` cpp
-cp -rf /root/. /home/新用户名</p>
+<pre><code class="cpp">cp -rf /root/. /home/新用户名
 
-<p>chown -R 新用户名:新用户名 /home/新用户名
-```</p>
+chown -R 新用户名:新用户名 /home/新用户名
+</code></pre>
 
 <p>这样普通用户的配置就完成了。</p>
 
@@ -214,22 +203,18 @@ cp -rf /root/. /home/新用户名</p>
 
 <p>Kali Linux的桌面环境已经升级为Gnome 3，但默认运行在fallback模式。想<strong>临时</strong>切换成gnome3的标准模式请在终端输入：</p>
 
-<p>``` cpp
-gnome-shell –replace</p>
-
-<p>```</p>
+<pre><code class="cpp">gnome-shell –replace
+</code></pre>
 
 <p>gnome 3的标准模式支持一些桌面特效开启还有很多gnome-shell插件，如果您觉得比较好用请输入下面的命令使系统在启动时，自动进入gnome-shell的标准模式。</p>
 
-<p><code>cpp
-gsettings set org.gnome.desktop.session session-name gnome
-</code></p>
+<pre><code class="cpp">gsettings set org.gnome.desktop.session session-name gnome
+</code></pre>
 
 <p>若想还原默认的桌面请输入：</p>
 
-<p><code>cpp
-gsettings set org.gnome.desktop.session session-name gnome-fallback
-</code></p>
+<pre><code class="cpp ">gsettings set org.gnome.desktop.session session-name gnome-fallback
+</code></pre>
 
 <p>注销或者重启之后进入桌面即可直接进入您要切换的模式。</p>
 
@@ -245,54 +230,53 @@ gsettings set org.gnome.desktop.session session-name gnome-fallback
 
 <p>1.官方源中的软件（可以通过apt-get install直接安装）：</p>
 
-<p>``` cpp
-apt-get install gnome-tweak-tool</p>
+<pre><code class="cpp">apt-get install gnome-tweak-tool 
 
-<p>（gnome-shell管理软件可以修改字体、管理插件、管理桌面主题。必备！）</p>
+（gnome-shell管理软件可以修改字体、管理插件、管理桌面主题。必备！） 
 
-<p>apt-get install gdebi</p>
+apt-get install gdebi 
 
-<p>(有了这个安装软件就不用在终端中dpkg -i 安装了，提供图形化软件安装方式)</p>
+(有了这个安装软件就不用在终端中dpkg -i 安装了，提供图形化软件安装方式) 
 
-<p>apt-get install nautilus-open-terminal</p>
+apt-get install nautilus-open-terminal 
 
-<p>(鼠标右键在当前目录打开终端)</p>
+(鼠标右键在当前目录打开终端) 
 
-<p>apt-get install flashplugin-nonfree</p>
+apt-get install flashplugin-nonfree 
 
-<p>（浏览器flash插件）</p>
+（浏览器flash插件） 
 
-<p>apt-get install synaptic</p>
+apt-get install synaptic 
 
-<p>（新立得软件包管理器）</p>
+（新立得软件包管理器） 
 
-<p>apt-get install file-roller</p>
+apt-get install file-roller 
 
-<p>（压缩文件管理工具）</p>
+（压缩文件管理工具） 
 
-<p>apt-get install amule</p>
+apt-get install amule 
 
-<p>（电骡）</p>
+（电骡） 
 
-<p>apt-get install remmina*</p>
+apt-get install remmina* 
 
-<p>（远程桌面+扩展）</p>
+（远程桌面+扩展） 
 
-<p>apt-get install geany</p>
+apt-get install geany 
 
-<p>（一个轻巧的IDE，如果您喜欢折腾emacs或者VIM就不用安装这个了）</p>
+（一个轻巧的IDE，如果您喜欢折腾emacs或者VIM就不用安装这个了） 
 
-<p>apt-get install bluefish</p>
+apt-get install bluefish 
 
-<p>（一个强大的Web编辑器）</p>
+（一个强大的Web编辑器） 
 
-<p>apt-get install&nbsp; meld</p>
+apt-get install&amp;nbsp; meld 
 
-<p>（一款可视化的文件及目录对比、合并工具）</p>
+（一款可视化的文件及目录对比、合并工具） 
 
-<p>apt-get install audacious<br>
-（一个轻量级音乐播放器）
-```</p>
+apt-get install audacious&lt;br&gt;
+（一个轻量级音乐播放器） 
+</code></pre>
 
 <p>3.安装QQ2012：</p>
 
@@ -306,9 +290,8 @@ apt-get install gnome-tweak-tool</p>
 
 <p>使用前要先</p>
 
-<p><code>cpp
-apt-get install libqt4-opengl
-</code></p>
+<pre><code class="cpp">apt-get install libqt4-opengl 
+</code></pre>
 
 <p><a href="https://www.virtualbox.org/wiki/Linux_Downloads">https://www.virtualbox.org/wiki/Linux_Downloads</a></p>
 
@@ -322,7 +305,7 @@ apt-get install libqt4-opengl
 
 <p>如图：</p>
 
-<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053042483.png">http://www.2cto.com/uploadfile/2013/0405/20130405053042483.png</a>" width="440" height="614"></p>
+<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053042483.png">http://www.2cto.com/uploadfile/2013/0405/20130405053042483.png</a>&#8221; width=&#8221;440&#8221; height=&#8221;614&#8221;></p>
 
 <p>如果想隐藏图标，可以打开系统工具——主菜单 来选择隐藏，如果您再使用这个工具时没有看见Kali Linux菜单, 请下载我修改好的文件放入 /home/你的用户名/.config/menus 文件夹，然后使用组合键alt+F2输入r ——回车，既可重启gome-shell</p>
 
@@ -332,23 +315,22 @@ apt-get install libqt4-opengl
 
 <p>（注意：“.”开头的目录或文件是隐藏的，按ctrl+H才可查看，或者在终端中输入 ls -a）</p>
 
-<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053044953.png">http://www.2cto.com/uploadfile/2013/0405/20130405053044953.png</a>" width="364" height="446"></p>
+<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053044953.png">http://www.2cto.com/uploadfile/2013/0405/20130405053044953.png</a>&#8221; width=&#8221;364&#8221; height=&#8221;446&#8221;></p>
 
 <h2>安装Faenza图标：</h2>
 
-<p>``` cpp
-wget <a href="http://faenza-icon-theme.googlecode.com/files/faenza-icon-theme_1.3.zip">http://faenza-icon-theme.googlecode.com/files/faenza-icon-theme_1.3.zip</a></p>
+<pre><code class="cpp">wget http://faenza-icon-theme.googlecode.com/files/faenza-icon-theme_1.3.zip
 
-<p>unzip faenza-icon-theme_1.3.zip</p>
+unzip faenza-icon-theme_1.3.zip
 
-<p>chmod u+x INSTALL</p>
+chmod u+x INSTALL
 
-<p>./INSTALL
-```</p>
+./INSTALL
+</code></pre>
 
 <p>然后根据提示安装即可，安装完成之后使用gnome-tweak-tool工具更换图标：</p>
 
-<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053045872.png">http://www.2cto.com/uploadfile/2013/0405/20130405053045872.png</a>" width="499" height="643"></p>
+<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053045872.png">http://www.2cto.com/uploadfile/2013/0405/20130405053045872.png</a>&#8221; width=&#8221;499&#8221; height=&#8221;643&#8221;></p>
 
 <p><strong>优化字体显示：</strong></p>
 
@@ -374,7 +356,7 @@ wget <a href="http://faenza-icon-theme.googlecode.com/files/faenza-icon-theme_1.
 
 <p>渲染之后的显示效果截图：</p>
 
-<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053046521.png">http://www.2cto.com/uploadfile/2013/0405/20130405053046521.png</a>"" width="544" height="587"></p>
+<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053046521.png">http://www.2cto.com/uploadfile/2013/0405/20130405053046521.png</a>&#8221;&#8221; width=&#8221;544&#8221; height=&#8221;587&#8221;></p>
 
 <p><strong>修改启动分辨率：</strong></p>
 
@@ -405,9 +387,9 @@ wget <a href="http://faenza-icon-theme.googlecode.com/files/faenza-icon-theme_1.
 
 <p>到此为止，Kali Linux的桌面环境基本折腾完成，上图：</p>
 
-<p><img class="center  <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053047828.png">http://www.2cto.com/uploadfile/2013/0405/20130405053047828.png</a>" width="345" height="614"></p>
+<p><img class="center  <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053047828.png">http://www.2cto.com/uploadfile/2013/0405/20130405053047828.png</a>&#8221; width=&#8221;345&#8221; height=&#8221;614&#8221;></p>
 
-<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053049272.png">http://www.2cto.com/uploadfile/2013/0405/20130405053049272.png</a>" width="345" height="614"></p>
+<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053049272.png">http://www.2cto.com/uploadfile/2013/0405/20130405053049272.png</a>&#8221; width=&#8221;345&#8221; height=&#8221;614&#8221;></p>
 ]]></content>
   </entry>
   

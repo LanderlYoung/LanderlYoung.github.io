@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: HTML5 | Young_Blog]]></title>
+  <title><![CDATA[Category: html5 | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/blog/categories/html5/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-10-16T21:30:16+08:00</updated>
+  <updated>2014-10-19T21:37:49+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -164,24 +164,20 @@ var styles = [
 
 <p>因为研究了一下游戏的源代码，突然发现可以很简单的让游戏想开了外挂一样牛叉！</p>
 
-<p>``` cpp
-(function(initialNum){</p>
-
-<pre><code>var a = new GameManager(4, KeyboardInputManager, HTMLActuator, LocalScoreManager);
-var row = 4;
-var column = 4;
-for(var i = 0; i &lt; row; i++) {
-    for(var j = 0; j &lt; column;j++) {
-        tile =  new Tile({x:i, y:j}, initialNum);
-        a.grid.cells[i][j] = tile;
+<pre><code class="cpp">(function(initialNum){
+    var a = new GameManager(4, KeyboardInputManager, HTMLActuator, LocalScoreManager);
+    var row = 4;
+    var column = 4;
+    for(var i = 0; i &lt; row; i++) {
+        for(var j = 0; j &lt; column;j++) {
+            tile =  new Tile({x:i, y:j}, initialNum);
+            a.grid.cells[i][j] = tile;
+        }
     }
-}
+})(128);
 </code></pre>
 
-<p>})(128);
-```</p>
-
-<p>这就是所有'外挂'代码，打开chrome的console。输入进去就可以看到奇迹。。。。</p>
+<p>这就是所有&#8217;外挂&#8217;代码，打开chrome的console。输入进去就可以看到奇迹。。。。</p>
 
 <h2>郑重声明</h2>
 

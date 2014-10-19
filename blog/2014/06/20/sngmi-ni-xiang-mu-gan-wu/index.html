@@ -91,13 +91,11 @@
 
 <p>因为我做和服务器端的接口工作，当时一边商量一边改。一开始觉得商量接口真麻烦，后来才发现没有事先定义好接口才是做苦逼的。最荒唐的一件事是今天上午mini项目要测评了，结果昨天下午还在找后台的同学加接口。所以说：</p>
 
-<blockquote><p><h2>概要设计真的很重要</h2></p></blockquote>
-
+<blockquote><p>概要设计真的很重要</p></blockquote>
 
 <p>前天晚上的问题是在电脑上调试完毕的net接口整合到Android上却得不到返回数据，比较奇怪的是有一个房屋信息POST请求能上传，而且数据库里会出现相应信息，但是返回值却是空的。一开始怀疑是没有申请网络访问权限，后来发现不是。后来sponsor Lewis 过来帮我调试，教了我安卓单步调试的方法，但是问题还是没能轻松解决。当天晚上熬了一夜，睡醒了4点，突然灵机一现决定把所有的JSON返回值都Log出来，同时所有的Exeption也要Log出来。后来慢慢调试才发现是<code>NetworkOnMainThreadException</code>！网络跑在主UI线程！所以每次执行到connect的时候android系统都会抛出这个异常，但是我却Too young， sometimes too naive！把所有可能抛出异常的地方都catch (Exception e) {}。就是说catch了所有Exception的父类并且什么也不做！对！就是不作为！后来跟我的导师raez说这件事，他说：</p>
 
-<blockquote><p><h2>异常本来是用来发现问题的，不能随便catch。</h2></p></blockquote>
-
+<blockquote><p>异常本来是用来发现问题的，不能随便catch。</p></blockquote>
 
 <p>对此我的理解是，需要catch一个exception的时候<strong>尽量精准catch</strong>。比如一个方法可能抛出IOException就不要懒懒的去直接catch Exception，同时如果抛出多种异常也要一个一个catch;</p>
 
@@ -226,30 +224,30 @@
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/android/'>Android (5)</a></li><li><a href='/blog/categories/git/'>Git (2)</a></li><li><a href='/blog/categories/html5/'>HTML5 (5)</a></li><li><a href='/blog/categories/java/'>Java (2)</a></li><li><a href='/blog/categories/java/'>java (1)</a></li><li><a href='/blog/categories/javascript/'>JavaScript (3)</a></li><li><a href='/blog/categories/linux/'>Linux (6)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/android/'>android (5)</a></li><li><a href='/blog/categories/git/'>git (2)</a></li><li><a href='/blog/categories/html5/'>html5 (5)</a></li><li><a href='/blog/categories/java/'>java (3)</a></li><li><a href='/blog/categories/javascript/'>javascript (3)</a></li><li><a href='/blog/categories/linux/'>linux (6)</a></li></ul>
 </section>
 <section>
 	<h1>Tags</h1>
 	<ul class="tag-cloud">
-		<li><a style="font-size: 106.0%" href="/tags/android/">Android</a></li>
-<li><a style="font-size: 104.7%" href="/tags/html5/">HTML5</a></li>
-<li><a style="font-size: 92.6%" href="/tags/linux/">Linux</a></li>
-<li><a style="font-size: 80.9%" href="/tags/java/">Java</a></li>
-<li><a style="font-size: 83.3%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
-<li><a style="font-size: 97.4%" href="/tags/node-dot-js/">Node.js</a></li>
-<li><a style="font-size: 103.9%" href="/tags/vim/">Vim</a></li>
-<li><a style="font-size: 96.5%" href="/tags/git/">Git</a></li>
-<li><a style="font-size: 74.9%" href="/tags/intellij/">IntelliJ</a></li>
-<li><a style="font-size: 102.6%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
-<li><a style="font-size: 96.2%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
-<li><a style="font-size: 114.7%" href="/tags/svg/">SVG</a></li>
-<li><a style="font-size: 118.0%" href="/tags/ui/">UI</a></li>
-<li><a style="font-size: 110.5%" href="/tags/tencent/">tencent</a></li>
-<li><a style="font-size: 114.1%" href="/tags/zhuan-tie/">转贴</a></li>
-<li><a style="font-size: 92.6%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
-<li><a style="font-size: 115.0%" href="/tags/java/">java</a></li>
-<li><a style="font-size: 85.8%" href="/tags/android/">android</a></li>
-<li><a style="font-size: 76.2%" href="/tags/jni/">JNI</a></li>
+		<li><a style="font-size: 82.4%" href="/tags/android/">Android</a></li>
+<li><a style="font-size: 117.3%" href="/tags/linux/">Linux</a></li>
+<li><a style="font-size: 84.4%" href="/tags/html5/">HTML5</a></li>
+<li><a style="font-size: 78.9%" href="/tags/java/">Java</a></li>
+<li><a style="font-size: 113.0%" href="/tags/node-dot-js/">Node.js</a></li>
+<li><a style="font-size: 77.7%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
+<li><a style="font-size: 71.1%" href="/tags/git/">Git</a></li>
+<li><a style="font-size: 102.6%" href="/tags/vim/">Vim</a></li>
+<li><a style="font-size: 111.1%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
+<li><a style="font-size: 82.2%" href="/tags/ui/">UI</a></li>
+<li><a style="font-size: 119.9%" href="/tags/zhuan-tie/">转贴</a></li>
+<li><a style="font-size: 112.5%" href="/tags/svg/">SVG</a></li>
+<li><a style="font-size: 103.1%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
+<li><a style="font-size: 107.1%" href="/tags/tencent/">tencent</a></li>
+<li><a style="font-size: 106.3%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
+<li><a style="font-size: 103.7%" href="/tags/java/">java</a></li>
+<li><a style="font-size: 85.6%" href="/tags/android/">android</a></li>
+<li><a style="font-size: 99.5%" href="/tags/intellij/">IntelliJ</a></li>
+<li><a style="font-size: 77.1%" href="/tags/jni/">JNI</a></li>
 
 	</ul>
 </section>
