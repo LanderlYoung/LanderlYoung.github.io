@@ -17,11 +17,13 @@ body {
 ::selection {
 	background-color: $selection-color;
 	color: $color-background;
+  text-shadow: 1px 1px $selection-shadow-color;
 }
 
 ::-moz-selection {
 	background-color: $selection-color;
 	color: $color-background;
+  text-shadow: 1px 1px $selection-shadow-color;
 }
 
 #header {
