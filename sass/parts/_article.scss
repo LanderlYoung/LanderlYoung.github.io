@@ -20,6 +20,7 @@ article{
 	.entry-content{
 		line-height: 2;
 		text-align: justify;
+    word-break: break-all;
 		a{
 			&:hover{
 				text-decoration: underline;

@@ -105,7 +105,9 @@ javah生成的头文件里面使用的类型都是jni.h定义的，目的是做�
 #### JNI中操作jobject
 其实也就是在native层操作java层的实例。
 要操作一个实例无疑是：
+
  1. 获取/设置 （即 get/set ）成员变量（field）的值
+
  2. 调用成员方法（method）
 
 所以问题来了：（挖掘机技术哪家强？！ o(*≧▽≦)ツ┏━┓ ）
@@ -130,17 +132,28 @@ jmethodID GetStaticMethodID(jclass clazz, const char *name, const char *sig) ;
 有了jfieldID和jmethodID就知道狗蛋住哪了，现在去狗蛋家找他玩 ♪(^∇^*)
 
 **成员变量:**  
- 1. get :
-	 1.  `<type> Get<type>Field(jobject , jfieldID);`即可获得对应的field，其中field的类型是type，可以是上面[类型][jni_type]所叙述的任何一种。  
-	 2.  `<type> GetStatic<type>Field(jobject , jfieldID);`同1，唯一的区别是用来获取静态成员。  
+
+ 1. get:  
+
+    1.  `<type> Get<type>Field(jobject , jfieldID);`即可获得对应的field，其中field的类型是type，可以是上面[类型][jni_type]所叙述的任何一种。   
+     
+    2.  `<type> GetStatic<type>Field(jobject , jfieldID);`同1，唯一的区别是用来获取静态成员。   
+
  2. set:  
-	1.  `void Set<type>Field(jobject obj, jfieldID fieldID, <type> val)`  
-	2. `void SetStatic<type>Field(jclass clazz, jfieldID fieldID, <type> value);`  
+
+    1.  `void Set<type>Field(jobject obj, jfieldID fieldID, <type> val)`  
+
+    2. `void SetStatic<type>Field(jclass clazz, jfieldID fieldID, <type> value);`  
+
 
 **成员方法：**  
+
 调用方法自然要把方法的参数传递进去，JNI中实现了三种参数的传递方式：  
+
  1. `Call<type>Method(jobject obj, jmethod jmethodID, ...)`其中`...`是C中的可变长参数，类似于`printf`那样，可以传递不定长个参数。于是你可以把java方法需要的参数在这里面传递进去。  
+
  2. `Call<type>MethodV(jobject obj, jmethodID methodID, va_list args)`其中的`va_list`也是C中可变长参数相关的内容（我不了解，不敢瞎说。。。偷懒粘一下Oracle的文档）Programmers place all arguments to the method in an args argument of type va_list that immediately follows the methodID argument. The Call<type>MethodV routine accepts the arguments, and, in turn, passes them to the Java method that the programmer wishes to invoke.  
+
  3. `Call<type>MethodA(jobject obj, jmethodID methodID, const jvalue * args)`哎！这个我知道可以说两句LOL~~这里的`jvalue`通过查代码发现就是JNI中各个数据类型的union，所以可以使用任何类型复制！所以参数的传入方式是通过一个jvalue的数组，数组内的元素可以是任何jni类型。  
  
 然后问题又来了：（挖掘机技术到底哪家强？！o(*≧▽≦)ツ┏━┓）
@@ -227,7 +240,7 @@ Local Reference:
 LocalReference也有一个释放的函数：`void DeleteLocalRef(jobject obj)`，他会立即释放Local Reference。
 这个方法可能略显多余，其实也是有它的用处的。刚才说Local Reference会再函数返回后释放掉，但是假如函数返回前就有很多引用占了很多内存，最好函数内就尽早释放不必要的内存。
 
-####关于<a name="jni_onload">JNI_OnLoad</a>
+####关于JNI_OnLoad<a name="jni_onload"></a>
 开头提到JNI_OnLoad是java1.2中新增加的方法，对应的还有一个JNI_OnUnload，分别是动态库被JVM加载、卸载的时候调用的函数。有点类似于WIndows里的DllMain。  
 前面提到的实现对应native的方法是实现javah生成的头文件中定义的方法，这样有几个弊端：
 
@@ -235,9 +248,13 @@ LocalReference也有一个释放的函数：`void DeleteLocalRef(jobject obj)`�
  2. 函数会被导出，也就谁说可以在动态库的导出函数表里面找到这些函数。这将有利于别人对动态库的逆向工程，因此带来安全问题。  
 
 现在有了JNI_OnLoad，情况好多了。你不光能在其中完成动态注册native函数的工作还可以完成一些初始化工作。java对应的有了`jint RegisterNatives(jclass clazz, const JNINativeMethod *methods,jint nMethods)`函数。参数分别是：  
+
  1. jclass clazz，于native层对应的java class  
+
  2. const JNINativeMethod *methods这是一个数组，数组的元素是JNI定义的一个结构体JNINativeMethod   
+
  3. 上面的数组的长度  
+
 **JNINativeMethod**：代码中的定义如下：
 
 ```java
@@ -421,8 +438,11 @@ L + 类全名（报名中的点(.)用(/)代替）+ ；
 [全文完]
 
 ####参考资料
+
 \[1\] : [Oracle java SE documents](http://docs.oracle.com/javase/7/docs/technotes/guides/jni/spec/functions.html)
+
 \[2\] : [深入理解Android 卷 1](http://baike.baidu.com/view/6415820.htm) 第二章 ，邓凡平著，机械工业出版社
+
 \[3\]: [Google Android documents -- JNI Tips](http://developer.android.com/training/articles/perf-jni.html)
 
 [jni_type]: #jni_type
