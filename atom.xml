@@ -4,7 +4,7 @@
   <title><![CDATA[Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-10-19T21:37:49+08:00</updated>
+  <updated>2014-10-20T15:43:49+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -234,9 +234,13 @@
 <h4>JNI中操作jobject</h4>
 
 <p>其实也就是在native层操作java层的实例。
-要操作一个实例无疑是：
- 1. 获取/设置 （即 get/set ）成员变量（field）的值
- 2. 调用成员方法（method）</p>
+要操作一个实例无疑是：</p>
+
+<ol>
+<li><p>获取/设置 （即 get/set ）成员变量（field）的值</p></li>
+<li><p>调用成员方法（method）</p></li>
+</ol>
+
 
 <p>所以问题来了：（挖掘机技术哪家强？！ o(*≧▽≦)ツ┏━┓ ）</p>
 
@@ -263,19 +267,36 @@
 
 <p>有了jfieldID和jmethodID就知道狗蛋住哪了，现在去狗蛋家找他玩 ♪(^∇^*)</p>
 
-<p><strong>成员变量:</strong><br/>
- 1. get :
-     1.  <code>&lt;type&gt; Get&lt;type&gt;Field(jobject , jfieldID);</code>即可获得对应的field，其中field的类型是type，可以是上面<a href="#jni_type">类型</a>所叙述的任何一种。<br/>
-     2.  <code>&lt;type&gt; GetStatic&lt;type&gt;Field(jobject , jfieldID);</code>同1，唯一的区别是用来获取静态成员。<br/>
- 2. set:<br/>
-    1.  <code>void Set&lt;type&gt;Field(jobject obj, jfieldID fieldID, &lt;type&gt; val)</code><br/>
-    2. <code>void SetStatic&lt;type&gt;Field(jclass clazz, jfieldID fieldID, &lt;type&gt; value);</code></p>
+<p><strong>成员变量:</strong></p>
 
-<p><strong>成员方法：</strong><br/>
-调用方法自然要把方法的参数传递进去，JNI中实现了三种参数的传递方式：<br/>
- 1. <code>Call&lt;type&gt;Method(jobject obj, jmethod jmethodID, ...)</code>其中<code>...</code>是C中的可变长参数，类似于<code>printf</code>那样，可以传递不定长个参数。于是你可以把java方法需要的参数在这里面传递进去。<br/>
- 2. <code>Call&lt;type&gt;MethodV(jobject obj, jmethodID methodID, va_list args)</code>其中的<code>va_list</code>也是C中可变长参数相关的内容（我不了解，不敢瞎说。。。偷懒粘一下Oracle的文档）Programmers place all arguments to the method in an args argument of type va_list that immediately follows the methodID argument. The Call<type>MethodV routine accepts the arguments, and, in turn, passes them to the Java method that the programmer wishes to invoke.<br/>
- 3. <code>Call&lt;type&gt;MethodA(jobject obj, jmethodID methodID, const jvalue * args)</code>哎！这个我知道可以说两句LOL~~这里的<code>jvalue</code>通过查代码发现就是JNI中各个数据类型的union，所以可以使用任何类型复制！所以参数的传入方式是通过一个jvalue的数组，数组内的元素可以是任何jni类型。</p>
+<ol>
+<li><p>get:</p>
+
+<ol>
+<li><p><code>&lt;type&gt; Get&lt;type&gt;Field(jobject , jfieldID);</code>即可获得对应的field，其中field的类型是type，可以是上面<a href="#jni_type">类型</a>所叙述的任何一种。</p></li>
+<li><p><code>&lt;type&gt; GetStatic&lt;type&gt;Field(jobject , jfieldID);</code>同1，唯一的区别是用来获取静态成员。</p></li>
+</ol>
+</li>
+<li><p>set:</p>
+
+<ol>
+<li><p><code>void Set&lt;type&gt;Field(jobject obj, jfieldID fieldID, &lt;type&gt; val)</code></p></li>
+<li><p><code>void SetStatic&lt;type&gt;Field(jclass clazz, jfieldID fieldID, &lt;type&gt; value);</code></p></li>
+</ol>
+</li>
+</ol>
+
+
+<p><strong>成员方法：</strong></p>
+
+<p>调用方法自然要把方法的参数传递进去，JNI中实现了三种参数的传递方式：</p>
+
+<ol>
+<li><p><code>Call&lt;type&gt;Method(jobject obj, jmethod jmethodID, ...)</code>其中<code>...</code>是C中的可变长参数，类似于<code>printf</code>那样，可以传递不定长个参数。于是你可以把java方法需要的参数在这里面传递进去。</p></li>
+<li><p><code>Call&lt;type&gt;MethodV(jobject obj, jmethodID methodID, va_list args)</code>其中的<code>va_list</code>也是C中可变长参数相关的内容（我不了解，不敢瞎说。。。偷懒粘一下Oracle的文档）Programmers place all arguments to the method in an args argument of type va_list that immediately follows the methodID argument. The Call<type>MethodV routine accepts the arguments, and, in turn, passes them to the Java method that the programmer wishes to invoke.</p></li>
+<li><p><code>Call&lt;type&gt;MethodA(jobject obj, jmethodID methodID, const jvalue * args)</code>哎！这个我知道可以说两句LOL~~这里的<code>jvalue</code>通过查代码发现就是JNI中各个数据类型的union，所以可以使用任何类型复制！所以参数的传入方式是通过一个jvalue的数组，数组内的元素可以是任何jni类型。</p></li>
+</ol>
+
 
 <p>然后问题又来了：（挖掘机技术到底哪家强？！o(*≧▽≦)ツ┏━┓）
 如果传进来的参数和java声明的参数的不一致会怎么样！（即不符合<a href="#signature">方法签名</a>）这里文档中没用明确解释，但是说道:</p>
@@ -399,7 +420,7 @@
 LocalReference也有一个释放的函数：<code>void DeleteLocalRef(jobject obj)</code>，他会立即释放Local Reference。
 这个方法可能略显多余，其实也是有它的用处的。刚才说Local Reference会再函数返回后释放掉，但是假如函数返回前就有很多引用占了很多内存，最好函数内就尽早释放不必要的内存。</p>
 
-<h4>关于<a name="jni_onload">JNI_OnLoad</a></h4>
+<h4>关于JNI_OnLoad<a name="jni_onload"></a></h4>
 
 <p>开头提到JNI_OnLoad是java1.2中新增加的方法，对应的还有一个JNI_OnUnload，分别是动态库被JVM加载、卸载的时候调用的函数。有点类似于WIndows里的DllMain。<br/>
 前面提到的实现对应native的方法是实现javah生成的头文件中定义的方法，这样有几个弊端：</p>
@@ -410,11 +431,16 @@ LocalReference也有一个释放的函数：<code>void DeleteLocalRef(jobject ob
 </ol>
 
 
-<p>现在有了JNI_OnLoad，情况好多了。你不光能在其中完成动态注册native函数的工作还可以完成一些初始化工作。java对应的有了<code>jint RegisterNatives(jclass clazz, const JNINativeMethod *methods,jint nMethods)</code>函数。参数分别是：<br/>
- 1. jclass clazz，于native层对应的java class<br/>
- 2. const JNINativeMethod *methods这是一个数组，数组的元素是JNI定义的一个结构体JNINativeMethod <br/>
- 3. 上面的数组的长度<br/>
-<strong>JNINativeMethod</strong>：代码中的定义如下：</p>
+<p>现在有了JNI_OnLoad，情况好多了。你不光能在其中完成动态注册native函数的工作还可以完成一些初始化工作。java对应的有了<code>jint RegisterNatives(jclass clazz, const JNINativeMethod *methods,jint nMethods)</code>函数。参数分别是：</p>
+
+<ol>
+<li><p>jclass clazz，于native层对应的java class</p></li>
+<li><p>const JNINativeMethod *methods这是一个数组，数组的元素是JNI定义的一个结构体JNINativeMethod</p></li>
+<li><p>上面的数组的长度</p></li>
+</ol>
+
+
+<p><strong>JNINativeMethod</strong>：代码中的定义如下：</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -742,9 +768,11 @@ L + 类全名（报名中的点(.)用(/)代替）+ ；
 
 <h4>参考资料</h4>
 
-<p>[1] : <a href="http://docs.oracle.com/javase/7/docs/technotes/guides/jni/spec/functions.html">Oracle java SE documents</a>
-[2] : <a href="http://baike.baidu.com/view/6415820.htm">深入理解Android 卷 1</a> 第二章 ，邓凡平著，机械工业出版社
-[3]: <a href="http://developer.android.com/training/articles/perf-jni.html">Google Android documents &ndash; JNI Tips</a></p>
+<p>[1] : <a href="http://docs.oracle.com/javase/7/docs/technotes/guides/jni/spec/functions.html">Oracle java SE documents</a></p>
+
+<p>[2] : <a href="http://baike.baidu.com/view/6415820.htm">深入理解Android 卷 1</a> 第二章 ，邓凡平著，机械工业出版社</p>
+
+<p>[3]: <a href="http://developer.android.com/training/articles/perf-jni.html">Google Android documents &ndash; JNI Tips</a></p>
 ]]></content>
   </entry>
   
