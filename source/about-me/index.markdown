@@ -6,10 +6,9 @@ comments: true
 sharing: true
 footer: true
 ---
-{% img right /assets/images/kyoko.png 200 200 %}
- ![kyoko](/assets/images/kyoko.png )
 
 {% img right /assets/images/kyoko.png 200 200 %}
+
 * 一个带有典型极客精神的计算机狂热者。
 * 武汉大学本科生
 * 二次元中毒者
