@@ -4,7 +4,7 @@
   <title><![CDATA[Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-11-08T15:09:38+08:00</updated>
+  <updated>2014-11-08T15:18:14+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -20,10 +20,10 @@
     <id>http://LanderlYoung.github.io/blog/2014/10/16/java-zhong-jnide-shi-yong</id>
     <content type="html"><![CDATA[<p>JNI全称是<code>Java Native Interface</code>是在JAVA和Native层（包括但不限于C/C++）相互调用的接口规范。</p>
 
+<p>JNI在JAVA1.1中正式推出，在JAVA1.2版本中加入了<code>JNI_OnLoad</code>，<code>JNI_OnUnload</code>方法，这两个方法还是很有用的，后面再说。</p>
+
 <!--more-->
 
-
-<p>JNI在JAVA1.1中正式推出，在JAVA1.2版本中加入了<code>JNI_OnLoad</code>，<code>JNI_OnUnload</code>方法，这两个方法还是很有用的，后面再说。</p>
 
 <h3>JNI基础篇</h3>
 
