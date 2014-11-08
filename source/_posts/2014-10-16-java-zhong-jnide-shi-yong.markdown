@@ -9,9 +9,9 @@ tags: [Java, Android, JNI]
 
 JNI全称是`Java Native Interface`是在JAVA和Native层（包括但不限于C/C++）相互调用的接口规范。
 
-<!--more-->
-
 JNI在JAVA1.1中正式推出，在JAVA1.2版本中加入了`JNI_OnLoad`，`JNI_OnUnload`方法，这两个方法还是很有用的，后面再说。
+
+<!--more-->
 
 ###JNI基础篇
 
