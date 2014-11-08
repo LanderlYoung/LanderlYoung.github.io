@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: JNI | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/tags/jni/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-11-06T10:56:38+08:00</updated>
+  <updated>2014-11-08T15:09:38+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -18,9 +18,7 @@
     <link href="http://LanderlYoung.github.io/blog/2014/10/16/java-zhong-jnide-shi-yong/"/>
     <updated>2014-10-16T21:10:55+08:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/10/16/java-zhong-jnide-shi-yong</id>
-    <content type="html"><![CDATA[<p>最近来电项目打算加入变声的功能，所以决定实用SoundTouch（这个库是LGPL协议的，所以对SoundTouch的代码没有修改的话是不需要开源代码的！LOL~~）。SoundTouch是用C++写的，因此需要一个Java的JNI封装，以便JAVA层比较方便的调用。这次用JNI封装SoundTouch的经历，还是颇有收获的。记录一下，方便以后查看。</p>
-
-<p>JNI全称是<code>Java Native Interface</code>是在JAVA和Native层（包括但不限于C/C++）相互调用的接口规范。</p>
+    <content type="html"><![CDATA[<p>JNI全称是<code>Java Native Interface</code>是在JAVA和Native层（包括但不限于C/C++）相互调用的接口规范。</p>
 
 <!--more-->
 
@@ -33,7 +31,7 @@
 
 <ol>
 <li>写一个Java类，在其中声明对应要调用的native方法，用<code>native</code>关键字修饰。 比如<code>private static native int native_newInstance();</code></li>
-<li>通过<code>javah</code>命令生成java类对应的C/C++头文件。<code>javah -encoding utf-8 -cp src com.tencent.soundtouch.SoundTouch</code></li>
+<li>通过<code>javah</code>命令生成java类对应的C/C++头文件。<code>javah -encoding utf-8 -cp src com.young.soundtouch.SoundTouch</code></li>
 <li>在C/C++中实现头文件中声明的函数</li>
 <li>编译C/C++代码为动态库（Windows中的dll，linux(Android)中的so，MAC OSX中的dylib）。</li>
 <li>在java代码中加载动态库，即可像调用Java方法一样，调用到native函数。</li>
@@ -154,11 +152,11 @@
 </span><span class='line'>
 </span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">jni</span><span class="o">.</span><span class="na">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
 </span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;/&lt;</span><span class="n">em</span><span class="o">&gt;</span> <span class="n">Header</span> <span class="k">for</span> <span class="kd">class</span> <span class="nc">com_tencent_soundtouch_SoundTouch</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;/&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;/&lt;</span><span class="n">em</span><span class="o">&gt;</span> <span class="n">Header</span> <span class="k">for</span> <span class="kd">class</span> <span class="nc">com_young_soundtouch_SoundTouch</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;/&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
 </span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">ifndef</span> <span class="n">_Included_com_tencent_soundtouch_SoundTouch</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">ifndef</span> <span class="n">_Included_com_young_soundtouch_SoundTouch</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
 </span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">define</span> <span class="n">_Included_com_tencent_soundtouch_SoundTouch</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">define</span> <span class="n">_Included_com_young_soundtouch_SoundTouch</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">ifdef</span> <span class="n">__cplusplus</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
 </span><span class='line'>
@@ -166,16 +164,16 @@
 </span><span class='line'>
 </span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">endif</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
 </span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">undef</span> <span class="n">com_tencent_soundtouch_SoundTouch_SETTING_USE_AA_FILTER</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">undef</span> <span class="n">com_young_soundtouch_SoundTouch_SETTING_USE_AA_FILTER</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
 </span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">define</span> <span class="n">com_tencent_soundtouch_SoundTouch_SETTING_USE_AA_FILTER</span> <span class="mi">0L</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">define</span> <span class="n">com_young_soundtouch_SoundTouch_SETTING_USE_AA_FILTER</span> <span class="mi">0L</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="cm">/*</span>
-</span><span class='line'><span class="cm">* Class:     com_tencent_soundtouch_SoundTouch</span>
+</span><span class='line'><span class="cm">* Class:     com_young_soundtouch_SoundTouch</span>
 </span><span class='line'><span class="cm">* Method:    native_getDefaultSampleElementSize</span>
 </span><span class='line'><span class="cm">* Signature: ()I</span>
 </span><span class='line'><span class="cm">*/</span>
-</span><span class='line'><span class="n">JNIEXPORT</span> <span class="n">jint</span> <span class="n">JNICALL</span> <span class="nf">Java_com_tencent_soundtouch_SoundTouch_native_1getDefaultSampleElementSize</span>
+</span><span class='line'><span class="n">JNIEXPORT</span> <span class="n">jint</span> <span class="n">JNICALL</span> <span class="nf">Java_com_young_soundtouch_SoundTouch_native_1getDefaultSampleElementSize</span>
 </span><span class='line'>    <span class="o">(</span><span class="n">JNIEnv</span> <span class="o">*,</span> <span class="n">jclass</span><span class="o">);</span>
 </span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
 </span><span class='line'>
@@ -202,7 +200,7 @@
 </span><span class='line'>     <span class="mi">1</span><span class="o">.</span> <span class="err">`</span><span class="n">JNIEXPORT</span><span class="err">`</span><span class="n">这是函数的导出方式</span>
 </span><span class='line'>     <span class="mi">2</span><span class="o">.</span> <span class="n">jint</span> <span class="n">返回值类型</span><span class="err">（</span><span class="n">jint由jni</span><span class="o">.</span><span class="na">h定义</span><span class="err">，</span><span class="n">对应int</span><span class="err">，</span><span class="o">[</span><span class="n">下面</span><span class="o">][</span><span class="n">jni_type</span><span class="o">]</span><span class="n">具体再说吧</span>
 </span><span class='line'>     <span class="mi">3</span><span class="o">.</span> <span class="n">JNICALL</span> <span class="n">函数的调用方式也就是汇编级别参数的传入方式</span>
-</span><span class='line'>     <span class="mi">4</span><span class="o">.</span>  <span class="n">Java_com_tencent_soundtouch_SoundTouch_native_1getDefaultSampleElementSize</span> <span class="err">——</span> <span class="n">超级长的函数名</span><span class="err">！！！</span><span class="n">格式是</span><span class="err">`</span><span class="n">Java_</span><span class="err">`</span> <span class="o">+</span> <span class="err">`</span><span class="n">类全名</span><span class="err">`</span> <span class="o">+</span> <span class="err">`</span><span class="n">_</span><span class="err">`</span> <span class="o">+</span> <span class="n">JAVA中声明的native方法名</span><span class="err">。</span><span class="n">其中会把包名中的点</span><span class="err">（`</span><span class="o">.</span><span class="err">`）</span><span class="n">替换成下划线</span><span class="err">（`</span><span class="n">_</span><span class="err">`），</span><span class="n">同时为了避免冲突把下划线替换成</span><span class="err">`</span><span class="n">_1</span><span class="err">`。</span>
+</span><span class='line'>     <span class="mi">4</span><span class="o">.</span>  <span class="n">Java_com_young_soundtouch_SoundTouch_native_1getDefaultSampleElementSize</span> <span class="err">——</span> <span class="n">超级长的函数名</span><span class="err">！！！</span><span class="n">格式是</span><span class="err">`</span><span class="n">Java_</span><span class="err">`</span> <span class="o">+</span> <span class="err">`</span><span class="n">类全名</span><span class="err">`</span> <span class="o">+</span> <span class="err">`</span><span class="n">_</span><span class="err">`</span> <span class="o">+</span> <span class="n">JAVA中声明的native方法名</span><span class="err">。</span><span class="n">其中会把包名中的点</span><span class="err">（`</span><span class="o">.</span><span class="err">`）</span><span class="n">替换成下划线</span><span class="err">（`</span><span class="n">_</span><span class="err">`），</span><span class="n">同时为了避免冲突把下划线替换成</span><span class="err">`</span><span class="n">_1</span><span class="err">`。</span>
 </span><span class='line'>     <span class="mi">5</span><span class="o">.</span> <span class="n">方法的参数</span><span class="err">，</span><span class="n">上面的这个方法在JAVA的声明中实际上是没有参数的</span><span class="err">，</span><span class="n">其中的</span><span class="err">`</span><span class="n">JNIENV</span><span class="err">`</span><span class="n">顾名思义是JNI环境</span><span class="err">，</span><span class="n">和具体的线程绑定</span><span class="err">。</span><span class="n">而第二个参数</span><span class="err">`</span><span class="n">jclass</span><span class="err">`</span><span class="n">其实是java中的</span><span class="err">`</span><span class="n">Class</span><span class="err">`</span><span class="n">因为上面是一个</span><span class="err">`</span><span class="kd">static</span><span class="err">`</span><span class="n">方法</span><span class="err">，</span><span class="n">因此第二个参数是</span><span class="err">`</span><span class="n">jclass</span><span class="err">`。</span><span class="n">如果是一个实例方法则对应第二个参数是</span><span class="err">`</span><span class="n">jobject</span><span class="err">`，</span><span class="n">相当于java中的</span><span class="err">`</span><span class="k">this</span><span class="err">`。</span>
 </span><span class='line'>
 </span><span class='line'><span class="n">下面在C</span><span class="o">/</span><span class="n">C</span><span class="o">++</span><span class="n">中实现这个方法就行啦</span><span class="err">。</span><span class="n">但是在动手前现大致了解以下jni</span><span class="o">.</span><span class="na">h制定的游戏规则</span><span class="err">。</span>
@@ -485,7 +483,7 @@ static jint native_newInstance (JNIEnv *env, jclass);
 
 //实现native方法
 /*
-* Class:     com_tencent_soundtouch_SoundTouch
+* Class:     com_young_soundtouch_SoundTouch
 * Method:    native_newInstance
 * Signature: ()I
 */
@@ -538,14 +536,14 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
 <h4>迅速生成全名</h4>
 
 <pre><code class="cpp">//修改包名时只需要改以下的宏定义即可
-#define FULL_CLASS_NAME "com/tencent/soundtouch/SoundTouch"
-#define func(name) Java_ ## com_tencent_soundtouch_SoundTouch_ ## name
-#define constance(cons) com_tencent_soundtouch_SoundTouch_ ## cons
+#define FULL_CLASS_NAME "com/young/soundtouch/SoundTouch"
+#define func(name) Java_ ## com_young_soundtouch_SoundTouch_ ## name
+#define constance(cons) com_young_soundtouch_SoundTouch_ ## cons
 </code></pre>
 
-<p>比如<code>func(native_1newInstance)</code>展开成：<code>Java_com_tencent_soundtouch_SoundTouch_native_1newInstance</code>即JNI中需要导出的函数名（不过用动态注册方式没太大用了）</p>
+<p>比如<code>func(native_1newInstance)</code>展开成：<code>Java_com_young_soundtouch_SoundTouch_native_1newInstance</code>即JNI中需要导出的函数名（不过用动态注册方式没太大用了）</p>
 
-<p><code>constance(AUDIO_FORMAT_PCM16)</code>展开成<code>com_tencent_soundtouch_SoundTouch_AUDIO_FORMAT_PCM16</code>这个着实有用。</p>
+<p><code>constance(AUDIO_FORMAT_PCM16)</code>展开成<code>com_young_soundtouch_SoundTouch_AUDIO_FORMAT_PCM16</code>这个着实有用。</p>
 
 <p>而且如果包名改了也可以很方便的适应之。</p>
 
