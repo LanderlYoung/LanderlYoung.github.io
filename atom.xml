@@ -4,7 +4,7 @@
   <title><![CDATA[Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-11-08T15:18:14+08:00</updated>
+  <updated>2014-11-09T18:26:14+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -14,16 +14,692 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Android中service的使用]]></title>
+    <link href="http://LanderlYoung.github.io/blog/2014/11/09/androidzhong-servicede-shi-yong/"/>
+    <updated>2014-11-09T18:07:03+08:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2014/11/09/androidzhong-servicede-shi-yong</id>
+    <content type="html"><![CDATA[<h2>Android 中service的使用 笔记</h2>
+
+<h3>Service是何物</h3>
+
+<p>service是安卓四大组件（Activity、BroadcastReceiver、ContentProvider、Service）之一。Service用于执行耗时比较长的操作，在后台运行，没有界面显示。</p>
+
+<p><strong>Service与进程</strong>：<br/>
+Service可以在应用的主进程中运行，也可以在单独的进程中运行。只需要在Service的[Manifest声明][manifest]中指明进程名即可。同一个应用中所有具有相同进程名的组件（四大组件，包括Activity）均可以运行在同一个进程中。</p>
+
+<p><strong>Service的寿命</strong>： <br/>
+这里说的<code>寿命</code>只是service什么时候运行什么时候终止而已并非生命周期的概念。service的启动方式有两种：<br/>
+ 1. 通过<code>Context::strtService</code>来启动一个Service，这个Service会一直在后台运行，即使启动该Service的组件已经结束。它只能自己结束自己，通过<code>Service::stopSelf()</code>或者是被其他组件显示的结束，通过<code>Context::StopService</code>。或者系统可用内存不够，android系统会选择性的kill掉一些service，在需要的时候再重新启动他们。当然如果进程自己crash也是会结束的(╯‵□′)╯︵┻━┻（这不是废话）。 <br/>
+ 2. 通过<code>Context::bindService</code>启动Service。一个绑定的Service一般是 C-S（客户端-服务器）类型的，通常会和其他组件进行通信，包括：发送请求，收取返回结果，甚至是进程间通信——IPC。一个绑定的Service的寿命和绑定他的组件相关，当所有绑定到他上面的组件都结束（或者取消绑定——通过<code>Context::unbindService</code>方法）的时候，这个service就自然结束。</p>
+
+<!--more-->
+
+
+<p>当然启动一个Service还可以同时用上面两个方法：先startService启动一个常驻service，然后bind到他上面进行通信——IPC。</p>
+
+<blockquote><p>Service运行在进程的主线程上。所以如果要执行长耗时或CPU高消耗任务的话还是要自行创建线程，以免阻塞主进程导致service的声明周期方法不能及时回调。</p></blockquote>
+
+<h3>基础知识：</h3>
+
+<p>创建一个Service时，必须创建一个Service的子类，并覆盖相应的声明周期回调方法，来进行相应的处理。你需要覆盖的最重要的几个声明周期回调是：<br/>
+ 1. onStartCommand：当其他组件（比如Activity）通过startService方法启动Service的时候，系统就会回调这个方法。一旦这个方法被调用，该service就会永久的运行下去。因此你将有义务来结束这个service，通过service自己调用<code>stopSelf</code>或者在其他组件中调用<code>Context::stopService</code>。如果你只是希望通过bind来启动这个service，则没有什么必要来覆盖这个方法。这个方法有三个参数，第一个是启动这个Service的Intent，第二个是启动Flag，第三个是startID，每次这个方法回调的时候这个ID就会增加一次（保证每次都不一样）。<br/>
+ 2. onBind：当其他组件调用<code>Context::bindService</code>来绑定到service上的时候，一般会在onBind中返回一个IBinder对象的实例，提供给Client调用Service中的方法。相应的如果不希望客户端绑定到service上就返回<code>null</code>好了。 <br/>
+ 3. onCreate：和Activity的onCreate一样，在整个生命周期中值调用一次——在service被创建的时候。 <br/>
+ 4. onDestroy：也是和Activity一样，在整个生命周期中也只调用一次——在service被销毁的时候。这个方法是service中最后一个执行的方法。</p>
+
+<p><strong>重申</strong>：</p>
+
+<blockquote><p>如果Service是通过<code>Context::startService</code>来启动的话，它将一直运行下去，知道他结束自己（通过<code>Service::stopSelf</code>方法）或者其他组件结束掉他（通过<code>Context:stopService</code>方法）。<strong>另外</strong>：即使上面所说两个方法（<code>Service::stopSelf</code>和<code>Context:stopService</code>）已经调用，只要有bind到这个service上的组件没有unbind这个service也不会立即结束。</p></blockquote>
+
+<h3>在Manifest中声明你的service：</h3>
+
+<p>语法如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;service</span> <span class="na">android:enabled=</span><span class="s">[&quot;true&quot;</span> <span class="err">|</span> <span class="err">&quot;false&quot;]</span>
+</span><span class='line'>         <span class="na">android:exported=</span><span class="s">[&quot;true&quot;</span> <span class="err">|</span> <span class="err">&quot;false&quot;]</span>
+</span><span class='line'>         <span class="na">android:icon=</span><span class="s">&quot;drawable resource&quot;</span>
+</span><span class='line'>         <span class="na">android:isolatedProcess=</span><span class="s">[&quot;true&quot;</span> <span class="err">|</span> <span class="err">&quot;false&quot;]</span>
+</span><span class='line'>         <span class="na">android:label=</span><span class="s">&quot;string resource&quot;</span>
+</span><span class='line'>         <span class="na">android:name=</span><span class="s">&quot;string&quot;</span>
+</span><span class='line'>         <span class="na">android:permission=</span><span class="s">&quot;string&quot;</span>
+</span><span class='line'>         <span class="na">android:process=</span><span class="s">&quot;string&quot;</span> <span class="nt">&gt;</span>
+</span><span class='line'>    . . .
+</span><span class='line'><span class="nt">&lt;/service&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上面的attribute和大部分的组件都是一样的。<br/>
+ 1. <code>android:isolatedProcess</code>：如果是true的话这个service将运行在一个隔离的特殊进程中，并且不具备任何权限（包括你在Manifest中声明的）。唯一能和service通信的方式就是bind和start。
+ 2. <code>android:process</code>：进程名。就是这个service运行的进程的名字。虽然其他三个组件也可以指定进程名，但是service才是真正需要这个属性的组件！因为一些进程往往需要长时间运行，在主进程之外运行。
+     1. 如果不指定这个属性的话，组件将在默认进程中执行，进程名就是包名。<br/>
+     2. 如果指定了进程名，则运行在指定的进程中，其他组件也可以访问该service，只要满足service指定的权限。
+     3. 特殊情况：如果进程名以「冒号」开头（<code>:</code>），则该service是应用私有的service，其他应用不能访问到。</p>
+
+<p>**bindService和unbindService：
+bind和onBind必须成对出现，否则service不会终止。加入你的onBind卸载activity的onDestroy中，然后activity被系统终止而没有调用onDestroy，此时系统会帮你调用onBind并log一个warnning警告你！<br/>
+<code>boolean bindService(Intent service, ServiceConnection conn, int flags)</code>:其中intent是启动service的Intent，conn是回调。定义是：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">ServiceConnection</span> <span class="o">{</span>
+</span><span class='line'>  <span class="c1">//service连接成功时的回调，IBinder就是service返回的Binder</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onServiceConnected</span><span class="o">(</span><span class="n">ComponentName</span> <span class="n">name</span><span class="o">,</span> <span class="n">IBinder</span> <span class="n">service</span><span class="o">);</span>
+</span><span class='line'>  <span class="c1">//service**意外**终止时的回调，一般是service进程crash或者被系统杀掉。他并不会关闭与service的连接。</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onServiceDisconnected</span><span class="o">(</span><span class="n">ComponentName</span> <span class="n">name</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><code>public void unbindService(ServiceConnection conn)</code>:unbind中有个conn参数，就是你在bind是传入的那个回调。</p>
+
+<h3>Android中的进程间通信——IPC</h3>
+
+<p>这个是一个很精彩的内容，用过android的ipc机制才发现<strong>IPC从未如此简单！</strong>。</p>
+
+<h4>Android Interface Definition Language (AIDL)</h4>
+
+<p>android的IPC通过<code>aidl</code>文件来指定接口，aidl的含义是「Android Interface Definition Language 」，其使用了一种很类似java的语法来制定IPC接口。<br/>
+<a name="aidl_chestnut">举个栗子</>，比如在com.example.service包中，写一个aidl文件，内容如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">example</span><span class="o">.</span><span class="na">service</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kn">import</span> <span class="nn">com.example.service.ICallback</span><span class="o">;</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">android.os.Bundle</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="kd">interface</span> <span class="nc">IDemoServiceController</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="nf">getPid</span><span class="o">();</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="nf">add</span><span class="o">(</span><span class="kt">int</span> <span class="n">a</span><span class="o">,</span> <span class="kt">int</span> <span class="n">b</span><span class="o">);</span>
+</span><span class='line'>    <span class="kt">void</span> <span class="nf">causeToStop</span><span class="o">();</span>
+</span><span class='line'>    <span class="kt">void</span> <span class="nf">paramInAndOut</span><span class="o">(</span><span class="n">in</span> <span class="n">Bundle</span> <span class="n">bundleIn</span><span class="o">,</span> <span class="n">out</span> <span class="n">Bundle</span> <span class="n">bundleOut</span><span class="o">,</span> <span class="n">inout</span> <span class="n">Bundle</span> <span class="n">bundleInOut</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>可以看到基本上和JAVA一模一样！<br/>
+<strong>需要注意</strong>：<br/>
+ 1. AIDL支持的数据类型<a name="aidl_types"></>：<br/>
+     1. <a href="#aidl_default_type">AIDL默认支持的数据类型</a><br/>
+     2. <a href="#parcelable">实现了Parcelable接口</a>任意类<br/>
+ 2. 另外你必须import所有使用到的class到你的AIDL文件中，即使他跟你的aidl文件在同一个包中！<br/>
+ 3. 方法可以有0到多个参数，也可以返回void。<br/>
+ 4. 参数中的所有的非java原始类型（必须指定一个参数的数据走向，是<code>int</code>，<code>out</code>，<code>inout</code>，三者之一）。<br/>
+ 5. 参数中的所有的原始类型都是in，而且不能被修改。</p>
+
+<p><a name="aidl_default_type"></a>AIDL默认支持的数据类型如下：</p>
+
+<ol>
+<li><p>java语言中的所有原始类型（primitive type，比如：int, long, char, boolean)</p></li>
+<li><p>String</p></li>
+<li><p>CharSequence</p></li>
+<li><p>支持数组！虽然文档没说，但经过实验证明是支持数组的。但是数组的元素必须是AIDL所支持的<a href="#aidl_types">数据类型</a>。</p></li>
+<li><p>List <strong>注意</strong></p>
+
+<ol>
+<li>List中的所有类型也必须是AIDL所支持的<a href="#aidl_types">数据类型</a>。</li>
+<li>List可以被当做泛型类来使用（比如<code>List&lt;String&gt;</code>）。</li>
+<li>接收参数的另一端（对于client，另一端指service；对于service另一端指  client）收到的List实际类型总是ArrayList。</li>
+</ol>
+</li>
+<li><p>Map <strong>注意</strong></p>
+
+<ol>
+<li>Map所支持的类型同上。</li>
+<li>泛型Map并不支持。</li>
+<li>接收参数的另一端接收到的Map实际类型是HashMap。</li>
+</ol>
+</li>
+</ol>
+
+
+<h4>实现Parcelable接口</h4>
+
+<p>因为实例是要在进程间传递的因此必须序列化才行。Parcelable就是android定义的一个用于class序列化的即轻量级又高效的机制。<br/>
+Parcelable接口的定义如下：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Parcelable</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">describeContents</span><span class="o">();</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">writeToParcel</span><span class="o">(</span><span class="n">Parcel</span> <span class="n">dest</span><span class="o">,</span> <span class="kt">int</span> <span class="n">flags</span><span class="o">);</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Creator</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="o">{</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="n">T</span> <span class="nf">createFromParcel</span><span class="o">(</span><span class="n">Parcel</span> <span class="n">source</span><span class="o">);</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="n">T</span><span class="o">[]</span> <span class="nf">newArray</span><span class="o">(</span><span class="kt">int</span> <span class="n">size</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p>其中<code>describeContents()</code>用于描述数据类型，可以简单的返回0。
+然后是用于序列化的方法<code>writeToParcel(Parcel dest, int flags)</code>：<br/>
+dest就是用于存储序列的类的容器，然后flags可以是普通的0，或者是<code>PARCELABLE_WRITE_RETURN_VALUE</code>用来告诉你这个object是被写回返回值的（比如下列方法中  <code>Parcelable someFunction()</code>, <code>void someFunction(out Parcelable)</code>, or <code>void someFunction(inout Parcelable)</code>），以此来告诉你该清理资源就赶紧的！</p>
+
+<p>然后问题来了：怎么只有序列化没有反序列化！这只出不进不是要弹尽粮绝（<del>精尽人亡</del>）吗？！<br/>
+好了，Parcelable接口是有魔力的，他并不是一个普通的接口。android规定，要实现这个接口除了实现上面两个接口还要在类中定义一个static成员变量，名字必须叫“CREATOR”（此处需要注意配置proguard混淆，很明显android会用反射来获取这个变量，<del>忍不住吐槽一句！google你怎么那么喜欢反射！！</del>），然后这个CREATOR必须是<code>Parcelable.Creator&lt;T&gt;</code>的实现，android系统将使用这个实例来进行反序列化。</p>
+
+<p>举个栗子（盗自android文档Parcelable篇）：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyParcelable</span> <span class="kd">implements</span> <span class="n">Parcelable</span> <span class="o">{</span>
+</span><span class='line'>     <span class="kd">private</span> <span class="kt">int</span> <span class="n">mData</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>     <span class="kd">public</span> <span class="kt">int</span> <span class="nf">describeContents</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>         <span class="k">return</span> <span class="mi">0</span><span class="o">;</span>
+</span><span class='line'>     <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">writeToParcel</span><span class="o">(</span><span class="n">Parcel</span> <span class="n">out</span><span class="o">,</span> <span class="kt">int</span> <span class="n">flags</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>         <span class="n">out</span><span class="o">.</span><span class="na">writeInt</span><span class="o">(</span><span class="n">mData</span><span class="o">);</span>
+</span><span class='line'>     <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>     <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Parcelable</span><span class="o">.</span><span class="na">Creator</span><span class="o">&lt;</span><span class="n">MyParcelable</span><span class="o">&gt;</span> <span class="n">CREATOR</span>
+</span><span class='line'>             <span class="o">=</span> <span class="k">new</span> <span class="n">Parcelable</span><span class="o">.</span><span class="na">Creator</span><span class="o">&lt;</span><span class="n">MyParcelable</span><span class="o">&gt;()</span> <span class="o">{</span>
+</span><span class='line'>         <span class="kd">public</span> <span class="n">MyParcelable</span> <span class="nf">createFromParcel</span><span class="o">(</span><span class="n">Parcel</span> <span class="n">in</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>             <span class="k">return</span> <span class="k">new</span> <span class="nf">MyParcelable</span><span class="o">(</span><span class="n">in</span><span class="o">);</span>
+</span><span class='line'>         <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>         <span class="kd">public</span> <span class="n">MyParcelable</span><span class="o">[]</span> <span class="nf">newArray</span><span class="o">(</span><span class="kt">int</span> <span class="n">size</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>             <span class="k">return</span> <span class="k">new</span> <span class="n">MyParcelable</span><span class="o">[</span><span class="n">size</span><span class="o">];</span>
+</span><span class='line'>         <span class="o">}</span>
+</span><span class='line'>     <span class="o">};</span>
+</span><span class='line'>
+</span><span class='line'>     <span class="kd">private</span> <span class="nf">MyParcelable</span><span class="o">(</span><span class="n">Parcel</span> <span class="n">in</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>         <span class="n">mData</span> <span class="o">=</span> <span class="n">in</span><span class="o">.</span><span class="na">readInt</span><span class="o">();</span>
+</span><span class='line'>     <span class="o">}</span>
+</span><span class='line'> <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>在Client和Service端调用aidl指定的方法</h4>
+
+<p>android sdk tool会自动根据aidl文件生成相应的java文件。因此可以直接使用之。</p>
+
+<p><strong>在server端</strong><br/>
+前面说过onBind方法会返回一个IBinder的实例给client调用。这里返回的IBinder实例就和你的aidl有关。你需要在server中实现aidl中指定的接口的实现，还举<a href="#aidl_chestnut">刚才的栗子</a>。你需要在server中这样：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">private</span> <span class="kd">class</span> <span class="nc">MyBinder</span> <span class="kd">extends</span> <span class="n">IDemoServiceController</span><span class="o">.</span><span class="na">Stub</span> <span class="o">{</span>
+</span><span class='line'>        <span class="nd">@Override</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getPid</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">RemoteException</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">android</span><span class="o">.</span><span class="na">os</span><span class="o">.</span><span class="na">Process</span><span class="o">.</span><span class="na">myPid</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="nd">@Override</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">add</span><span class="o">(</span><span class="kt">int</span> <span class="n">a</span><span class="o">,</span> <span class="kt">int</span> <span class="n">b</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">RemoteException</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="nd">@Override</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">causeToStop</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">RemoteException</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">log</span><span class="o">(</span><span class="s">&quot;causeToStop&quot;</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">stopSelf</span><span class="o">();</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="nd">@Override</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">addCallback</span><span class="o">(</span><span class="n">ICallback</span> <span class="n">callback</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">RemoteException</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">clientCallback</span> <span class="o">=</span> <span class="n">callback</span><span class="o">;</span>
+</span><span class='line'>            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="nd">@Override</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">invokeCallback</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">RemoteException</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">clientCallback</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">clientCallback</span><span class="o">.</span><span class="na">call</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="nd">@Override</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">paramInAndOut</span><span class="o">(</span><span class="n">Bundle</span><span class="o">[]</span> <span class="n">bundleIn</span><span class="o">,</span> <span class="n">Bundle</span> <span class="n">bundleOut</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">RemoteException</span> <span class="o">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>其中的Stub是aldi工具自动生成的，<a href="#aidl_implements">等会</a>详细说为啥要继承自他而不是自己实现Interface即可。然后你在onBinde中返回这个实现的实例即可：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">private</span> <span class="n">IBinder</span> <span class="n">mBinder</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">MyBinder</span><span class="o">();</span>
+</span><span class='line'><span class="kd">public</span> <span class="n">IBinder</span> <span class="nf">onBind</span><span class="o">(</span><span class="n">Intent</span> <span class="n">intent</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">log</span><span class="o">(</span><span class="s">&quot;onBind&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">mBinder</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><strong>client端</strong>：
+记得上面说的bindService的回调吗在<code>onServiceConnected</code>中：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">onServiceConnected</span><span class="o">(</span><span class="n">ComponentName</span> <span class="n">name</span><span class="o">,</span> <span class="n">IBinder</span> <span class="n">service</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">log</span><span class="o">(</span><span class="s">&quot;service name:&quot;</span> <span class="o">+</span> <span class="n">name</span><span class="o">);</span>
+</span><span class='line'>    <span class="n">mDemoServiceBinder</span> <span class="o">=</span> <span class="n">IDemoServiceController</span><span class="o">.</span><span class="na">Stub</span><span class="o">.</span><span class="na">asInterface</span><span class="o">(</span><span class="n">service</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>是的，这里还是要用那个Stub。然后你只需要在Client中调用mDemoServiceBinder 中的所有方法即可。因为Stub是实现了AIDL中的接口的，所以它提供给你了你定义的所有方法。<br/>
+<strong>需要注意</strong>：AIDL中定义的方法会抛出RemoteException，所以记得捕获之。</p>
+
+<h3>好奇：“AIDL是怎么实现跨进程方法调用的  ”</h3>
+
+<p>这里点很类似于java EE中的RMI（Remote Method Invoke）。但是比他轻量级，简单，方便。想知道android中怎么实现RMI的，不妨从上面用的的神器Stub入手。于是我们就打开了sdk tool从aidl生成的java文件。看看Stub到底长啥样！！</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">static</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">Stub</span> <span class="kd">extends</span> <span class="n">android</span><span class="o">.</span><span class="na">os</span><span class="o">.</span><span class="na">Binder</span> <span class="kd">implements</span> <span class="n">com</span><span class="o">.</span><span class="na">example</span><span class="o">.</span><span class="na">service</span><span class="o">.</span><span class="na">IDemoServiceController</span> <span class="o">{</span>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">String</span> <span class="n">DESCRIPTOR</span> <span class="o">=</span> <span class="s">&quot;com.example.service.IDemoServiceController&quot;</span><span class="o">;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="cm">/**</span>
+</span><span class='line'><span class="cm">     * Construct the stub at attach it to the interface.</span>
+</span><span class='line'><span class="cm">     */</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="nf">Stub</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">this</span><span class="o">.</span><span class="na">attachInterface</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">DESCRIPTOR</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="cm">/**</span>
+</span><span class='line'><span class="cm">     * Cast an IBinder object into an com.example.service.IDemoServiceController interface,</span>
+</span><span class='line'><span class="cm">     * generating a proxy if needed.</span>
+</span><span class='line'><span class="cm">     */</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kd">static</span> <span class="n">com</span><span class="o">.</span><span class="na">example</span><span class="o">.</span><span class="na">service</span><span class="o">.</span><span class="na">IDemoServiceController</span> <span class="nf">asInterface</span><span class="o">(</span><span class="n">android</span><span class="o">.</span><span class="na">os</span><span class="o">.</span><span class="na">IBinder</span> <span class="n">obj</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">((</span><span class="n">obj</span> <span class="o">==</span> <span class="kc">null</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="n">android</span><span class="o">.</span><span class="na">os</span><span class="o">.</span><span class="na">IInterface</span> <span class="n">iin</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="na">queryLocalInterface</span><span class="o">(</span><span class="n">DESCRIPTOR</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(((</span><span class="n">iin</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="o">(</span><span class="n">iin</span> <span class="k">instanceof</span> <span class="n">com</span><span class="o">.</span><span class="na">example</span><span class="o">.</span><span class="na">service</span><span class="o">.</span><span class="na">IDemoServiceController</span><span class="o">)))</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">return</span> <span class="o">((</span><span class="n">com</span><span class="o">.</span><span class="na">example</span><span class="o">.</span><span class="na">service</span><span class="o">.</span><span class="na">IDemoServiceController</span><span class="o">)</span> <span class="n">iin</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">new</span> <span class="n">com</span><span class="o">.</span><span class="na">example</span><span class="o">.</span><span class="na">service</span><span class="o">.</span><span class="na">IDemoServiceController</span><span class="o">.</span><span class="na">Stub</span><span class="o">.</span><span class="na">Proxy</span><span class="o">(</span><span class="n">obj</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="n">android</span><span class="o">.</span><span class="na">os</span><span class="o">.</span><span class="na">IBinder</span> <span class="nf">asBinder</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">return</span> <span class="k">this</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">onTransact</span><span class="o">(</span><span class="kt">int</span> <span class="n">code</span><span class="o">,</span> <span class="n">android</span><span class="o">.</span><span class="na">os</span><span class="o">.</span><span class="na">Parcel</span> <span class="n">data</span><span class="o">,</span> <span class="n">android</span><span class="o">.</span><span class="na">os</span><span class="o">.</span><span class="na">Parcel</span> <span class="n">reply</span><span class="o">,</span> <span class="kt">int</span> <span class="n">flags</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">android</span><span class="o">.</span><span class="na">os</span><span class="o">.</span><span class="na">RemoteException</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">switch</span> <span class="o">(</span><span class="n">code</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="k">case</span> <span class="nl">INTERFACE_TRANSACTION:</span> <span class="o">{</span>
+</span><span class='line'>                <span class="n">reply</span><span class="o">.</span><span class="na">writeString</span><span class="o">(</span><span class="n">DESCRIPTOR</span><span class="o">);</span>
+</span><span class='line'>                <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>            <span class="k">case</span> <span class="nl">TRANSACTION_paramInAndOut:</span> <span class="o">{</span>
+</span><span class='line'>                    <span class="n">data</span><span class="o">.</span><span class="na">enforceInterface</span><span class="o">(</span><span class="n">DESCRIPTOR</span><span class="o">);</span>
+</span><span class='line'>                    <span class="n">android</span><span class="o">.</span><span class="na">os</span><span class="o">.</span><span class="na">Bundle</span> <span class="n">_arg0</span><span class="o">;</span>
+</span><span class='line'>                    <span class="k">if</span> <span class="o">((</span><span class="mi">0</span> <span class="o">!=</span> <span class="n">data</span><span class="o">.</span><span class="na">readInt</span><span class="o">()))</span> <span class="o">{</span>
+</span><span class='line'>                        <span class="n">_arg0</span> <span class="o">=</span> <span class="n">android</span><span class="o">.</span><span class="na">os</span><span class="o">.</span><span class="na">Bundle</span><span class="o">.</span><span class="na">CREATOR</span><span class="o">.</span><span class="na">createFromParcel</span><span class="o">(</span><span class="n">data</span><span class="o">);</span>
+</span><span class='line'>                    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>                        <span class="n">_arg0</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>                    <span class="o">}</span>
+</span><span class='line'>                    <span class="n">android</span><span class="o">.</span><span class="na">os</span><span class="o">.</span><span class="na">Bundle</span> <span class="n">_arg1</span><span class="o">;</span>
+</span><span class='line'>                    <span class="n">_arg1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">android</span><span class="o">.</span><span class="na">os</span><span class="o">.</span><span class="na">Bundle</span><span class="o">();</span>
+</span><span class='line'>                    <span class="k">this</span><span class="o">.</span><span class="na">paramInAndOut</span><span class="o">(</span><span class="n">_arg0</span><span class="o">,</span> <span class="n">_arg1</span><span class="o">);</span>
+</span><span class='line'>                    <span class="n">reply</span><span class="o">.</span><span class="na">writeNoException</span><span class="o">();</span>
+</span><span class='line'>                    <span class="k">if</span> <span class="o">((</span><span class="n">_arg1</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>                        <span class="n">reply</span><span class="o">.</span><span class="na">writeInt</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+</span><span class='line'>                        <span class="n">_arg1</span><span class="o">.</span><span class="na">writeToParcel</span><span class="o">(</span><span class="n">reply</span><span class="o">,</span> <span class="n">android</span><span class="o">.</span><span class="na">os</span><span class="o">.</span><span class="na">Parcelable</span><span class="o">.</span><span class="na">PARCELABLE_WRITE_RETURN_VALUE</span><span class="o">);</span>
+</span><span class='line'>                    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>                        <span class="n">reply</span><span class="o">.</span><span class="na">writeInt</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+</span><span class='line'>                    <span class="o">}</span>
+</span><span class='line'>                    <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>                <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="k">return</span> <span class="kd">super</span><span class="o">.</span><span class="na">onTransact</span><span class="o">(</span><span class="n">code</span><span class="o">,</span> <span class="n">data</span><span class="o">,</span> <span class="n">reply</span><span class="o">,</span> <span class="n">flags</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Proxy</span> <span class="kd">implements</span> <span class="n">com</span><span class="o">.</span><span class="na">example</span><span class="o">.</span><span class="na">service</span><span class="o">.</span><span class="na">IDemoServiceController</span> <span class="o">{</span> <span class="o">...</span> <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="o">...</span>
+</span><span class='line'>    <span class="kd">static</span> <span class="kd">final</span> <span class="kt">int</span> <span class="n">TRANSACTION_paramInAndOut</span> <span class="o">=</span> <span class="o">(</span><span class="n">android</span><span class="o">.</span><span class="na">os</span><span class="o">.</span><span class="na">IBinder</span><span class="o">.</span><span class="na">FIRST_CALL_TRANSACTION</span> <span class="o">+</span> <span class="mi">3</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">...</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>所以说Stub是个抽象类，继承自Binder，实现了AIDL接口，我们在service端就是直接实现的这个类。在Stub有很长的一个方法叫<code>onTransact</code>他是Binder的方法，从上面可以看到（为了篇幅删了好几个case）。然后在case里面才调用到了aidl接口的实现，对边找一个case看看，会发现他是从Parcel中获取参数，然后调用真正的方法实现，最后在把返回值写回parcel。所以可以看到如果client调用某个方法，系统会调用service的onTransact。所以RMI最主要的还是数据（参数，返回值，Exception）的传输。</p>
+
+<p>注意到Client中是把<code>onServiceConnection</code>返回的IBinder通过Stub的<code>asInterface</code>方法获取的ALDI实现，于是去看看<code>asInterface</code>是干嘛的。有点复杂，总之看最后一句<code>return new com.example.service.IDemoServiceController.Stub.Proxy(obj);</code>!哦！Stub里还有个Proxy类。所以我们最后拿到的是Proxy的实例咯。</p>
+
+<p>其实从名字（Proxy）可以知道他是干啥的，就是个代理嘛，用到了面向对象的Proxy设计模式。所以我们在Client中调用的所有方法都是由Proxy实现的，于是看看Proxy。</p>
+
+<p>举个栗子呗：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Override</span>
+</span><span class='line'><span class="kd">public</span> <span class="kt">int</span> <span class="nf">paramInAndOut</span><span class="o">(</span><span class="n">android</span><span class="o">.</span><span class="na">os</span><span class="o">.</span><span class="na">Bundle</span> <span class="n">bundleIn</span><span class="o">,</span> <span class="n">android</span><span class="o">.</span><span class="na">os</span><span class="o">.</span><span class="na">Bundle</span> <span class="n">bundleOut</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">android</span><span class="o">.</span><span class="na">os</span><span class="o">.</span><span class="na">RemoteException</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">android</span><span class="o">.</span><span class="na">os</span><span class="o">.</span><span class="na">Parcel</span> <span class="n">_data</span> <span class="o">=</span> <span class="n">android</span><span class="o">.</span><span class="na">os</span><span class="o">.</span><span class="na">Parcel</span><span class="o">.</span><span class="na">obtain</span><span class="o">();</span>
+</span><span class='line'>    <span class="n">android</span><span class="o">.</span><span class="na">os</span><span class="o">.</span><span class="na">Parcel</span> <span class="n">_reply</span> <span class="o">=</span> <span class="n">android</span><span class="o">.</span><span class="na">os</span><span class="o">.</span><span class="na">Parcel</span><span class="o">.</span><span class="na">obtain</span><span class="o">();</span>
+</span><span class='line'>    <span class="kt">int</span> <span class="n">_result</span><span class="o">;</span>
+</span><span class='line'>    <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">_data</span><span class="o">.</span><span class="na">writeInterfaceToken</span><span class="o">(</span><span class="n">DESCRIPTOR</span><span class="o">);</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">((</span><span class="n">bundleIn</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">))</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">_data</span><span class="o">.</span><span class="na">writeInt</span><span class="o">(</span><span class="mi">1</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">bundleIn</span><span class="o">.</span><span class="na">writeToParcel</span><span class="o">(</span><span class="n">_data</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">_data</span><span class="o">.</span><span class="na">writeInt</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>        <span class="n">mRemote</span><span class="o">.</span><span class="na">transact</span><span class="o">(</span><span class="n">Stub</span><span class="o">.</span><span class="na">TRANSACTION_paramInAndOut</span><span class="o">,</span> <span class="n">_data</span><span class="o">,</span> <span class="n">_reply</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">_reply</span><span class="o">.</span><span class="na">readException</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">_result</span> <span class="o">=</span> <span class="n">_reply</span><span class="o">.</span><span class="na">readInt</span><span class="o">();</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">((</span><span class="mi">0</span> <span class="o">!=</span> <span class="n">_reply</span><span class="o">.</span><span class="na">readInt</span><span class="o">()))</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">bundleOut</span><span class="o">.</span><span class="na">readFromParcel</span><span class="o">(</span><span class="n">_reply</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">_reply</span><span class="o">.</span><span class="na">recycle</span><span class="o">();</span>
+</span><span class='line'>        <span class="n">_data</span><span class="o">.</span><span class="na">recycle</span><span class="o">();</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">_result</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>吼吼吼，所以就是把参数写进Parcel，调用Binder的transact，再从返回的parcel中取得数据，最后返回。其中readException会捕获service中抛出的异常，然后丢回给client。</p>
+
+<h3>附录——Service回调Client</h3>
+
+<p>通过AIDL可以很方便的让client调用service的方法，但是有时候service需要回调Client。（比如报告任务的进度从而更新进度条。）</p>
+
+<p>最简单粗暴的方式就是发广播！这个方法怎么样？好啊！真的不错，但是不够轻量级吧。而且有点不够方便。</p>
+
+<blockquote><p>有没有像AIDL中Client调Service中的方法呢，还是那样方便呀！
+答案是：<strong>有！</strong></p></blockquote>
+
+<p>好了，关子卖完了。说正事！</p>
+
+<p>这里需要定义一个回调函数的AIDL接口（比如 &ldquo;ICallback.aidl&#8221;），然后还要在Client——Service通信的AIDL中添加类似<code>boolean addCallback(in ICallback callback);</code>、<code>void invokeCallback();</code>的方法。</p>
+
+<p>然后你在Client实现一个<code>ICallback.Stub</code>类，在<code>addCallback</code>中把他传给service，service收到之后存下来，当你调用<code>invokeCallback</code>的时候service就会调用刚才传进来的callback。</p>
+
+<p>栗子——Client:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">private</span> <span class="n">ICallback</span> <span class="n">mServiceCallback</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ICallback</span><span class="o">.</span><span class="na">Stub</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">call</span><span class="o">(</span><span class="kt">int</span> <span class="n">code</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">log</span><span class="o">(</span><span class="s">&quot;pid:&quot;</span> <span class="o">+</span> <span class="n">android</span><span class="o">.</span><span class="na">os</span><span class="o">.</span><span class="na">Process</span><span class="o">.</span><span class="na">myPid</span><span class="o">());</span>
+</span><span class='line'>        <span class="n">mStartServiceButton</span><span class="o">.</span><span class="na">setBackgroundColor</span><span class="o">(</span><span class="n">Color</span><span class="o">.</span><span class="na">parseColor</span><span class="o">(</span><span class="s">&quot;#ff00ff&quot;</span><span class="o">));</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span> <span class="o">(</span><span class="n">mDemoServiceBinder</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">try</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">mDemoServiceBinder</span><span class="o">.</span><span class="na">addCallback</span><span class="o">(</span><span class="n">mServiceCallback</span><span class="o">);</span>
+</span><span class='line'>        <span class="n">log</span><span class="o">(</span><span class="s">&quot;add 1 + 2 = &quot;</span> <span class="o">+</span> <span class="n">mDemoServiceBinder</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">));</span>
+</span><span class='line'>    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">RemoteException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">log</span><span class="o">(</span><span class="s">&quot;add 1 + 2 reveived remoteexception&quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">log</span><span class="o">(</span><span class="s">&quot;not binded yet&quot;</span><span class="o">);</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>栗子——Service：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">private</span> <span class="kd">class</span> <span class="nc">MyBinder</span> <span class="kd">extends</span> <span class="n">IDemoServiceController</span><span class="o">.</span><span class="na">Stub</span> <span class="o">{</span>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'>  <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">addCallback</span><span class="o">(</span><span class="n">ICallback</span> <span class="n">callback</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">RemoteException</span> <span class="o">{</span>
+</span><span class='line'>        <span class="n">clientCallback</span> <span class="o">=</span> <span class="n">callback</span><span class="o">;</span>
+</span><span class='line'>        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">invokeCallback</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">RemoteException</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">if</span> <span class="o">(</span><span class="n">clientCallback</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">clientCallback</span><span class="o">.</span><span class="na">call</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'><span class="o">...</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>很简单，就酱！</p>
+
+<h3>参考资料</h3>
+
+<p>[API Guide——Service]：<a href="http://developer.android.com/guide/components/services.html">http://developer.android.com/guide/components/services.html</a></p>
+
+<p>[API Guide——AIDL]: <a href="http://developer.android.com/guide/components/aidl.html">http://developer.android.com/guide/components/aidl.html</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Java 中JNI的使用]]></title>
     <link href="http://LanderlYoung.github.io/blog/2014/10/16/java-zhong-jnide-shi-yong/"/>
     <updated>2014-10-16T21:10:55+08:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/10/16/java-zhong-jnide-shi-yong</id>
-    <content type="html"><![CDATA[<p>JNI全称是<code>Java Native Interface</code>是在JAVA和Native层（包括但不限于C/C++）相互调用的接口规范。</p>
+    <content type="html"><![CDATA[<p>最近来电项目打算加入变声的功能，所以决定实用SoundTouch（这个库是LGPL协议的，所以对SoundTouch的代码没有修改的话是不需要开源代码的！LOL~~）。SoundTouch是用C++写的，因此需要一个Java的JNI封装，以便JAVA层比较方便的调用。这次用JNI封装SoundTouch的经历，还是颇有收获的。记录一下，方便以后查看。</p>
 
-<p>JNI在JAVA1.1中正式推出，在JAVA1.2版本中加入了<code>JNI_OnLoad</code>，<code>JNI_OnUnload</code>方法，这两个方法还是很有用的，后面再说。</p>
+<p>JNI全称是<code>Java Native Interface</code>是在JAVA和Native层（包括但不限于C/C++）相互调用的接口规范。</p>
 
 <!--more-->
 
+
+<p>JNI在JAVA1.1中正式推出，在JAVA1.2版本中加入了<code>JNI_OnLoad</code>，<code>JNI_OnUnload</code>方法，这两个方法还是很有用的，后面再说。</p>
 
 <h3>JNI基础篇</h3>
 
@@ -31,7 +707,7 @@
 
 <ol>
 <li>写一个Java类，在其中声明对应要调用的native方法，用<code>native</code>关键字修饰。 比如<code>private static native int native_newInstance();</code></li>
-<li>通过<code>javah</code>命令生成java类对应的C/C++头文件。<code>javah -encoding utf-8 -cp src com.young.soundtouch.SoundTouch</code></li>
+<li>通过<code>javah</code>命令生成java类对应的C/C++头文件。<code>javah -encoding utf-8 -cp src com.tencent.soundtouch.SoundTouch</code></li>
 <li>在C/C++中实现头文件中声明的函数</li>
 <li>编译C/C++代码为动态库（Windows中的dll，linux(Android)中的so，MAC OSX中的dylib）。</li>
 <li>在java代码中加载动态库，即可像调用Java方法一样，调用到native函数。</li>
@@ -66,21 +742,21 @@
 <span class='line-number'>22</span>
 </pre></td><td class='code'><pre><code class='java'><span class='line'><span class="cm">/* DO NOT EDIT THIS FILE - it is machine generated */</span>
 </span><span class='line'><span class="err">#</span><span class="n">include</span> <span class="o">&lt;</span><span class="n">jni</span><span class="o">.</span><span class="na">h</span><span class="o">&gt;</span>
-</span><span class='line'><span class="cm">/* Header for class com_young_soundtouch_SoundTouch */</span>
+</span><span class='line'><span class="cm">/* Header for class com_tencent_soundtouch_SoundTouch */</span>
 </span><span class='line'>
-</span><span class='line'><span class="err">#</span><span class="n">ifndef</span> <span class="n">_Included_com_young_soundtouch_SoundTouch</span>
-</span><span class='line'><span class="err">#</span><span class="n">define</span> <span class="n">_Included_com_young_soundtouch_SoundTouch</span>
+</span><span class='line'><span class="err">#</span><span class="n">ifndef</span> <span class="n">_Included_com_tencent_soundtouch_SoundTouch</span>
+</span><span class='line'><span class="err">#</span><span class="n">define</span> <span class="n">_Included_com_tencent_soundtouch_SoundTouch</span>
 </span><span class='line'><span class="err">#</span><span class="n">ifdef</span> <span class="n">__cplusplus</span>
 </span><span class='line'><span class="n">extern</span> <span class="s">&quot;C&quot;</span> <span class="o">{</span>
 </span><span class='line'><span class="err">#</span><span class="n">endif</span>
-</span><span class='line'><span class="err">#</span><span class="n">undef</span> <span class="n">com_young_soundtouch_SoundTouch_SETTING_USE_AA_FILTER</span>
-</span><span class='line'><span class="err">#</span><span class="n">define</span> <span class="n">com_young_soundtouch_SoundTouch_SETTING_USE_AA_FILTER</span> <span class="mi">0L</span>
+</span><span class='line'><span class="err">#</span><span class="n">undef</span> <span class="n">com_tencent_soundtouch_SoundTouch_SETTING_USE_AA_FILTER</span>
+</span><span class='line'><span class="err">#</span><span class="n">define</span> <span class="n">com_tencent_soundtouch_SoundTouch_SETTING_USE_AA_FILTER</span> <span class="mi">0L</span>
 </span><span class='line'>  <span class="cm">/*</span>
-</span><span class='line'><span class="cm"> * Class:     com_young_soundtouch_SoundTouch</span>
+</span><span class='line'><span class="cm"> * Class:     com_tencent_soundtouch_SoundTouch</span>
 </span><span class='line'><span class="cm"> * Method:    native_getDefaultSampleElementSize</span>
 </span><span class='line'><span class="cm"> * Signature: ()I</span>
 </span><span class='line'><span class="cm"> */</span>
-</span><span class='line'>  <span class="n">JNIEXPORT</span> <span class="n">jint</span> <span class="n">JNICALL</span> <span class="nf">Java_com_young_soundtouch_SoundTouch_native_1getDefaultSampleElementSize</span>
+</span><span class='line'>  <span class="n">JNIEXPORT</span> <span class="n">jint</span> <span class="n">JNICALL</span> <span class="nf">Java_com_tencent_soundtouch_SoundTouch_native_1getDefaultSampleElementSize</span>
 </span><span class='line'>      <span class="o">(</span><span class="n">JNIEnv</span> <span class="o">*,</span> <span class="n">jclass</span><span class="o">);</span>
 </span><span class='line'><span class="err">#</span><span class="n">ifdef</span> <span class="n">__cplusplus</span>
 </span><span class='line'><span class="o">}</span>
@@ -108,7 +784,7 @@
 <li><code>JNIEXPORT</code>这是函数的导出方式</li>
 <li>jint 返回值类型（jint由jni.h定义，对应int，<a href="#jni_type">下面</a>具体再说吧</li>
 <li>JNICALL 函数的调用方式也就是汇编级别参数的传入方式</li>
-<li> Java_com_young_soundtouch_SoundTouch_native_1getDefaultSampleElementSize —— 超级长的函数名！！！格式是<code>Java_</code> + <code>类全名</code> + <code>_</code> + JAVA中声明的native方法名。其中会把包名中的点（<code>.</code>）替换成下划线（<code>_</code>），同时为了避免冲突把下划线替换成<code>_1</code>。</li>
+<li> Java_com_tencent_soundtouch_SoundTouch_native_1getDefaultSampleElementSize —— 超级长的函数名！！！格式是<code>Java_</code> + <code>类全名</code> + <code>_</code> + JAVA中声明的native方法名。其中会把包名中的点（<code>.</code>）替换成下划线（<code>_</code>），同时为了避免冲突把下划线替换成<code>_1</code>。</li>
 <li>方法的参数，上面的这个方法在JAVA的声明中实际上是没有参数的，其中的<code>JNIENV</code>顾名思义是JNI环境，和具体的线程绑定。而第二个参数<code>jclass</code>其实是java中的<code>Class</code>因为上面是一个<code>static</code>方法，因此第二个参数是<code>jclass</code>。如果是一个实例方法则对应第二个参数是<code>jobject</code>，相当于java中的<code>this</code>。</li>
 </ol>
 </li>
@@ -554,20 +1230,20 @@ LocalReference也有一个释放的函数：<code>void DeleteLocalRef(jobject ob
 </span><span class='line'><span class="cm">/**</span>
 </span><span class='line'><span class="cm"> * These are the exported function in this library.</span>
 </span><span class='line'><span class="cm">*/</span>
-</span><span class='line'><span class="n">JNIEXPORT</span> <span class="n">jint</span> <span class="n">JNICALL</span> <span class="nf">JNI_OnLoad</span><span class="p">(</span><span class="n">JavaVM</span> <span class="o">*</span><span class="n">vm</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">reserved</span><span class="p">);</span>
-</span><span class='line'><span class="n">JNIEXPORT</span> <span class="kt">void</span> <span class="n">JNICALL</span> <span class="nf">JNI_OnUnload</span><span class="p">(</span><span class="n">JavaVM</span> <span class="o">*</span><span class="n">vm</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">reserved</span><span class="p">);</span>
+</span><span class='line'><span class="n">JNIEXPORT</span> <span class="n">jint</span> <span class="n">JNICALL</span> <span class="n">JNI_OnLoad</span><span class="p">(</span><span class="n">JavaVM</span> <span class="o">*</span><span class="n">vm</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">reserved</span><span class="p">);</span>
+</span><span class='line'><span class="n">JNIEXPORT</span> <span class="kt">void</span> <span class="n">JNICALL</span> <span class="n">JNI_OnUnload</span><span class="p">(</span><span class="n">JavaVM</span> <span class="o">*</span><span class="n">vm</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">reserved</span><span class="p">);</span>
 </span><span class='line'>
 </span><span class='line'><span class="c1">//为了在动态库中不用导出函数，全部声明为static</span>
 </span><span class='line'><span class="c1">//native methods registered by JNI_OnLoad</span>
-</span><span class='line'><span class="k">static</span> <span class="n">jint</span> <span class="nf">native_newInstance</span> <span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jclass</span><span class="p">);</span>
+</span><span class='line'><span class="k">static</span> <span class="n">jint</span> <span class="n">native_newInstance</span> <span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jclass</span><span class="p">);</span>
 </span><span class='line'>
 </span><span class='line'><span class="c1">//实现native方法</span>
 </span><span class='line'><span class="cm">/*</span>
-</span><span class='line'><span class="cm">* Class:     com_young_soundtouch_SoundTouch</span>
+</span><span class='line'><span class="cm">* Class:     com_tencent_soundtouch_SoundTouch</span>
 </span><span class='line'><span class="cm">* Method:    native_newInstance</span>
 </span><span class='line'><span class="cm">* Signature: ()I</span>
 </span><span class='line'><span class="cm">*/</span>
-</span><span class='line'><span class="k">static</span> <span class="n">jint</span> <span class="nf">native_newInstance</span>
+</span><span class='line'><span class="k">static</span> <span class="n">jint</span> <span class="n">native_newInstance</span>
 </span><span class='line'><span class="p">(</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="n">env</span><span class="p">,</span> <span class="n">jclass</span> <span class="p">)</span> <span class="p">{</span>
 </span><span class='line'>  <span class="kt">int</span> <span class="n">instanceID</span> <span class="o">=</span> <span class="o">++</span><span class="n">sInstanceIdentifer</span><span class="p">;</span>
 </span><span class='line'>  <span class="n">SoundTouchWrapper</span> <span class="o">*</span><span class="n">instance</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SoundTouchWrapper</span><span class="p">();</span>
@@ -621,15 +1297,15 @@ LocalReference也有一个释放的函数：<code>void DeleteLocalRef(jobject ob
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 </pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="c1">//修改包名时只需要改以下的宏定义即可</span>
-</span><span class='line'><span class="cp">#define FULL_CLASS_NAME &quot;com/young/soundtouch/SoundTouch&quot;</span>
-</span><span class='line'><span class="cp">#define func(name) Java_ ## com_young_soundtouch_SoundTouch_ ## name</span>
-</span><span class='line'><span class="cp">#define constance(cons) com_young_soundtouch_SoundTouch_ ## cons</span>
+</span><span class='line'><span class="cp">#define FULL_CLASS_NAME &quot;com/tencent/soundtouch/SoundTouch&quot;</span>
+</span><span class='line'><span class="cp">#define func(name) Java_ ## com_tencent_soundtouch_SoundTouch_ ## name</span>
+</span><span class='line'><span class="cp">#define constance(cons) com_tencent_soundtouch_SoundTouch_ ## cons</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>比如<code>func(native_1newInstance)</code>展开成：<code>Java_com_young_soundtouch_SoundTouch_native_1newInstance</code>即JNI中需要导出的函数名（不过用动态注册方式没太大用了）</p>
+<p>比如<code>func(native_1newInstance)</code>展开成：<code>Java_com_tencent_soundtouch_SoundTouch_native_1newInstance</code>即JNI中需要导出的函数名（不过用动态注册方式没太大用了）</p>
 
-<p><code>constance(AUDIO_FORMAT_PCM16)</code>展开成<code>com_young_soundtouch_SoundTouch_AUDIO_FORMAT_PCM16</code>这个着实有用。</p>
+<p><code>constance(AUDIO_FORMAT_PCM16)</code>展开成<code>com_tencent_soundtouch_SoundTouch_AUDIO_FORMAT_PCM16</code>这个着实有用。</p>
 
 <p>而且如果包名改了也可以很方便的适应之。</p>
 
@@ -888,7 +1564,7 @@ L + 类全名（报名中的点(.)用(/)代替）+ ；
 </span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">pdus</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>      <span class="n">StringBuilder</span> <span class="n">message</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">StringBuilder</span><span class="o">();</span>
+</span><span class='line'>      <span class="n">StringBuilder</span> <span class="n">message</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuilder</span><span class="o">();</span>
 </span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="n">Object</span> <span class="n">pdu</span> <span class="o">:</span> <span class="n">pdus</span><span class="o">)</span> <span class="o">{</span>
 </span><span class='line'>            <span class="n">SmsMessage</span> <span class="n">smsMessage</span> <span class="o">=</span> <span class="n">SmsMessage</span><span class="o">.</span><span class="na">createFromPdu</span><span class="o">((</span><span class="kt">byte</span><span class="o">[])</span> <span class="n">pdu</span><span class="o">);</span>
 </span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">smsMessage</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">continue</span><span class="o">;</span>
@@ -1123,7 +1799,7 @@ L + 类全名（报名中的点(.)用(/)代替）+ ；
 </pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//定义</span>
 </span><span class='line'><span class="kd">private</span> <span class="n">Dialog</span> <span class="n">mDialog</span><span class="o">;</span>
 </span><span class='line'><span class="c1">//创建</span>
-</span><span class='line'><span class="n">mDialog</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Dialog</span><span class="o">(</span><span class="n">mContext</span><span class="o">,</span> <span class="n">mTheme</span><span class="o">);</span>
+</span><span class='line'><span class="n">mDialog</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Dialog</span><span class="o">(</span><span class="n">mContext</span><span class="o">,</span> <span class="n">mTheme</span><span class="o">);</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -1180,8 +1856,8 @@ L + 类全名（报名中的点(.)用(/)代替）+ ；
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
 <span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">Outer</span> <span class="n">outer</span>  <span class="o">=</span> <span class="k">new</span> <span class="nf">Outer</span><span class="o">();</span>
-</span><span class='line'><span class="n">Outer</span><span class="o">.</span><span class="na">Inner</span> <span class="n">inner</span> <span class="o">=</span> <span class="n">outer</span><span class="o">.</span><span class="na">new</span> <span class="nf">Inner</span><span class="o">();</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">Outer</span> <span class="n">outer</span>  <span class="o">=</span> <span class="k">new</span> <span class="n">Outer</span><span class="o">();</span>
+</span><span class='line'><span class="n">Outer</span><span class="o">.</span><span class="na">Inner</span> <span class="n">inner</span> <span class="o">=</span> <span class="n">outer</span><span class="o">.</span><span class="na">new</span> <span class="n">Inner</span><span class="o">();</span>
 </span><span class='line'>
 </span><span class='line'><span class="cm">/*</span>
 </span><span class='line'><span class="cm"> * can not pass compile, the compiler would complain</span>
@@ -1227,7 +1903,7 @@ L + 类全名（报名中的点(.)用(/)代替）+ ；
 <span class='line-number'>6</span>
 </pre></td><td class='code'><pre><code class='java'><span class='line'> <span class="k">if</span> <span class="o">(</span><span class="n">mPositiveButtonLinstener</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
 </span><span class='line'>            <span class="kd">final</span> <span class="n">DialogInterface</span><span class="o">.</span><span class="na">OnClickListener</span> <span class="n">listener</span> <span class="o">=</span> <span class="n">mPositiveButtonLinstener</span><span class="o">;</span>
-</span><span class='line'>            <span class="n">posBtn</span><span class="o">.</span><span class="na">setOnClickListener</span><span class="o">(</span><span class="k">new</span> <span class="nf">DialogButtonOnClickListener</span><span class="o">(</span><span class="n">dialog</span><span class="o">,</span>
+</span><span class='line'>            <span class="n">posBtn</span><span class="o">.</span><span class="na">setOnClickListener</span><span class="o">(</span><span class="k">new</span> <span class="n">DialogButtonOnClickListener</span><span class="o">(</span><span class="n">dialog</span><span class="o">,</span>
 </span><span class='line'>                    <span class="n">DialogInterface</span><span class="o">.</span><span class="na">BUTTON_POSITIVE</span><span class="o">,</span>
 </span><span class='line'>                    <span class="n">listener</span><span class="o">));</span>
 </span><span class='line'>        <span class="o">}</span>
@@ -5594,342 +6270,6 @@ var styles = [
 
 <p>这样就可以开两个进程了，一个下载解析xml显示单词解释，另一个进程下载发音文件在播放（其实播放又开了一个进程）。<br/>
 恩，还不错。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[dictionary_Node.js-版本v1.0]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/02/19/dictionary-node-dot-js-ban-ben-v1-dot-0/"/>
-    <updated>2014-02-19T18:31:45+08:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/02/19/dictionary-node-dot-js-ban-ben-v1-dot-0</id>
-    <content type="html"><![CDATA[<p>&lt; 开场白 &gt;</p>
-
-<p><a href="https://github.com/LanderlYoung/Dictinoary_Node.js"><strong>基于Node.js的命令行词典应用</strong></a></p>
-
-<p>&lt;/ 开场白 &gt;</p>
-
-<p>这个小工具需要的功能有以下几个：</p>
-
-<ul>
-<li>解析命令行参数</li>
-<li>发送http请求并取得返回的xml <!--more--></li>
-<li>解析xml并得到单词的解释</li>
-<li>输出结果</li>
-</ul>
-
-
-<p>最后还有一个，不过在v1.0中没有加入：</p>
-
-<ul>
-<li>发送http请求，获得单词发音，并播放出来</li>
-</ul>
-
-
-<p>下面一部分一部分的把各个功能实现说明一下：</p>
-
-<h3>1.解析命令行参数</h3>
-
-<p>这里的重点是获取命令行参数，在Node.js里面命令行参数可以从<code>process.argv</code>获取。
-得到的是一个string数组，数组的第一项是node解释器的调用名，一般是<code>node</code>;第二项是js脚本的绝对路径，后面的各项就是传进去的命令行参数。于是得到下面的解析命令行参数的代码。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="c1">//command line arguments</span>
-</span><span class='line'><span class="n">var</span> <span class="n">argv</span> <span class="o">=</span> <span class="n">process</span><span class="p">.</span><span class="n">argv</span><span class="p">.</span><span class="n">splice</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="n">function</span><span class="p">(){</span>
-</span><span class='line'> <span class="k">if</span> <span class="p">(</span><span class="n">argv</span><span class="p">.</span><span class="n">length</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">argv</span><span class="p">.</span><span class="n">length</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'> <span class="n">usage</span><span class="p">();</span>
-</span><span class='line'> <span class="n">process</span><span class="p">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-</span><span class='line'> <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="n">argv</span><span class="p">.</span><span class="n">length</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'> <span class="n">word</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
-</span><span class='line'> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span><span class='line'> <span class="n">var</span> <span class="n">swt</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
-</span><span class='line'> <span class="n">word</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
-</span><span class='line'> <span class="k">if</span><span class="p">(</span> <span class="n">swt</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="o">/</span><span class="n">e</span><span class="o">|</span><span class="n">E</span><span class="o">/</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'> <span class="n">ee</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
-</span><span class='line'> <span class="p">}</span>
-</span><span class='line'> <span class="k">if</span><span class="p">(</span> <span class="n">swt</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="o">/</span><span class="n">p</span><span class="o">|</span><span class="n">P</span><span class="o">/</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'> <span class="n">pnc</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
-</span><span class='line'> <span class="p">}</span>
-</span><span class='line'> <span class="k">if</span><span class="p">(</span> <span class="n">swt</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="o">/</span><span class="n">v</span><span class="o">/</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'> <span class="n">ee</span> <span class="o">=</span> <span class="n">cc</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
-</span><span class='line'> <span class="p">}</span>
-</span><span class='line'> <span class="k">if</span><span class="p">(</span><span class="n">swt</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="o">/</span><span class="n">V</span><span class="o">/</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'> <span class="n">pnc</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
-</span><span class='line'> <span class="n">ee</span> <span class="o">=</span> <span class="n">cc</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
-</span><span class='line'> <span class="p">}</span>
-</span><span class='line'> <span class="p">}</span>
-</span><span class='line'><span class="p">})();</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>2.发送http请求并取得返回的xml</h3>
-
-<p>说到这个话题，最先想到的是AJAX，不过在Node.js里面对http request 有另一种封装。</p>
-
-<p>代码中的 http 来自于源代码最前面的 <code>var  http = require("http");</code></p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">var</span> <span class="n">req</span> <span class="o">=</span> <span class="n">http</span><span class="p">.</span><span class="n">request</span><span class="p">(</span><span class="n">queryURL</span><span class="p">,</span>  <span class="n">function</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>      <span class="n">var</span> <span class="n">chunks</span> <span class="o">=</span> <span class="p">[],</span> <span class="n">length</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-</span><span class='line'>      <span class="n">res</span><span class="p">.</span><span class="n">on</span><span class="p">(</span><span class="err">&#39;</span><span class="n">data</span><span class="err">&#39;</span><span class="p">,</span> <span class="n">function</span><span class="p">(</span><span class="n">trunk</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>          <span class="n">length</span> <span class="o">+=</span> <span class="n">trunk</span><span class="p">.</span><span class="n">length</span><span class="p">;</span>
-</span><span class='line'>          <span class="n">chunks</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">trunk</span><span class="p">);</span>
-</span><span class='line'>          <span class="p">});</span>
-</span><span class='line'>      <span class="n">res</span><span class="p">.</span><span class="n">on</span><span class="p">(</span><span class="err">&#39;</span><span class="n">end</span><span class="err">&#39;</span><span class="p">,</span> <span class="n">function</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>          <span class="n">var</span> <span class="n">data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Buffer</span><span class="p">(</span><span class="n">length</span><span class="p">),</span>
-</span><span class='line'>          <span class="n">pos</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-</span><span class='line'>          <span class="n">l</span> <span class="o">=</span> <span class="n">chunks</span><span class="p">.</span><span class="n">length</span><span class="p">;</span>
-</span><span class='line'>          <span class="k">for</span> <span class="p">(</span><span class="n">var</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">l</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>          <span class="n">chunks</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">copy</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">pos</span><span class="p">);</span>
-</span><span class='line'>          <span class="n">pos</span> <span class="o">+=</span> <span class="n">chunks</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">length</span><span class="p">;</span>
-</span><span class='line'>          <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>          <span class="n">res</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">data</span><span class="p">;</span>
-</span><span class='line'>          <span class="c1">//TODO</span>
-</span><span class='line'>          <span class="c1">//console.log(data.toString());</span>
-</span><span class='line'>          <span class="n">var</span> <span class="n">output</span> <span class="o">=</span> <span class="n">genOutput</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">toString</span><span class="p">());</span>
-</span><span class='line'>          <span class="n">show</span><span class="p">(</span><span class="n">output</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>          <span class="p">});</span>
-</span><span class='line'>      <span class="n">res</span><span class="p">.</span><span class="n">on</span><span class="p">(</span><span class="err">&#39;</span><span class="n">error</span><span class="err">&#39;</span><span class="p">,</span> <span class="n">function</span><span class="p">(</span><span class="n">err</span><span class="p">){</span>
-</span><span class='line'>              <span class="c1">//FIXME</span>
-</span><span class='line'>              <span class="n">console</span><span class="p">.</span><span class="n">log</span><span class="p">(</span><span class="s">&quot;requesr error&quot;</span><span class="p">);</span>
-</span><span class='line'>              <span class="p">});</span>
-</span><span class='line'><span class="p">});</span>
-</span><span class='line'><span class="n">req</span><span class="p">.</span><span class="n">end</span><span class="p">();</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>这里面主要做事的是三个回调函数，分别是当得到数据、数据下载结束、发生错误。代码所做的事是，把每次得到的数据缓存起来；当数据下载结束时把缓存的数据拼接起来。需要说明的是：在代码中用到了Node.js的Buffer类，其中on &lsquo;data&rsquo; 时的回调函数的参数就是Buffer类的实例。在一开始出现的问题是：设置了返回的xml的编码，然后就出现了乱码，猜测原因是每次on &lsquo;data&rsquo; 时传来的数据段把utf-8编码截断了。解决方法是先把返回数据当成二进制来处理，最后拼接起来再转成字符串。</p>
-
-<h3>3.解析xml</h3>
-
-<p>在浏览器下的javascript解析xml是原生支持的，不过在Node.js里面就要依赖于第三方的扩展库了。这里解析xml我选择了xmlreader库。安装方式相当简单<code>npm install xmlreader</code>就能把xmlreader安装到当前目录下。使用该xml库解析xml也是相当简单的。还是先上代码吧。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">function</span> <span class="n">genOutput</span><span class="p">(</span><span class="n">xml</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>  <span class="n">var</span> <span class="n">res</span> <span class="o">=</span> <span class="p">[];</span>
-</span><span class='line'>  <span class="n">xmlreader</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">xml</span><span class="p">,</span> <span class="n">function</span> <span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>          <span class="k">if</span> <span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="k">return</span> <span class="n">console</span><span class="p">.</span><span class="n">log</span><span class="p">(</span><span class="n">err</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>          <span class="n">var</span> <span class="n">basic</span> <span class="o">=</span> <span class="n">response</span><span class="p">.</span><span class="n">yodaodict</span><span class="p">.</span><span class="n">basic</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>          <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">basic</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>          <span class="k">for</span> <span class="p">(</span><span class="n">var</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">basic</span><span class="p">.</span><span class="n">count</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>          <span class="n">var</span> <span class="n">expand</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
-</span><span class='line'>          <span class="c1">//english chinese --default</span>
-</span><span class='line'>          <span class="n">var</span> <span class="n">type</span> <span class="o">=</span> <span class="n">basic</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">i</span><span class="p">).</span><span class="n">type</span><span class="p">.</span><span class="n">text</span><span class="p">().</span><span class="n">toLowerCase</span><span class="p">();</span>
-</span><span class='line'>          <span class="k">if</span> <span class="p">(</span> <span class="p">(</span><span class="n">type</span> <span class="o">===</span> <span class="err">&#39;</span><span class="n">ec</span><span class="err">&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">cc</span><span class="p">)</span> <span class="o">||</span>
-</span><span class='line'>              <span class="p">(</span><span class="n">type</span> <span class="o">===</span> <span class="err">&#39;</span><span class="n">ee</span><span class="err">&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">ee</span><span class="p">)</span> <span class="o">||</span>
-</span><span class='line'>              <span class="p">(</span><span class="n">type</span> <span class="o">===</span> <span class="err">&#39;</span><span class="n">ce</span><span class="err">&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">cc</span><span class="p">)</span> <span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>          <span class="n">res</span><span class="p">.</span><span class="n">push</span><span class="p">({</span>
-</span><span class='line'><span class="n">type</span> <span class="o">:</span> <span class="n">basic</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">i</span><span class="p">).</span><span class="n">name</span><span class="p">.</span><span class="n">text</span><span class="p">(),</span>
-</span><span class='line'><span class="n">word</span> <span class="o">:</span> <span class="p">[]</span>
-</span><span class='line'><span class="p">});</span>
-</span><span class='line'>          <span class="n">expand</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
-</span><span class='line'>          <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">if</span> <span class="p">(</span><span class="n">expand</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>  <span class="c1">//console.log(res[res.length - 1].type);</span>
-</span><span class='line'>  <span class="n">var</span> <span class="n">xword</span> <span class="o">=</span> <span class="n">basic</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">i</span><span class="p">)[</span><span class="err">&#39;</span><span class="n">authoritative</span><span class="o">-</span><span class="n">dict</span><span class="err">&#39;</span><span class="p">].</span><span class="n">word</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">xword</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">var</span> <span class="n">word</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="n">res</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">].</span><span class="n">word</span><span class="p">;</span>
-</span><span class='line'>  <span class="k">for</span><span class="p">(</span> <span class="n">var</span> <span class="n">word_c</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">word_c</span> <span class="o">&lt;</span> <span class="n">xword</span><span class="p">.</span><span class="n">count</span><span class="p">();</span> <span class="n">word_c</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>      <span class="n">word</span><span class="p">.</span><span class="n">push</span><span class="p">(</span> <span class="p">{</span> <span class="n">type</span> <span class="o">:</span> <span class="err">&#39;&#39;</span><span class="p">,</span> <span class="n">trs</span> <span class="o">:</span> <span class="p">[]});</span>
-</span><span class='line'>
-</span><span class='line'>      <span class="n">var</span> <span class="n">xtrs</span> <span class="o">=</span> <span class="n">xword</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">word_c</span><span class="p">).</span><span class="n">trs</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">xtrs</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>      <span class="n">var</span> <span class="n">trs</span> <span class="o">=</span> <span class="n">word</span><span class="p">[</span><span class="n">word</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span><span class="mi">1</span><span class="p">].</span><span class="n">trs</span><span class="p">;</span>
-</span><span class='line'>      <span class="n">trs</span><span class="p">.</span><span class="n">push</span><span class="p">({</span><span class="n">type</span> <span class="o">:</span> <span class="err">&#39;&#39;</span><span class="p">,</span> <span class="n">exp</span> <span class="o">:</span> <span class="p">[]});</span>
-</span><span class='line'>      <span class="n">var</span> <span class="n">exp</span> <span class="o">=</span> <span class="n">trs</span><span class="p">[</span><span class="n">trs</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">].</span><span class="n">exp</span><span class="p">;</span>
-</span><span class='line'>      <span class="k">for</span><span class="p">(</span><span class="n">var</span> <span class="n">trs_c</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">trs_c</span> <span class="o">&lt;</span> <span class="n">xtrs</span><span class="p">.</span><span class="n">count</span><span class="p">();</span> <span class="n">trs_c</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>          <span class="k">if</span><span class="p">(</span> <span class="n">xtrs</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">trs_c</span><span class="p">).</span><span class="n">pos</span> <span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>              <span class="n">trs</span><span class="p">[</span><span class="n">trs</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span><span class="mi">1</span><span class="p">].</span><span class="n">type</span> <span class="o">=</span> <span class="n">xtrs</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">trs_c</span><span class="p">).</span><span class="n">pos</span><span class="p">.</span><span class="n">text</span><span class="p">();</span>
-</span><span class='line'>          <span class="p">}</span>
-</span><span class='line'>          <span class="n">var</span> <span class="n">xtr</span> <span class="o">=</span> <span class="n">xtrs</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">trs_c</span><span class="p">).</span><span class="n">tr</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>          <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">xtr</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>          <span class="k">for</span><span class="p">(</span> <span class="n">var</span> <span class="n">tr_c</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">tr_c</span> <span class="o">&lt;</span> <span class="n">xtr</span><span class="p">.</span><span class="n">count</span><span class="p">();</span> <span class="n">tr_c</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>              <span class="k">try</span> <span class="p">{</span>
-</span><span class='line'>                  <span class="n">exp</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">xtr</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">tr_c</span><span class="p">).</span><span class="n">l</span><span class="p">.</span><span class="n">i</span><span class="p">.</span><span class="n">text</span><span class="p">());</span>
-</span><span class='line'>              <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>              <span class="p">}</span>
-</span><span class='line'>          <span class="p">}</span>
-</span><span class='line'>      <span class="p">}</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span><span class='line'>  <span class="c1">//console.log(basic.at(i).name.text());</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">});</span>
-</span><span class='line'><span class="k">return</span> <span class="n">res</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>这里面回调函数的参数就是遍历xml的关键，其相当与整个xml的父节点。在xmlreader库中，获取字节点只需要使用<code>.</code>即可取得，比如html有个字节点body可以使用html.body来取得body节点。对于每个节点有几个方法，text()是获取该节点内的文本内容。如果某一父节点有多个相同标签的字节点，那么就要用count和at来取得每一个字节点。还有一个attributes（）方法来获取标签内的属性。</p>
-
-<h3>4.输出结果</h3>
-
-<p>没什么好解释的，使用<code>console.log</code>输出。值得说明的只是bash的文本显示格式，bash可以控制文字的颜色，和样式（包括：正常，下划线，加粗等）。使用方法如下：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">RED</span> <span class="o">=</span> <span class="s">&quot;</span><span class="se">\033</span><span class="s">[1;31m&quot;</span><span class="p">;</span>
-</span><span class='line'><span class="n">GREEN</span> <span class="o">=</span> <span class="s">&quot;</span><span class="se">\033</span><span class="s">[1;32m&quot;</span><span class="p">;</span>
-</span><span class='line'><span class="n">DEFAULT</span> <span class="o">=</span> <span class="s">&quot;</span><span class="se">\033</span><span class="s">[0;49m&quot;</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">BOLD</span> <span class="o">=</span> <span class="s">&quot;</span><span class="se">\033</span><span class="s">[1m&quot;</span><span class="p">;</span>
-</span><span class='line'><span class="n">UNDERLINE</span> <span class="o">=</span> <span class="s">&quot;</span><span class="se">\033</span><span class="s">[4m&quot;</span><span class="p">;</span>
-</span><span class='line'><span class="n">NORMAL</span> <span class="o">=</span> <span class="s">&quot;</span><span class="se">\033</span><span class="s">[m&quot;</span><span class="p">;</span>
-</span><span class='line'><span class="n">p</span><span class="p">(</span><span class="err">&#39;</span>  <span class="err">&#39;</span> <span class="o">+</span> <span class="n">GREEN</span> <span class="o">+</span> <span class="n">BOLD</span> <span class="o">+</span> <span class="n">trs</span><span class="p">[</span><span class="n">trs_c</span><span class="p">].</span><span class="n">type</span> <span class="o">+</span> <span class="n">NORMAL</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<hr />
-
-<h3>即将添加到V2.0中的新功能</h3>
-
-<ul>
-<li>可以实现异步发音</li>
-</ul>
-
-
-<p>即发音和词典显示分两个进程进行，不会因为发音文件硕大影响单词显示速度，进而产生阻塞感。</p>
-
-<p>预计实现方式，是使用Node.js的http request下载下来发音的mp3文件，放到临时文件中，使用ffplay或其他工具播放，然后删除掉mp3文件。</p>
-
-<p>如果可能的话不是用ffplay，而是使用ffmpeg库开发一个mp3播放小程序，增强可移植行。</p>
 ]]></content>
   </entry>
   
