@@ -7,7 +7,7 @@
 	<meta name="author" content="LanderlYoung">
 
 	
-	<meta name="description" content="android Comments Android中service的使用 Android 中service的使用 笔记 Service是何物 service是安卓四大组件（Activity、BroadcastReceiver、ContentProvider、Service）之一。 &hellip;">
+	<meta name="description" content="java Comments Java序列化实践 java中实例的序列化是指将一个实例专程二进制流以用于网络传输或者固化存储之用。事实上，简单点说就是把一个类实例的成员变量存储下来，然而这个过程根据成员变量的类型的不同，可能会很简单，也可能会很复杂。序列化的用处还是很大的，比如跨进程通信（IPC， &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -96,6 +96,46 @@
   
 
 
+<time datetime="2015-04-04T18:06:20+08:00" data-updated="true" itemprop="datePublished"></time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/java/'>java</a>
+
+
+</div>
+		
+			<span class="comments"><a href="/blog/2015/04/04/javaxu-lie-hua-shi-jian/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2015/04/04/javaxu-lie-hua-shi-jian/" itemprop="url">Java序列化实践</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<p>java中实例的序列化是指将一个实例专程二进制流以用于网络传输或者固化存储之用。事实上，简单点说就是把一个类实例的成员变量存储下来，然而这个过程根据成员变量的类型的不同，可能会很简单，也可能会很复杂。序列化的用处还是很大的，比如跨进程通信（IPC，安卓中的IPC用到了序列化，只是安卓自身实现了一个比java更轻量级、更简单的序列化方式。但是原理大同小异），远程方法调用（RMI，事实上这个和安卓中的Binder通讯很类似）;此外还常见的是把实例序列化到数据库中以blob的形式存储。并且因为java语言本身就是跨平台设计的，序列化之后的数据也是平台无关的，因此你无需关心大小端之类的问题（以及类似于C语言的内存对齐问题）！既然序列化这个有用还是有必要学习一下的。（BTW，java EE中提供了更加严格的固化方案Java Date Object，或着也可以考虑使用Hibernate框架。）</p>
+
+<p>参考的资料是《Thinking in java》，和<a href="http://www.ibm.com/developerworks/cn/java/j-lo-serial/index.html">IBM的一篇博文</a>。下面来做几个实验，一边学习一边实践一下。</p>
+
+
+		
+		<a href="/blog/2015/04/04/javaxu-lie-hua-shi-jian/" class="more-link">Read on &rarr;</a>
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
 <time datetime="2014-11-09T18:07:03+08:00" data-updated="true" itemprop="datePublished"></time></div>
 		<div class="tags">
 
@@ -160,9 +200,9 @@ Service可以在应用的主进程中运行，也可以在单独的进程中运�
 	</div>
 	<h1 class="title" itemprop="name"><a href="/blog/2014/10/16/java-zhong-jnide-shi-yong/" itemprop="url">Java 中JNI的使用</a></h1>
 	<div class="entry-content" itemprop="articleBody">
-		<p>最近来电项目打算加入变声的功能，所以决定实用SoundTouch（这个库是LGPL协议的，所以对SoundTouch的代码没有修改的话是不需要开源代码的！LOL~~）。SoundTouch是用C++写的，因此需要一个Java的JNI封装，以便JAVA层比较方便的调用。这次用JNI封装SoundTouch的经历，还是颇有收获的。记录一下，方便以后查看。</p>
+		<p>JNI全称是<code>Java Native Interface</code>是在JAVA和Native层（包括但不限于C/C++）相互调用的接口规范。</p>
 
-<p>JNI全称是<code>Java Native Interface</code>是在JAVA和Native层（包括但不限于C/C++）相互调用的接口规范。</p>
+<p>JNI在JAVA1.1中正式推出，在JAVA1.2版本中加入了<code>JNI_OnLoad</code>，<code>JNI_OnUnload</code>方法，这两个方法还是很有用的，后面再说。</p>
 
 
 		
@@ -404,7 +444,7 @@ Service可以在应用的主进程中运行，也可以在单独的进程中运�
 <span class='line-number'>14</span>
 <span class='line-number'>15</span>
 </pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//在主线程中</span>
-</span><span class='line'><span class="kd">private</span> <span class="n">Handler</span> <span class="n">handler</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Handler</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'><span class="kd">private</span> <span class="n">Handler</span> <span class="n">handler</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Handler</span><span class="o">()</span> <span class="o">{</span>
 </span><span class='line'>    <span class="c1">// 处理子线程给我们发送的消息。</span>
 </span><span class='line'>    <span class="nd">@Override</span>
 </span><span class='line'>        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">handleMessage</span><span class="o">(</span><span class="n">android</span><span class="o">.</span><span class="na">os</span><span class="o">.</span><span class="na">Message</span> <span class="n">msg</span><span class="o">)</span> <span class="o">{</span>
@@ -504,44 +544,6 @@ Service可以在应用的主进程中运行，也可以在单独的进程中运�
 
 </article>
 
-
-    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-05-26T22:03:55+08:00" data-updated="true" itemprop="datePublished"></time></div>
-		<div class="tags">
-
-
-	<a class='category' href='/blog/categories/html5/'>html5</a>
-
-
-</div>
-		
-			<span class="comments"><a href="/blog/2014/05/26/wang-ye-zhong-shi-xian-yue-du-mo-shi/#disqus_thread">Comments</a></span>
-		
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2014/05/26/wang-ye-zhong-shi-xian-yue-du-mo-shi/" itemprop="url">网页中实现阅读模式</a></h1>
-	<div class="entry-content" itemprop="articleBody">
-		<p>一直觉得safari的阅读模式超赞，然后今天突然觉得想有一个。于是搜索了一些东西找到了readability这个东西。</p>
-
-
-		
-		<a href="/blog/2014/05/26/wang-ye-zhong-shi-xian-yue-du-mo-shi/" class="more-link">Read on &rarr;</a>
-	</div>
-
-</article>
-
 </div>
 <nav id="pagenavi">
     
@@ -553,7 +555,7 @@ Service可以在应用的主进程中运行，也可以在单独的进程中运�
 			</div>
 			<footer id="footer" class="inner">
 <p>
-  Copyright &copy; 2014 - LanderlYoung -
+  Copyright &copy; 2015 - LanderlYoung -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 </footer>
@@ -596,6 +598,10 @@ Service可以在应用的主进程中运行，也可以在单独的进程中运�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/04/04/javaxu-lie-hua-shi-jian/">Java序列化实践</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/09/androidzhong-servicede-shi-yong/">Android中service的使用</a>
       </li>
     
@@ -611,38 +617,34 @@ Service可以在应用的主进程中运行，也可以在单独的进程中运�
         <a href="/blog/2014/09/30/an-zhuo-jian-ting-xin-shou-dao-duan-xin/">安卓监听新收到短信</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/09/23/javazhong-xian-cheng-chi-de-shi-yong/">Java(Android)中线程池的使用</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/android/'>android (6)</a></li><li><a href='/blog/categories/git/'>git (2)</a></li><li><a href='/blog/categories/html5/'>html5 (5)</a></li><li><a href='/blog/categories/java/'>java (3)</a></li><li><a href='/blog/categories/javascript/'>javascript (3)</a></li><li><a href='/blog/categories/linux/'>linux (6)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/android/'>android (6)</a></li><li><a href='/blog/categories/git/'>git (2)</a></li><li><a href='/blog/categories/html5/'>html5 (5)</a></li><li><a href='/blog/categories/java/'>java (4)</a></li><li><a href='/blog/categories/javascript/'>javascript (3)</a></li><li><a href='/blog/categories/linux/'>linux (6)</a></li></ul>
 </section>
 <section>
 	<h1>Tags</h1>
 	<ul class="tag-cloud">
-		<li><a style="font-size: 86.3%" href="/tags/android/">Android</a></li>
-<li><a style="font-size: 85.6%" href="/tags/linux/">Linux</a></li>
-<li><a style="font-size: 97.4%" href="/tags/html5/">HTML5</a></li>
-<li><a style="font-size: 82.0%" href="/tags/java/">Java</a></li>
-<li><a style="font-size: 116.1%" href="/tags/node-dot-js/">Node.js</a></li>
-<li><a style="font-size: 92.9%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
-<li><a style="font-size: 94.2%" href="/tags/git/">Git</a></li>
-<li><a style="font-size: 70.8%" href="/tags/vim/">Vim</a></li>
-<li><a style="font-size: 110.9%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
-<li><a style="font-size: 99.7%" href="/tags/ui/">UI</a></li>
-<li><a style="font-size: 83.6%" href="/tags/zhuan-tie/">转贴</a></li>
-<li><a style="font-size: 100.7%" href="/tags/svg/">SVG</a></li>
-<li><a style="font-size: 113.2%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
-<li><a style="font-size: 103.7%" href="/tags/tencent/">tencent</a></li>
-<li><a style="font-size: 115.6%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
-<li><a style="font-size: 101.6%" href="/tags/java/">java</a></li>
-<li><a style="font-size: 96.5%" href="/tags/android/">android</a></li>
-<li><a style="font-size: 83.0%" href="/tags/intellij/">IntelliJ</a></li>
-<li><a style="font-size: 107.5%" href="/tags/jni/">JNI</a></li>
+		<li><a style="font-size: 100.2%" href="/tags/android/">Android</a></li>
+<li><a style="font-size: 95.7%" href="/tags/linux/">Linux</a></li>
+<li><a style="font-size: 90.4%" href="/tags/html5/">HTML5</a></li>
+<li><a style="font-size: 105.6%" href="/tags/java/">Java</a></li>
+<li><a style="font-size: 78.3%" href="/tags/node-dot-js/">Node.js</a></li>
+<li><a style="font-size: 111.3%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
+<li><a style="font-size: 106.2%" href="/tags/java/">java</a></li>
+<li><a style="font-size: 92.0%" href="/tags/git/">Git</a></li>
+<li><a style="font-size: 119.9%" href="/tags/vim/">Vim</a></li>
+<li><a style="font-size: 104.8%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
+<li><a style="font-size: 74.0%" href="/tags/zhuan-tie/">转贴</a></li>
+<li><a style="font-size: 99.0%" href="/tags/ui/">UI</a></li>
+<li><a style="font-size: 86.1%" href="/tags/svg/">SVG</a></li>
+<li><a style="font-size: 100.4%" href="/tags/tencent/">tencent</a></li>
+<li><a style="font-size: 98.6%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
+<li><a style="font-size: 118.0%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
+<li><a style="font-size: 108.1%" href="/tags/android/">android</a></li>
+<li><a style="font-size: 111.7%" href="/tags/intellij/">IntelliJ</a></li>
+<li><a style="font-size: 95.6%" href="/tags/jni/">JNI</a></li>
 
 	</ul>
 </section>

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: javascript | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/blog/categories/javascript/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-11-09T18:26:14+08:00</updated>
+  <updated>2015-04-05T01:54:39+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -64,7 +64,16 @@ while (true) {
 </code></pre>
 
 <p>其中<code>genRandomString(len)</code>返回长度为len的随机字符串。主要说明的是openSync方法，他是open方法的同步版，不过参数含义都是相同的。Node.js<a href="http://www.nodejs.org/api/fs.html#fs_fs_open_path_flags_mode_callback">官方文档</a>这么解释open的
-<blockquote><p>&hellip;</p></p><p><p>&lsquo;w&rsquo; - Open file for writing. The file is created (if it does not exist) or truncated (if it exists).<br/>&lsquo;wx&rsquo; - Like &lsquo;w&rsquo; but fails if path exists.<br/>&lsquo;w+&rsquo; - Open file for reading and writing. The file is created (if it does not exist) or truncated (if it exists).<br/>&lsquo;wx+&rsquo; - Like &lsquo;w+&rsquo; but fails if path exists.</p></p><p><p>&hellip;</p></blockquote></p>
+{% blockquote %}
+&hellip;</p>
+
+<p>&lsquo;w&rsquo; - Open file for writing. The file is created (if it does not exist) or truncated (if it exists).
+&lsquo;wx&rsquo; - Like &lsquo;w&rsquo; but fails if path exists.
+&lsquo;w+&rsquo; - Open file for reading and writing. The file is created (if it does not exist) or truncated (if it exists).
+&lsquo;wx+&rsquo; - Like &lsquo;w+&rsquo; but fails if path exists.</p>
+
+<p>&hellip;
+{% endblockquote %}</p>
 
 <p>也就是说当flags是&#8217;wx&#8217;时，如果文件已经存在会抛出异常（原文只说会fail，实验之后才确定是抛异常）。这样当检测到异常时在生成一个文件名看看能不能生成临时文件就行了。上诉代码就是这个思路。为了极端情况发生导致死循环，设置了循环的最大次数——10。</p>
 

@@ -106,9 +106,9 @@ API。抓包的应用是win8上的有道词典。得到的数据如下：</p>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">GET</span> <span class="o">/</span><span class="n">search</span><span class="o">?</span><span class="n">keyfrom</span><span class="o">=</span><span class="n">metrodict</span><span class="p">.</span><span class="n">main</span><span class="o">&amp;</span><span class="n">xmlDetail</span><span class="o">=</span><span class="kc">true</span><span class="o">&amp;</span><span class="n">doctype</span><span class="o">=</span><span class="n">xml</span><span class="o">&amp;</span><span class="n">xmlVersion</span><span class="o">=</span><span class="mf">8.1</span><span class="o">&amp;</span><span class="n">dogVersion</span><span class="o">=</span><span class="mf">1.0</span><span class="o">&amp;</span><span class="n">q</span><span class="o">=</span><span class="n">node</span><span class="o">&amp;</span><span class="n">le</span><span class="o">=</span><span class="n">eng</span><span class="o">&amp;</span><span class="n">keyfrom</span><span class="o">=</span><span class="n">metrodict</span><span class="p">.</span><span class="n">input</span><span class="o">&amp;</span><span class="n">client</span><span class="o">=</span><span class="n">metrodict</span><span class="o">&amp;</span><span class="n">id</span><span class="o">=</span><span class="mi">3019615280104595010663601040404140109040186114402823410158212201782429070109</span><span class="o">&amp;</span><span class="n">appVer</span><span class="o">=</span><span class="mf">1.1.49.6663</span><span class="p">.</span><span class="n">beta</span><span class="o">&amp;</span><span class="n">vendor</span><span class="o">=</span><span class="n">store</span> <span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">GET</span> <span class="o">/</span><span class="n">search</span><span class="o">?</span><span class="n">keyfrom</span><span class="o">=</span><span class="n">metrodict</span><span class="p">.</span><span class="n">main</span><span class="o">&amp;</span><span class="n">xmlDetail</span><span class="o">=</span><span class="nb">true</span><span class="o">&amp;</span><span class="n">doctype</span><span class="o">=</span><span class="n">xml</span><span class="o">&amp;</span><span class="n">xmlVersion</span><span class="o">=</span><span class="mf">8.1</span><span class="o">&amp;</span><span class="n">dogVersion</span><span class="o">=</span><span class="mf">1.0</span><span class="o">&amp;</span><span class="n">q</span><span class="o">=</span><span class="n">node</span><span class="o">&amp;</span><span class="n">le</span><span class="o">=</span><span class="n">eng</span><span class="o">&amp;</span><span class="n">keyfrom</span><span class="o">=</span><span class="n">metrodict</span><span class="p">.</span><span class="n">input</span><span class="o">&amp;</span><span class="n">client</span><span class="o">=</span><span class="n">metrodict</span><span class="o">&amp;</span><span class="n">id</span><span class="o">=</span><span class="mi">3019615280104595010663601040404140109040186114402823410158212201782429070109</span><span class="o">&amp;</span><span class="n">appVer</span><span class="o">=</span><span class="mf">1.1.49.6663</span><span class="p">.</span><span class="n">beta</span><span class="o">&amp;</span><span class="n">vendor</span><span class="o">=</span><span class="n">store</span> <span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
 </span><span class='line'>
-</span><span class='line'><span class="nl">Host:</span> <span class="n">dict</span><span class="p">.</span><span class="n">youdao</span><span class="p">.</span><span class="n">com</span>
+</span><span class='line'><span class="nl">Host</span><span class="p">:</span> <span class="n">dict</span><span class="p">.</span><span class="n">youdao</span><span class="p">.</span><span class="n">com</span>
 </span><span class='line'>
 </span><span class='line'><span class="p">...</span> <span class="p">...</span>
 </span></code></pre></td></tr></table></div></figure>
@@ -157,16 +157,16 @@ API。抓包的应用是win8上的有道词典。得到的数据如下：</p>
 <span class='line-number'>10</span>
 <span class='line-number'>11</span>
 </pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">GET</span> <span class="o">/</span><span class="n">dictvoice</span><span class="o">?</span><span class="n">audio</span><span class="o">=</span><span class="n">world</span><span class="o">&amp;</span><span class="n">type</span><span class="o">=</span><span class="mi">2</span> <span class="n">HTTP</span><span class="o">/</span><span class="mf">1.1</span>
-</span><span class='line'><span class="nl">Accept:</span> <span class="err">*/</span><span class="o">*</span>
-</span><span class='line'><span class="n">If</span><span class="o">-</span><span class="n">Modified</span><span class="o">-</span><span class="nl">Since:</span> <span class="n">Sun</span><span class="p">,</span>  <span class="mo">05</span> <span class="n">Jan</span> <span class="mi">2014</span> <span class="mi">14</span><span class="o">:</span><span class="mo">04</span><span class="o">:</span><span class="mi">56</span> <span class="n">GMT</span>
-</span><span class='line'><span class="n">User</span><span class="o">-</span><span class="nl">Agent:</span> <span class="n">Mozilla</span><span class="o">/</span><span class="mf">5.0</span> <span class="p">(</span><span class="n">compatible</span><span class="p">;</span> <span class="n">MSIE</span> <span class="mf">10.0</span><span class="p">;</span> <span class="n">Windows</span> <span class="n">NT</span> <span class="mf">6.2</span><span class="p">;</span> <span class="n">Trident</span><span class="o">/</span><span class="mf">6.0</span><span class="p">;</span> <span class="n">MSAppHost</span><span class="o">/</span><span class="mf">1.0</span><span class="p">)</span>
-</span><span class='line'><span class="n">GetContentFeatures</span><span class="p">.</span><span class="n">DLNA</span><span class="p">.</span><span class="nl">ORG:</span> <span class="mi">1</span>
-</span><span class='line'><span class="nl">Pragma:</span> <span class="n">getIfoFileURI</span><span class="p">.</span><span class="n">dlna</span><span class="p">.</span><span class="n">org</span>
-</span><span class='line'><span class="n">Accept</span><span class="o">-</span><span class="nl">Language:</span> <span class="n">zh</span><span class="o">-</span><span class="n">Hans</span><span class="o">-</span><span class="n">CN</span><span class="p">,</span> <span class="n">zh</span><span class="o">-</span><span class="n">Hans</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">en</span><span class="o">-</span><span class="n">US</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">en</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.3</span>
-</span><span class='line'><span class="n">UA</span><span class="o">-</span><span class="nl">CPU:</span> <span class="n">AMD64</span>
-</span><span class='line'><span class="n">Accept</span><span class="o">-</span><span class="nl">Encoding:</span> <span class="n">gzip</span><span class="p">,</span>  <span class="n">deflate</span>
-</span><span class='line'><span class="nl">Host:</span> <span class="n">dict</span><span class="p">.</span><span class="n">youdao</span><span class="p">.</span><span class="n">com</span>
-</span><span class='line'><span class="nl">Connection:</span> <span class="n">Keep</span><span class="o">-</span><span class="n">Alive</span>
+</span><span class='line'><span class="nl">Accept</span><span class="p">:</span> <span class="err">*/</span><span class="o">*</span>
+</span><span class='line'><span class="n">If</span><span class="o">-</span><span class="n">Modified</span><span class="o">-</span><span class="nl">Since</span><span class="p">:</span> <span class="n">Sun</span><span class="p">,</span>  <span class="mo">05</span> <span class="n">Jan</span> <span class="mi">2014</span> <span class="mi">14</span><span class="o">:</span><span class="mo">04</span><span class="o">:</span><span class="mi">56</span> <span class="n">GMT</span>
+</span><span class='line'><span class="n">User</span><span class="o">-</span><span class="nl">Agent</span><span class="p">:</span> <span class="n">Mozilla</span><span class="o">/</span><span class="mf">5.0</span> <span class="p">(</span><span class="n">compatible</span><span class="p">;</span> <span class="n">MSIE</span> <span class="mf">10.0</span><span class="p">;</span> <span class="n">Windows</span> <span class="n">NT</span> <span class="mf">6.2</span><span class="p">;</span> <span class="n">Trident</span><span class="o">/</span><span class="mf">6.0</span><span class="p">;</span> <span class="n">MSAppHost</span><span class="o">/</span><span class="mf">1.0</span><span class="p">)</span>
+</span><span class='line'><span class="n">GetContentFeatures</span><span class="p">.</span><span class="n">DLNA</span><span class="p">.</span><span class="nl">ORG</span><span class="p">:</span> <span class="mi">1</span>
+</span><span class='line'><span class="nl">Pragma</span><span class="p">:</span> <span class="n">getIfoFileURI</span><span class="p">.</span><span class="n">dlna</span><span class="p">.</span><span class="n">org</span>
+</span><span class='line'><span class="n">Accept</span><span class="o">-</span><span class="nl">Language</span><span class="p">:</span> <span class="n">zh</span><span class="o">-</span><span class="n">Hans</span><span class="o">-</span><span class="n">CN</span><span class="p">,</span> <span class="n">zh</span><span class="o">-</span><span class="n">Hans</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">en</span><span class="o">-</span><span class="n">US</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">en</span><span class="p">;</span><span class="n">q</span><span class="o">=</span><span class="mf">0.3</span>
+</span><span class='line'><span class="n">UA</span><span class="o">-</span><span class="nl">CPU</span><span class="p">:</span> <span class="n">AMD64</span>
+</span><span class='line'><span class="n">Accept</span><span class="o">-</span><span class="nl">Encoding</span><span class="p">:</span> <span class="n">gzip</span><span class="p">,</span>  <span class="n">deflate</span>
+</span><span class='line'><span class="nl">Host</span><span class="p">:</span> <span class="n">dict</span><span class="p">.</span><span class="n">youdao</span><span class="p">.</span><span class="n">com</span>
+</span><span class='line'><span class="nl">Connection</span><span class="p">:</span> <span class="n">Keep</span><span class="o">-</span><span class="n">Alive</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -210,7 +210,7 @@ API。抓包的应用是win8上的有道词典。得到的数据如下：</p>
 			</div>
 			<footer id="footer" class="inner">
 <p>
-  Copyright &copy; 2014 - LanderlYoung -
+  Copyright &copy; 2015 - LanderlYoung -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 </footer>
@@ -256,6 +256,10 @@ API。抓包的应用是win8上的有道词典。得到的数据如下：</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/04/04/javaxu-lie-hua-shi-jian/">Java序列化实践</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/09/androidzhong-servicede-shi-yong/">Android中service的使用</a>
       </li>
     
@@ -271,38 +275,34 @@ API。抓包的应用是win8上的有道词典。得到的数据如下：</p>
         <a href="/blog/2014/09/30/an-zhuo-jian-ting-xin-shou-dao-duan-xin/">安卓监听新收到短信</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/09/23/javazhong-xian-cheng-chi-de-shi-yong/">Java(Android)中线程池的使用</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/android/'>android (6)</a></li><li><a href='/blog/categories/git/'>git (2)</a></li><li><a href='/blog/categories/html5/'>html5 (5)</a></li><li><a href='/blog/categories/java/'>java (3)</a></li><li><a href='/blog/categories/javascript/'>javascript (3)</a></li><li><a href='/blog/categories/linux/'>linux (6)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/android/'>android (6)</a></li><li><a href='/blog/categories/git/'>git (2)</a></li><li><a href='/blog/categories/html5/'>html5 (5)</a></li><li><a href='/blog/categories/java/'>java (4)</a></li><li><a href='/blog/categories/javascript/'>javascript (3)</a></li><li><a href='/blog/categories/linux/'>linux (6)</a></li></ul>
 </section>
 <section>
 	<h1>Tags</h1>
 	<ul class="tag-cloud">
-		<li><a style="font-size: 74.2%" href="/tags/android/">Android</a></li>
-<li><a style="font-size: 105.3%" href="/tags/linux/">Linux</a></li>
-<li><a style="font-size: 70.1%" href="/tags/html5/">HTML5</a></li>
-<li><a style="font-size: 119.1%" href="/tags/java/">Java</a></li>
-<li><a style="font-size: 111.3%" href="/tags/node-dot-js/">Node.js</a></li>
-<li><a style="font-size: 92.3%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
-<li><a style="font-size: 118.7%" href="/tags/git/">Git</a></li>
-<li><a style="font-size: 73.4%" href="/tags/vim/">Vim</a></li>
-<li><a style="font-size: 117.3%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
-<li><a style="font-size: 73.5%" href="/tags/ui/">UI</a></li>
-<li><a style="font-size: 98.7%" href="/tags/zhuan-tie/">转贴</a></li>
-<li><a style="font-size: 100.7%" href="/tags/svg/">SVG</a></li>
-<li><a style="font-size: 85.9%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
-<li><a style="font-size: 105.9%" href="/tags/tencent/">tencent</a></li>
-<li><a style="font-size: 111.7%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
-<li><a style="font-size: 78.7%" href="/tags/java/">java</a></li>
-<li><a style="font-size: 117.9%" href="/tags/android/">android</a></li>
-<li><a style="font-size: 107.0%" href="/tags/intellij/">IntelliJ</a></li>
-<li><a style="font-size: 107.1%" href="/tags/jni/">JNI</a></li>
+		<li><a style="font-size: 82.4%" href="/tags/android/">Android</a></li>
+<li><a style="font-size: 90.0%" href="/tags/linux/">Linux</a></li>
+<li><a style="font-size: 88.9%" href="/tags/html5/">HTML5</a></li>
+<li><a style="font-size: 84.3%" href="/tags/java/">Java</a></li>
+<li><a style="font-size: 93.4%" href="/tags/node-dot-js/">Node.js</a></li>
+<li><a style="font-size: 99.8%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
+<li><a style="font-size: 74.2%" href="/tags/java/">java</a></li>
+<li><a style="font-size: 80.0%" href="/tags/git/">Git</a></li>
+<li><a style="font-size: 106.9%" href="/tags/vim/">Vim</a></li>
+<li><a style="font-size: 77.4%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
+<li><a style="font-size: 105.5%" href="/tags/zhuan-tie/">转贴</a></li>
+<li><a style="font-size: 100.9%" href="/tags/ui/">UI</a></li>
+<li><a style="font-size: 110.4%" href="/tags/svg/">SVG</a></li>
+<li><a style="font-size: 106.7%" href="/tags/tencent/">tencent</a></li>
+<li><a style="font-size: 113.5%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
+<li><a style="font-size: 102.4%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
+<li><a style="font-size: 81.8%" href="/tags/android/">android</a></li>
+<li><a style="font-size: 114.7%" href="/tags/intellij/">IntelliJ</a></li>
+<li><a style="font-size: 72.7%" href="/tags/jni/">JNI</a></li>
 
 	</ul>
 </section>

@@ -114,7 +114,7 @@ private Handler handler = new Handler() { // 处理子线程给我们发送的�
 <span class='line-number'>14</span>
 <span class='line-number'>15</span>
 </pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//在主线程中</span>
-</span><span class='line'><span class="kd">private</span> <span class="n">Handler</span> <span class="n">handler</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Handler</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'><span class="kd">private</span> <span class="n">Handler</span> <span class="n">handler</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Handler</span><span class="o">()</span> <span class="o">{</span>
 </span><span class='line'>    <span class="c1">// 处理子线程给我们发送的消息。</span>
 </span><span class='line'>    <span class="nd">@Override</span>
 </span><span class='line'>        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">handleMessage</span><span class="o">(</span><span class="n">android</span><span class="o">.</span><span class="na">os</span><span class="o">.</span><span class="na">Message</span> <span class="n">msg</span><span class="o">)</span> <span class="o">{</span>
@@ -168,8 +168,8 @@ private Handler handler = new Handler() { // 处理子线程给我们发送的�
 </span><span class='line'>    <span class="c1">// 在run方法中完成网络耗时的操作</span>
 </span><span class='line'>    <span class="nd">@Override</span>
 </span><span class='line'>        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">HttpClient</span> <span class="n">httpClient</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DefaultHttpClient</span><span class="o">();</span>
-</span><span class='line'>            <span class="n">HttpGet</span> <span class="n">httpGet</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HttpGet</span><span class="o">(</span><span class="n">imgPath</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">HttpClient</span> <span class="n">httpClient</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">DefaultHttpClient</span><span class="o">();</span>
+</span><span class='line'>            <span class="n">HttpGet</span> <span class="n">httpGet</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">HttpGet</span><span class="o">(</span><span class="n">imgPath</span><span class="o">);</span>
 </span><span class='line'>            <span class="n">HttpResponse</span> <span class="n">httpResponse</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
 </span><span class='line'>            <span class="k">try</span> <span class="o">{</span>
 </span><span class='line'>                <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="s">&quot;debug&quot;</span><span class="o">,</span> <span class="s">&quot;start download picture in thread:&quot;</span> <span class="o">+</span>
@@ -219,7 +219,7 @@ private Handler handler = new Handler() { // 处理子线程给我们发送的�
 </span><span class='line'>        <span class="n">sent</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="na">enqueueMessage</span><span class="o">(</span><span class="n">msg</span><span class="o">,</span> <span class="n">uptimeMillis</span><span class="o">);</span>
 </span><span class='line'>    <span class="o">}</span>
 </span><span class='line'>    <span class="k">else</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">RuntimeException</span> <span class="n">e</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RuntimeException</span><span class="o">(</span>
+</span><span class='line'>        <span class="n">RuntimeException</span> <span class="n">e</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">RuntimeException</span><span class="o">(</span>
 </span><span class='line'>                <span class="k">this</span> <span class="o">+</span> <span class="s">&quot; sendMessageAtTime() called with no mQueue&quot;</span><span class="o">);</span>
 </span><span class='line'>        <span class="n">Log</span><span class="o">.</span><span class="na">w</span><span class="o">(</span><span class="s">&quot;Looper&quot;</span><span class="o">,</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">(),</span> <span class="n">e</span><span class="o">);</span>
 </span><span class='line'>    <span class="o">}</span>
@@ -470,7 +470,7 @@ Message中的target是这么定义的：</p>
 			</div>
 			<footer id="footer" class="inner">
 <p>
-  Copyright &copy; 2014 - LanderlYoung -
+  Copyright &copy; 2015 - LanderlYoung -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 </footer>
@@ -516,6 +516,10 @@ Message中的target是这么定义的：</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2015/04/04/javaxu-lie-hua-shi-jian/">Java序列化实践</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2014/11/09/androidzhong-servicede-shi-yong/">Android中service的使用</a>
       </li>
     
@@ -531,38 +535,34 @@ Message中的target是这么定义的：</p>
         <a href="/blog/2014/09/30/an-zhuo-jian-ting-xin-shou-dao-duan-xin/">安卓监听新收到短信</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/09/23/javazhong-xian-cheng-chi-de-shi-yong/">Java(Android)中线程池的使用</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/android/'>android (6)</a></li><li><a href='/blog/categories/git/'>git (2)</a></li><li><a href='/blog/categories/html5/'>html5 (5)</a></li><li><a href='/blog/categories/java/'>java (3)</a></li><li><a href='/blog/categories/javascript/'>javascript (3)</a></li><li><a href='/blog/categories/linux/'>linux (6)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/android/'>android (6)</a></li><li><a href='/blog/categories/git/'>git (2)</a></li><li><a href='/blog/categories/html5/'>html5 (5)</a></li><li><a href='/blog/categories/java/'>java (4)</a></li><li><a href='/blog/categories/javascript/'>javascript (3)</a></li><li><a href='/blog/categories/linux/'>linux (6)</a></li></ul>
 </section>
 <section>
 	<h1>Tags</h1>
 	<ul class="tag-cloud">
-		<li><a style="font-size: 99.2%" href="/tags/android/">Android</a></li>
-<li><a style="font-size: 104.3%" href="/tags/linux/">Linux</a></li>
-<li><a style="font-size: 107.4%" href="/tags/html5/">HTML5</a></li>
-<li><a style="font-size: 116.5%" href="/tags/java/">Java</a></li>
-<li><a style="font-size: 100.5%" href="/tags/node-dot-js/">Node.js</a></li>
-<li><a style="font-size: 84.3%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
-<li><a style="font-size: 118.4%" href="/tags/git/">Git</a></li>
-<li><a style="font-size: 109.9%" href="/tags/vim/">Vim</a></li>
-<li><a style="font-size: 72.4%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
-<li><a style="font-size: 87.3%" href="/tags/ui/">UI</a></li>
-<li><a style="font-size: 89.1%" href="/tags/zhuan-tie/">转贴</a></li>
-<li><a style="font-size: 101.8%" href="/tags/svg/">SVG</a></li>
-<li><a style="font-size: 117.2%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
-<li><a style="font-size: 83.0%" href="/tags/tencent/">tencent</a></li>
-<li><a style="font-size: 87.4%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
-<li><a style="font-size: 108.3%" href="/tags/java/">java</a></li>
-<li><a style="font-size: 90.3%" href="/tags/android/">android</a></li>
-<li><a style="font-size: 96.1%" href="/tags/intellij/">IntelliJ</a></li>
-<li><a style="font-size: 91.0%" href="/tags/jni/">JNI</a></li>
+		<li><a style="font-size: 84.7%" href="/tags/android/">Android</a></li>
+<li><a style="font-size: 72.9%" href="/tags/linux/">Linux</a></li>
+<li><a style="font-size: 94.1%" href="/tags/html5/">HTML5</a></li>
+<li><a style="font-size: 106.9%" href="/tags/java/">Java</a></li>
+<li><a style="font-size: 88.2%" href="/tags/node-dot-js/">Node.js</a></li>
+<li><a style="font-size: 79.2%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
+<li><a style="font-size: 118.6%" href="/tags/java/">java</a></li>
+<li><a style="font-size: 119.1%" href="/tags/git/">Git</a></li>
+<li><a style="font-size: 89.0%" href="/tags/vim/">Vim</a></li>
+<li><a style="font-size: 117.8%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
+<li><a style="font-size: 100.9%" href="/tags/zhuan-tie/">转贴</a></li>
+<li><a style="font-size: 76.7%" href="/tags/ui/">UI</a></li>
+<li><a style="font-size: 98.1%" href="/tags/svg/">SVG</a></li>
+<li><a style="font-size: 84.3%" href="/tags/tencent/">tencent</a></li>
+<li><a style="font-size: 85.4%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
+<li><a style="font-size: 71.5%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
+<li><a style="font-size: 112.8%" href="/tags/android/">android</a></li>
+<li><a style="font-size: 91.6%" href="/tags/intellij/">IntelliJ</a></li>
+<li><a style="font-size: 74.9%" href="/tags/jni/">JNI</a></li>
 
 	</ul>
 </section>

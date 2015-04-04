@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: 转贴 | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/tags/zhuan-tie/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2014-11-09T18:26:14+08:00</updated>
+  <updated>2015-04-05T01:54:39+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -63,7 +63,7 @@
 
 <p>rootoorotor下载的是kali Linux 1.0 64位版本，在安装好之后就会进入kali linux默认的桌面环境(gnome-fallback)，如图所示：</p>
 
-<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053037648.png">http://www.2cto.com/uploadfile/2013/0405/20130405053037648.png</a>&#8221; width=&#8221;345&#8221; height=&#8221;614&#8221;></p>
+<p>{% img center <a href="http://www.2cto.com/uploadfile/2013/0405/20130405053037648.png">http://www.2cto.com/uploadfile/2013/0405/20130405053037648.png</a> 345 614 %}</p>
 
 <p>然后打开终端，输入</p>
 
@@ -141,7 +141,7 @@ deb http://security.kali.org/kali-security kali/updates main contrib non-free
 
 <p>确认手工配置，选择你喜欢的输入法，如图：</p>
 
-<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053039870.png">http://www.2cto.com/uploadfile/2013/0405/20130405053039870.png</a>&#8221; width=&#8221;440&#8221; height=&#8221;610&#8221;>
+<p>{% img center <a href="http://www.2cto.com/uploadfile/2013/0405/20130405053039870.png">http://www.2cto.com/uploadfile/2013/0405/20130405053039870.png</a> 440 610 %}
 然后重启系统~</p>
 
 <p>如果你使用的是ibus：</p>
@@ -167,7 +167,7 @@ deb http://security.kali.org/kali-security kali/updates main contrib non-free
 
 <p>如图所示：</p>
 
-<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053040253.png">http://www.2cto.com/uploadfile/2013/0405/20130405053040253.png</a>&#8221; width=&#8221;415&#8221; height=&#8221;745&#8221;></p>
+<p>{% img center <a href="http://www.2cto.com/uploadfile/2013/0405/20130405053040253.png">http://www.2cto.com/uploadfile/2013/0405/20130405053040253.png</a> 415 745 %}</p>
 
 <p>在终端下输入：</p>
 
@@ -180,7 +180,7 @@ deb http://security.kali.org/kali-security kali/updates main contrib non-free
 
 <p>如图所示：</p>
 
-<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053041263.png">http://www.2cto.com/uploadfile/2013/0405/20130405053041263.png</a>&#8221; width=&#8221;514&#8221; height=&#8221;659&#8221;></p>
+<p>{% img center <a href="http://www.2cto.com/uploadfile/2013/0405/20130405053041263.png">http://www.2cto.com/uploadfile/2013/0405/20130405053041263.png</a> 514 659 %}</p>
 
 <p>完成后按Esc键进入命令行模式，键入:w来保存</p>
 
@@ -305,7 +305,7 @@ apt-get install audacious&lt;br&gt;
 
 <p>如图：</p>
 
-<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053042483.png">http://www.2cto.com/uploadfile/2013/0405/20130405053042483.png</a>&#8221; width=&#8221;440&#8221; height=&#8221;614&#8221;></p>
+<p>{% img  center <a href="http://www.2cto.com/uploadfile/2013/0405/20130405053042483.png">http://www.2cto.com/uploadfile/2013/0405/20130405053042483.png</a> 440 614 %}</p>
 
 <p>如果想隐藏图标，可以打开系统工具——主菜单 来选择隐藏，如果您再使用这个工具时没有看见Kali Linux菜单, 请下载我修改好的文件放入 /home/你的用户名/.config/menus 文件夹，然后使用组合键alt+F2输入r ——回车，既可重启gome-shell</p>
 
@@ -315,7 +315,7 @@ apt-get install audacious&lt;br&gt;
 
 <p>（注意：“.”开头的目录或文件是隐藏的，按ctrl+H才可查看，或者在终端中输入 ls -a）</p>
 
-<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053044953.png">http://www.2cto.com/uploadfile/2013/0405/20130405053044953.png</a>&#8221; width=&#8221;364&#8221; height=&#8221;446&#8221;></p>
+<p>{% img center <a href="http://www.2cto.com/uploadfile/2013/0405/20130405053044953.png">http://www.2cto.com/uploadfile/2013/0405/20130405053044953.png</a> 364 446 %}</p>
 
 <h2>安装Faenza图标：</h2>
 
@@ -330,7 +330,7 @@ chmod u+x INSTALL
 
 <p>然后根据提示安装即可，安装完成之后使用gnome-tweak-tool工具更换图标：</p>
 
-<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053045872.png">http://www.2cto.com/uploadfile/2013/0405/20130405053045872.png</a>&#8221; width=&#8221;499&#8221; height=&#8221;643&#8221;></p>
+<p>{% img center <a href="http://www.2cto.com/uploadfile/2013/0405/20130405053045872.png">http://www.2cto.com/uploadfile/2013/0405/20130405053045872.png</a> 499 643 %}</p>
 
 <p><strong>优化字体显示：</strong></p>
 
@@ -356,7 +356,7 @@ chmod u+x INSTALL
 
 <p>渲染之后的显示效果截图：</p>
 
-<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053046521.png">http://www.2cto.com/uploadfile/2013/0405/20130405053046521.png</a>&#8221;&#8221; width=&#8221;544&#8221; height=&#8221;587&#8221;></p>
+<p>{% img center <a href="http://www.2cto.com/uploadfile/2013/0405/20130405053046521.png">http://www.2cto.com/uploadfile/2013/0405/20130405053046521.png</a>&#8221; 544 587 %}</p>
 
 <p><strong>修改启动分辨率：</strong></p>
 
@@ -387,9 +387,9 @@ chmod u+x INSTALL
 
 <p>到此为止，Kali Linux的桌面环境基本折腾完成，上图：</p>
 
-<p><img class="center  <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053047828.png">http://www.2cto.com/uploadfile/2013/0405/20130405053047828.png</a>&#8221; width=&#8221;345&#8221; height=&#8221;614&#8221;></p>
+<p>{% img center  <a href="http://www.2cto.com/uploadfile/2013/0405/20130405053047828.png">http://www.2cto.com/uploadfile/2013/0405/20130405053047828.png</a> 345 614 %}</p>
 
-<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053049272.png">http://www.2cto.com/uploadfile/2013/0405/20130405053049272.png</a>&#8221; width=&#8221;345&#8221; height=&#8221;614&#8221;></p>
+<p>{% img center <a href="http://www.2cto.com/uploadfile/2013/0405/20130405053049272.png">http://www.2cto.com/uploadfile/2013/0405/20130405053049272.png</a> 345 614 %}</p>
 ]]></content>
   </entry>
   
