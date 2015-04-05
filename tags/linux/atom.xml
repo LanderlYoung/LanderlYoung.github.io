@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: Linux | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/tags/linux/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2015-04-05T01:54:39+08:00</updated>
+  <updated>2015-04-05T15:47:46+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -81,7 +81,7 @@
 
 <p>rootoorotor下载的是kali Linux 1.0 64位版本，在安装好之后就会进入kali linux默认的桌面环境(gnome-fallback)，如图所示：</p>
 
-<p>{% img center <a href="http://www.2cto.com/uploadfile/2013/0405/20130405053037648.png">http://www.2cto.com/uploadfile/2013/0405/20130405053037648.png</a> 345 614 %}</p>
+<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053037648.png">http://www.2cto.com/uploadfile/2013/0405/20130405053037648.png</a>&#8221; width=&#8221;345&#8221; height=&#8221;614&#8221;></p>
 
 <p>然后打开终端，输入</p>
 
@@ -159,7 +159,7 @@ deb http://security.kali.org/kali-security kali/updates main contrib non-free
 
 <p>确认手工配置，选择你喜欢的输入法，如图：</p>
 
-<p>{% img center <a href="http://www.2cto.com/uploadfile/2013/0405/20130405053039870.png">http://www.2cto.com/uploadfile/2013/0405/20130405053039870.png</a> 440 610 %}
+<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053039870.png">http://www.2cto.com/uploadfile/2013/0405/20130405053039870.png</a>&#8221; width=&#8221;440&#8221; height=&#8221;610&#8221;>
 然后重启系统~</p>
 
 <p>如果你使用的是ibus：</p>
@@ -185,7 +185,7 @@ deb http://security.kali.org/kali-security kali/updates main contrib non-free
 
 <p>如图所示：</p>
 
-<p>{% img center <a href="http://www.2cto.com/uploadfile/2013/0405/20130405053040253.png">http://www.2cto.com/uploadfile/2013/0405/20130405053040253.png</a> 415 745 %}</p>
+<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053040253.png">http://www.2cto.com/uploadfile/2013/0405/20130405053040253.png</a>&#8221; width=&#8221;415&#8221; height=&#8221;745&#8221;></p>
 
 <p>在终端下输入：</p>
 
@@ -198,7 +198,7 @@ deb http://security.kali.org/kali-security kali/updates main contrib non-free
 
 <p>如图所示：</p>
 
-<p>{% img center <a href="http://www.2cto.com/uploadfile/2013/0405/20130405053041263.png">http://www.2cto.com/uploadfile/2013/0405/20130405053041263.png</a> 514 659 %}</p>
+<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053041263.png">http://www.2cto.com/uploadfile/2013/0405/20130405053041263.png</a>&#8221; width=&#8221;514&#8221; height=&#8221;659&#8221;></p>
 
 <p>完成后按Esc键进入命令行模式，键入:w来保存</p>
 
@@ -323,7 +323,7 @@ apt-get install audacious&lt;br&gt;
 
 <p>如图：</p>
 
-<p>{% img  center <a href="http://www.2cto.com/uploadfile/2013/0405/20130405053042483.png">http://www.2cto.com/uploadfile/2013/0405/20130405053042483.png</a> 440 614 %}</p>
+<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053042483.png">http://www.2cto.com/uploadfile/2013/0405/20130405053042483.png</a>&#8221; width=&#8221;440&#8221; height=&#8221;614&#8221;></p>
 
 <p>如果想隐藏图标，可以打开系统工具——主菜单 来选择隐藏，如果您再使用这个工具时没有看见Kali Linux菜单, 请下载我修改好的文件放入 /home/你的用户名/.config/menus 文件夹，然后使用组合键alt+F2输入r ——回车，既可重启gome-shell</p>
 
@@ -333,7 +333,7 @@ apt-get install audacious&lt;br&gt;
 
 <p>（注意：“.”开头的目录或文件是隐藏的，按ctrl+H才可查看，或者在终端中输入 ls -a）</p>
 
-<p>{% img center <a href="http://www.2cto.com/uploadfile/2013/0405/20130405053044953.png">http://www.2cto.com/uploadfile/2013/0405/20130405053044953.png</a> 364 446 %}</p>
+<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053044953.png">http://www.2cto.com/uploadfile/2013/0405/20130405053044953.png</a>&#8221; width=&#8221;364&#8221; height=&#8221;446&#8221;></p>
 
 <h2>安装Faenza图标：</h2>
 
@@ -348,7 +348,7 @@ chmod u+x INSTALL
 
 <p>然后根据提示安装即可，安装完成之后使用gnome-tweak-tool工具更换图标：</p>
 
-<p>{% img center <a href="http://www.2cto.com/uploadfile/2013/0405/20130405053045872.png">http://www.2cto.com/uploadfile/2013/0405/20130405053045872.png</a> 499 643 %}</p>
+<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053045872.png">http://www.2cto.com/uploadfile/2013/0405/20130405053045872.png</a>&#8221; width=&#8221;499&#8221; height=&#8221;643&#8221;></p>
 
 <p><strong>优化字体显示：</strong></p>
 
@@ -374,7 +374,7 @@ chmod u+x INSTALL
 
 <p>渲染之后的显示效果截图：</p>
 
-<p>{% img center <a href="http://www.2cto.com/uploadfile/2013/0405/20130405053046521.png">http://www.2cto.com/uploadfile/2013/0405/20130405053046521.png</a>&#8221; 544 587 %}</p>
+<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053046521.png">http://www.2cto.com/uploadfile/2013/0405/20130405053046521.png</a>&#8221;&#8221; width=&#8221;544&#8221; height=&#8221;587&#8221;></p>
 
 <p><strong>修改启动分辨率：</strong></p>
 
@@ -405,9 +405,9 @@ chmod u+x INSTALL
 
 <p>到此为止，Kali Linux的桌面环境基本折腾完成，上图：</p>
 
-<p>{% img center  <a href="http://www.2cto.com/uploadfile/2013/0405/20130405053047828.png">http://www.2cto.com/uploadfile/2013/0405/20130405053047828.png</a> 345 614 %}</p>
+<p><img class="center  <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053047828.png">http://www.2cto.com/uploadfile/2013/0405/20130405053047828.png</a>&#8221; width=&#8221;345&#8221; height=&#8221;614&#8221;></p>
 
-<p>{% img center <a href="http://www.2cto.com/uploadfile/2013/0405/20130405053049272.png">http://www.2cto.com/uploadfile/2013/0405/20130405053049272.png</a> 345 614 %}</p>
+<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053049272.png">http://www.2cto.com/uploadfile/2013/0405/20130405053049272.png</a>&#8221; width=&#8221;345&#8221; height=&#8221;614&#8221;></p>
 ]]></content>
   </entry>
   
@@ -700,28 +700,47 @@ int main(void) {
 </code></pre>
 
 <p>看一下结果：
-&#8220;` cpp
-young@Y470:~/Desktop/busy$Copyright &copy; 1998-2011 Erik Andersen,  Rob Landley,  Denys Vlasenko
-and others. Licensed under GPLv2.
-See source distribution for full notice.</p>
-
-<p>Usage: busybox [function] [arguments]&hellip;
-   or: busybox &ndash;list[-full]
-   or: busybox &ndash;install [-s] [DIR]
-   or: function [arguments]&hellip;</p>
-
-<pre><code>BusyBox is a multi-call binary that combines many common Unix
-utilities into a single executable.  Most people will create a
-                …………
-cttyhack,  cut,  date,  dc,  -rwxr-xr-x    1 young    young       697656 Jan 13 03:29 busybox
-</code></pre>
-
-<p>dd,  -rwxr-xr-x    1 young    young         6935 Jan 13 03:35 t
-deallocvt,  -rw-r&ndash;r&ndash;    1 young    young          476 Jan 13 03:35 t.c
-depmod,  df-rw-r&ndash;r&ndash;    1 young    young            0 Jan 13 03:30 ??
-,  diff,
-                    …………
-&#8220;`
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">young</span><span class="err">@</span><span class="nl">Y470</span><span class="p">:</span><span class="o">~/</span><span class="n">Desktop</span><span class="o">/</span><span class="n">busy</span><span class="err">$</span><span class="n">Copyright</span> <span class="o">&amp;</span><span class="n">copy</span><span class="p">;</span> <span class="mi">1998</span><span class="o">-</span><span class="mi">2011</span> <span class="n">Erik</span> <span class="n">Andersen</span><span class="p">,</span>  <span class="n">Rob</span> <span class="n">Landley</span><span class="p">,</span>  <span class="n">Denys</span> <span class="n">Vlasenko</span>
+</span><span class='line'><span class="n">and</span> <span class="n">others</span><span class="p">.</span> <span class="n">Licensed</span> <span class="n">under</span> <span class="n">GPLv2</span><span class="p">.</span>
+</span><span class='line'><span class="n">See</span> <span class="n">source</span> <span class="n">distribution</span> <span class="k">for</span> <span class="n">full</span> <span class="n">notice</span><span class="p">.</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="nl">Usage</span><span class="p">:</span> <span class="n">busybox</span> <span class="p">[</span><span class="n">function</span><span class="p">]</span> <span class="p">[</span><span class="n">arguments</span><span class="p">]</span><span class="o">&amp;</span><span class="n">hellip</span><span class="p">;</span>
+</span><span class='line'>   <span class="nl">or</span><span class="p">:</span> <span class="n">busybox</span> <span class="o">&amp;</span><span class="n">ndash</span><span class="p">;</span><span class="n">list</span><span class="p">[</span><span class="o">-</span><span class="n">full</span><span class="p">]</span>
+</span><span class='line'>   <span class="nl">or</span><span class="p">:</span> <span class="n">busybox</span> <span class="o">&amp;</span><span class="n">ndash</span><span class="p">;</span><span class="n">install</span> <span class="p">[</span><span class="o">-</span><span class="n">s</span><span class="p">]</span> <span class="p">[</span><span class="kt">DIR</span><span class="p">]</span>
+</span><span class='line'>   <span class="nl">or</span><span class="p">:</span> <span class="n">function</span> <span class="p">[</span><span class="n">arguments</span><span class="p">]</span><span class="o">&amp;</span><span class="n">hellip</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">BusyBox</span> <span class="n">is</span> <span class="n">a</span> <span class="n">multi</span><span class="o">-</span><span class="n">call</span> <span class="n">binary</span> <span class="n">that</span> <span class="n">combines</span> <span class="n">many</span> <span class="n">common</span> <span class="n">Unix</span>
+</span><span class='line'><span class="n">utilities</span> <span class="n">into</span> <span class="n">a</span> <span class="n">single</span> <span class="n">executable</span><span class="p">.</span>  <span class="n">Most</span> <span class="n">people</span> <span class="n">will</span> <span class="n">create</span> <span class="n">a</span>
+</span><span class='line'>                <span class="err">…………</span>
+</span><span class='line'><span class="n">cttyhack</span><span class="p">,</span>  <span class="n">cut</span><span class="p">,</span>  <span class="n">date</span><span class="p">,</span>  <span class="n">dc</span><span class="p">,</span>  <span class="o">-</span><span class="n">rwxr</span><span class="o">-</span><span class="n">xr</span><span class="o">-</span><span class="n">x</span>    <span class="mi">1</span> <span class="n">young</span>    <span class="n">young</span>       <span class="mi">697656</span> <span class="n">Jan</span> <span class="mi">13</span> <span class="mo">03</span><span class="o">:</span><span class="mi">29</span> <span class="n">busybox</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">dd</span><span class="p">,</span>  <span class="o">-</span><span class="n">rwxr</span><span class="o">-</span><span class="n">xr</span><span class="o">-</span><span class="n">x</span>    <span class="mi">1</span> <span class="n">young</span>    <span class="n">young</span>         <span class="mi">6935</span> <span class="n">Jan</span> <span class="mi">13</span> <span class="mo">03</span><span class="o">:</span><span class="mi">35</span> <span class="n">t</span>
+</span><span class='line'><span class="n">deallocvt</span><span class="p">,</span>  <span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">&amp;</span><span class="n">ndash</span><span class="p">;</span><span class="n">r</span><span class="o">&amp;</span><span class="n">ndash</span><span class="p">;</span>    <span class="mi">1</span> <span class="n">young</span>    <span class="n">young</span>          <span class="mi">476</span> <span class="n">Jan</span> <span class="mi">13</span> <span class="mo">03</span><span class="o">:</span><span class="mi">35</span> <span class="n">t</span><span class="p">.</span><span class="n">c</span>
+</span><span class='line'><span class="n">depmod</span><span class="p">,</span>  <span class="n">df</span><span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">&amp;</span><span class="n">ndash</span><span class="p">;</span><span class="n">r</span><span class="o">&amp;</span><span class="n">ndash</span><span class="p">;</span>    <span class="mi">1</span> <span class="n">young</span>    <span class="n">young</span>            <span class="mi">0</span> <span class="n">Jan</span> <span class="mi">13</span> <span class="mo">03</span><span class="o">:</span><span class="mi">30</span> <span class="o">??</span>
+</span><span class='line'><span class="p">,</span>  <span class="n">diff</span><span class="p">,</span>
+</span><span class='line'>                    <span class="err">…………</span>
+</span></code></pre></td></tr></table></div></figure>
 busybox 的输出太长了，我删掉了一部分并用省略号标记。可以看到ls的输出（夹杂在busybox之间，因为是两个进程的输出）。</p>
 
 <p>大功告成，没想到好好写一篇博客需要3个小时！！！困死我了，怒睡！</p>
@@ -778,7 +797,7 @@ synclient HorizScrollDelta=-103
 
 <h1>Author:           Landerl Young</h1>
 
-<h1>e-Mail:           <a href="&#109;&#97;&#105;&#x6c;&#116;&#111;&#x3a;&#76;&#97;&#x6e;&#x64;&#x65;&#114;&#108;&#x59;&#x6f;&#117;&#x6e;&#103;&#x40;&#103;&#x6d;&#97;&#x69;&#x6c;&#46;&#x63;&#111;&#109;">&#76;&#97;&#110;&#100;&#101;&#114;&#x6c;&#x59;&#x6f;&#x75;&#x6e;&#103;&#64;&#x67;&#109;&#97;&#105;&#x6c;&#46;&#x63;&#x6f;&#x6d;</a></h1>
+<h1>e-Mail:           <a href="&#x6d;&#97;&#105;&#108;&#x74;&#x6f;&#58;&#76;&#x61;&#110;&#x64;&#101;&#114;&#x6c;&#x59;&#111;&#117;&#x6e;&#103;&#64;&#103;&#x6d;&#x61;&#x69;&#x6c;&#46;&#x63;&#x6f;&#x6d;">&#x4c;&#x61;&#110;&#100;&#x65;&#114;&#x6c;&#x59;&#111;&#x75;&#110;&#x67;&#x40;&#103;&#x6d;&#97;&#x69;&#x6c;&#46;&#x63;&#x6f;&#x6d;</a></h1>
 
 <h1>Created Time:     Thu 31 Oct 2013 01:41:46 PM HST</h1>
 
