@@ -4,7 +4,7 @@
   <title><![CDATA[Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2015-04-05T17:31:52+08:00</updated>
+  <updated>2015-07-09T04:09:36-07:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -14,9 +14,269 @@
 
   
   <entry>
+    <title type="html"><![CDATA[ijkplyer 编译配置]]></title>
+    <link href="http://LanderlYoung.github.io/blog/2015/07/09/ijkplyer-bian-yi-pei-zhi/"/>
+    <updated>2015-07-09T03:53:18-07:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2015/07/09/ijkplyer-bian-yi-pei-zhi</id>
+    <content type="html"><![CDATA[<h1>IjkMediaPlayer 使用手册</h1>
+
+<blockquote><p><a href="&#109;&#x61;&#x69;&#108;&#116;&#x6f;&#x3a;&#116;&#97;&#x79;&#108;&#x6f;&#x72;&#99;&#x79;&#x61;&#110;&#103;&#x40;&#x74;&#101;&#110;&#99;&#101;&#110;&#116;&#46;&#99;&#x6f;&#109;">&#x74;&#x61;&#121;&#x6c;&#x6f;&#114;&#99;&#121;&#97;&#110;&#x67;&#64;&#x74;&#x65;&#x6e;&#x63;&#101;&#x6e;&#x74;&#x2e;&#x63;&#x6f;&#x6d;</a></p></blockquote>
+
+<ol>
+<li>首先编译环境是OS X或者linux或者其他*nix系统（Windows暂不支持，因为ijkplayer中使用了软链接o(╯□╰)o）。</li>
+<li>其次系统中需要安装以下工具：
+
+<ol>
+<li>git</li>
+<li>Android ndk 并配置环境变量 <code>ANDROID_NDK</code></li>
+<li>Android sdk 并配置环境变量 <code>ANDROID_SDK</code></li>
+</ol>
+</li>
+</ol>
+
+
+<p>项目地址：<a href="">https://github.com/Bilibili/ijkplayer</a></p>
+
+<p><strong>note</strong>:</p>
+
+<p>如果你觉得TL;DR。不想知道ijkmediaplayer是怎么编译的那就执行<code>./init.sh</code>脚本。让他来帮你做初始化（就是下面的1-3步），然后使用<code>./make.sh</code>做编译甚至是编译之后so的拷贝工作，下文就不用看了。</p>
+
+<p>三个需要的文件分别是：</p>
+
+<ol>
+<li><a href="https://gist.github.com/LanderlYoung/046f4b90b0da26484d5e">init.sh</a></li>
+<li><a href="https://gist.github.com/LanderlYoung/63d4c59260bce20c4a0f">make.sh</a></li>
+<li><a href="https://gist.github.com/LanderlYoung/a28ddb1fb1e575be91ec">module.sh</a></li>
+</ol>
+
+
+<!--more-->
+
+
+<h2>编译步骤：</h2>
+
+<h3>1. 下载代码</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>git clone https://github.com/Bilibili/ijkplayer.git
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>2. 切换到稳定分支</h3>
+
+<p>在开发视频播放组件时ijkplayer的稳定版本是n0.2.2因此本手册以n0.2.2为实例。若发布新版本可以切换分支并测试兼容性。可以使用<code>git tag</code>命令查看release版本。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>git checkout -B n_0.2.2 n0.2.2
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>3. 初始化</h3>
+
+<p>首先进入工程根目录</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd </span>ijkplayer
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>然后执行</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>./init-android.sh
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>执行初始化操作：包括下载ffmpeg源代码，配置ffmpeg编译选项，下载。</p>
+
+<p><strong>注意</strong>：n0.2.2版本的ffmpeg仓库换成了videolan的，如果发现不能下载可以把init-android.sh中的</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">IJK_FFMPEG_UPSTREAM</span><span class="o">=</span>git://git.videolan.org/ffmpeg.git
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>替换成</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">IJK_FFMPEG_UPSTREAM</span><span class="o">=</span>https://github.com/bbcallen/FFmpeg.git
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>然后再进行初始化操作。</p>
+
+<p>这里初始化会生成ffmpeg编译配置文件，主要配置需要哪些组件。因为android端希望尽量减小so库的大小，因此会disable掉很多组件。这里可以使用我准备的这个module.sh文件覆盖掉 项目根目录下的config/module.sh文件。</p>
+
+<p>这个module.sh文件已经去处了绝大部分不用的组件，并且启用了硬件加速。</p>
+
+<h3>4. 编译</h3>
+
+<p>进入项目根目录下的android目录</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd </span>android
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>编译 ffmpeg 依赖库。由于大多数设备都为 armv7a 架构，故在这里使用之。使用 armv5|armv7a|x86 作为输入来设定平台，或传入 all|clean|check 进行[编译所有平台/清理/检查]。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>./compile-ffmpeg.sh clean
+</span><span class='line'>./compile-ffmpeg.sh armv7a
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>若报错，请检查以上各项配置是否正确；否则耐心等待编译完毕即可。</p>
+
+<p>接下来就可以编译 ijkplayer 了：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='bash'><span class='line'>./compile-ijk.sh
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>使用ijkplayer</h2>
+
+<p>android目录下的ijkmediaplayer就是ijk播放器的本体了，编译完成之后会在libs目录中生成相应的so动态库。这时候只需要把这些库拷到工程目录的ijkmdediaplayer module的libs下就好了。</p>
+
+<p>当然你可以把整个android目录导入Android Studio，作者已经写好了gradle配置，这里是一个demo工程。它有三个module：</p>
+
+<ol>
+<li>ijkmediademo是demo本体，是个很好的教学示例</li>
+<li>ijkmediaplayer就是播放器了，这里是一个library module</li>
+<li>ijkmediawidget是基于ijkmediaplayer的各种控件，主要提供类似VideoView的控件方便使用。当然这个是可选组件。</li>
+</ol>
+
+
+<p>如果看到这说明你很有研究精神，给自己点个赞吧n(<em>≧▽≦</em>)n</p>
+
+<h3>附录-关于module.sh</h3>
+
+<p>module.sh中配置了ffmpeg使用哪些decoder，demuser等信息。我给的模板中配置了如下信息</p>
+
+<h4>解码器</h4>
+
+<table>
+<thead>
+<tr>
+<th style="text-align:center;"> 解码器 </th>
+<th style="text-align:center;"> 支持格式 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;"> aac、aac_latm </td>
+<td style="text-align:center;"> aac 音频 </td>
+</tr>
+<tr>
+<td style="text-align:center;"> ac3 </td>
+<td style="text-align:center;"> ac3 音频 </td>
+</tr>
+<tr>
+<td style="text-align:center;"> mp3* </td>
+<td style="text-align:center;"> mp3 音频</td>
+</tr>
+<tr>
+<td style="text-align:center;"> flv </td>
+<td style="text-align:center;"> flv 视频 </td>
+</tr>
+<tr>
+<td style="text-align:center;"> h263、h263i、h263p </td>
+<td style="text-align:center;"> h263 视频（可以考虑舍弃）</td>
+</tr>
+<tr>
+<td style="text-align:center;"> h264 </td>
+<td style="text-align:center;"> h264 视频（重要！）</td>
+</tr>
+<tr>
+<td style="text-align:center;"> msmpeg4v_crystalhd、msmpeg4v1、msmpeg4v2、msmpeg4v3 </td>
+<td style="text-align:center;"> wmv 视频 </td>
+</tr>
+<tr>
+<td style="text-align:center;"> wmav1、wmav2、wmavoice </td>
+<td style="text-align:center;"> wmv 音频 </td>
+</tr>
+</tbody>
+</table>
+
+
+<h3>解容器</h3>
+
+<table>
+<thead>
+<tr>
+<th style="text-align:center;"> 解容器 </th>
+<th style="text-align:center;"> 支持容器格式 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;"> aac </td>
+<td style="text-align:center;"> aac 音频容器 </td>
+</tr>
+<tr>
+<td style="text-align:center;"> ac3 </td>
+<td style="text-align:center;"> ac3 音频容器 </td>
+</tr>
+<tr>
+<td style="text-align:center;"> flv </td>
+<td style="text-align:center;"> flv 视频容器 </td>
+</tr>
+<tr>
+<td style="text-align:center;"> hls </td>
+<td style="text-align:center;"> HTTP Live Streaming </td>
+</tr>
+<tr>
+<td style="text-align:center;"> latm </td>
+<td style="text-align:center;"> aac latm封装格式</td>
+</tr>
+<tr>
+<td style="text-align:center;"> live_flv </td>
+<td style="text-align:center;">直播 flv格式</td>
+</tr>
+<tr>
+<td style="text-align:center;"> loas</td>
+<td style="text-align:center;"> aac loas封装格式</td>
+</tr>
+<tr>
+<td style="text-align:center;"> m4v </td>
+<td style="text-align:center;"> m4v/mp4 视频 </td>
+</tr>
+<tr>
+<td style="text-align:center;"> mov </td>
+<td style="text-align:center;"> mov 视频 </td>
+</tr>
+<tr>
+<td style="text-align:center;"> mp3</td>
+<td style="text-align:center;"> mp3 音频</td>
+</tr>
+<tr>
+<td style="text-align:center;">matroska </td>
+<td style="text-align:center;"> mkv 视频</td>
+</tr>
+<tr>
+<td style="text-align:center;">avi </td>
+<td style="text-align:center;"> avi 视频</td>
+</tr>
+<tr>
+<td style="text-align:center;">mpegps、mpegts、mpegvideo</td>
+<td style="text-align:center;"> mpeg封装格式</td>
+</tr>
+<tr>
+<td style="text-align:center;">asf </td>
+<td style="text-align:center;"> wmv 格式</td>
+</tr>
+</tbody>
+</table>
+
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[java序列化实践]]></title>
     <link href="http://LanderlYoung.github.io/blog/2015/04/04/javaxu-lie-hua-shi-jian/"/>
-    <updated>2015-04-04T18:06:20+08:00</updated>
+    <updated>2015-04-04T03:06:20-07:00</updated>
     <id>http://LanderlYoung.github.io/blog/2015/04/04/javaxu-lie-hua-shi-jian</id>
     <content type="html"><![CDATA[<p>java中实例的序列化是指将一个实例转成 二进制流以用于网络传输或者固化存储之用。事实上，简单点说就是把一个类实例的成员变量存储下来，然而这个过程根据成员变量的类型的不同，可能会很简单，也可能会很复杂。序列化的用处还是很大的，比如跨进程通信（IPC，安卓中的IPC用到了序列化，只是安卓自身实现了一个比java更轻量级、更简单的序列化方式。但是原理大同小异），远程方法调用（RMI，事实上这个和安卓中的Binder通讯很类似）;此外还常见的是把实例序列化到数据库中以blob的形式存储。并且因为java语言本身就是跨平台设计的，序列化之后的数据也是平台无关的，因此你无需关心大小端之类的问题（以及类似于C语言的内存对齐问题）！既然序列化这么有用还是有必要学习一下的。（BTW，java EE中提供了更加严格的固化方案Java Date Object，或着也可以考虑使用Hibernate框架。）</p>
 
@@ -544,7 +804,7 @@
   <entry>
     <title type="html"><![CDATA[Android中service的使用]]></title>
     <link href="http://LanderlYoung.github.io/blog/2014/11/09/androidzhong-servicede-shi-yong/"/>
-    <updated>2014-11-09T18:07:03+08:00</updated>
+    <updated>2014-11-09T02:07:03-08:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/11/09/androidzhong-servicede-shi-yong</id>
     <content type="html"><![CDATA[<h2>Android 中service的使用 笔记</h2>
 
@@ -1218,7 +1478,7 @@ dest就是用于存储序列的类的容器，然后flags可以是普通的0，�
   <entry>
     <title type="html"><![CDATA[Java 中JNI的使用]]></title>
     <link href="http://LanderlYoung.github.io/blog/2014/10/16/java-zhong-jnide-shi-yong/"/>
-    <updated>2014-10-16T21:10:55+08:00</updated>
+    <updated>2014-10-16T06:10:55-07:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/10/16/java-zhong-jnide-shi-yong</id>
     <content type="html"><![CDATA[<p>JNI全称是<code>Java Native Interface</code>是在JAVA和Native层（包括但不限于C/C++）相互调用的接口规范。</p>
 
@@ -1979,7 +2239,7 @@ L + 类全名（报名中的点(.)用(/)代替）+ ；
   <entry>
     <title type="html"><![CDATA[Run commamd before build in IntelliJ IDEA]]></title>
     <link href="http://LanderlYoung.github.io/blog/2014/10/14/run-commamd-before-build-in-intellij-idea/"/>
-    <updated>2014-10-14T17:22:29+08:00</updated>
+    <updated>2014-10-14T02:22:29-07:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/10/14/run-commamd-before-build-in-intellij-idea</id>
     <content type="html"><![CDATA[<p>I came across <a href="http://stackoverflow.com/questions/8380693/run-e-g-calc-exe-before-build-in-intellij-with-android-projects">this question at <code>StackOverflow</code></a> when I was searching the same question in Google.</p>
 
@@ -2024,9 +2284,9 @@ L + 类全名（报名中的点(.)用(/)代替）+ ；
   
   <entry>
     <title type="html"><![CDATA[安卓监听新收到短信]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/09/30/an-zhuo-jian-ting-xin-shou-dao-duan-xin/"/>
-    <updated>2014-09-30T11:52:25+08:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/09/30/an-zhuo-jian-ting-xin-shou-dao-duan-xin</id>
+    <link href="http://LanderlYoung.github.io/blog/2014/09/29/an-zhuo-jian-ting-xin-shou-dao-duan-xin/"/>
+    <updated>2014-09-29T20:52:25-07:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2014/09/29/an-zhuo-jian-ting-xin-shou-dao-duan-xin</id>
     <content type="html"><![CDATA[<p>安卓收到短信的事件是由系统发一个有序广播的，所以这里需要一个BroadcastReceiver。receiver收到的Intent里面并不是直接存储的短信内容，而是短信的原始数据。所以我们需要自己解码。</p>
 
 <p><strong>获取短信的原始数据：</strong>
@@ -2163,7 +2423,7 @@ L + 类全名（报名中的点(.)用(/)代替）+ ；
   <entry>
     <title type="html"><![CDATA[Java(Android)中线程池的使用]]></title>
     <link href="http://LanderlYoung.github.io/blog/2014/09/23/javazhong-xian-cheng-chi-de-shi-yong/"/>
-    <updated>2014-09-23T17:39:40+08:00</updated>
+    <updated>2014-09-23T02:39:40-07:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/09/23/javazhong-xian-cheng-chi-de-shi-yong</id>
     <content type="html"><![CDATA[<p>java SE5提供了<code>java.util.concurrent.Executors</code>类来实现线程池的功能。
 <em>Thinking in Java</em> 中这么解释Executors：</p>
@@ -2278,9 +2538,9 @@ L + 类全名（报名中的点(.)用(/)代替）+ ；
   
   <entry>
     <title type="html"><![CDATA[一次对非静态内部类引用final变量的研究]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/08/10/yi-ci-dui-fei-jing-tai-nei-bu-lei-yin-yong-finalbian-liang-de-yan-jiu/"/>
-    <updated>2014-08-10T13:57:38+08:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/08/10/yi-ci-dui-fei-jing-tai-nei-bu-lei-yin-yong-finalbian-liang-de-yan-jiu</id>
+    <link href="http://LanderlYoung.github.io/blog/2014/08/09/yi-ci-dui-fei-jing-tai-nei-bu-lei-yin-yong-finalbian-liang-de-yan-jiu/"/>
+    <updated>2014-08-09T22:57:38-07:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2014/08/09/yi-ci-dui-fei-jing-tai-nei-bu-lei-yin-yong-finalbian-liang-de-yan-jiu</id>
     <content type="html"><![CDATA[<p>前几天遇到一个奇怪的问题，问题的起因是我把以前的RingfriendDialogBuilder（以下简称builder，没有IDE的自动补全打完全名还是很长的。。）修改了一下，添加了一个clear()方法。目的是避免每次创建一个Dialog都new一个builder的实例，这样一个builder可以用于创建多个dialog，以提高效率。接下来的问题就是因为这个修改导致的。</p>
 
 <!--more-->
@@ -2496,7 +2756,7 @@ L + 类全名（报名中的点(.)用(/)代替）+ ；
   <entry>
     <title type="html"><![CDATA[Android 中的Handler相关源代码浅析]]></title>
     <link href="http://LanderlYoung.github.io/blog/2014/06/24/android-zhong-de-handlerxiang-guan-yuan-dai-ma-qian-xi/"/>
-    <updated>2014-06-24T17:01:09+08:00</updated>
+    <updated>2014-06-24T02:01:09-07:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/06/24/android-zhong-de-handlerxiang-guan-yuan-dai-ma-qian-xi</id>
     <content type="html"><![CDATA[<p>简单用法示例：</p>
 
@@ -2848,7 +3108,7 @@ Message中的target是这么定义的：</p>
   <entry>
     <title type="html"><![CDATA[SNG迷你项目感悟]]></title>
     <link href="http://LanderlYoung.github.io/blog/2014/06/20/sngmi-ni-xiang-mu-gan-wu/"/>
-    <updated>2014-06-20T16:38:32+08:00</updated>
+    <updated>2014-06-20T01:38:32-07:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/06/20/sngmi-ni-xiang-mu-gan-wu</id>
     <content type="html"><![CDATA[<p>来腾讯实习有半个月来，刚进来公司统一培训了一天半，闲扯了点东西。然后SNG部门培训了3天时间，讲解一些业务流程。然后就是重头戏，所谓的迷你项目。我擦，虽然今天做完了，但是我还是想说这个巨坑啊！</p>
 
@@ -2901,7 +3161,7 @@ Message中的target是这么定义的：</p>
   <entry>
     <title type="html"><![CDATA[css动画链接特效]]></title>
     <link href="http://LanderlYoung.github.io/blog/2014/05/27/cssdong-hua-lian-jie-te-xiao/"/>
-    <updated>2014-05-27T17:24:01+08:00</updated>
+    <updated>2014-05-27T02:24:01-07:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/05/27/cssdong-hua-lian-jie-te-xiao</id>
     <content type="html"><![CDATA[<p>今天见到几个css3实现的连接特效，效果不错。放到博客上<a href="http://landerlyoung.github.io/assets/storage/CreativeLinkEffects">存档</a>一下。可惜的是找不到原始地址了。</p>
 
@@ -2913,7 +3173,7 @@ Message中的target是这么定义的：</p>
   <entry>
     <title type="html"><![CDATA[网页中实现阅读模式]]></title>
     <link href="http://LanderlYoung.github.io/blog/2014/05/26/wang-ye-zhong-shi-xian-yue-du-mo-shi/"/>
-    <updated>2014-05-26T22:03:55+08:00</updated>
+    <updated>2014-05-26T07:03:55-07:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/05/26/wang-ye-zhong-shi-xian-yue-du-mo-shi</id>
     <content type="html"><![CDATA[<p>一直觉得safari的阅读模式超赞，然后今天突然觉得想有一个。于是搜索了一些东西找到了readability这个东西。</p>
 
@@ -2928,9 +3188,9 @@ Message中的target是这么定义的：</p>
   
   <entry>
     <title type="html"><![CDATA[stepByStepAndroid-第一课]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/05/13/stepbystepandroid-di-%5B%3F%5D-ke/"/>
-    <updated>2014-05-13T12:04:19+08:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/05/13/stepbystepandroid-di-[?]-ke</id>
+    <link href="http://LanderlYoung.github.io/blog/2014/05/12/stepbystepandroid-di-%5B%3F%5D-ke/"/>
+    <updated>2014-05-12T21:04:19-07:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2014/05/12/stepbystepandroid-di-[?]-ke</id>
     <content type="html"><![CDATA[<p>&lt;资源></p>
 
 <ul>
@@ -3123,7 +3383,7 @@ Message中的target是这么定义的：</p>
   <entry>
     <title type="html"><![CDATA[Git中创建tag和release]]></title>
     <link href="http://LanderlYoung.github.io/blog/2014/05/12/gitzhong-chuang-jian-taghe-release/"/>
-    <updated>2014-05-12T21:28:57+08:00</updated>
+    <updated>2014-05-12T06:28:57-07:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/05/12/gitzhong-chuang-jian-taghe-release</id>
     <content type="html"><![CDATA[<p>今天开始学习Android Design，也详细了解一下Android的应用开发，方便暑假的实习。于是打算创建一个github的仓库，记录学习的过程。然后想到每学习一个新功能都应该有一个tag（或者叫release）不然别人看你的仓库的时候怎么知道学习的步步过程。然后就学习了一下git tag的相关内容，如下：</p>
 
@@ -3176,7 +3436,7 @@ Message中的target是这么定义的：</p>
   <entry>
     <title type="html"><![CDATA[Vim quick reference]]></title>
     <link href="http://LanderlYoung.github.io/blog/2014/05/07/vim-quick-reference/"/>
-    <updated>2014-05-07T22:46:32+08:00</updated>
+    <updated>2014-05-07T07:46:32-07:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/05/07/vim-quick-reference</id>
     <content type="html"><![CDATA[<center>
 <h2><b>quickref.txt</b>  For Vim version 7.4.  Last change: 2013 Jun 29</h2>
@@ -5999,9 +6259,9 @@ Message中的target是这么定义的：</p>
   
   <entry>
     <title type="html"><![CDATA[Vim插件全攻略]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/05/07/vimcha-jian-quan-gong-lue/"/>
-    <updated>2014-05-07T11:42:23+08:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/05/07/vimcha-jian-quan-gong-lue</id>
+    <link href="http://LanderlYoung.github.io/blog/2014/05/06/vimcha-jian-quan-gong-lue/"/>
+    <updated>2014-05-06T20:42:23-07:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2014/05/06/vimcha-jian-quan-gong-lue</id>
     <content type="html"><![CDATA[<p>原来配置vim插件的时候因为总是要下载解压，试用然后把.vim目录弄得乱七八糟。所以也就用了那几个插件，本着够用就好的原则。今天才发现Vim也有自己的插件管理工具<a href="https://github.com/gmarik/Vundle.vim">Vundle</a>真的是太开心了。然后又发现了有大神共享的<a href="https://github.com/humiaozuzu/dot-vimrc">插件列表</a>，于是我就开始了开开心心的Vim插件攻略。</p>
 
 <!--more-->
@@ -6017,9 +6277,9 @@ Message中的target是这么定义的：</p>
   
   <entry>
     <title type="html"><![CDATA[[转]Linux初始配置]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/04/29/zhuan-linuxchu-shi-pei-zhi/"/>
-    <updated>2014-04-29T10:11:07+08:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/04/29/zhuan-linuxchu-shi-pei-zhi</id>
+    <link href="http://LanderlYoung.github.io/blog/2014/04/28/zhuan-linuxchu-shi-pei-zhi/"/>
+    <updated>2014-04-28T19:11:07-07:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2014/04/28/zhuan-linuxchu-shi-pei-zhi</id>
     <content type="html"><![CDATA[<p>转载自：<a target="_blank" href="http://www.2cto.com/Article/201304/200418.html"><a href="http://www.2cto.com/Article/201304/200418.html">http://www.2cto.com/Article/201304/200418.html</a></a></p>
 
 <p>昨天折腾了 Kali Linux 1.0，把大概的配置过程记录下来，希望对想接触或使用Kali Linux的同学有所帮助。</p>
@@ -6486,9 +6746,9 @@ Message中的target是这么定义的：</p>
   
   <entry>
     <title type="html"><![CDATA[linux的搜狗输入法！]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/04/22/linuxde-sou-gou-shu-ru-fa-!/"/>
-    <updated>2014-04-22T14:52:39+08:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/04/22/linuxde-sou-gou-shu-ru-fa-!</id>
+    <link href="http://LanderlYoung.github.io/blog/2014/04/21/linuxde-sou-gou-shu-ru-fa-!/"/>
+    <updated>2014-04-21T23:52:39-07:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2014/04/21/linuxde-sou-gou-shu-ru-fa-!</id>
     <content type="html"><![CDATA[<p>貌似好久之前就知道搜狗输入法推出了linux版本，但是当时用的是Debian74系统。Debian的特点就是软件版本比较老（考虑的是稳定性之类的原因，毕竟Debian更多的是用在服务器上的）。而且搜狗输入法又不是开源的，不能自己编译，所以出现的libc6的版本不兼容问题很是蛋疼。昨天还是决定装上Ubuntu14.04，然后装上了搜狗输入法，那感觉真是一个爽啊。从此Linux打字也有了飞一般的感觉，也不用担心满篇的错别字了。
 附带一个链接吧<a href="http://pinyin.sogou.com/linux/">伟大的搜狗输入法</a></p>
 ]]></content>
@@ -6497,7 +6757,7 @@ Message中的target是这么定义的：</p>
   <entry>
     <title type="html"><![CDATA[漂亮的svg背景]]></title>
     <link href="http://LanderlYoung.github.io/blog/2014/04/02/piao-liang-de-svgbei-jing/"/>
-    <updated>2014-04-02T21:48:10+08:00</updated>
+    <updated>2014-04-02T06:48:10-07:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/04/02/piao-liang-de-svgbei-jing</id>
     <content type="html"><![CDATA[<p>今天很巧合的遇到了两次很漂亮的svg背景，于是打算把他们收集下来。<br/>
 收集的背景来源于<a href="http://www.svgeneration.com/">www.svgeneration.com</a> 和 github 的 explore 模块。</p>
@@ -6580,9 +6840,9 @@ var styles = [
   
   <entry>
     <title type="html"><![CDATA[2048游戏安卓移植版]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/03/22/2048you-xi-an-zhuo-yi-zhi-ban/"/>
-    <updated>2014-03-22T00:51:51+08:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/03/22/2048you-xi-an-zhuo-yi-zhi-ban</id>
+    <link href="http://LanderlYoung.github.io/blog/2014/03/21/2048you-xi-an-zhuo-yi-zhi-ban/"/>
+    <updated>2014-03-21T09:51:51-07:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2014/03/21/2048you-xi-an-zhuo-yi-zhi-ban</id>
     <content type="html"><![CDATA[<p>这几天一直在玩2048游戏，觉得这个游戏很有意思。上次研究了一下源代码于是就写了个‘外挂’(囧)。后来在手机上玩，发现网页版的玩着不爽，于是想着把这个游戏当成基于安卓的html5游戏。于是就看了一下怎么写android的html5游戏。的出结论是基于WebView——在应用中开一个区域显示网页内容，所以这个区域就是一个浏览器了。经过两天的努力算是弄了个<a href="http://LanderlYoung.github.io/assets/storage/2048">小样</a>出来。最后还是利用WebView移植到<a href="https://github.com/LanderlYoung/2048_android">安卓平台</a>，使用起来和native app没啥区别。</p>
 
 <!--more-->
@@ -6598,55 +6858,6 @@ var styles = [
 <li>about的下落效果（其实在写chrome的插件的时候有用到）</li>
 </ol>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[2048游戏的'外挂'代码]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/03/14/2048you-xi-de-slash-wai-gua-slash-dai-ma/"/>
-    <updated>2014-03-14T22:12:35+08:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/03/14/2048you-xi-de-slash-wai-gua-slash-dai-ma</id>
-    <content type="html"><![CDATA[<p>这两天<a href="http://gabrielecirulli.github.io/2048/">‘2048’</a>游戏很火，于是我秉承这学习的态度研究了一下他的代码。
-本以为使用canvas实现的，后来发现就是普通的html元素，突然觉得开发者还是很厉害的！<br/>
-说实话，这个游戏设计得的确很牛。牛的不是代码，是游戏创意！如果发到app store上估计会和flappy bird有的一拼吧。</p>
-
-<!--more-->
-
-
-<h2>我是邪恶的开始</h2>
-
-<p>因为研究了一下游戏的源代码，突然发现可以很简单的让游戏想开了外挂一样牛叉！</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="p">(</span><span class="n">function</span><span class="p">(</span><span class="n">initialNum</span><span class="p">){</span>
-</span><span class='line'>  <span class="n">var</span> <span class="n">a</span> <span class="o">=</span> <span class="k">new</span> <span class="n">GameManager</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">KeyboardInputManager</span><span class="p">,</span> <span class="n">HTMLActuator</span><span class="p">,</span> <span class="n">LocalScoreManager</span><span class="p">);</span>
-</span><span class='line'>  <span class="n">var</span> <span class="n">row</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
-</span><span class='line'>  <span class="n">var</span> <span class="n">column</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
-</span><span class='line'>  <span class="k">for</span><span class="p">(</span><span class="n">var</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">row</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>      <span class="k">for</span><span class="p">(</span><span class="n">var</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">column</span><span class="p">;</span><span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>          <span class="n">tile</span> <span class="o">=</span>  <span class="k">new</span> <span class="n">Tile</span><span class="p">({</span><span class="nl">x</span><span class="p">:</span><span class="n">i</span><span class="p">,</span> <span class="nl">y</span><span class="p">:</span><span class="n">j</span><span class="p">},</span> <span class="n">initialNum</span><span class="p">);</span>
-</span><span class='line'>          <span class="n">a</span><span class="p">.</span><span class="n">grid</span><span class="p">.</span><span class="n">cells</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">tile</span><span class="p">;</span>
-</span><span class='line'>      <span class="p">}</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'><span class="p">})(</span><span class="mi">128</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>这就是所有&#8217;外挂&#8217;代码，打开chrome的console。输入进去就可以看到奇迹。。。。</p>
-
-<h2>郑重声明</h2>
-
-<p>这只是一个个人的无聊作品，如果因为这个东西让你丧失了对本游戏的兴趣，请无视这段代码！</p>
 ]]></content>
   </entry>
   

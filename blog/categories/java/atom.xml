@@ -4,7 +4,7 @@
   <title><![CDATA[Category: java | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2015-04-05T17:31:52+08:00</updated>
+  <updated>2015-07-09T04:09:36-07:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[java序列化实践]]></title>
     <link href="http://LanderlYoung.github.io/blog/2015/04/04/javaxu-lie-hua-shi-jian/"/>
-    <updated>2015-04-04T18:06:20+08:00</updated>
+    <updated>2015-04-04T03:06:20-07:00</updated>
     <id>http://LanderlYoung.github.io/blog/2015/04/04/javaxu-lie-hua-shi-jian</id>
     <content type="html"><![CDATA[<p>java中实例的序列化是指将一个实例转成 二进制流以用于网络传输或者固化存储之用。事实上，简单点说就是把一个类实例的成员变量存储下来，然而这个过程根据成员变量的类型的不同，可能会很简单，也可能会很复杂。序列化的用处还是很大的，比如跨进程通信（IPC，安卓中的IPC用到了序列化，只是安卓自身实现了一个比java更轻量级、更简单的序列化方式。但是原理大同小异），远程方法调用（RMI，事实上这个和安卓中的Binder通讯很类似）;此外还常见的是把实例序列化到数据库中以blob的形式存储。并且因为java语言本身就是跨平台设计的，序列化之后的数据也是平台无关的，因此你无需关心大小端之类的问题（以及类似于C语言的内存对齐问题）！既然序列化这么有用还是有必要学习一下的。（BTW，java EE中提供了更加严格的固化方案Java Date Object，或着也可以考虑使用Hibernate框架。）</p>
 
@@ -336,7 +336,7 @@ readObject
   <entry>
     <title type="html"><![CDATA[Java 中JNI的使用]]></title>
     <link href="http://LanderlYoung.github.io/blog/2014/10/16/java-zhong-jnide-shi-yong/"/>
-    <updated>2014-10-16T21:10:55+08:00</updated>
+    <updated>2014-10-16T06:10:55-07:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/10/16/java-zhong-jnide-shi-yong</id>
     <content type="html"><![CDATA[<p>JNI全称是<code>Java Native Interface</code>是在JAVA和Native层（包括但不限于C/C++）相互调用的接口规范。</p>
 
@@ -996,7 +996,7 @@ L + 类全名（报名中的点(.)用(/)代替）+ ；
   <entry>
     <title type="html"><![CDATA[Run commamd before build in IntelliJ IDEA]]></title>
     <link href="http://LanderlYoung.github.io/blog/2014/10/14/run-commamd-before-build-in-intellij-idea/"/>
-    <updated>2014-10-14T17:22:29+08:00</updated>
+    <updated>2014-10-14T02:22:29-07:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/10/14/run-commamd-before-build-in-intellij-idea</id>
     <content type="html"><![CDATA[<p>I came across <a href="http://stackoverflow.com/questions/8380693/run-e-g-calc-exe-before-build-in-intellij-with-android-projects">this question at <code>StackOverflow</code></a> when I was searching the same question in Google.</p>
 
@@ -1042,7 +1042,7 @@ L + 类全名（报名中的点(.)用(/)代替）+ ；
   <entry>
     <title type="html"><![CDATA[Java(Android)中线程池的使用]]></title>
     <link href="http://LanderlYoung.github.io/blog/2014/09/23/javazhong-xian-cheng-chi-de-shi-yong/"/>
-    <updated>2014-09-23T17:39:40+08:00</updated>
+    <updated>2014-09-23T02:39:40-07:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/09/23/javazhong-xian-cheng-chi-de-shi-yong</id>
     <content type="html"><![CDATA[<p>java SE5提供了<code>java.util.concurrent.Executors</code>类来实现线程池的功能。
 <em>Thinking in Java</em> 中这么解释Executors：</p>

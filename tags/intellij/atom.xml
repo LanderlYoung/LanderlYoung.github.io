@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: IntelliJ | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/tags/intellij/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2015-04-05T17:31:52+08:00</updated>
+  <updated>2015-07-09T04:09:36-07:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Run commamd before build in IntelliJ IDEA]]></title>
     <link href="http://LanderlYoung.github.io/blog/2014/10/14/run-commamd-before-build-in-intellij-idea/"/>
-    <updated>2014-10-14T17:22:29+08:00</updated>
+    <updated>2014-10-14T02:22:29-07:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/10/14/run-commamd-before-build-in-intellij-idea</id>
     <content type="html"><![CDATA[<p>I came across <a href="http://stackoverflow.com/questions/8380693/run-e-g-calc-exe-before-build-in-intellij-with-android-projects">this question at <code>StackOverflow</code></a> when I was searching the same question in Google.</p>
 

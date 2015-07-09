@@ -4,7 +4,7 @@
   <title><![CDATA[Category: android | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/blog/categories/android/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2015-04-05T17:31:52+08:00</updated>
+  <updated>2015-07-09T04:09:36-07:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Android中service的使用]]></title>
     <link href="http://LanderlYoung.github.io/blog/2014/11/09/androidzhong-servicede-shi-yong/"/>
-    <updated>2014-11-09T18:07:03+08:00</updated>
+    <updated>2014-11-09T02:07:03-08:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/11/09/androidzhong-servicede-shi-yong</id>
     <content type="html"><![CDATA[<h2>Android 中service的使用 笔记</h2>
 
@@ -443,9 +443,9 @@ if (mDemoServiceBinder != null) {
   
   <entry>
     <title type="html"><![CDATA[安卓监听新收到短信]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/09/30/an-zhuo-jian-ting-xin-shou-dao-duan-xin/"/>
-    <updated>2014-09-30T11:52:25+08:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/09/30/an-zhuo-jian-ting-xin-shou-dao-duan-xin</id>
+    <link href="http://LanderlYoung.github.io/blog/2014/09/29/an-zhuo-jian-ting-xin-shou-dao-duan-xin/"/>
+    <updated>2014-09-29T20:52:25-07:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2014/09/29/an-zhuo-jian-ting-xin-shou-dao-duan-xin</id>
     <content type="html"><![CDATA[<p>安卓收到短信的事件是由系统发一个有序广播的，所以这里需要一个BroadcastReceiver。receiver收到的Intent里面并不是直接存储的短信内容，而是短信的原始数据。所以我们需要自己解码。</p>
 
 <p><strong>获取短信的原始数据：</strong>
@@ -525,9 +525,9 @@ public void onReceive(Context context, Intent intent) {
   
   <entry>
     <title type="html"><![CDATA[一次对非静态内部类引用final变量的研究]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/08/10/yi-ci-dui-fei-jing-tai-nei-bu-lei-yin-yong-finalbian-liang-de-yan-jiu/"/>
-    <updated>2014-08-10T13:57:38+08:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/08/10/yi-ci-dui-fei-jing-tai-nei-bu-lei-yin-yong-finalbian-liang-de-yan-jiu</id>
+    <link href="http://LanderlYoung.github.io/blog/2014/08/09/yi-ci-dui-fei-jing-tai-nei-bu-lei-yin-yong-finalbian-liang-de-yan-jiu/"/>
+    <updated>2014-08-09T22:57:38-07:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2014/08/09/yi-ci-dui-fei-jing-tai-nei-bu-lei-yin-yong-finalbian-liang-de-yan-jiu</id>
     <content type="html"><![CDATA[<p>前几天遇到一个奇怪的问题，问题的起因是我把以前的RingfriendDialogBuilder（以下简称builder，没有IDE的自动补全打完全名还是很长的。。）修改了一下，添加了一个clear()方法。目的是避免每次创建一个Dialog都new一个builder的实例，这样一个builder可以用于创建多个dialog，以提高效率。接下来的问题就是因为这个修改导致的。</p>
 
 <!--more-->
@@ -674,7 +674,7 @@ private static class DialogButtonOnClickListener implements View.OnClickListener
   <entry>
     <title type="html"><![CDATA[Android 中的Handler相关源代码浅析]]></title>
     <link href="http://LanderlYoung.github.io/blog/2014/06/24/android-zhong-de-handlerxiang-guan-yuan-dai-ma-qian-xi/"/>
-    <updated>2014-06-24T17:01:09+08:00</updated>
+    <updated>2014-06-24T02:01:09-07:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/06/24/android-zhong-de-handlerxiang-guan-yuan-dai-ma-qian-xi</id>
     <content type="html"><![CDATA[<p>简单用法示例：</p>
 
@@ -877,7 +877,7 @@ Message中的target是这么定义的：</p>
   <entry>
     <title type="html"><![CDATA[SNG迷你项目感悟]]></title>
     <link href="http://LanderlYoung.github.io/blog/2014/06/20/sngmi-ni-xiang-mu-gan-wu/"/>
-    <updated>2014-06-20T16:38:32+08:00</updated>
+    <updated>2014-06-20T01:38:32-07:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/06/20/sngmi-ni-xiang-mu-gan-wu</id>
     <content type="html"><![CDATA[<p>来腾讯实习有半个月来，刚进来公司统一培训了一天半，闲扯了点东西。然后SNG部门培训了3天时间，讲解一些业务流程。然后就是重头戏，所谓的迷你项目。我擦，虽然今天做完了，但是我还是想说这个巨坑啊！</p>
 
