@@ -7,7 +7,23 @@
 	<meta name="author" content="LanderlYoung">
 
 	
-	<meta name="description" content="html5 Comments Css动画链接特效 今天见到几个css3实现的连接特效，效果不错。放到博客上存档一下。可惜的是找不到原始地址了。 Read on &rarr; html5 Comments 网页中实现阅读模式 一直觉得safari的阅读模式超赞，然后今天突然觉得想有一个。 &hellip;">
+	<meta name="description" content="android Comments Android 中的Handler相关源代码浅析 简单用法示例： 1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+//在主线程中
+private Handler handler = new Handler() { // &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -96,7 +112,116 @@
   
 
 
-<time datetime="2014-05-27T02:24:01-07:00" data-updated="true" itemprop="datePublished"></time></div>
+<time datetime="2014-06-24T17:01:09+08:00" data-updated="true" itemprop="datePublished"></time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/android/'>android</a>
+
+
+</div>
+		
+			<span class="comments"><a href="/blog/2014/06/24/android-zhong-de-handlerxiang-guan-yuan-dai-ma-qian-xi/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2014/06/24/android-zhong-de-handlerxiang-guan-yuan-dai-ma-qian-xi/" itemprop="url">Android 中的Handler相关源代码浅析</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<p>简单用法示例：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//在主线程中</span>
+</span><span class='line'><span class="kd">private</span> <span class="n">Handler</span> <span class="n">handler</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Handler</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="c1">// 处理子线程给我们发送的消息。</span>
+</span><span class='line'>    <span class="nd">@Override</span>
+</span><span class='line'>        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">handleMessage</span><span class="o">(</span><span class="n">android</span><span class="o">.</span><span class="na">os</span><span class="o">.</span><span class="na">Message</span> <span class="n">msg</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="kt">byte</span><span class="o">[]</span> <span class="n">data</span> <span class="o">=</span> <span class="o">(</span><span class="kt">byte</span><span class="o">[])</span><span class="n">msg</span><span class="o">.</span><span class="na">obj</span><span class="o">;</span>
+</span><span class='line'>            <span class="n">Bitmap</span> <span class="n">bitmap</span> <span class="o">=</span> <span class="n">BitmapFactory</span><span class="o">.</span><span class="na">decodeByteArray</span><span class="o">(</span><span class="n">data</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">data</span><span class="o">.</span><span class="na">length</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">imageView</span><span class="o">.</span><span class="na">setImageBitmap</span><span class="o">(</span><span class="n">bitmap</span><span class="o">);</span>
+</span><span class='line'>            <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="s">&quot;handler&quot;</span><span class="o">,</span> <span class="s">&quot;thread:&quot;</span> <span class="o">+</span> <span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span>
+</span><span class='line'>                    <span class="s">&quot; msg.target=&quot;</span> <span class="n">msg</span><span class="o">.</span><span class="na">getTarget</span><span class="o">());</span>
+</span><span class='line'>            <span class="k">if</span><span class="o">(</span><span class="n">msg</span><span class="o">.</span><span class="na">what</span> <span class="o">==</span> <span class="n">DOWNLOAD_IMG</span><span class="o">){</span>
+</span><span class='line'>                <span class="n">dialog</span><span class="o">.</span><span class="na">dismiss</span><span class="o">();</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+
+		
+		<a href="/blog/2014/06/24/android-zhong-de-handlerxiang-guan-yuan-dai-ma-qian-xi/" class="more-link">Read on &rarr;</a>
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-20T16:38:32+08:00" data-updated="true" itemprop="datePublished"></time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/android/'>android</a>
+
+
+</div>
+		
+			<span class="comments"><a href="/blog/2014/06/20/sngmi-ni-xiang-mu-gan-wu/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2014/06/20/sngmi-ni-xiang-mu-gan-wu/" itemprop="url">SNG迷你项目感悟</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<p>来腾讯实习有半个月来，刚进来公司统一培训了一天半，闲扯了点东西。然后SNG部门培训了3天时间，讲解一些业务流程。然后就是重头戏，所谓的迷你项目。我擦，虽然今天做完了，但是我还是想说这个巨坑啊！</p>
+
+
+		
+		<a href="/blog/2014/06/20/sngmi-ni-xiang-mu-gan-wu/" class="more-link">Read on &rarr;</a>
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-27T17:24:01+08:00" data-updated="true" itemprop="datePublished"></time></div>
 		<div class="tags">
 
 
@@ -134,7 +259,7 @@
   
 
 
-<time datetime="2014-05-26T07:03:55-07:00" data-updated="true" itemprop="datePublished"></time></div>
+<time datetime="2014-05-26T22:03:55+08:00" data-updated="true" itemprop="datePublished"></time></div>
 		<div class="tags">
 
 
@@ -172,7 +297,7 @@
   
 
 
-<time datetime="2014-05-12T21:04:19-07:00" data-updated="true" itemprop="datePublished"></time></div>
+<time datetime="2014-05-13T12:04:19+08:00" data-updated="true" itemprop="datePublished"></time></div>
 		<div class="tags">
 
 
@@ -181,10 +306,10 @@
 
 </div>
 		
-			<span class="comments"><a href="/blog/2014/05/12/stepbystepandroid-di-%5B%3F%5D-ke/#disqus_thread">Comments</a></span>
+			<span class="comments"><a href="/blog/2014/05/13/stepbystepandroid-di-%5B%3F%5D-ke/#disqus_thread">Comments</a></span>
 		
 	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2014/05/12/stepbystepandroid-di-%5B%3F%5D-ke/" itemprop="url">stepByStepAndroid-第一课</a></h1>
+	<h1 class="title" itemprop="name"><a href="/blog/2014/05/13/stepbystepandroid-di-%5B%3F%5D-ke/" itemprop="url">stepByStepAndroid-第一课</a></h1>
 	<div class="entry-content" itemprop="articleBody">
 		<p>&lt;资源></p>
 
@@ -218,7 +343,7 @@
 
 
 		
-		<a href="/blog/2014/05/12/stepbystepandroid-di-%5B%3F%5D-ke/" class="more-link">Read on &rarr;</a>
+		<a href="/blog/2014/05/13/stepbystepandroid-di-%5B%3F%5D-ke/" class="more-link">Read on &rarr;</a>
 	</div>
 
 </article>
@@ -238,7 +363,7 @@
   
 
 
-<time datetime="2014-05-12T06:28:57-07:00" data-updated="true" itemprop="datePublished"></time></div>
+<time datetime="2014-05-12T21:28:57+08:00" data-updated="true" itemprop="datePublished"></time></div>
 		<div class="tags">
 
 
@@ -284,7 +409,7 @@
   
 
 
-<time datetime="2014-05-07T07:46:32-07:00" data-updated="true" itemprop="datePublished"></time></div>
+<time datetime="2014-05-07T22:46:32+08:00" data-updated="true" itemprop="datePublished"></time></div>
 		<div class="tags">
 
 
@@ -327,7 +452,7 @@
   
 
 
-<time datetime="2014-05-06T20:42:23-07:00" data-updated="true" itemprop="datePublished"></time></div>
+<time datetime="2014-05-07T11:42:23+08:00" data-updated="true" itemprop="datePublished"></time></div>
 		<div class="tags">
 
 
@@ -336,16 +461,16 @@
 
 </div>
 		
-			<span class="comments"><a href="/blog/2014/05/06/vimcha-jian-quan-gong-lue/#disqus_thread">Comments</a></span>
+			<span class="comments"><a href="/blog/2014/05/07/vimcha-jian-quan-gong-lue/#disqus_thread">Comments</a></span>
 		
 	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2014/05/06/vimcha-jian-quan-gong-lue/" itemprop="url">Vim插件全攻略</a></h1>
+	<h1 class="title" itemprop="name"><a href="/blog/2014/05/07/vimcha-jian-quan-gong-lue/" itemprop="url">Vim插件全攻略</a></h1>
 	<div class="entry-content" itemprop="articleBody">
 		<p>原来配置vim插件的时候因为总是要下载解压，试用然后把.vim目录弄得乱七八糟。所以也就用了那几个插件，本着够用就好的原则。今天才发现Vim也有自己的插件管理工具<a href="https://github.com/gmarik/Vundle.vim">Vundle</a>真的是太开心了。然后又发现了有大神共享的<a href="https://github.com/humiaozuzu/dot-vimrc">插件列表</a>，于是我就开始了开开心心的Vim插件攻略。</p>
 
 
 		
-		<a href="/blog/2014/05/06/vimcha-jian-quan-gong-lue/" class="more-link">Read on &rarr;</a>
+		<a href="/blog/2014/05/07/vimcha-jian-quan-gong-lue/" class="more-link">Read on &rarr;</a>
 	</div>
 
 </article>
@@ -365,7 +490,7 @@
   
 
 
-<time datetime="2014-04-28T19:11:07-07:00" data-updated="true" itemprop="datePublished"></time></div>
+<time datetime="2014-04-29T10:11:07+08:00" data-updated="true" itemprop="datePublished"></time></div>
 		<div class="tags">
 
 
@@ -374,10 +499,10 @@
 
 </div>
 		
-			<span class="comments"><a href="/blog/2014/04/28/zhuan-linuxchu-shi-pei-zhi/#disqus_thread">Comments</a></span>
+			<span class="comments"><a href="/blog/2014/04/29/zhuan-linuxchu-shi-pei-zhi/#disqus_thread">Comments</a></span>
 		
 	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2014/04/28/zhuan-linuxchu-shi-pei-zhi/" itemprop="url">[转]Linux初始配置</a></h1>
+	<h1 class="title" itemprop="name"><a href="/blog/2014/04/29/zhuan-linuxchu-shi-pei-zhi/" itemprop="url">[转]Linux初始配置</a></h1>
 	<div class="entry-content" itemprop="articleBody">
 		<p>转载自：<a target="_blank" href="http://www.2cto.com/Article/201304/200418.html"><a href="http://www.2cto.com/Article/201304/200418.html">http://www.2cto.com/Article/201304/200418.html</a></a></p>
 
@@ -385,7 +510,7 @@
 
 
 		
-		<a href="/blog/2014/04/28/zhuan-linuxchu-shi-pei-zhi/" class="more-link">Read on &rarr;</a>
+		<a href="/blog/2014/04/29/zhuan-linuxchu-shi-pei-zhi/" class="more-link">Read on &rarr;</a>
 	</div>
 
 </article>
@@ -405,7 +530,7 @@
   
 
 
-<time datetime="2014-04-21T23:52:39-07:00" data-updated="true" itemprop="datePublished"></time></div>
+<time datetime="2014-04-22T14:52:39+08:00" data-updated="true" itemprop="datePublished"></time></div>
 		<div class="tags">
 
 
@@ -414,93 +539,16 @@
 
 </div>
 		
-			<span class="comments"><a href="/blog/2014/04/21/linuxde-sou-gou-shu-ru-fa-!/#disqus_thread">Comments</a></span>
+			<span class="comments"><a href="/blog/2014/04/22/linuxde-sou-gou-shu-ru-fa-!/#disqus_thread">Comments</a></span>
 		
 	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2014/04/21/linuxde-sou-gou-shu-ru-fa-!/" itemprop="url">Linux的搜狗输入法！</a></h1>
+	<h1 class="title" itemprop="name"><a href="/blog/2014/04/22/linuxde-sou-gou-shu-ru-fa-!/" itemprop="url">Linux的搜狗输入法！</a></h1>
 	<div class="entry-content" itemprop="articleBody">
 		<p>貌似好久之前就知道搜狗输入法推出了linux版本，但是当时用的是Debian74系统。Debian的特点就是软件版本比较老（考虑的是稳定性之类的原因，毕竟Debian更多的是用在服务器上的）。而且搜狗输入法又不是开源的，不能自己编译，所以出现的libc6的版本不兼容问题很是蛋疼。昨天还是决定装上Ubuntu14.04，然后装上了搜狗输入法，那感觉真是一个爽啊。从此Linux打字也有了飞一般的感觉，也不用担心满篇的错别字了。
 附带一个链接吧<a href="http://pinyin.sogou.com/linux/">伟大的搜狗输入法</a></p>
 
 		
 		
-	</div>
-
-</article>
-
-
-    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-04-02T06:48:10-07:00" data-updated="true" itemprop="datePublished"></time></div>
-		<div class="tags">
-
-
-	<a class='category' href='/blog/categories/html5/'>html5</a>
-
-
-</div>
-		
-			<span class="comments"><a href="/blog/2014/04/02/piao-liang-de-svgbei-jing/#disqus_thread">Comments</a></span>
-		
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2014/04/02/piao-liang-de-svgbei-jing/" itemprop="url">漂亮的svg背景</a></h1>
-	<div class="entry-content" itemprop="articleBody">
-		<p>今天很巧合的遇到了两次很漂亮的svg背景，于是打算把他们收集下来。<br/>
-收集的背景来源于<a href="http://www.svgeneration.com/">www.svgeneration.com</a> 和 github 的 explore 模块。</p>
-
-
-		
-		<a href="/blog/2014/04/02/piao-liang-de-svgbei-jing/" class="more-link">Read on &rarr;</a>
-	</div>
-
-</article>
-
-
-    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-03-21T09:51:51-07:00" data-updated="true" itemprop="datePublished"></time></div>
-		<div class="tags">
-
-
-	<a class='category' href='/blog/categories/html5/'>html5</a>
-
-
-</div>
-		
-			<span class="comments"><a href="/blog/2014/03/21/2048you-xi-an-zhuo-yi-zhi-ban/#disqus_thread">Comments</a></span>
-		
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2014/03/21/2048you-xi-an-zhuo-yi-zhi-ban/" itemprop="url">2048游戏安卓移植版</a></h1>
-	<div class="entry-content" itemprop="articleBody">
-		<p>这几天一直在玩2048游戏，觉得这个游戏很有意思。上次研究了一下源代码于是就写了个‘外挂’(囧)。后来在手机上玩，发现网页版的玩着不爽，于是想着把这个游戏当成基于安卓的html5游戏。于是就看了一下怎么写android的html5游戏。的出结论是基于WebView——在应用中开一个区域显示网页内容，所以这个区域就是一个浏览器了。经过两天的努力算是弄了个<a href="/assets/storage/2048">小样</a>出来。最后还是利用WebView移植到<a href="https://github.com/LanderlYoung/2048_android">安卓平台</a>，使用起来和native app没啥区别。</p>
-
-
-		
-		<a href="/blog/2014/03/21/2048you-xi-an-zhuo-yi-zhi-ban/" class="more-link">Read on &rarr;</a>
 	</div>
 
 </article>
@@ -573,42 +621,42 @@
       </li>
     
       <li class="post">
-        <a href="/blog/2014/10/16/java-zhong-jnide-shi-yong/">Java 中JNI的使用</a>
+        <a href="/blog/2014/10/31/androidzhong-de-wakelockshi-yong/">Android中的WakeLock使用</a>
       </li>
     
       <li class="post">
-        <a href="/blog/2014/10/14/run-commamd-before-build-in-intellij-idea/">Run Commamd Before Build in IntelliJ IDEA</a>
+        <a href="/blog/2014/10/16/java-zhong-jnide-shi-yong/">Java 中JNI的使用</a>
       </li>
     
   </ul>
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/android/'>android (6)</a></li><li><a href='/blog/categories/git/'>git (2)</a></li><li><a href='/blog/categories/html5/'>html5 (5)</a></li><li><a href='/blog/categories/java/'>java (4)</a></li><li><a href='/blog/categories/javascript/'>javascript (3)</a></li><li><a href='/blog/categories/linux/'>linux (7)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/android/'>android (8)</a></li><li><a href='/blog/categories/git/'>git (2)</a></li><li><a href='/blog/categories/html5/'>html5 (5)</a></li><li><a href='/blog/categories/java/'>java (4)</a></li><li><a href='/blog/categories/javascript/'>javascript (3)</a></li><li><a href='/blog/categories/linux/'>linux (7)</a></li></ul>
 </section>
 <section>
 	<h1>Tags</h1>
 	<ul class="tag-cloud">
-		<li><a style="font-size: 117.3%" href="/tags/android/">Android</a></li>
-<li><a style="font-size: 78.8%" href="/tags/linux/">Linux</a></li>
-<li><a style="font-size: 84.4%" href="/tags/html5/">HTML5</a></li>
-<li><a style="font-size: 95.4%" href="/tags/java/">Java</a></li>
-<li><a style="font-size: 105.1%" href="/tags/node-dot-js/">Node.js</a></li>
-<li><a style="font-size: 72.3%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
-<li><a style="font-size: 107.6%" href="/tags/java/">java</a></li>
-<li><a style="font-size: 83.7%" href="/tags/git/">Git</a></li>
-<li><a style="font-size: 79.7%" href="/tags/vim/">Vim</a></li>
-<li><a style="font-size: 82.6%" href="/tags/zhuan-tie/">转贴</a></li>
-<li><a style="font-size: 105.9%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
-<li><a style="font-size: 103.3%" href="/tags/ui/">UI</a></li>
-<li><a style="font-size: 82.3%" href="/tags/svg/">SVG</a></li>
-<li><a style="font-size: 72.6%" href="/tags/tencent/">tencent</a></li>
-<li><a style="font-size: 92.3%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
-<li><a style="font-size: 80.8%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
-<li><a style="font-size: 78.0%" href="/tags/android/">android</a></li>
-<li><a style="font-size: 71.7%" href="/tags/intellij/">IntelliJ</a></li>
-<li><a style="font-size: 103.5%" href="/tags/jni/">JNI</a></li>
-<li><a style="font-size: 94.6%" href="/tags/bilibili/">bilibili</a></li>
+		<li><a style="font-size: 113.1%" href="/tags/android/">Android</a></li>
+<li><a style="font-size: 119.1%" href="/tags/linux/">Linux</a></li>
+<li><a style="font-size: 85.3%" href="/tags/html5/">HTML5</a></li>
+<li><a style="font-size: 93.9%" href="/tags/java/">Java</a></li>
+<li><a style="font-size: 105.5%" href="/tags/node-dot-js/">Node.js</a></li>
+<li><a style="font-size: 87.6%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
+<li><a style="font-size: 93.0%" href="/tags/git/">Git</a></li>
+<li><a style="font-size: 71.2%" href="/tags/java/">java</a></li>
+<li><a style="font-size: 118.3%" href="/tags/android/">android</a></li>
+<li><a style="font-size: 93.1%" href="/tags/vim/">Vim</a></li>
+<li><a style="font-size: 108.8%" href="/tags/zhuan-tie/">转贴</a></li>
+<li><a style="font-size: 108.9%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
+<li><a style="font-size: 75.5%" href="/tags/ui/">UI</a></li>
+<li><a style="font-size: 118.2%" href="/tags/tencent/">tencent</a></li>
+<li><a style="font-size: 91.6%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
+<li><a style="font-size: 90.9%" href="/tags/sensor/">sensor</a></li>
+<li><a style="font-size: 100.7%" href="/tags/svg/">SVG</a></li>
+<li><a style="font-size: 112.4%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
+<li><a style="font-size: 78.2%" href="/tags/intellij/">IntelliJ</a></li>
+<li><a style="font-size: 111.1%" href="/tags/jni/">JNI</a></li>
 
 	</ul>
 </section>

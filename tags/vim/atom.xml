@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: Vim | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/tags/vim/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2015-07-09T04:09:36-07:00</updated>
+  <updated>2015-07-10T10:30:22+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Vim quick reference]]></title>
     <link href="http://LanderlYoung.github.io/blog/2014/05/07/vim-quick-reference/"/>
-    <updated>2014-05-07T07:46:32-07:00</updated>
+    <updated>2014-05-07T22:46:32+08:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/05/07/vim-quick-reference</id>
     <content type="html"><![CDATA[<center>
 <h2><b>quickref.txt</b>  For Vim version 7.4.  Last change: 2013 Jun 29</h2>
@@ -2839,9 +2839,9 @@
   
   <entry>
     <title type="html"><![CDATA[Vim插件全攻略]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/05/06/vimcha-jian-quan-gong-lue/"/>
-    <updated>2014-05-06T20:42:23-07:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/05/06/vimcha-jian-quan-gong-lue</id>
+    <link href="http://LanderlYoung.github.io/blog/2014/05/07/vimcha-jian-quan-gong-lue/"/>
+    <updated>2014-05-07T11:42:23+08:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2014/05/07/vimcha-jian-quan-gong-lue</id>
     <content type="html"><![CDATA[<p>原来配置vim插件的时候因为总是要下载解压，试用然后把.vim目录弄得乱七八糟。所以也就用了那几个插件，本着够用就好的原则。今天才发现Vim也有自己的插件管理工具<a href="https://github.com/gmarik/Vundle.vim">Vundle</a>真的是太开心了。然后又发现了有大神共享的<a href="https://github.com/humiaozuzu/dot-vimrc">插件列表</a>，于是我就开始了开开心心的Vim插件攻略。</p>
 
 <!--more-->

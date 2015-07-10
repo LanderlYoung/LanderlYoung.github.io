@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: HTML5 | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/tags/html5/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2015-07-09T04:09:36-07:00</updated>
+  <updated>2015-07-10T10:30:22+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[css动画链接特效]]></title>
     <link href="http://LanderlYoung.github.io/blog/2014/05/27/cssdong-hua-lian-jie-te-xiao/"/>
-    <updated>2014-05-27T02:24:01-07:00</updated>
+    <updated>2014-05-27T17:24:01+08:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/05/27/cssdong-hua-lian-jie-te-xiao</id>
     <content type="html"><![CDATA[<p>今天见到几个css3实现的连接特效，效果不错。放到博客上<a href="http://landerlyoung.github.io/assets/storage/CreativeLinkEffects">存档</a>一下。可惜的是找不到原始地址了。</p>
 
@@ -28,7 +28,7 @@
   <entry>
     <title type="html"><![CDATA[网页中实现阅读模式]]></title>
     <link href="http://LanderlYoung.github.io/blog/2014/05/26/wang-ye-zhong-shi-xian-yue-du-mo-shi/"/>
-    <updated>2014-05-26T07:03:55-07:00</updated>
+    <updated>2014-05-26T22:03:55+08:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/05/26/wang-ye-zhong-shi-xian-yue-du-mo-shi</id>
     <content type="html"><![CDATA[<p>一直觉得safari的阅读模式超赞，然后今天突然觉得想有一个。于是搜索了一些东西找到了readability这个东西。</p>
 
@@ -44,7 +44,7 @@
   <entry>
     <title type="html"><![CDATA[漂亮的svg背景]]></title>
     <link href="http://LanderlYoung.github.io/blog/2014/04/02/piao-liang-de-svgbei-jing/"/>
-    <updated>2014-04-02T06:48:10-07:00</updated>
+    <updated>2014-04-02T21:48:10+08:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/04/02/piao-liang-de-svgbei-jing</id>
     <content type="html"><![CDATA[<p>今天很巧合的遇到了两次很漂亮的svg背景，于是打算把他们收集下来。<br/>
 收集的背景来源于<a href="http://www.svgeneration.com/">www.svgeneration.com</a> 和 github 的 explore 模块。</p>
@@ -127,9 +127,9 @@ var styles = [
   
   <entry>
     <title type="html"><![CDATA[2048游戏安卓移植版]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/03/21/2048you-xi-an-zhuo-yi-zhi-ban/"/>
-    <updated>2014-03-21T09:51:51-07:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/03/21/2048you-xi-an-zhuo-yi-zhi-ban</id>
+    <link href="http://LanderlYoung.github.io/blog/2014/03/22/2048you-xi-an-zhuo-yi-zhi-ban/"/>
+    <updated>2014-03-22T00:51:51+08:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2014/03/22/2048you-xi-an-zhuo-yi-zhi-ban</id>
     <content type="html"><![CDATA[<p>这几天一直在玩2048游戏，觉得这个游戏很有意思。上次研究了一下源代码于是就写了个‘外挂’(囧)。后来在手机上玩，发现网页版的玩着不爽，于是想着把这个游戏当成基于安卓的html5游戏。于是就看了一下怎么写android的html5游戏。的出结论是基于WebView——在应用中开一个区域显示网页内容，所以这个区域就是一个浏览器了。经过两天的努力算是弄了个<a href="/assets/storage/2048">小样</a>出来。最后还是利用WebView移植到<a href="https://github.com/LanderlYoung/2048_android">安卓平台</a>，使用起来和native app没啥区别。</p>
 
 <!--more-->
@@ -151,7 +151,7 @@ var styles = [
   <entry>
     <title type="html"><![CDATA[2048游戏的'外挂'代码]]></title>
     <link href="http://LanderlYoung.github.io/blog/2014/03/14/2048you-xi-de-slash-wai-gua-slash-dai-ma/"/>
-    <updated>2014-03-14T07:12:35-07:00</updated>
+    <updated>2014-03-14T22:12:35+08:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/03/14/2048you-xi-de-slash-wai-gua-slash-dai-ma</id>
     <content type="html"><![CDATA[<p>这两天<a href="http://gabrielecirulli.github.io/2048/">‘2048’</a>游戏很火，于是我秉承这学习的态度研究了一下他的代码。
 本以为使用canvas实现的，后来发现就是普通的html元素，突然觉得开发者还是很厉害的！<br/>

@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: Linux | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/tags/linux/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2015-07-09T04:09:36-07:00</updated>
+  <updated>2015-07-10T10:30:22+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Vim插件全攻略]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/05/06/vimcha-jian-quan-gong-lue/"/>
-    <updated>2014-05-06T20:42:23-07:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/05/06/vimcha-jian-quan-gong-lue</id>
+    <link href="http://LanderlYoung.github.io/blog/2014/05/07/vimcha-jian-quan-gong-lue/"/>
+    <updated>2014-05-07T11:42:23+08:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2014/05/07/vimcha-jian-quan-gong-lue</id>
     <content type="html"><![CDATA[<p>原来配置vim插件的时候因为总是要下载解压，试用然后把.vim目录弄得乱七八糟。所以也就用了那几个插件，本着够用就好的原则。今天才发现Vim也有自己的插件管理工具<a href="https://github.com/gmarik/Vundle.vim">Vundle</a>真的是太开心了。然后又发现了有大神共享的<a href="https://github.com/humiaozuzu/dot-vimrc">插件列表</a>，于是我就开始了开开心心的Vim插件攻略。</p>
 
 <!--more-->
@@ -33,9 +33,9 @@
   
   <entry>
     <title type="html"><![CDATA[[转]Linux初始配置]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/04/28/zhuan-linuxchu-shi-pei-zhi/"/>
-    <updated>2014-04-28T19:11:07-07:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/04/28/zhuan-linuxchu-shi-pei-zhi</id>
+    <link href="http://LanderlYoung.github.io/blog/2014/04/29/zhuan-linuxchu-shi-pei-zhi/"/>
+    <updated>2014-04-29T10:11:07+08:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2014/04/29/zhuan-linuxchu-shi-pei-zhi</id>
     <content type="html"><![CDATA[<p>转载自：<a target="_blank" href="http://www.2cto.com/Article/201304/200418.html"><a href="http://www.2cto.com/Article/201304/200418.html">http://www.2cto.com/Article/201304/200418.html</a></a></p>
 
 <p>昨天折腾了 Kali Linux 1.0，把大概的配置过程记录下来，希望对想接触或使用Kali Linux的同学有所帮助。</p>
@@ -413,9 +413,9 @@ chmod u+x INSTALL
   
   <entry>
     <title type="html"><![CDATA[linux的搜狗输入法！]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/04/21/linuxde-sou-gou-shu-ru-fa-!/"/>
-    <updated>2014-04-21T23:52:39-07:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/04/21/linuxde-sou-gou-shu-ru-fa-!</id>
+    <link href="http://LanderlYoung.github.io/blog/2014/04/22/linuxde-sou-gou-shu-ru-fa-!/"/>
+    <updated>2014-04-22T14:52:39+08:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2014/04/22/linuxde-sou-gou-shu-ru-fa-!</id>
     <content type="html"><![CDATA[<p>貌似好久之前就知道搜狗输入法推出了linux版本，但是当时用的是Debian74系统。Debian的特点就是软件版本比较老（考虑的是稳定性之类的原因，毕竟Debian更多的是用在服务器上的）。而且搜狗输入法又不是开源的，不能自己编译，所以出现的libc6的版本不兼容问题很是蛋疼。昨天还是决定装上Ubuntu14.04，然后装上了搜狗输入法，那感觉真是一个爽啊。从此Linux打字也有了飞一般的感觉，也不用担心满篇的错别字了。
 附带一个链接吧<a href="http://pinyin.sogou.com/linux/">伟大的搜狗输入法</a></p>
 ]]></content>
@@ -423,9 +423,9 @@ chmod u+x INSTALL
   
   <entry>
     <title type="html"><![CDATA[linux fork和exec系列函数]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/01/12/linux-forkhe-execxi-lie-han-shu/"/>
-    <updated>2014-01-12T08:31:29-08:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/01/12/linux-forkhe-execxi-lie-han-shu</id>
+    <link href="http://LanderlYoung.github.io/blog/2014/01/13/linux-forkhe-execxi-lie-han-shu/"/>
+    <updated>2014-01-13T00:31:29+08:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2014/01/13/linux-forkhe-execxi-lie-han-shu</id>
     <content type="html"><![CDATA[<p>linux 中的<a href="http://en.wikipedia.org/wiki/Fork_(system_call)">fork</a>和<a href="http://en.wikipedia.org/wiki/Exec_(operating_system)">exec</a>函数是进程相关的两个函数，最早在大二的操作系统课上了解到。今天要写个小东西偶尔用到就研究了一下。</p>
 
 <h2>1.fork</h2>
@@ -750,7 +750,7 @@ busybox 的输出太长了，我删掉了一部分并用省略号标记。可以
   <entry>
     <title type="html"><![CDATA[linux触摸板自然滚动]]></title>
     <link href="http://LanderlYoung.github.io/blog/2014/01/12/linuxchong-mo-ban-zi-ran-gun-dong/"/>
-    <updated>2014-01-12T04:11:36-08:00</updated>
+    <updated>2014-01-12T20:11:36+08:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/01/12/linuxchong-mo-ban-zi-ran-gun-dong</id>
     <content type="html"><![CDATA[<p>触摸板的自然滚动最早是乔帮主发明的。</p>
 
@@ -797,7 +797,7 @@ synclient HorizScrollDelta=-103
 
 <h1>Author:           Landerl Young</h1>
 
-<h1>e-Mail:           <a href="&#109;&#x61;&#x69;&#108;&#x74;&#x6f;&#x3a;&#x4c;&#97;&#x6e;&#x64;&#x65;&#114;&#108;&#89;&#x6f;&#117;&#x6e;&#103;&#x40;&#103;&#x6d;&#97;&#x69;&#x6c;&#46;&#x63;&#111;&#x6d;">&#x4c;&#97;&#x6e;&#x64;&#x65;&#x72;&#108;&#x59;&#x6f;&#x75;&#x6e;&#103;&#64;&#x67;&#109;&#97;&#x69;&#108;&#46;&#99;&#111;&#x6d;</a></h1>
+<h1>e-Mail:           <a href="&#109;&#97;&#105;&#x6c;&#116;&#x6f;&#58;&#76;&#x61;&#110;&#100;&#101;&#114;&#108;&#x59;&#x6f;&#x75;&#x6e;&#103;&#x40;&#x67;&#x6d;&#97;&#x69;&#x6c;&#x2e;&#x63;&#x6f;&#109;">&#76;&#x61;&#110;&#100;&#x65;&#114;&#x6c;&#89;&#111;&#x75;&#110;&#x67;&#x40;&#103;&#x6d;&#97;&#x69;&#108;&#x2e;&#x63;&#111;&#109;</a></h1>
 
 <h1>Created Time:     Thu 31 Oct 2013 01:41:46 PM HST</h1>
 

@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: Octpress搬迁编辑位置 | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/tags/octpressban-qian-bian-ji-wei-zhi/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2015-07-09T04:09:36-07:00</updated>
+  <updated>2015-07-10T10:30:22+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[用git下载单个分支]]></title>
     <link href="http://LanderlYoung.github.io/blog/2014/01/06/yong-gitxia-zai-dan-ge-fen-zhi/"/>
-    <updated>2014-01-06T00:45:34-08:00</updated>
+    <updated>2014-01-06T16:45:34+08:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/01/06/yong-gitxia-zai-dan-ge-fen-zhi</id>
     <content type="html"><![CDATA[<p>最近在玩octpress。开始一直在我的Debian系统里面玩的，后来因为一夹些软件必须在windows下面跑，只能在虚拟机里写博客了。然后就打算把github上的网页项目下载下来。但是这个项目有点不一样。github.io的博客项目有两个分支，master和source;其实他们根本不是分支的概念，没有什么交集的。在octpress项目文件夹里面是source分支里的内容，除了_deploy目录内的东西是用gitignore忽略的，_deploy里面的内容就是master分支的东西了。</p>
 

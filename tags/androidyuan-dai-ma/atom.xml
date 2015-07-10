@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: Android源代码 | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/tags/androidyuan-dai-ma/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2015-07-09T04:09:36-07:00</updated>
+  <updated>2015-07-10T10:30:22+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Android 中的Handler相关源代码浅析]]></title>
     <link href="http://LanderlYoung.github.io/blog/2014/06/24/android-zhong-de-handlerxiang-guan-yuan-dai-ma-qian-xi/"/>
-    <updated>2014-06-24T02:01:09-07:00</updated>
+    <updated>2014-06-24T17:01:09+08:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/06/24/android-zhong-de-handlerxiang-guan-yuan-dai-ma-qian-xi</id>
     <content type="html"><![CDATA[<p>简单用法示例：</p>
 

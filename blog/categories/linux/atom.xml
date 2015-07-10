@@ -4,7 +4,7 @@
   <title><![CDATA[Category: linux | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2015-07-09T04:09:36-07:00</updated>
+  <updated>2015-07-10T10:30:22+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -16,11 +16,11 @@
   <entry>
     <title type="html"><![CDATA[ijkplyer 编译配置]]></title>
     <link href="http://LanderlYoung.github.io/blog/2015/07/09/ijkplyer-bian-yi-pei-zhi/"/>
-    <updated>2015-07-09T03:53:18-07:00</updated>
+    <updated>2015-07-09T18:53:18+08:00</updated>
     <id>http://LanderlYoung.github.io/blog/2015/07/09/ijkplyer-bian-yi-pei-zhi</id>
     <content type="html"><![CDATA[<h1>IjkMediaPlayer 使用手册</h1>
 
-<blockquote><p><a href="&#x6d;&#97;&#x69;&#108;&#x74;&#111;&#58;&#x74;&#x61;&#x79;&#108;&#x6f;&#x72;&#99;&#121;&#x61;&#x6e;&#x67;&#x40;&#116;&#101;&#110;&#99;&#101;&#x6e;&#x74;&#46;&#x63;&#111;&#x6d;">&#116;&#97;&#x79;&#108;&#111;&#x72;&#99;&#121;&#97;&#x6e;&#x67;&#x40;&#116;&#x65;&#x6e;&#99;&#101;&#x6e;&#116;&#x2e;&#x63;&#111;&#109;</a></p></blockquote>
+<blockquote><p><a href="&#x6d;&#97;&#105;&#x6c;&#x74;&#x6f;&#x3a;&#x74;&#x61;&#x79;&#x6c;&#111;&#x72;&#x63;&#121;&#x61;&#110;&#103;&#64;&#x74;&#101;&#x6e;&#x63;&#101;&#110;&#116;&#x2e;&#99;&#x6f;&#x6d;">&#116;&#97;&#x79;&#108;&#111;&#114;&#x63;&#x79;&#x61;&#110;&#103;&#x40;&#x74;&#x65;&#110;&#x63;&#x65;&#110;&#116;&#x2e;&#x63;&#111;&#x6d;</a></p></blockquote>
 
 <ol>
 <li>首先编译环境是OS X或者linux或者其他*nix系统（Windows暂不支持，因为ijkplayer中使用了软链接o(╯□╰)o）。</li>
@@ -416,7 +416,7 @@
 </span><span class='line'>  &lt;entry&gt;
 </span><span class='line'>    &lt;title <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;html&quot;</span>&gt;&lt;!<span class="o">[</span>CDATA<span class="o">[</span>Vim quick reference<span class="o">]]</span>&gt;&lt;/title&gt;
 </span><span class='line'>    &lt;link <span class="nv">href</span><span class="o">=</span><span class="s2">&quot;http://LanderlYoung.github.io/blog/2014/05/07/vim-quick-reference/&quot;</span>/&gt;
-</span><span class='line'>    &lt;updated&gt;2014-05-07T07:46:32-07:00&lt;/updated&gt;
+</span><span class='line'>    &lt;updated&gt;2014-05-07T22:46:32+08:00&lt;/updated&gt;
 </span><span class='line'>    &lt;id&gt;http://LanderlYoung.github.io/blog/2014/05/07/vim-quick-reference&lt;/id&gt;
 </span><span class='line'>    &lt;content <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;html&quot;</span>&gt;&lt;!<span class="o">[</span>CDATA<span class="o">[</span>&lt;center&gt;
 </span><span class='line'>&lt;h2&gt;&lt;b&gt;quickref.txt&lt;/b&gt;  For Vim version 7.4.  Last change: <span class="m">2013</span> Jun 29&lt;/h2&gt;
@@ -1840,9 +1840,9 @@ zi      zi          invert &#8216;foldenable&#8217;
   
   <entry>
     <title type="html"><![CDATA[Vim插件全攻略]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/05/06/vimcha-jian-quan-gong-lue/"/>
-    <updated>2014-05-06T20:42:23-07:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/05/06/vimcha-jian-quan-gong-lue</id>
+    <link href="http://LanderlYoung.github.io/blog/2014/05/07/vimcha-jian-quan-gong-lue/"/>
+    <updated>2014-05-07T11:42:23+08:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2014/05/07/vimcha-jian-quan-gong-lue</id>
     <content type="html"><![CDATA[<p>原来配置vim插件的时候因为总是要下载解压，试用然后把.vim目录弄得乱七八糟。所以也就用了那几个插件，本着够用就好的原则。今天才发现Vim也有自己的插件管理工具<a href="https://github.com/gmarik/Vundle.vim">Vundle</a>真的是太开心了。然后又发现了有大神共享的<a href="https://github.com/humiaozuzu/dot-vimrc">插件列表</a>，于是我就开始了开开心心的Vim插件攻略。</p>
 
 <!--more-->
@@ -1858,9 +1858,9 @@ zi      zi          invert &#8216;foldenable&#8217;
   
   <entry>
     <title type="html"><![CDATA[[转]Linux初始配置]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/04/28/zhuan-linuxchu-shi-pei-zhi/"/>
-    <updated>2014-04-28T19:11:07-07:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/04/28/zhuan-linuxchu-shi-pei-zhi</id>
+    <link href="http://LanderlYoung.github.io/blog/2014/04/29/zhuan-linuxchu-shi-pei-zhi/"/>
+    <updated>2014-04-29T10:11:07+08:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2014/04/29/zhuan-linuxchu-shi-pei-zhi</id>
     <content type="html"><![CDATA[<p>转载自：<a target="_blank" href="http://www.2cto.com/Article/201304/200418.html"><a href="http://www.2cto.com/Article/201304/200418.html">http://www.2cto.com/Article/201304/200418.html</a></a></p>
 
 <p>昨天折腾了 Kali Linux 1.0，把大概的配置过程记录下来，希望对想接触或使用Kali Linux的同学有所帮助。</p>
@@ -2238,9 +2238,9 @@ chmod u+x INSTALL
   
   <entry>
     <title type="html"><![CDATA[linux的搜狗输入法！]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/04/21/linuxde-sou-gou-shu-ru-fa-!/"/>
-    <updated>2014-04-21T23:52:39-07:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/04/21/linuxde-sou-gou-shu-ru-fa-!</id>
+    <link href="http://LanderlYoung.github.io/blog/2014/04/22/linuxde-sou-gou-shu-ru-fa-!/"/>
+    <updated>2014-04-22T14:52:39+08:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2014/04/22/linuxde-sou-gou-shu-ru-fa-!</id>
     <content type="html"><![CDATA[<p>貌似好久之前就知道搜狗输入法推出了linux版本，但是当时用的是Debian74系统。Debian的特点就是软件版本比较老（考虑的是稳定性之类的原因，毕竟Debian更多的是用在服务器上的）。而且搜狗输入法又不是开源的，不能自己编译，所以出现的libc6的版本不兼容问题很是蛋疼。昨天还是决定装上Ubuntu14.04，然后装上了搜狗输入法，那感觉真是一个爽啊。从此Linux打字也有了飞一般的感觉，也不用担心满篇的错别字了。
 附带一个链接吧<a href="http://pinyin.sogou.com/linux/">伟大的搜狗输入法</a></p>
 ]]></content>

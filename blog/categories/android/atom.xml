@@ -4,7 +4,7 @@
   <title><![CDATA[Category: android | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/blog/categories/android/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2015-07-09T04:09:36-07:00</updated>
+  <updated>2015-07-10T10:30:22+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Android中service的使用]]></title>
     <link href="http://LanderlYoung.github.io/blog/2014/11/09/androidzhong-servicede-shi-yong/"/>
-    <updated>2014-11-09T02:07:03-08:00</updated>
+    <updated>2014-11-09T18:07:03+08:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/11/09/androidzhong-servicede-shi-yong</id>
     <content type="html"><![CDATA[<h2>Android 中service的使用 笔记</h2>
 
@@ -442,10 +442,99 @@ if (mDemoServiceBinder != null) {
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[Android中的WakeLock使用]]></title>
+    <link href="http://LanderlYoung.github.io/blog/2014/10/31/androidzhong-de-wakelockshi-yong/"/>
+    <updated>2014-10-31T10:08:26+08:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2014/10/31/androidzhong-de-wakelockshi-yong</id>
+    <content type="html"><![CDATA[<p>android系统在手机屏幕锁定之后一般会让手机休眠，以提高电池的使用时间。但是休眠意味着CPU频率降低，有时候可能需要做一些需要大量运算的任务，所以需要唤醒CPU。WakeLock可以做到这一点。</p>
+
+<!--more-->
+
+
+<h3>WakeLock的创建是：</h3>
+
+<pre><code class="java">
+PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+
+Wakelock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+
+        "MyWakelockTag");
+</code></pre>
+
+<p>另外如果要使用WakeLock需要在Manifest中添加如下权限</p>
+
+<p><code>&lt;uses-permission android:name="android.permission.WAKE_LOCK" /&gt;</code></p>
+
+<h3>WakeLock的等级</h3>
+
+<p>上面的第一个参数是WakeLock levelAndFlag，分别代表了一种WakeLock等级，并且可以通过「或」位操作组合使用。他们是：</p>
+
+<ol>
+<li><p>PARTIAL_WAKE_LOCK：保证CPU保持高性能运行，而屏幕和键盘背光（也可能是触摸按键的背光）关闭。一般情况下都会使用这个WakeLock。</p></li>
+<li><p>ACQUIRE_CAUSES_WAKEUP：这个WakeLock除了会使CPU高性能运行外还会导致屏幕亮起，即使屏幕原先处于关闭的状态下。</p></li>
+<li><p>ON_AFTER_RELEASE：如果释放WakeLock的时候屏幕处于亮着的状态，则在释放WakeLock之后让屏幕再保持亮一小会。如果释放WakeLock的时候屏幕本身就没亮，则不会有动作。</p></li>
+</ol>
+
+
+<p>被<strong>弃用</strong>的WakeLock：</p>
+
+<ol>
+<li><p>SCREEN_DIM_WAKE_LOCK：保证屏幕亮起，但是亮度可能比较低。同时键盘背光也可以不亮。</p></li>
+<li><p>SCREEN_BRIGHT_WAKE_LOCK ：保证屏幕全亮，同时键盘背光也亮。</p></li>
+<li><p>FULL_WAKE_LOCK：表现和SCREEN_BRIGHT_WAKE_LOCK 类似，但是区别在于这个等级的WakeLock使用的是<strong>最高亮度</strong>！</p></li>
+</ol>
+
+
+<p>这三个Level在API17被弃用。被弃用说明肯定有替代品吗，上面三个类型的作用无非就是保持屏幕长亮。所以推荐是用WindowFlag<code>WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON</code>。使用方法是：</p>
+
+<ol>
+<li><p>在Activity中： <code>getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);</code></p></li>
+<li><p>甚至可以在布局中添加这个属性：<code>android:keepScreenOn="true"</code></p></li>
+</ol>
+
+
+<p>被<strong>隐藏</strong>的WakeLock：</p>
+
+<p>android中的部分api并不对用户应用开放，他们通过在注释中加入<code>{@hide}</code>来注明。但是在SDK提供的源代码中是可以看到的。</p>
+
+<ul>
+<li>WAIT_FOR_PROXIMITY_NEGATIVE：用于和接近传感器配合使用，来实现电话应用中打电话时可以使屏幕黑掉，手机离开时又能使屏幕亮起来的功能。acqure的时候屏幕会暗下来，release之后屏幕会亮。其值是32（int）。虽然被hide起来，但是感觉这个超实用的好吗！！！为啥要hide起来。。。「话说在API21 上终于开放了（开放这么晚有个屁用啊(╯‵□′)╯︵┻━┻）」经试验，不过newWakeLock的时候flag直接用32代替是可以创建这个等级的WakeLock的，但是因为是非开放API，不能保证第三方OEM修改这个代码实现！因此使用起来并不安全。「说的好像开放的API第三方OEM就不会乱改一样。。。(╯‵□′)╯︵┻━┻」</li>
+</ul>
+
+
+<h3>WakeLock的使用：</h3>
+
+<ul>
+<li><p>获取WakeLock：</p>
+
+<ol>
+<li><p><code>void acquire()</code>:获得WakeLock</p></li>
+<li><p><code>void acquire(long timeOut)</code>:获得WakeLock timeOut时长，当超过timeOut之后系统自动释放WakeLock。</p></li>
+</ol>
+</li>
+<li><p>释放WakeLock：<code>release()</code></p></li>
+<li><p>判断是否已经获取WakeLock：<code>boolean isHeld()</code></p></li>
+<li><p><code>void setReferenceCounted(boolean value)</code>：是否使用引用计数。类似于垃圾回收策略，只是把垃圾回收改成了WakeLock回收。如果value是true的话将启用该特性，如果一个WakeLock acquire了多次也必须release多次才能释放掉。但是如果释放次数比acquire多则会抛出<code>RuntimeException("WakeLock under-locked " + mTag)</code>异常。<strong>默认是开启了引用计数的！</strong></p></li>
+</ul>
+
+
+<h3>PowerManager的几个实用方法</h3>
+
+<ol>
+<li><p><code>boolean PowerManager::isScreenOn ()</code>判断屏幕是否亮着（不管是暗的dimed还是正常亮度），在API20被弃用，推荐<code>boolean PowerManager::isInteractive ()</code></p></li>
+<li><p><code>void PowerManager::goToSleep(long time)</code>time是时间戳，一般是System.currentTimeMillis()+timeDelay。强制系统立刻休眠，需要Manifest中添加权限<code>"android.permission.DEVICE_POWER"</code>。按下电源键锁屏时调用的就是这个方法。</p></li>
+<li><p><code>void PowerManager::wakeUp(long time)</code>与上面对应。参数含义，所需权限与上同。按下电源键解锁屏幕时调用的就是这个方法。</p></li>
+<li><p><code>void PowerManager::reboot(String reason)</code>重启手机，reason是要传给linux内核的参数，比如“recovery”重启进recovery模式，“fastboot”重启进fastboot模式。需要权限<code>"android.permission.REBOOT"</code>。</p></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[安卓监听新收到短信]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/09/29/an-zhuo-jian-ting-xin-shou-dao-duan-xin/"/>
-    <updated>2014-09-29T20:52:25-07:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/09/29/an-zhuo-jian-ting-xin-shou-dao-duan-xin</id>
+    <link href="http://LanderlYoung.github.io/blog/2014/09/30/an-zhuo-jian-ting-xin-shou-dao-duan-xin/"/>
+    <updated>2014-09-30T11:52:25+08:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2014/09/30/an-zhuo-jian-ting-xin-shou-dao-duan-xin</id>
     <content type="html"><![CDATA[<p>安卓收到短信的事件是由系统发一个有序广播的，所以这里需要一个BroadcastReceiver。receiver收到的Intent里面并不是直接存储的短信内容，而是短信的原始数据。所以我们需要自己解码。</p>
 
 <p><strong>获取短信的原始数据：</strong>
@@ -524,10 +613,101 @@ public void onReceive(Context context, Intent intent) {
   </entry>
   
   <entry>
+    <title type="html"><![CDATA[安卓中传感器的使用]]></title>
+    <link href="http://LanderlYoung.github.io/blog/2014/09/10/an-zhuo-zhong-chuan-gan-qi-de-shi-yong/"/>
+    <updated>2014-09-10T10:12:22+08:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2014/09/10/an-zhuo-zhong-chuan-gan-qi-de-shi-yong</id>
+    <content type="html"><![CDATA[<p>由于需要一个像系统电话应用那样：打电话时可以使屏幕黑掉，手机离开时又能使屏幕亮起来的功能。所以需要能够获取「接近传感器」的数据。</p>
+
+<p>Android中的传感器只是一个抽象，它可能是硬件传感器，也可能是通过软件模拟的一个传感器。但是不管哪一种，对程序员来说都是一样的。</p>
+
+<p>Android中的传感器分为两类：</p>
+
+<ul>
+<li><p>连续性的传感器 比如：接近传感器，加速度传感器等。可以连续的反馈数据</p></li>
+<li><p>触发性的传感器 比如：significant motion sensor（好吧，我不知道他是啥；看名字貌似是监听用户的什么动作的）。总之就是那种会再特定情况下触发的传感器。</p></li>
+</ul>
+
+
+<!--more-->
+
+
+<p>Sensor的使用过程如下：</p>
+
+<pre><code class="java">public class SensorActivity extends Activity implements SensorEventListener {
+    private final SensorManager mSensorManager;
+    private final Sensor mAccelerometer;
+
+    public SensorActivity() {
+        //获取SensorManager
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        //获取对应的Sensor
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+    }
+
+    protected void onResume() {
+        super.onResume();
+        //注册一个Sensor的监听器，监听器的回调函数是在主线程中被调用的，因此要尽量避免阻塞主线程！
+        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    protected void onPause() {
+        super.onPause();
+        //取消注册一个Sensor的监听器
+        mSensorManager.unregisterListener(this);
+    }
+
+    /**
+     * SensorEventListener的回调方法
+     *
+     * @param sensor
+     * @param accuracy
+     */
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    }
+
+    /**
+     * SensorEventListener的回调方法
+     *
+     * @param event
+     */
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        float[] values = event.values;
+        /**
+         * 这是传感器传送来的数据，根据不同的传感器，其值和数组长度会有所不同。
+         */
+    }
+}
+</code></pre>
+
+<p>上面的注册监听器是针对以连续性的传感器，如果是触发性的传感器相应的换成：</p>
+
+<ul>
+<li><p>注册： <a href="http://developer.android.com/reference/android/hardware/SensorManager.html#requestTriggerSensor(android.hardware.TriggerEventListener,%20android.hardware.Sensor"><code>boolean SensorManager::requestTriggerSensor(TriggerEventListener listener, Sensor sensor)</code></a></p></li>
+<li><p>取消注册：<a href="http://developer.android.com/reference/android/hardware/SensorManager.html#cancelTriggerSensor(android.hardware.TriggerEventListener,%20android.hardware.Sensor"><code>boolean SensorManager::cancelTriggerSensor(TriggerEventListener listener, Sensor sensor)</code></a></p></li>
+<li><p>监听器：<a href="http://developer.android.com/reference/android/hardware/TriggerEventListener.html"><code>TriggerEventListener</code></a></p></li>
+</ul>
+
+
+<p>上面registerListener中最后一个参数是传感器的频率，频率越高单位时间内数据采集就越多，相应的也就更费电！频率从高到低分别是：</p>
+
+<ol>
+<li><p><code>SensorManager.SENSOR_DELAY_FASTEST</code> : 获取数据尽可能的快</p></li>
+<li><p><code>SensorManager.SENSOR_DELAY_GAME</code> : 适合游戏的频率</p></li>
+<li><p><code>SensorManager.SENSOR_DELAY_NORMAL</code>： 正常的频率，一般实时性要求不高都可以用这个设定。</p></li>
+<li><p><code>SensorManager.SENSOR_DELAY_UI</code>：适合普通用户界面的平率。由于频率低，所以，延时大，但是也会更省电。</p></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[一次对非静态内部类引用final变量的研究]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/08/09/yi-ci-dui-fei-jing-tai-nei-bu-lei-yin-yong-finalbian-liang-de-yan-jiu/"/>
-    <updated>2014-08-09T22:57:38-07:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/08/09/yi-ci-dui-fei-jing-tai-nei-bu-lei-yin-yong-finalbian-liang-de-yan-jiu</id>
+    <link href="http://LanderlYoung.github.io/blog/2014/08/10/yi-ci-dui-fei-jing-tai-nei-bu-lei-yin-yong-finalbian-liang-de-yan-jiu/"/>
+    <updated>2014-08-10T13:57:38+08:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2014/08/10/yi-ci-dui-fei-jing-tai-nei-bu-lei-yin-yong-finalbian-liang-de-yan-jiu</id>
     <content type="html"><![CDATA[<p>前几天遇到一个奇怪的问题，问题的起因是我把以前的RingfriendDialogBuilder（以下简称builder，没有IDE的自动补全打完全名还是很长的。。）修改了一下，添加了一个clear()方法。目的是避免每次创建一个Dialog都new一个builder的实例，这样一个builder可以用于创建多个dialog，以提高效率。接下来的问题就是因为这个修改导致的。</p>
 
 <!--more-->
@@ -668,251 +848,6 @@ private static class DialogButtonOnClickListener implements View.OnClickListener
 <p>&#8220;`</p>
 
 <h3>[完]</h3>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Android 中的Handler相关源代码浅析]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/06/24/android-zhong-de-handlerxiang-guan-yuan-dai-ma-qian-xi/"/>
-    <updated>2014-06-24T02:01:09-07:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/06/24/android-zhong-de-handlerxiang-guan-yuan-dai-ma-qian-xi</id>
-    <content type="html"><![CDATA[<p>简单用法示例：</p>
-
-<pre><code class="java">//在主线程中
-private Handler handler = new Handler() {
-    // 处理子线程给我们发送的消息。
-    @Override
-        public void handleMessage(android.os.Message msg) {
-            byte[] data = (byte[])msg.obj;
-            Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-            imageView.setImageBitmap(bitmap);
-            Log.v("handler", "thread:" + Thread.currentThread().getName() +
-                    " msg.target=" msg.getTarget());
-            if(msg.what == DOWNLOAD_IMG){
-                dialog.dismiss();
-            }
-        }
-}
-</code></pre>
-
-<!--more-->
-
-
-<p>然后开启新的线程，在新的线程里面完成后台任务，任务完成后给这个handler发一个消息让它来处理。因为Handler是在主线程实例化(并且在实例化的时候没有指明Looper)，因此handler的handleMessage方法也是在主线程被调用的。</p>
-
-<p>// 使用Handler Message MessageQueue Looper等方式去访问网络资源的时候，我们必须要开启一个子线程</p>
-
-<pre><code>public class MyThread implements Runnable{
-    // 在run方法中完成网络耗时的操作
-    @Override
-        public void run() {
-            HttpClient httpClient = new DefaultHttpClient();
-            HttpGet httpGet = new HttpGet(imgPath);
-            HttpResponse httpResponse = null;
-            try {
-                Log.v("debug", "start download picture in thread:" +
-                        Thread.currentThread().getName());
-                httpResponse = httpClient.execute(httpGet);
-                Log.v("debug", "download complete with status code" +
-                        httpResponse.getStatusLine().getStatusCode());
-                if(200 == httpResponse.getStatusLine().getStatusCode()){
-                    byte[] data = EntityUtils.toByteArray(httpResponse.getEntity());
-                    // 这里的数据data我们必须发送给UI的主线程，所以我们通过Message的方式来做桥梁。
-                    Message message = Message.obtain();
-                    message.obj = data;
-                    message.what = DOWNLOAD_IMG;
-                    handler.sendMessage(message);
-                }
-            } catch (Exception e) {
-                // TODO: handle exception
-            }
-        }
-}
-</code></pre>
-
-<p>分析一下整个过程的大致流程,首先从Handler的sendMessage下手：从源代码中看，sendMessage最终会调用到Handler中的sendMessageAtTime。</p>
-
-<pre><code class="java">public boolean sendMessageAtTime(Message msg, long uptimeMillis)
-{
-    boolean sent = false;
-    MessageQueue queue = mQueue;
-    if (queue != null) {
-        msg.target = this;
-        sent = queue.enqueueMessage(msg, uptimeMillis);
-    }
-    else {
-        RuntimeException e = new RuntimeException(
-                this + " sendMessageAtTime() called with no mQueue");
-        Log.w("Looper", e.getMessage(), e);
-    }
-    return sent;
-}
-</code></pre>
-
-<p>看得出来主要做的事情就是把消息的target设置成自己，然后把消息存入到消息队列MessageQueue中去，
-接着首先去看看MessageQueue mQueue的定义</p>
-
-<p>在Handler类的最后，既然是final的那初始化一定在构造函数了：
-默认构造函数，代码中的注释写道“默认构造函数，把这个handler和当前线程的消息队列联系起来，如果没有（当前线程的消息队列），这个handler就不能接收消息了。</p>
-
-<pre><code>/**
- * Default constructor associates this handler with the queue for the
- * current thread.
- *
- * If there isn't one, this handler won't be able to receive messages.
- */
-public Handler() {
-    ...
-        mLooper = Looper.myLooper();
-    if (mLooper == null) {
-        throw new RuntimeException(
-                "Can't create handler inside thread that has not called Looper.prepare()");
-    }
-    mQueue = mLooper.mQueue;
-    mCallback = null;
-}
-</code></pre>
-
-<p>使用提供的消息队列，而不是使用默认的。</p>
-
-<pre><code class="java">/**
- * Use the provided queue instead of the default one.
- */
-public Handler(Looper looper) {
-    mLooper = looper;
-    mQueue = looper.mQueue;
-    mCallback = null;
-}
-</code></pre>
-
-<p>从上面两个函数可以看出来消息队列是Looper的，handler的sendMessage只是把Message加到了消息队列去。接着去看看Looper对消息对了mQueue做了什么。</p>
-
-<p>Looper中的MessageQueue的定义如下：</p>
-
-<p>然后是Looper 中的loop方法</p>
-
-<pre><code class="java">/**
- * Run the message queue in this thread. Be sure to call
- * {@link #quit()} to end the loop.
- */
-public static void loop() {
-    final Looper me = myLooper();
-    if (me == null) {
-        throw new RuntimeException("No Looper; Looper.prepare() wasn't called on this thread.");
-    }
-    final MessageQueue queue = me.mQueue;
-
-    // Make sure the identity of this thread is that of the local process,
-    // and keep track of what that identity token actually is.
-    Binder.clearCallingIdentity();
-    final long ident = Binder.clearCallingIdentity();
-
-    for (;;) {
-        Message msg = queue.next(); // might block
-        if (msg == null) {
-            // No message indicates that the message queue is quitting.
-            return;
-        }
-
-        // This must be in a local variable, in case a UI event sets the logger
-        Printer logging = me.mLogging;
-        if (logging != null) {
-            logging.println("&gt;&gt;&gt;&gt;&gt; Dispatching to " + msg.target + " " +
-                    msg.callback + ": " + msg.what);
-        }
-
-        msg.target.dispatchMessage(msg);
-
-        if (logging != null) {
-            logging.println("&lt;&lt;&lt;&lt;&lt; Finished to " + msg.target + " " + msg.callback);
-        }
-
-        // Make sure that during the course of dispatching the
-        // identity of the thread wasn't corrupted.
-        final long newIdent = Binder.clearCallingIdentity();
-        if (ident != newIdent) {
-            Log.wtf(TAG, "Thread identity changed from 0x"
-                    + Long.toHexString(ident) + " to 0x"
-                    + Long.toHexString(newIdent) + " while dispatching to "
-                    + msg.target.getClass().getName() + " "
-                    + msg.callback + " what=" + msg.what);
-        }
-
-        msg.recycle();
-    }
-}
-</code></pre>
-
-<p>注意到中间的死循环 <code>for(;;;){...}</code>
-以及关键的这一句：</p>
-
-<p>猜测target就是这个message对应处理他的handler，于是我圆润的滚过去看看：
-Message中的target是这么定义的：</p>
-
-<p>看来八九不离十了。继续看target赋值的语句：</p>
-
-<p>当然还有各种带有Handler参数的obtain方法，都会给target赋值。
-于是看看Handler.dispatchMessage(Message)是做什么的：</p>
-
-<pre><code class="java">public void dispatchMessage(Message msg) {
-    if (msg.callback != null) {
-        handleCallback(msg);
-    } else {
-        if (mCallback != null) {
-            if (mCallback.handleMessage(msg)) {
-                return;
-            }
-        }
-        handleMessage(msg);
-    }
-}
-</code></pre>
-
-<p>如果msg的callback不为null就调用callback，否则如果就看看mCallback有没有设置，如果有的话就让callback来处理消息，如果没有就是用默认的处理方法。默认的处理方法是什么都不多，但是子类如果覆盖了handleMessage方法就可以执行子类想要做的代码了。</p>
-
-<p>但是 事情没有那么简单！还有一个无参数的obtain方法，那么没有指定target的message是怎么成功发送到相应的handler的呢？还是圆润的滚过去看Looper的代码吧。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[SNG迷你项目感悟]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/06/20/sngmi-ni-xiang-mu-gan-wu/"/>
-    <updated>2014-06-20T01:38:32-07:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/06/20/sngmi-ni-xiang-mu-gan-wu</id>
-    <content type="html"><![CDATA[<p>来腾讯实习有半个月来，刚进来公司统一培训了一天半，闲扯了点东西。然后SNG部门培训了3天时间，讲解一些业务流程。然后就是重头戏，所谓的迷你项目。我擦，虽然今天做完了，但是我还是想说这个巨坑啊！</p>
-
-<!--more-->
-
-
-<p>做这个迷你项目首先要说的是，还真的有点累的。。。每天早上做班车从酒店到公司，然后晚上一边九点走，到最后两天就更夸张了。前天在公司通宵了一夜，昨天夜里也是十二点多才走，欣慰的是腾大东侧的路上出租车排排停，估计我鹅长的员工加班都很积极吧。一个安卓应用，7天时间，两个人做，看这数据都觉得恐怖。</p>
-
-<p>不过最后还是搞定了，尽管没拿奖，但是自己仍然很有成就感。做项目期间还是受到导师同事们的很大帮助的。最后一晚要不是wii帮qiuhang调了一个多小时的bug估计就得继续通宵了，而且说不定通宵了也搞不，那就苦逼了。</p>
-
-<p>因为我做和服务器端的接口工作，当时一边商量一边改。一开始觉得商量接口真麻烦，后来才发现没有事先定义好接口才是做苦逼的。最荒唐的一件事是今天上午mini项目要测评了，结果昨天下午还在找后台的同学加接口。所以说：</p>
-
-<blockquote><p>概要设计真的很重要</p></blockquote>
-
-<p>前天晚上的问题是在电脑上调试完毕的net接口整合到Android上却得不到返回数据，比较奇怪的是有一个房屋信息POST请求能上传，而且数据库里会出现相应信息，但是返回值却是空的。一开始怀疑是没有申请网络访问权限，后来发现不是。后来sponsor Lewis 过来帮我调试，教了我安卓单步调试的方法，但是问题还是没能轻松解决。当天晚上熬了一夜，睡醒了4点，突然灵机一现决定把所有的JSON返回值都Log出来，同时所有的Exeption也要Log出来。后来慢慢调试才发现是<code>NetworkOnMainThreadException</code>！网络跑在主UI线程！所以每次执行到connect的时候android系统都会抛出这个异常，但是我却Too young， sometimes too naive！把所有可能抛出异常的地方都catch (Exception e) {}。就是说catch了所有Exception的父类并且什么也不做！对！就是不作为！后来跟我的导师raez说这件事，他说：</p>
-
-<blockquote><p>异常本来是用来发现问题的，不能随便catch。</p></blockquote>
-
-<p>对此我的理解是，需要catch一个exception的时候<strong>尽量精准catch</strong>。比如一个方法可能抛出IOException就不要懒懒的去直接catch Exception，同时如果抛出多种异常也要一个一个catch;
-<code>java
-try {
-    ...
-    } catch (IOException e) {
-            e.printStackTrace();
-            ...
-    } catch (FileNotFoundException ex) {
-            e.printStackTrace();
-            ...
-    }
-</code>
-同时<strong>捕获一个异常之后不能什么都不做</strong>，至少应该<code>printStackTrace</code>或者是Log出来，否则出现问题之后很难排查出来。另外<code>NullPointerException</code> 原则上不允许catch，<code>OutOfMemoryError</code>除了在大量消耗内存的代码片段上（比图图片处理，或者字符串拼接等）不允许catch。还有就是捕获异常是一定<strong>精准捕获</strong>。</p>
-
-<p>另外关于安卓多线程的使用，学习到了两种方式：Activity的<code>runOnUiThread(Runnable)</code>方法，还有使用AsyncTask类, 另外还有是用Handler之类的方法，当时没有还没有学习。</p>
-
-<p>另外一方面是缺少大型软开发的经验，原来自己写过的代码，最多也就一两千行。导致我们缺乏大型软件框架方面的知识。mini项目的Android端事实上来说就分了两个部分，UI和后台。今天听Wii讲了我们组的项目的大致构架，各个模块的分工功能，模块之间怎么通信回调，瞬间觉得高达上！真的是很开眼界。</p>
 ]]></content>
   </entry>
   

@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: 转贴 | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/tags/zhuan-tie/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2015-07-09T04:09:36-07:00</updated>
+  <updated>2015-07-10T10:30:22+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[[转]Linux初始配置]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/04/28/zhuan-linuxchu-shi-pei-zhi/"/>
-    <updated>2014-04-28T19:11:07-07:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/04/28/zhuan-linuxchu-shi-pei-zhi</id>
+    <link href="http://LanderlYoung.github.io/blog/2014/04/29/zhuan-linuxchu-shi-pei-zhi/"/>
+    <updated>2014-04-29T10:11:07+08:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2014/04/29/zhuan-linuxchu-shi-pei-zhi</id>
     <content type="html"><![CDATA[<p>转载自：<a target="_blank" href="http://www.2cto.com/Article/201304/200418.html"><a href="http://www.2cto.com/Article/201304/200418.html">http://www.2cto.com/Article/201304/200418.html</a></a></p>
 
 <p>昨天折腾了 Kali Linux 1.0，把大概的配置过程记录下来，希望对想接触或使用Kali Linux的同学有所帮助。</p>

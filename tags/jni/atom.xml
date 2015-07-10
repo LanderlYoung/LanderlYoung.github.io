@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: JNI | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/tags/jni/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2015-07-09T04:09:36-07:00</updated>
+  <updated>2015-07-10T10:30:22+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Java 中JNI的使用]]></title>
     <link href="http://LanderlYoung.github.io/blog/2014/10/16/java-zhong-jnide-shi-yong/"/>
-    <updated>2014-10-16T06:10:55-07:00</updated>
+    <updated>2014-10-16T21:10:55+08:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/10/16/java-zhong-jnide-shi-yong</id>
     <content type="html"><![CDATA[<p>JNI全称是<code>Java Native Interface</code>是在JAVA和Native层（包括但不限于C/C++）相互调用的接口规范。</p>
 

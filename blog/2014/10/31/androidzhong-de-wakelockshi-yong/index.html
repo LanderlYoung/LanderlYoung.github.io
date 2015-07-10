@@ -1,0 +1,320 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Android中的WakeLock使用 - Young_Blog</title>
+	<meta name="author" content="LanderlYoung">
+
+	
+	<meta name="description" content="Android中的WakeLock使用 android系统在手机屏幕锁定之后一般会让手机休眠，以提高电池的使用时间。但是休眠意味着CPU频率降低，有时候可能需要做一些需要大量运算的任务，所以需要唤醒CPU。WakeLock可以做到这一点。 WakeLock的创建是： 1
+2
+3
+4
+5 &hellip;">
+	
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="Young_Blog" type="application/atom+xml">
+	
+	<link rel="canonical" href="http://LanderlYoung.github.io/blog/2014/10/31/androidzhong-de-wakelockshi-yong/">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
+  
+  <script src="/javascripts/libs/jquery.min.js"></script>
+
+	
+</head>
+
+
+<body>
+	<div class="container">
+		<div class="left-col">
+			<div class="intrude-less">
+				<header id="header" class="inner"><div class="profilepic">	
+	 
+	<img src="/images/profile.png" width=160px />
+</div>
+<h1><a href="/">Young_Blog</a></h1>
+<p class="subtitle">Life with Passion<br/>Code with Creativity</p>
+<nav id="main-nav"><ul class="main">
+	<li><a href="/">Blog</a></li>
+	<li><a href="/blog/archives">Archives</a></li>
+	<li><a href="/about-me/">About Me</a></li>
+</ul>
+</nav>
+<nav id="sub-nav">
+	<div class="social">
+		
+		<a class="weibo" href="http://www.weibo.com/1863369094" title="Weibo">Weibo</a>
+		
+		
+		
+		<a class="google" href="https://plus.google.com/101237485378321820376/posts" rel="author" title="Google+">Google+</a>
+		
+		
+		
+		<a class="github" href="https://github.com/LanderlYoung" title="GitHub">GitHub</a>
+		
+		
+		
+		
+		
+		
+		
+		
+		<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+		
+	</div>
+</nav>
+
+</header>				
+			</div>
+		</div>	
+		<div class="mid-col">
+			
+			
+			
+			<div class="mid-col-container">
+				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+	<h1 class="title" itemprop="name">Android中的WakeLock使用</h1>
+	<div class="entry-content" itemprop="articleBody"><p>android系统在手机屏幕锁定之后一般会让手机休眠，以提高电池的使用时间。但是休眠意味着CPU频率降低，有时候可能需要做一些需要大量运算的任务，所以需要唤醒CPU。WakeLock可以做到这一点。</p>
+
+<!--more-->
+
+
+<h3>WakeLock的创建是：</h3>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="n">PowerManager</span> <span class="n">powerManager</span> <span class="o">=</span> <span class="o">(</span><span class="n">PowerManager</span><span class="o">)</span> <span class="n">getSystemService</span><span class="o">(</span><span class="n">POWER_SERVICE</span><span class="o">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">Wakelock</span> <span class="n">wakeLock</span> <span class="o">=</span> <span class="n">powerManager</span><span class="o">.</span><span class="na">newWakeLock</span><span class="o">(</span><span class="n">PowerManager</span><span class="o">.</span><span class="na">PARTIAL_WAKE_LOCK</span><span class="o">,</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="s">&quot;MyWakelockTag&quot;</span><span class="o">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>另外如果要使用WakeLock需要在Manifest中添加如下权限</p>
+
+<p><code>&lt;uses-permission android:name="android.permission.WAKE_LOCK" /&gt;</code></p>
+
+<h3>WakeLock的等级</h3>
+
+<p>上面的第一个参数是WakeLock levelAndFlag，分别代表了一种WakeLock等级，并且可以通过「或」位操作组合使用。他们是：</p>
+
+<ol>
+<li><p>PARTIAL_WAKE_LOCK：保证CPU保持高性能运行，而屏幕和键盘背光（也可能是触摸按键的背光）关闭。一般情况下都会使用这个WakeLock。</p></li>
+<li><p>ACQUIRE_CAUSES_WAKEUP：这个WakeLock除了会使CPU高性能运行外还会导致屏幕亮起，即使屏幕原先处于关闭的状态下。</p></li>
+<li><p>ON_AFTER_RELEASE：如果释放WakeLock的时候屏幕处于亮着的状态，则在释放WakeLock之后让屏幕再保持亮一小会。如果释放WakeLock的时候屏幕本身就没亮，则不会有动作。</p></li>
+</ol>
+
+
+<p>被<strong>弃用</strong>的WakeLock：</p>
+
+<ol>
+<li><p>SCREEN_DIM_WAKE_LOCK：保证屏幕亮起，但是亮度可能比较低。同时键盘背光也可以不亮。</p></li>
+<li><p>SCREEN_BRIGHT_WAKE_LOCK ：保证屏幕全亮，同时键盘背光也亮。</p></li>
+<li><p>FULL_WAKE_LOCK：表现和SCREEN_BRIGHT_WAKE_LOCK 类似，但是区别在于这个等级的WakeLock使用的是<strong>最高亮度</strong>！</p></li>
+</ol>
+
+
+<p>这三个Level在API17被弃用。被弃用说明肯定有替代品吗，上面三个类型的作用无非就是保持屏幕长亮。所以推荐是用WindowFlag<code>WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON</code>。使用方法是：</p>
+
+<ol>
+<li><p>在Activity中： <code>getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);</code></p></li>
+<li><p>甚至可以在布局中添加这个属性：<code>android:keepScreenOn="true"</code></p></li>
+</ol>
+
+
+<p>被<strong>隐藏</strong>的WakeLock：</p>
+
+<p>android中的部分api并不对用户应用开放，他们通过在注释中加入<code>{@hide}</code>来注明。但是在SDK提供的源代码中是可以看到的。</p>
+
+<ul>
+<li>WAIT_FOR_PROXIMITY_NEGATIVE：用于和接近传感器配合使用，来实现电话应用中打电话时可以使屏幕黑掉，手机离开时又能使屏幕亮起来的功能。acqure的时候屏幕会暗下来，release之后屏幕会亮。其值是32（int）。虽然被hide起来，但是感觉这个超实用的好吗！！！为啥要hide起来。。。「话说在API21 上终于开放了（开放这么晚有个屁用啊(╯‵□′)╯︵┻━┻）」经试验，不过newWakeLock的时候flag直接用32代替是可以创建这个等级的WakeLock的，但是因为是非开放API，不能保证第三方OEM修改这个代码实现！因此使用起来并不安全。「说的好像开放的API第三方OEM就不会乱改一样。。。(╯‵□′)╯︵┻━┻」</li>
+</ul>
+
+
+<h3>WakeLock的使用：</h3>
+
+<ul>
+<li><p>获取WakeLock：</p>
+
+<ol>
+<li><p><code>void acquire()</code>:获得WakeLock</p></li>
+<li><p><code>void acquire(long timeOut)</code>:获得WakeLock timeOut时长，当超过timeOut之后系统自动释放WakeLock。</p></li>
+</ol>
+</li>
+<li><p>释放WakeLock：<code>release()</code></p></li>
+<li><p>判断是否已经获取WakeLock：<code>boolean isHeld()</code></p></li>
+<li><p><code>void setReferenceCounted(boolean value)</code>：是否使用引用计数。类似于垃圾回收策略，只是把垃圾回收改成了WakeLock回收。如果value是true的话将启用该特性，如果一个WakeLock acquire了多次也必须release多次才能释放掉。但是如果释放次数比acquire多则会抛出<code>RuntimeException("WakeLock under-locked " + mTag)</code>异常。<strong>默认是开启了引用计数的！</strong></p></li>
+</ul>
+
+
+<h3>PowerManager的几个实用方法</h3>
+
+<ol>
+<li><p><code>boolean PowerManager::isScreenOn ()</code>判断屏幕是否亮着（不管是暗的dimed还是正常亮度），在API20被弃用，推荐<code>boolean PowerManager::isInteractive ()</code></p></li>
+<li><p><code>void PowerManager::goToSleep(long time)</code>time是时间戳，一般是System.currentTimeMillis()+timeDelay。强制系统立刻休眠，需要Manifest中添加权限<code>"android.permission.DEVICE_POWER"</code>。按下电源键锁屏时调用的就是这个方法。</p></li>
+<li><p><code>void PowerManager::wakeUp(long time)</code>与上面对应。参数含义，所需权限与上同。按下电源键解锁屏幕时调用的就是这个方法。</p></li>
+<li><p><code>void PowerManager::reboot(String reason)</code>重启手机，reason是要传给linux内核的参数，比如“recovery”重启进recovery模式，“fastboot”重启进fastboot模式。需要权限<code>"android.permission.REBOOT"</code>。</p></li>
+</ol>
+
+</div>
+
+</article>
+
+	
+
+<!--aThis Button BEGIN -->
+<div class="jiathis_style">
+	<span class="jiathis_txt">分享到：</span>
+	<a class="jiathis_button_tools_1"></a>
+	<a class="jiathis_button_tools_2"></a>
+	<a class="jiathis_button_tools_3"></a>
+	<a class="jiathis_button_tools_4"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank">更多</a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+
+
+<section id="comment">
+    <h1 class="title">Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</div>
+			</div>
+			<footer id="footer" class="inner">
+<p>
+  Copyright &copy; 2015 - LanderlYoung -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+</footer>
+			<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+<!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'landerlyoung';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://LanderlYoung.github.io/blog/2014/10/31/androidzhong-de-wakelockshi-yong/';
+        var disqus_url = 'http://LanderlYoung.github.io/blog/2014/10/31/androidzhong-de-wakelockshi-yong/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+		</div>
+	</div>
+
+	<div id="slide">
+		<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/07/09/ijkplyer-bian-yi-pei-zhi/">Ijkplyer 编译配置</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/04/04/javaxu-lie-hua-shi-jian/">Java序列化实践</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/11/09/androidzhong-servicede-shi-yong/">Android中service的使用</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/31/androidzhong-de-wakelockshi-yong/">Android中的WakeLock使用</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/10/16/java-zhong-jnide-shi-yong/">Java 中JNI的使用</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li><a href='/blog/categories/android/'>android (8)</a></li><li><a href='/blog/categories/git/'>git (2)</a></li><li><a href='/blog/categories/html5/'>html5 (5)</a></li><li><a href='/blog/categories/java/'>java (4)</a></li><li><a href='/blog/categories/javascript/'>javascript (3)</a></li><li><a href='/blog/categories/linux/'>linux (7)</a></li></ul>
+</section>
+<section>
+	<h1>Tags</h1>
+	<ul class="tag-cloud">
+		<li><a style="font-size: 102.4%" href="/tags/android/">Android</a></li>
+<li><a style="font-size: 81.9%" href="/tags/linux/">Linux</a></li>
+<li><a style="font-size: 110.1%" href="/tags/html5/">HTML5</a></li>
+<li><a style="font-size: 70.5%" href="/tags/java/">Java</a></li>
+<li><a style="font-size: 82.7%" href="/tags/node-dot-js/">Node.js</a></li>
+<li><a style="font-size: 105.8%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
+<li><a style="font-size: 72.4%" href="/tags/git/">Git</a></li>
+<li><a style="font-size: 78.6%" href="/tags/java/">java</a></li>
+<li><a style="font-size: 101.5%" href="/tags/android/">android</a></li>
+<li><a style="font-size: 97.0%" href="/tags/vim/">Vim</a></li>
+<li><a style="font-size: 93.2%" href="/tags/zhuan-tie/">转贴</a></li>
+<li><a style="font-size: 92.0%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
+<li><a style="font-size: 94.9%" href="/tags/ui/">UI</a></li>
+<li><a style="font-size: 108.0%" href="/tags/tencent/">tencent</a></li>
+<li><a style="font-size: 97.1%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
+<li><a style="font-size: 76.1%" href="/tags/sensor/">sensor</a></li>
+<li><a style="font-size: 80.4%" href="/tags/svg/">SVG</a></li>
+<li><a style="font-size: 81.1%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
+<li><a style="font-size: 87.2%" href="/tags/intellij/">IntelliJ</a></li>
+<li><a style="font-size: 115.9%" href="/tags/jni/">JNI</a></li>
+
+	</ul>
+</section>
+
+	</div>
+	<div id="hint">&gt;</div>
+
+	<div id="drawer">
+		<div id="touch"></div>
+		<div id="bar">
+			<div class="info">
+				<ul class="main">
+	<li><a href="/">Blog</a></li>
+	<li><a href="/blog/archives">Archives</a></li>
+	<li><a href="/about-me/">About Me</a></li>
+</ul>
+
+			</div>
+		</div>
+	</div>
+	<script src="/javascripts/slide.js"></script>
+
+</body>
+</html>
