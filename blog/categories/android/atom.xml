@@ -4,7 +4,7 @@
   <title><![CDATA[Category: android | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/blog/categories/android/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2015-07-10T10:30:22+08:00</updated>
+  <updated>2016-01-11T00:43:50+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -12,6 +12,411 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[retro-lambda 测试报告]]></title>
+    <link href="http://LanderlYoung.github.io/blog/2016/01/11/re-lambda-ce-shi-bao-gao/"/>
+    <updated>2016-01-11T00:10:42+08:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2016/01/11/re-lambda-ce-shi-bao-gao</id>
+    <content type="html"><![CDATA[<h1>retrolambda测试报告</h1>
+
+<p>先说结论</p>
+
+<ol>
+<li>堆栈行号完全匹配！没有任何问题，包括最新的android build tools自身支持的switch string，MultiCatch，和retrolambda的所有特性都没问题。</li>
+<li>lambda是通过生成class来实现的，而且是生成static class而不是anonumous class，因此没有this$0引用。且支持<strong><a href="https://docs.oracle.com/javase/tutorial/java/javaOO/methodreferences.html">method reference （推荐阅读）</a></strong>。</li>
+<li>但是lambda会生成冗余方法，每个Lambda类4个方法（下面有代码），其中一个是原接口的方法；增加3个，一个是构造方法，两个是静态工厂方法。</li>
+<li>支持MultiCatch。</li>
+<li>支持interface加default方法，亲测可行，但是使用该特性必须禁用增量编译。</li>
+<li>支持interface加static方法，亲测不可行（可能版本bug），同上需要禁用增量编译。</li>
+<li>支持tryWithResource但是估计这个用的不多，问题在于默认会吞掉Exception。同时Android Studio会报错说API19才能用，但是可以编译。</li>
+<li>不支持Java8的新增API，包括Lambda相关的function包，和其他新包比如stream api。</li>
+</ol>
+
+
+<p>下面是测试细节以及源代码和反编译代码对比：</p>
+
+<h2>switch string（这个是java7自身的语法糖）</h2>
+
+<p>源代码：</p>
+
+<pre><code class="cpp">private static void switchWithString(String str) {
+    System.out.println("switchWithString");
+    switch (str) {
+        case "hello":
+            System.out.println("Hello");
+            break;
+        case "World":
+        case "world":
+            new Throwable().printStackTrace();
+            break;
+    }
+}
+</code></pre>
+
+<p>class反编译：</p>
+
+<pre><code class="cpp">private static void switchWithString(String str) {
+    System.out.println("switchWithString");
+    byte var2 = -1;
+    switch(str.hashCode()) {
+    case 83766130:
+        if(str.equals("World")) {
+            var2 = 1;
+        }
+        break;
+    case 99162322:
+        if(str.equals("hello")) {
+            var2 = 0;
+        }
+        break;
+    case 113318802:
+        if(str.equals("world")) {
+            var2 = 2;
+        }
+    }
+
+    switch(var2) {
+    case 0:
+        System.out.println("Hello");
+        break;
+    case 1:
+    case 2:
+        (new Throwable()).printStackTrace();
+    }
+
+}
+</code></pre>
+
+<h2>lambda</h2>
+
+<p>源代码：</p>
+
+<pre><code class="cpp">findViewById(R.id.stop).setOnClickListener((v) -&gt; {
+    //Yes! use "this" to refer to the MainActivity.this
+    Toast.makeText(this, "Hello lambda", Toast.LENGTH_SHORT).show();
+
+    System.out.println("crash in lambda");
+    new Throwable().printStackTrace();
+});
+</code></pre>
+
+<p>class反编译：</p>
+
+<pre><code class="cpp">this.findViewById(2131492943).setOnClickListener(MainActivity$$Lambda$1.lambdaFactory$(this));
+final class MainActivity$$Lambda$1 implements OnClickListener {
+    private final MainActivity arg$1;
+
+    private MainActivity$$Lambda$1(MainActivity var1) {
+        this.arg$1 = var1;
+    }
+
+    private static OnClickListener get$Lambda(MainActivity var0) {
+        return new MainActivity$$Lambda$1(var0);
+    }
+
+    public void onClick(View var1) {
+        MainActivity.access$lambda$0(this.arg$1, var1);
+    }
+
+    public static OnClickListener lambdaFactory$(MainActivity var0) {
+        return new MainActivity$$Lambda$1(var0);
+    }
+}
+</code></pre>
+
+<p>可以看到生成的class中两个工厂方法get$Lambda和lambdaFactory$其实除了名字其他都一样，而且代码中只调用了后者，因此proguard混淆之后，会删除get$Lambda方法。这样和之前的InnerClass比起来就只是多了LambdaFactory$一个工厂方法。然而lambda的实现中会在MainActivity中添加一个 MainActivity.access$lambda$0 ，然后该方法会调用 MainActivity.lambda$onCreate$0 方法（这个命名和java8的lambda是一致的）。然而这里其实没必要使用access方法，因为lambda方法（即上文的MainActivity.lambda$onCreate$0 ）是编译器生成的，不会被其他方法引用。（嗯！java8就没有access方法！），不过没关系retrolambda是开源的，不爽可以自己改（就是这么任性！）。</p>
+
+<p>优：</p>
+
+<ol>
+<li>把InnerClass改成了外部static class。避免了this$0逸出。</li>
+</ol>
+
+
+<p>劣：</p>
+
+<pre><code>1. 所以总体方法数多了两个。可以改成只多一个。
+2. lambda内部的堆栈dump会多几层，但是最后还是会定位到lambda内部。
+</code></pre>
+
+<p>下面是lambda内部crash堆栈dump：</p>
+
+<pre><code class="bash">08-14 09:30:46.402  11348-11348/young.com.demo I/System.out﹕ crash in lambda
+08-14 09:30:46.402  11348-11348/young.com.demo W/System.err﹕ java.lang.Throwable
+08-14 09:30:46.402  11348-11348/young.com.demo W/System.err﹕ at young.com.demo.MainActivity.lambda$onCreate$0(MainActivity.java:81)
+08-14 09:30:46.402  11348-11348/young.com.demo W/System.err﹕ at young.com.demo.MainActivity.access$lambda$0(MainActivity.java)
+08-14 09:30:46.402  11348-11348/young.com.demo W/System.err﹕ at young.com.demo.MainActivity$$Lambda$1.onClick(Unknown Source)
+08-14 09:30:46.402  11348-11348/young.com.demo W/System.err﹕ at android.view.View.performClick(View.java:4781)
+08-14 09:30:46.402  11348-11348/young.com.demo W/System.err﹕ at android.view.View$PerformClick.run(View.java:19873)
+08-14 09:30:46.402  11348-11348/young.com.demo W/System.err﹕ at android.os.Handler.handleCallback(Handler.java:739)
+08-14 09:30:46.403  11348-11348/young.com.demo W/System.err﹕ at android.os.Handler.dispatchMessage(Handler.java:95)
+08-14 09:30:46.403  11348-11348/young.com.demo W/System.err﹕ at android.os.Looper.loop(Looper.java:135)
+08-14 09:30:46.403  11348-11348/young.com.demo W/System.err﹕ at android.app.ActivityThread.main(ActivityThread.java:5289)
+08-14 09:30:46.403  11348-11348/young.com.demo W/System.err﹕ at java.lang.reflect.Method.invoke(Native Method)
+08-14 09:30:46.403  11348-11348/young.com.demo W/System.err﹕ at java.lang.reflect.Method.invoke(Method.java:372)
+08-14 09:30:46.403  11348-11348/young.com.demo W/System.err﹕ at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:904)
+08-14 09:30:46.403  11348-11348/young.com.demo W/System.err﹕ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:699)
+</code></pre>
+
+<h2>Lambda Method Reference：</h2>
+
+<p>源代码：</p>
+
+<pre><code class="cpp">private interface StringConsumer {
+    void consumeAString(String str);
+}
+
+private static void testMethodReference(StringConsumer sc) {
+    sc.consumeAString("testStringConsumer");
+}
+
+testMethodReference(System.out::println);
+</code></pre>
+
+<p>class反编译：</p>
+
+<pre><code class="cpp">testMethodReference(MainActivity$$Lambda$4.lambdaFactory$(var10000));
+
+final class MainActivity$$Lambda$4 implements StringConsumer {
+    private final PrintStream arg$1;
+
+    private MainActivity$$Lambda$4(PrintStream var1) {
+        this.arg$1 = var1;
+    }
+
+    private static StringConsumer get$Lambda(PrintStream var0) {
+        return new MainActivity$$Lambda$4(var0);
+    }
+
+    public void consumeAString(String var1) {
+        this.arg$1.println(var1);
+    }
+
+    public static StringConsumer lambdaFactory$(PrintStream var0) {
+        return new MainActivity$$Lambda$4(var0);
+    }
+}
+</code></pre>
+
+<h2>MultiCatch</h2>
+
+<p>源代码：</p>
+
+<pre><code class="cpp">private static void testMultiCatch(int i) {
+    System.out.println("testMultiCatch");
+    try {
+        switch (i) {
+            case 0:
+                throw new NullPointerException();
+            case 1:
+                throw new IllegalStateException();
+            case 2:
+                throw new IOException();
+            case 3:
+                throw new RuntimeException();
+        }
+    } catch (NullPointerException | IllegalStateException | IOException e) {
+        e.printStackTrace();
+    } catch (RuntimeException ex) {
+        //make this branch different to suppress warnings
+        int a = ex.hashCode();
+        ex.printStackTrace();
+    }
+}
+</code></pre>
+
+<p>class反编译：</p>
+
+<pre><code class="cpp">private static void testMultiCatch(int i) {
+    System.out.println("testMultiCatch");
+
+    try {
+        switch(i) {
+        case 0:
+            throw new NullPointerException();
+        case 1:
+            throw new IllegalStateException();
+        case 2:
+            throw new IOException();
+        case 3:
+            throw new RuntimeException();
+        }
+    } catch (IllegalStateException | IOException | NullPointerException var3) {
+        var3.printStackTrace();
+    } catch (RuntimeException var4) {
+        int a = var4.hashCode();
+        var4.printStackTrace();
+    }
+
+}
+</code></pre>
+
+<pre><code>好像没什么区别，不是我粘错了，估计是JVM本来就支持这个特性。
+</code></pre>
+
+<h2>tryWithResource</h2>
+
+<p>源代码：</p>
+
+<pre><code class="cpp">
+private static void testTryWithResource(ServerSocket ss) {
+if (ss == null) return;
+
+try (Socket in = ss.accept();
+     InputStream is = in.getInputStream()) {
+    is.read();
+} catch (IOException e) {
+
+}
+</code></pre>
+
+<p>class反编译：</p>
+
+<pre><code class="cpp">
+private static void testTryWithResource(ServerSocket ss) {
+    if(ss != null) {
+        try {
+            Socket in = ss.accept();
+            Throwable var2 = null;
+
+            try {
+                InputStream is = in.getInputStream();
+                Throwable var4 = null;
+
+                try {
+                    is.read();
+                } catch (Throwable var29) {
+                    var4 = var29;
+                    throw var29;
+                } finally {
+                    if(is != null) {
+                        if(var4 != null) {
+                            try {
+                                is.close();
+                            } catch (Throwable var28) {
+                                ;
+                            }
+                    } else {
+                            is.close();
+                        }
+                    }
+
+                }
+            } catch (Throwable var31) {
+                var2 = var31;
+                throw var31;
+            } finally {
+                if(in != null) {
+                    if(var2 != null) {
+                        try {
+                            in.close();
+                        } catch (Throwable var27) {
+                            ;
+                        }
+                    } else {
+                        in.close();
+                }
+                }
+
+            }
+        } catch (IOException var33) {
+            ;
+        }
+
+    }
+}
+</code></pre>
+
+<p>好™啰嗦啦！绝对不要用这个。</p>
+
+<p>附录
+关于androidBuildTool对java7的支持，原文来自：</p>
+
+<p><a href="">http://tools.android.com/tech-docs/new-build-system/user-guide#TOC-Using-sourceCompatibility-1.7</a></p>
+
+<p>Using sourceCompatibility 1.7
+With Android KitKat (buildToolsVersion 19) you can use the diamond operator, multi-catch, strings in switches, try with resources, etc. To do this, add the following to your build file:</p>
+
+<pre><code class="cpp">
+android {
+    compileSdkVersion 19
+    buildToolsVersion "19.0.0"
+
+    defaultConfig {
+        minSdkVersion 7
+        targetSdkVersion 19
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+}
+</code></pre>
+
+<p>Note that you can use minSdkVersion with a value earlier than 19, for all language features <em>except try with resources</em>. If you want to use try with resources, you will need to also use a minSdkVersion of 19.</p>
+
+<p>You also need to make sure that Gradle is using version 1.7 or later of the JDK. (And version 0.6.1 or later of the Android Gradle plugin.)</p>
+
+<h1>匿名类 VS Lambda</h1>
+
+<p>今天修复了几个listener导致内存泄露的问题。
+在review代码的过程中发现很多泄露是匿名类的this$0导致的，事实上挺多时候匿名类并没有显式的使用到this。</p>
+
+<h2>匿名类</h2>
+
+<p><strong>匿名类必然会引用this，不管代码中是否真正用到。</strong>
+java中的匿名类和非static内部类（标准叫法是嵌套类nested class，内部类专指static inner class），都会有外部类的引用，通过构造函数传进来，并在内部类的this$0成员变量中保存；但是我们通常不会注意到他们，因为java编译器帮我们做了这些；如果我们查看反编译的class文件会发现他们是真真切切的存在。</p>
+
+<p>比如：</p>
+
+<pre><code class="cpp">
+private BroadcastReceiver mCollectionReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //...
+        }
+    };
+</code></pre>
+
+<p>反编译javac生成的class</p>
+
+<pre><code class="cpp">
+class BroadcastDetailFragment$4
+  extends BroadcastReceiver
+{
+  BroadcastDetailFragment$4(BroadcastDetailFragment this$0) {}
+
+  public void onReceive(Context context, Intent intent)
+  {
+    //...
+  }
+}
+</code></pre>
+
+<p>可以看到构造函数中是有个this$0的参数的。</p>
+
+<h2>Lambda</h2>
+
+<p><strong>lambda不一定会引用this，具体看lambda里面是否用到。</strong>
+Lambda中所有引用到的外部的变量都是通过参数的形式传给实现lambda的函数的。如果lambda中用到this或非static成员方法、非static成员变量，那么lambda就必须引用this，这个this就是作为参数传给实现lambda的函数；反之，若lambda不需要this，编译器就不会传this作为参数，这时候该lambda生成的类就不会泄露我们的Fragment，Activity。</p>
+
+<h2>总结：</h2>
+
+<p>使用Lambda除了可以使代码更优雅，还可以减少不必要的this泄露。
+之前我曾担心过：retro-lambda会给每个lambda生成一个类，会不会带来性能，内存之类的压力；但是想到scala语言就是用这种方式实现的lambda，而且玩的很欢乐，想必不用过度担心。</p>
+
+<h3>附录：</h3>
+
+<ol>
+<li><p>关于scala和java8是怎么分别实现lambda的，可以参看<a href="http://blog.takipi.com/compiling-lambda-expressions-scala-vs-java-8/">这篇文章</a>。PS：retro-lambda是模仿了scala的做法（因为android中不支持invokedynamic虚拟机指令，其在java7中引入，所以理论上javac生成的lambda在java7上也是能跑的）</p></li>
+<li><p>retrolambda测试报告，在项目引入retro-lambda之前，我做了几个实验，验证之前的疑问点。下面是之前的结论，再贴一遍~方便翻阅~</p></li>
+</ol>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Android中service的使用]]></title>
@@ -700,154 +1105,6 @@ public void onReceive(Context context, Intent intent) {
 <li><p><code>SensorManager.SENSOR_DELAY_UI</code>：适合普通用户界面的平率。由于频率低，所以，延时大，但是也会更省电。</p></li>
 </ol>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[一次对非静态内部类引用final变量的研究]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/08/10/yi-ci-dui-fei-jing-tai-nei-bu-lei-yin-yong-finalbian-liang-de-yan-jiu/"/>
-    <updated>2014-08-10T13:57:38+08:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/08/10/yi-ci-dui-fei-jing-tai-nei-bu-lei-yin-yong-finalbian-liang-de-yan-jiu</id>
-    <content type="html"><![CDATA[<p>前几天遇到一个奇怪的问题，问题的起因是我把以前的RingfriendDialogBuilder（以下简称builder，没有IDE的自动补全打完全名还是很长的。。）修改了一下，添加了一个clear()方法。目的是避免每次创建一个Dialog都new一个builder的实例，这样一个builder可以用于创建多个dialog，以提高效率。接下来的问题就是因为这个修改导致的。</p>
-
-<!--more-->
-
-
-<h2>描述现象</h2>
-
-<p>这个DialogBuilder允许构建Dialog，set其中的标题，监听器之类的变量。然后clear掉所有设置，重新再重新构建一个Dialog。问题出现在构建的多个（> 1）Dialog之后，当某个Dialog显示出来时，点击其按钮时，会出现NullPointerException。</p>
-
-<h2>定位Bug：</h2>
-
-<p>起初我觉得这很奇怪，因为每一个Dialog明明都设置了回调函数的呀。然后看到create方法其中一个setOnClickListener的代码段。
-因为Dialong中的内容是普通的View，而Dialog的Listener与View的Listener不同，因此代码中做了如下adapt：</p>
-
-<p><a name="anonymousClass"></a>
-<code>java
-if (mNegativeButtonLinstener != null) {
-    negBtn.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-        mNegativeButtonLinstener.onClick(mDialog, DialogInterface.BUTTON_NEGATIVE);
-        }
-    });
-}
-</code>
-因为dialog的onclick需要传入dialog自身的引用，所以就很 「随意」的把builder的mDialog成员传了过来，这个mDialog是在create的时候new出来的新的Dialog：</p>
-
-<pre><code class="java">//定义
-private Dialog mDialog;
-//创建
-mDialog = new Dialog(mContext, mTheme);
-</code></pre>
-
-<p>此时我突然明白了，因为内部匿名类的onClick回调函数使用了外部类（《java编程思想》中称作 enclosing object that made it）的成员变量 mDialog，所以每次onClick，内部类都会resolve外部类的这个成员变量。然而这是不应该发生的，因为：</p>
-
-<blockquote><p><strong>当一个dialog被create之后，builder还有可能再创建一个dialog，或者builder的clear方法可能被调用，其会恢复所有成员变量至默认值，包括设置mDialog为null。所以当某个dialog的按钮被按下时，外部类的mDialog成员可能已经被修改，而不再对应这个dialog。</strong></p></blockquote>
-
-<h2>解决方案</h2>
-
-<p>解决的思路很简单，就是在onClick的<a href="#anonymousClass">内部类</a>中把dialog「定死」，不因成员变量mDialog的变化为转移！这时突然想起来匿名类引用局部变量是必须给局部变量加final修饰符的问题，于是就有了以下解决方案：</p>
-
-<p>在create中声明一个变量
-<code>java
-final Dialog d = mDialog;
-</code>
-然后下面需要传入mDialog的地方全部使用d代替。于是问题就顺利的解决了！</p>
-
-<h2>思考</h2>
-
-<p>对于上面解决方案为什么生效，首先说一下<strong>匿名类引用局部变量为什么必须声明final，为什么引用外部类的成员变量又不需要是final</strong>。</p>
-
-<p>首先：
- 1. static修饰的内部类和外部类是不能相互引用的，即内部类不能直接引用外部类的任何非static成员变量。因为static内部类不依赖于外部类就可以创建比如<code>new AlertDialog.Builder</code>是可以成功执行的。
- 2. 然内非static的内部类是不能这样new出来的，比如：</p>
-
-<pre><code class="java">public class Outer {
-    public A() {
-    }
-    public class Inner {
-        public Inner() {
-        }
-    }
-}
-</code></pre>
-
-<p>Inner想要被new出来必须这样做：</p>
-
-<pre><code class="java">Outer outer  = new Outer();
-Outer.Inner inner = outer.new Inner();
-
-/*
- * can not pass compile, the compiler would complain
- */
- //Outer.Inner inner = new Outer.Inner();
-</code></pre>
-
-<p>那么为什么非静态内部类就可以使用外部类的成员变量了呢，那是因为<strong>内部类会保存一个外部类的引用</strong>。可以通过如下方式在内部类中获取该引用。
-<code>java
-//in inner class
-Outer.this
-</code>
-怎么样！是不是好熟悉，是不是觉得我用过！没错，就是他！</p>
-
-<p>问题逐渐明朗了，需要说明一件事：<strong>anonymous class肯定全都是非static内部类</strong>。</p>
-
-<p>那么匿名类就可以访问外部类的成员变量，这一点和常识想通。但是匿名类一般是在方法体内被创建的，当匿名类想引用方法体内的变量或者方法的参数时该变量必须声明final才行。这是为什么呢？！</p>
-
-<p>这个说来话长，因为方法的参数，乃至方法内的局部变量都是临时性的，他们储存在栈（stack）中。当方法return的时候他们便不复存在。所以匿名类不可能通过外部类的引用来获取局部变量。
-而final修饰的变量是不能修改的，因此内部类并不「引用」这个变量，而是在内部直接copy一下！反正她是不会变的，我copy一下也不会导致不一致的问题。（这里需要说明一个事实，copy一个实例的引用时，并不会copy这个实例，只是copy了「指针」而已！）</p>
-
-<p>所以，结论是：</p>
-
-<blockquote><p><strong>final的作用就是告诉编译器，这个变量不会修改的，内部类想用的话可以自己copy一份过去</strong></p></blockquote>
-
-<p>对于上述的解决方案，因为我们使用了一个final变量代替成员变量，因此内部类会直接使用该final变量的copy，而不像原来那样每次都去resolve外部类的成员，这就保证了这个变量在内部类是「定死」的！</p>
-
-<h2>优化升级</h2>
-
-<p>该才说到，非静态内部类会保留一个外部类的引用。在builder这个实例中，dialog的onclick Listener是builder的内部类，因此该listener会保留Builder的引用。但是builder只是辅助构建Dialog用的，当dialog构造出来之后不应该在和builder保有引用。否则会导致builder不能被垃圾回收掉！
-因此做一个修改，把dialog的onclick listener改成静态类，如下：</p>
-
-<pre><code class="java"> if (mPositiveButtonLinstener != null) {
-            final DialogInterface.OnClickListener listener = mPositiveButtonLinstener;
-            posBtn.setOnClickListener(new DialogButtonOnClickListener(dialog,
-                    DialogInterface.BUTTON_POSITIVE,
-                    listener));
-        }
-</code></pre>
-
-<p>其中<code>DialogButtonOnClickListener</code>定义如下：
-&#8220;`java
-private static class DialogButtonOnClickListener implements View.OnClickListener {
-        private Dialog mDialog;
-        private int mWhich;
-        private DialogInterface.OnClickListener mListener;</p>
-
-<pre><code>    public DialogButtonOnClickListener(
-            Dialog dialog,
-            int whichButton,
-            DialogInterface.OnClickListener l) {
-
-        mDialog = dialog;
-        mWhich = whichButton;
-        mListener = l;
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (mListener != null &amp;&amp; mDialog != null) {
-            mListener.onClick(mDialog, mWhich);
-
-        }
-
-    }
-}
-</code></pre>
-
-<p>&#8220;`</p>
-
-<h3>[完]</h3>
 ]]></content>
   </entry>
   

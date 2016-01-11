@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://LanderlYoung.github.io/blog/2016/01/11/re-lambda-ce-shi-bao-gao/</loc>
+    <lastmod>2016-01-11T00:10:42+08:00</lastmod>
+  </url>
+  <url>
     <loc>http://LanderlYoung.github.io/blog/2015/07/09/ijkplyer-bian-yi-pei-zhi/</loc>
     <lastmod>2015-07-09T18:53:18+08:00</lastmod>
   </url>
@@ -209,6 +213,9 @@
     <loc>http://LanderlYoung.github.io/tags/ijkplyer/</loc>
   </url>
   <url>
+    <loc>http://LanderlYoung.github.io/tags/andriod/</loc>
+  </url>
+  <url>
     <loc>http://LanderlYoung.github.io/blog/categories/javascript/</loc>
   </url>
   <url>
@@ -227,27 +234,36 @@
     <loc>http://LanderlYoung.github.io/blog/categories/java/</loc>
   </url>
   <url>
-    <loc>http://LanderlYoung.github.io/assets/storage/readability-0.5.1/close.html</loc>
-    <lastmod>2015-07-09T18:29:16+08:00</lastmod>
+    <loc>http://LanderlYoung.github.io/posts/2/</loc>
   </url>
   <url>
-    <loc>http://LanderlYoung.github.io/assets/storage/CreativeLinkEffects/index.html</loc>
-    <lastmod>2015-07-09T18:29:16+08:00</lastmod>
+    <loc>http://LanderlYoung.github.io/posts/3/</loc>
   </url>
   <url>
-    <loc>http://LanderlYoung.github.io/assets/storage/hack/index.html</loc>
-    <lastmod>2015-07-09T18:29:16+08:00</lastmod>
-  </url>
-  <url>
-    <loc>http://LanderlYoung.github.io/assets/documents/resume.html</loc>
-    <lastmod>2015-07-09T18:29:16+08:00</lastmod>
-  </url>
-  <url>
-    <loc>http://LanderlYoung.github.io/javascripts/Javascript-Pacman-master/index.html</loc>
-    <lastmod>2015-07-09T18:29:16+08:00</lastmod>
+    <loc>http://LanderlYoung.github.io/posts/4/</loc>
   </url>
   <url>
     <loc>http://LanderlYoung.github.io/404.html</loc>
-    <lastmod>2015-07-09T18:29:16+08:00</lastmod>
+    <lastmod>2016-01-10T23:44:48+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://LanderlYoung.github.io/assets/documents/resume.html</loc>
+    <lastmod>2016-01-10T23:44:48+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://LanderlYoung.github.io/assets/storage/CreativeLinkEffects/index.html</loc>
+    <lastmod>2016-01-10T23:44:48+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://LanderlYoung.github.io/assets/storage/hack/index.html</loc>
+    <lastmod>2016-01-10T23:44:48+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://LanderlYoung.github.io/assets/storage/readability-0.5.1/close.html</loc>
+    <lastmod>2016-01-10T23:44:48+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://LanderlYoung.github.io/javascripts/Javascript-Pacman-master/index.html</loc>
+    <lastmod>2016-01-10T23:44:48+08:00</lastmod>
   </url>
 </urlset>
