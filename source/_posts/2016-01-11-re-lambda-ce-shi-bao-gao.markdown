@@ -20,6 +20,7 @@ tags: [Andriod, java]
 8. 不支持Java8的新增API，包括Lambda相关的function包，和其他新包比如stream api。
 
 
+<!--more-->
 
 下面是测试细节以及源代码和反编译代码对比：
 
