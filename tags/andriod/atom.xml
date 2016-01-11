@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: Andriod | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/tags/andriod/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2016-01-11T00:43:50+08:00</updated>
+  <updated>2016-01-11T23:46:35+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -32,6 +32,9 @@
 <li>支持tryWithResource但是估计这个用的不多，问题在于默认会吞掉Exception。同时Android Studio会报错说API19才能用，但是可以编译。</li>
 <li>不支持Java8的新增API，包括Lambda相关的function包，和其他新包比如stream api。</li>
 </ol>
+
+
+<!--more-->
 
 
 <p>下面是测试细节以及源代码和反编译代码对比：</p>
