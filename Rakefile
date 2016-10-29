@@ -88,7 +88,7 @@ task :preview do
 
   #add by young
   #auto matically open browser
-  system "sleep 2; gnome-open http://localhost:#{server_port}/ 2>&1 >/dev/null"
+  system "sleep 2; open http://localhost:#{server_port}/ 2>&1 >/dev/null"
   
   trap("INT") {
     [jekyllPid, compassPid, rackupPid].each { |pid| Process.kill(9, pid) rescue Errno::ESRCH }

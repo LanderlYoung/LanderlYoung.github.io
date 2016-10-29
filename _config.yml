@@ -34,7 +34,10 @@ plugins: plugins
 code_dir: downloads/code
 category_dir: blog/categories
 catefory_title_prefix: "Category: "
-markdown: rdiscount
+markdown: kramdown
+kramdown:
+    input: GFM
+    hard_wrap: false
 rdiscount:
   extensions:
     - autolink
@@ -83,10 +86,10 @@ coderwall_button: false
 
 # Twitter
 twitter_user:
-twitter_tweet_button: false 
+twitter_tweet_button: false
 
 # Google +1
-google_plus_one: true 
+google_plus_one: true
 google_plus_one_size: medium
 
 # Google Plus Profile
@@ -110,4 +113,4 @@ disqus_show_comment_count: true
 #google_analytics_tracking_id: UA-49240285-1
 
 # Facebook Like
-facebook_like: false 
+facebook_like: false

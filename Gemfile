@@ -1,6 +1,7 @@
 #source "https://rubygems.org"
 #mirror for 山东理工大学
-source "http://ruby.sdutlinux.org/"
+#source "http://ruby.sdutlinux.org/"
+source "https://ruby.taobao.org"
 
 group :development do
   gem 'rake', '~> 10.0'
