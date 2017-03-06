@@ -1,0 +1,684 @@
+/*
+ * Copyright (c) 2009, Tencent TAPD lab. Some rights reserved.
+ *
+ * [     Base on YUI     ]
+ * [   Version: 1.04     ]
+ * [ http://tapd3.oa.com ]
+ *
+ * Update Log: 
+ * v1.04  2009.10.29 - ceil - 添加浏览器基础样式tui-base，nesting grids命名规则修改
+ * v1.03  2009.07.28 - ceil - 默认字体大小改为12px，用px取代em限定grid大小
+ * v1.02  2009.06.11 - ceil - added t1o ~ t5o
+ * v1.01  2009.06.10 - ceil - removed doc1, modified tui-b width
+ * v1.00  2009.02.13 - ceil - initialization
+*/
+
+
+
+/*----- Reset -----*/
+html{
+	color:#333;
+	background:#FFF;
+}
+/*
+	TODO remove settings on BODY since we can't namespace it.
+*/
+/*
+	TODO test putting a class on HEAD.
+		- Fails on FF. 
+*/
+body,
+div,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+pre,
+code,
+form,
+fieldset,
+legend,
+input,
+textarea,
+p,
+blockquote,
+th,
+td {
+	margin:0;
+	padding:0;
+}
+table {
+	border-collapse:collapse;
+	border-spacing:0;
+}
+fieldset,
+img {
+	border:0;
+}
+/*
+	TODO think about hanlding inheritence differently, maybe letting IE6 fail a bit...
+*/
+address,
+caption,
+cite,
+code,
+dfn,
+em,
+th,
+var {
+	font-style:normal;
+	font-weight:normal;
+}
+/*
+	TODO Figure out where this list-style rule is best set. Hedger has a request to investigate.
+*/
+li {
+	list-style:none;
+}
+
+caption,
+th {
+	text-align:left;
+}
+q:before,
+q:after {
+	content:'';
+}
+abbr,
+acronym {
+	border:0;
+	font-variant:normal;
+}
+/* to preserve line-height and selector appearance */
+sup {
+	vertical-align:text-top;
+}
+sub {
+	vertical-align:text-bottom;
+}
+input,
+textarea,
+select {
+	font-family:inherit;
+	font-size:inherit;
+	font-weight:inherit;
+}
+/*to enable resizing for IE*/
+input,
+textarea,
+select {
+	*font-size:100%;
+}
+/*because legend doesn't inherit in IE */
+legend {
+	color:#000;
+}
+
+
+/*----- Fonts -----*/
+
+body {
+	font:12px/1.231 arial,helvetica,clean,sans-serif;
+	*font-size:small; /* for IE */
+	*font:x-small; /* for IE in quirks mode */
+}
+
+/**
+ * Nudge down to get to 13px equivalent for these form elements
+ */ 
+select,
+input,
+button,
+textarea {
+	font:99% arial,helvetica,clean,sans-serif;
+}
+
+/**
+ * To help tables remember to inherit
+ */
+table {
+	font-size:inherit;
+	font:100%;
+}
+
+/**
+ * Bump up IE to get to 13px equivalent for these fixed-width elements
+ */
+pre,
+code,
+kbd,
+samp,
+tt {
+	font-family:monospace;
+	*font-size:108%;
+	line-height:100%;
+}
+
+
+
+/*----- Grid -----*/
+
+/* General setting */
+body {
+	/* center the page */
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/*
+Section: Page Width Rules (#doc, #doc2, #doc3, #doc4)
+*/
+/*
+Subsection: General
+*/
+.tui-d0, /* 100% */
+.tui-d1, /* 950px */
+.tui-d2, /* 974px */
+.tui-d3 { /* 1190px */
+	margin: auto;
+	text-align: left;
+	width: 950px;
+}
+
+.tui-t1,
+.tui-t2,
+.tui-t3,
+.tui-t4,
+.tui-t5,
+.tui-t1o,
+.tui-t2o,
+.tui-t3o,
+.tui-t4o,
+.tui-t5o,
+.tui-t6{
+	margin: auto;
+	text-align: left;
+	width: 100%;
+}
+
+/*
+Subsection: 100% (doc)
+*/
+.tui-d0 {
+	/* Left and Right margins are not a structural part of Grids. Without them Grids
+	works fine, but content bleeds to the very edge of the document, which often
+	impairs readability and usability. They are
+	provided because they prevent the content from "bleeding" into the browser's chrome.*/
+	margin: auto 10px;
+	width: auto;
+}
+
+/*
+Subsection: 974 Centered (doc2)
+*/
+.tui-d2 {
+	width: 974px;
+}
+/*
+Subsection: 1190 Centered (doc3)
+*/
+.tui-d3 {
+	width:1190px;
+}
+/*
+Section: Preset Template Rules (.tui-t[1-6])
+*/
+/*
+Subsection: General
+*/
+
+/* to preserve source-order independence for Gecko without breaking IE */
+.tui-b {
+	position: relative;
+}
+.tui-b {
+	_position: static;
+}
+.tui-main .tui-b {
+	position: static;
+}
+.tui-main {
+	width: 100%;
+}
+.tui-t1 .tui-main,
+.tui-t2 .tui-main,
+.tui-t3 .tui-main, 
+.tui-t4 .tui-main,
+.tui-t5 .tui-main{
+	float: right;
+	/* IE: preserve layout at narrow widths */
+	margin-left: -26em;
+}
+.tui-t1o .tui-main,
+.tui-t2o .tui-main,
+.tui-t3o .tui-main,
+.tui-t4o .tui-main,
+.tui-t5o .tui-main{
+	float: left;
+	/* IE: preserve layout at narrow widths */
+	margin-right: -26em;
+}
+
+/* Subsection: For Specific Template Presets */
+
+/**
+* Nudge down to get to 13px equivalent for these form elements
+*/
+
+/*
+TODO Create t1-6's that are based on fixed widths
+*/
+/* t1 narrow block = left, equivalent of 150px */
+.tui-t1 .tui-b {
+	float: left;
+	width:150px;
+}
+.tui-t1 .tui-main .tui-b {
+	margin-left:160px;
+}
+/* t2 narrow block = left, equivalent of 190px */
+.tui-t2 .tui-b {
+	float: left;
+	width:190px;
+}
+.tui-t2 .tui-main .tui-b {
+	margin-left:200px;
+}
+/* t3 narrow block = left, equivalent of 230px */
+.tui-t3 .tui-b {
+	float: left;
+	width:230px;
+}
+.tui-t3 .tui-main .tui-b {
+	margin-left:240px;
+}
+/* t4 narrow block = left, equivalent of 270px */
+.tui-t4 .tui-b {
+	float: left;
+	width:270px;
+}
+.tui-t4 .tui-main .tui-b {
+	margin-left:280px;
+}
+/* t5 narrow block = left, equivalent of 310px */
+.tui-t5 .tui-b {
+	float: left;
+	width:310px;
+}
+.tui-t5 .tui-main .tui-b {
+	margin-left:320px;
+}
+
+/* t1o narrow block = right, equivalent of 150px */
+.tui-t1o .tui-b {
+	float: right;
+	width:150px;
+}
+.tui-t1o .tui-main .tui-b {
+	margin-right:160px;
+}
+/* t2o narrow block = right, equivalent of 190px */
+.tui-t2o .tui-b {
+	float: right;
+	width:190px;
+}
+.tui-t2o .tui-main .tui-b {
+	margin-right:200px;
+}
+/* t3o narrow block = right, equivalent of 230px */
+.tui-t3o .tui-b {
+	float: right;
+	width:230px;
+}
+.tui-t3o .tui-main .tui-b {
+	margin-right:240px;
+}
+/* t4o narrow block = right, equivalent of 270px */
+.tui-t4o .tui-b {
+	float: right;
+	width:270px;
+}
+.tui-t4o .tui-main .tui-b {
+	margin-right:280px;
+}
+/* t5o narrow block = right, equivalent of 310px */
+.tui-t5o .tui-b {
+	float: right;
+	width:310px;
+}
+.tui-t5o .tui-main .tui-b {
+	margin-right:320px;
+}
+.tui-main .tui-b {
+	float: none;
+	width: auto;
+}
+/*
+Section: Grids and Nesting Grids
+*/
+
+/*
+Subsection: Children generally take half the available space
+*/
+
+.tui-gb .tui-u,
+.tui-g .tui-gb .tui-u,
+.tui-gb .tui-g,
+.tui-gb .tui-gb,
+.tui-gb .tui-gc,
+.tui-gb .tui-gd,
+.tui-gb .tui-ge,
+.tui-gb .tui-gf,
+.tui-gc .tui-u,
+.tui-gc .tui-g,
+.tui-gd .tui-u {
+	float: left;
+}
+
+/*Float units (and sub grids) to the right */
+.tui-g .tui-u,
+.tui-g .tui-g,
+.tui-g .tui-gb,
+.tui-g .tui-gc,
+.tui-g .tui-gd,
+.tui-g .tui-ge,
+.tui-g .tui-gf,
+.tui-gc .tui-u,
+.tui-gd .tui-g,
+.tui-g .tui-gc .tui-u,
+.tui-ge .tui-u,
+.tui-ge .tui-g,
+.tui-gf .tui-g,
+.tui-gf .tui-u {
+	float: right;
+}
+
+/*Float units (and sub grids) to the left */
+.tui-g div.first,
+.tui-gb div.first,
+.tui-gc div.first,
+.tui-gd div.first,
+.tui-ge div.first,
+.tui-gf div.first,
+.tui-g .tui-gc div.first,
+.tui-g .tui-ge div.first,
+.tui-gc div.first div.first {
+	float: left;
+}
+
+.tui-g .tui-u,
+.tui-g .tui-g,
+.tui-g .tui-gb,
+.tui-g .tui-gc,
+.tui-g .tui-gd,
+.tui-g .tui-ge,
+.tui-g .tui-gf {
+	width: 49.1%;
+}
+
+.tui-gb .tui-u,
+.tui-g .tui-gb .tui-u,
+.tui-gb .tui-g,
+.tui-gb .tui-gb,
+.tui-gb .tui-gc,
+.tui-gb .tui-gd,
+.tui-gb .tui-ge,
+.tui-gb .tui-gf,
+.tui-gc .tui-u,
+.tui-gc .tui-g,
+.tui-gd .tui-u {
+	width: 32%;
+	margin-left: 2.0%;
+}
+
+/* Give IE some extra breathing room for 1/3-based rounding issues */
+.tui-gb .tui-u {
+	*width: 31.8%;
+	*margin-left: 1.9%;
+}
+
+.tui-gc div.first,
+.tui-gd .tui-u {
+	width: 66%;
+	_width: 65.7%;
+}
+.tui-gd div.first {
+	width: 32%;
+	_width: 31.5%;
+}
+
+.tui-ge div.first,
+.tui-gf .tui-u {
+	width: 74.2%;
+	_width: 74%;
+}
+
+.tui-ge .tui-u,
+.tui-gf div.first {
+	width: 24%;
+	_width: 23.8%;
+}
+
+.tui-g .tui-gb div.first,
+.tui-gb div.first,
+.tui-gc div.first,
+.tui-gd div.first {
+	margin-left: 0;
+}
+
+/*
+Section: Deep Nesting
+*/
+.tui-g .tui-g .tui-u,
+.tui-gb .tui-g .tui-u,
+.tui-gc .tui-g .tui-u,
+.tui-gd .tui-g .tui-u,
+.tui-ge .tui-g .tui-u,
+.tui-gf .tui-g .tui-u {
+	width: 49%;
+	*width: 48.1%;
+	*margin-left: 0;
+}
+
+.tui-g .tui-gb div.first,
+.tui-gb .tui-gb div.first {
+	*margin-right: 0;
+	*width: 32%;
+	_width: 31.7%;
+}
+
+.tui-g .tui-gc div.first,
+.tui-gd .tui-g {
+	width: 66%;
+}
+
+.tui-gb .tui-g div.first {
+	*margin-right: 4%;
+	_margin-right: 1.3%;
+}
+
+.tui-gb .tui-gc div.first,
+.tui-gb .tui-gd div.first {
+	*margin-right: 0;
+}
+
+.tui-gb .tui-gb .tui-u,
+.tui-gb .tui-gc .tui-u {
+	*margin-left: 1.8%;
+	_margin-left: 4%;
+}
+
+.tui-g .tui-gb .tui-u {
+	_margin-left: 1.0%;
+}
+
+.tui-gb .tui-gd .tui-u {
+	*width: 66%;
+	_width: 61.2%;
+}
+.tui-gb .tui-gd div.first {
+	*width: 31%;
+	_width: 29.5%;
+}
+
+.tui-g .tui-gc .tui-u,
+.tui-gb .tui-gc .tui-u {
+	width: 32%;
+	_float: right;
+	margin-right: 0;
+	_margin-left: 0;
+}
+.tui-gb .tui-gc div.first {
+	width: 66%;
+	*float: left;
+	*margin-left: 0;
+}
+
+.tui-gb .tui-ge .tui-u,
+.tui-gb .tui-gf .tui-u {
+	margin: 0;
+}
+
+.tui-gb .tui-gb .tui-u {
+	_margin-left: .7%;
+}
+
+.tui-gb .tui-g div.first,
+.tui-gb .tui-gb div.first {
+	*margin-left:0;
+}
+
+.tui-gc .tui-g .tui-u,
+.tui-gd .tui-g .tui-u {
+	*width: 48.1%;
+	*margin-left: 0;
+}
+
+.tui-gb .tui-gd div.first {
+	width: 32%;
+}
+.tui-g .tui-gd div.first {
+	_width: 29.9%;
+}
+
+.tui-ge .tui-g {
+	width: 24%;
+}
+.tui-gf .tui-g {
+	width: 74.2%;
+}
+
+.tui-gb .tui-ge div.tui-u,
+.tui-gb .tui-gf div.tui-u {
+	float: right;
+}
+.tui-gb .tui-ge div.first,
+.tui-gb .tui-gf div.first {
+	float: left;
+}
+
+/* Width Accommodation for Nested Contexts */
+.tui-gb .tui-ge .tui-u,
+.tui-gb .tui-gf div.first {
+	*width: 24%;
+	_width: 20%;
+}
+
+/* Width Accommodation for Nested Contexts */
+.tui-gb .tui-ge div.first,
+.tui-gb .tui-gf .tui-u {
+	*width: 73.5%;
+	_width: 65.5%;
+}
+
+/* Patch for GD within GE */
+.tui-ge div.first .tui-gd .tui-u {
+	width: 65%;
+}
+.tui-ge div.first .tui-gd div.first {
+	width: 32%;
+}
+
+/*
+Section: Clearing. zoom for IE, :after for others
+*/
+
+#bd:after,
+.tui-g:after,
+.tui-gb:after,
+.tui-gc:after,
+.tui-gd:after,
+.tui-ge:after,
+.tui-gf:after,
+.tui-t1:after,
+.tui-t2:after,
+.tui-t3:after,
+.tui-t4:after,
+.tui-t5:after,
+.tui-t1o:after,
+.tui-t2o:after,
+.tui-t3o:after,
+.tui-t4o:after,
+.tui-t5o:after{
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+#bd,
+.tui-g,
+.tui-gb,
+.tui-gc,
+.tui-gd,
+.tui-ge,
+.tui-gf,
+.tui-t1,
+.tui-t2,
+.tui-t3,
+.tui-t4,
+.tui-t5,
+.tui-t6,
+.tui-t1o,
+.tui-t2o,
+.tui-t3o,
+.tui-t4o,
+.tui-t5o,
+.tui-t6o{
+	zoom: 1;
+}
+
+/*.solid_div {
+	overflow: hidden;
+	table-layout: fixed;
+	word-wrap: break-word;
+}*/
+
+/*--o tapd-base @ceil 20091019 用于还原浏览器默认样式--*/
+.tui-base h1 {font-size:138.5%;}
+.tui-base h2 {font-size:123.1%;}
+.tui-base h3 {font-size:108%;  }
+.tui-base h1,.tui-base h2,.tui-base h3 {margin:1em 0;}
+.tui-base h1,.tui-base h2,.tui-base h3,.tui-base h4,.tui-base h5,.tui-base h6,.tui-base strong {font-weight:bold; }
+.tui-base abbr,.tui-base acronym {border-bottom:1px dotted #000;cursor:help;} 
+.tui-base em {font-style:italic;}
+.tui-base blockquote, .tui-base ul,.tui-base ol,.tui-base dl {margin:1em;}
+.tui-base ol,.tui-base ul,.tui-base dl {margin-left:2em;}
+.tui-base ol li {list-style: decimal outside;}
+.tui-base ul li {list-style: disc outside;}
+.tui-base dl dd {margin-left:1em;}
+.tui-base th, .tui-base td {border:1px solid #000;padding:.5em;}
+.tui-base th {font-weight:bold;text-align:center;}
+.tui-base caption {margin-bottom:.5em;text-align:center;}
+.tui-base p,.tui-base fieldset, .tui-base table, .tui-base pre {margin-bottom:1em;}
+.tui-base input[type=text], .tui-base input[type=password], .tui-base textarea{width:12.25em;*width:11.9em;}
+/*--x tapd-base --*/

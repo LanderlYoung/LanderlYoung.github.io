@@ -83,43 +83,39 @@
 	<div class="entry-content" itemprop="articleBody"><p>来腾讯实习有半个月来，刚进来公司统一培训了一天半，闲扯了点东西。然后SNG部门培训了3天时间，讲解一些业务流程。然后就是重头戏，所谓的迷你项目。我擦，虽然今天做完了，但是我还是想说这个巨坑啊！</p>
 
 <!--more-->
-
-
 <p>做这个迷你项目首先要说的是，还真的有点累的。。。每天早上做班车从酒店到公司，然后晚上一边九点走，到最后两天就更夸张了。前天在公司通宵了一夜，昨天夜里也是十二点多才走，欣慰的是腾大东侧的路上出租车排排停，估计我鹅长的员工加班都很积极吧。一个安卓应用，7天时间，两个人做，看这数据都觉得恐怖。</p>
 
 <p>不过最后还是搞定了，尽管没拿奖，但是自己仍然很有成就感。做项目期间还是受到导师同事们的很大帮助的。最后一晚要不是wii帮qiuhang调了一个多小时的bug估计就得继续通宵了，而且说不定通宵了也搞不，那就苦逼了。</p>
 
-<p>因为我做和服务器端的接口工作，当时一边商量一边改。一开始觉得商量接口真麻烦，后来才发现没有事先定义好接口才是做苦逼的。最荒唐的一件事是今天上午mini项目要测评了，结果昨天下午还在找后台的同学加接口。所以说：</p>
-
-<blockquote><p>概要设计真的很重要</p></blockquote>
+<p>因为我做和服务器端的接口工作，当时一边商量一边改。一开始觉得商量接口真麻烦，后来才发现没有事先定义好接口才是做苦逼的。最荒唐的一件事是今天上午mini项目要测评了，结果昨天下午还在找后台的同学加接口。所以说：
+&gt; 概要设计真的很重要</p>
 
 <p>前天晚上的问题是在电脑上调试完毕的net接口整合到Android上却得不到返回数据，比较奇怪的是有一个房屋信息POST请求能上传，而且数据库里会出现相应信息，但是返回值却是空的。一开始怀疑是没有申请网络访问权限，后来发现不是。后来sponsor Lewis 过来帮我调试，教了我安卓单步调试的方法，但是问题还是没能轻松解决。当天晚上熬了一夜，睡醒了4点，突然灵机一现决定把所有的JSON返回值都Log出来，同时所有的Exeption也要Log出来。后来慢慢调试才发现是<code>NetworkOnMainThreadException</code>！网络跑在主UI线程！所以每次执行到connect的时候android系统都会抛出这个异常，但是我却Too young， sometimes too naive！把所有可能抛出异常的地方都catch (Exception e) {}。就是说catch了所有Exception的父类并且什么也不做！对！就是不作为！后来跟我的导师raez说这件事，他说：</p>
 
-<blockquote><p>异常本来是用来发现问题的，不能随便catch。</p></blockquote>
+<blockquote>
+  <p>异常本来是用来发现问题的，不能随便catch。</p>
+</blockquote>
 
 <p>对此我的理解是，需要catch一个exception的时候<strong>尽量精准catch</strong>。比如一个方法可能抛出IOException就不要懒懒的去直接catch Exception，同时如果抛出多种异常也要一个一个catch;</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>    <span class="o">...</span>
-</span><span class='line'>    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
-</span><span class='line'>            <span class="o">...</span>
-</span><span class='line'>    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">FileNotFoundException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
-</span><span class='line'>            <span class="o">...</span>
-</span><span class='line'>    <span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="k">try</span> <span class="o">{</span>
+</span><span class="line">    <span class="o">...</span>
+</span><span class="line">    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+</span><span class="line">            <span class="o">...</span>
+</span><span class="line">    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">FileNotFoundException</span> <span class="n">ex</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+</span><span class="line">            <span class="o">...</span>
+</span><span class="line">    <span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 <p>同时<strong>捕获一个异常之后不能什么都不做</strong>，至少应该<code>printStackTrace</code>或者是Log出来，否则出现问题之后很难排查出来。另外<code>NullPointerException</code> 原则上不允许catch，<code>OutOfMemoryError</code>除了在大量消耗内存的代码片段上（比图图片处理，或者字符串拼接等）不允许catch。还有就是捕获异常是一定<strong>精准捕获</strong>。</p>
 
 <p>另外关于安卓多线程的使用，学习到了两种方式：Activity的<code>runOnUiThread(Runnable)</code>方法，还有使用AsyncTask类, 另外还有是用Handler之类的方法，当时没有还没有学习。</p>
@@ -155,7 +151,7 @@
 			</div>
 			<footer id="footer" class="inner">
 <p>
-  Copyright &copy; 2016 - LanderlYoung -
+  Copyright &copy; 2017 - LanderlYoung -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 </footer>
@@ -201,6 +197,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/03/08/android-zhi-chi-ping-mu-xuan-zhuan-de-fang-shi/">Android 支持屏幕旋转的方式</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/01/11/re-lambda-ce-shi-bao-gao/">Retro-lambda 测试报告</a>
       </li>
     
@@ -216,39 +216,35 @@
         <a href="/blog/2014/11/09/androidzhong-servicede-shi-yong/">Android中service的使用</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/10/31/androidzhong-de-wakelockshi-yong/">Android中的WakeLock使用</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/android/'>android (9)</a></li><li><a href='/blog/categories/git/'>git (2)</a></li><li><a href='/blog/categories/html5/'>html5 (5)</a></li><li><a href='/blog/categories/java/'>java (4)</a></li><li><a href='/blog/categories/javascript/'>javascript (3)</a></li><li><a href='/blog/categories/linux/'>linux (7)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/android/'>android (10)</a></li><li><a href='/blog/categories/git/'>git (2)</a></li><li><a href='/blog/categories/html5/'>html5 (5)</a></li><li><a href='/blog/categories/java/'>java (4)</a></li><li><a href='/blog/categories/javascript/'>javascript (3)</a></li><li><a href='/blog/categories/linux/'>linux (7)</a></li></ul>
 </section>
 <section>
 	<h1>Tags</h1>
 	<ul class="tag-cloud">
-		<li><a style="font-size: 105.6%" href="/tags/android/">Android</a></li>
-<li><a style="font-size: 84.8%" href="/tags/linux/">Linux</a></li>
-<li><a style="font-size: 114.5%" href="/tags/html5/">HTML5</a></li>
-<li><a style="font-size: 110.4%" href="/tags/java/">Java</a></li>
-<li><a style="font-size: 74.4%" href="/tags/node-dot-js/">Node.js</a></li>
-<li><a style="font-size: 93.0%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
-<li><a style="font-size: 119.6%" href="/tags/java/">java</a></li>
-<li><a style="font-size: 98.6%" href="/tags/android/">android</a></li>
-<li><a style="font-size: 77.4%" href="/tags/git/">Git</a></li>
-<li><a style="font-size: 100.1%" href="/tags/vim/">Vim</a></li>
-<li><a style="font-size: 89.1%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
-<li><a style="font-size: 80.1%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
-<li><a style="font-size: 104.5%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
-<li><a style="font-size: 103.6%" href="/tags/tencent/">tencent</a></li>
-<li><a style="font-size: 83.9%" href="/tags/zhuan-tie/">转贴</a></li>
-<li><a style="font-size: 78.1%" href="/tags/sensor/">sensor</a></li>
-<li><a style="font-size: 106.7%" href="/tags/ui/">UI</a></li>
-<li><a style="font-size: 112.8%" href="/tags/svg/">SVG</a></li>
-<li><a style="font-size: 94.8%" href="/tags/intellij/">IntelliJ</a></li>
-<li><a style="font-size: 74.1%" href="/tags/jni/">JNI</a></li>
+		<li><a style="font-size: 110.0%" href="/tags/android/">Android</a></li>
+<li><a style="font-size: 108.6%" href="/tags/linux/">Linux</a></li>
+<li><a style="font-size: 70.6%" href="/tags/html5/">HTML5</a></li>
+<li><a style="font-size: 86.6%" href="/tags/java/">Java</a></li>
+<li><a style="font-size: 81.3%" href="/tags/node-dot-js/">Node.js</a></li>
+<li><a style="font-size: 110.2%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
+<li><a style="font-size: 111.5%" href="/tags/java/">java</a></li>
+<li><a style="font-size: 71.7%" href="/tags/android/">android</a></li>
+<li><a style="font-size: 114.9%" href="/tags/git/">Git</a></li>
+<li><a style="font-size: 97.8%" href="/tags/vim/">Vim</a></li>
+<li><a style="font-size: 109.7%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
+<li><a style="font-size: 92.4%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
+<li><a style="font-size: 109.2%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
+<li><a style="font-size: 82.5%" href="/tags/tencent/">tencent</a></li>
+<li><a style="font-size: 106.3%" href="/tags/zhuan-tie/">转贴</a></li>
+<li><a style="font-size: 93.6%" href="/tags/sensor/">sensor</a></li>
+<li><a style="font-size: 116.2%" href="/tags/ui/">UI</a></li>
+<li><a style="font-size: 101.4%" href="/tags/svg/">SVG</a></li>
+<li><a style="font-size: 105.8%" href="/tags/intellij/">IntelliJ</a></li>
+<li><a style="font-size: 119.4%" href="/tags/jni/">JNI</a></li>
 
 	</ul>
 </section>

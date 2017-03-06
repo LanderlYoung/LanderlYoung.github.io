@@ -1,0 +1,86 @@
+<html>
+  <head>
+    <title>hello world</title>
+    <style media="screen" type="text/css">
+      .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 80%;
+      }
+
+      .border {
+        border: 1px solid #ccc;
+        background: #fff;
+        box-shadow: 2px 2px 5px #eee;
+        font-family: 'Robot', arial, sans-serif;
+        font-weight: 300;
+        display: block;
+        padding: 25px;
+
+        width: 36em;
+        margin: 0px auto;
+      }
+
+      p {
+        color: #777;
+        font-size: 1.2em;
+      }
+
+      .title {
+        text-align: left;
+      }
+
+      .content {
+        font-size: 1.5em;
+        margin: 0.83em;
+      }
+
+      .footer {
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="border">
+        <p class="title" id="title">
+          title
+        </p>
+
+        <div class="content" id="content">
+          conent
+        </div>
+
+        <p class="footer" id="footer">
+          footer
+        </p>
+      </div>
+    </div>
+
+    <script>
+      function getParams() {
+        var regex = /[?&]([^=#&]+)=([^=#&]*)/g
+        var url = window.location.href
+        var params = {}
+        var match
+        while(match = regex.exec(url)) {
+          params[match[1]] =decodeURIComponent(match[2]);
+        }
+        return params
+      }
+      var params = getParams()
+      var title = document.getElementById("title")
+      var content = document.getElementById("content")
+      var footer = document.getElementById("footer")
+      if (params['title'] != undefined
+          && params['content'] != undefined
+          && params['footer'] != undefined) {
+          title.innerText = params['title']
+          content.innerText = params['content']
+          footer.innerText = params['footer']
+        }
+    </script>
+  </body>
+</html>
+

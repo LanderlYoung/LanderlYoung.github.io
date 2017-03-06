@@ -87,127 +87,141 @@
 <p>Android中的传感器分为两类：</p>
 
 <ul>
-<li><p>连续性的传感器 比如：接近传感器，加速度传感器等。可以连续的反馈数据</p></li>
-<li><p>触发性的传感器 比如：significant motion sensor（好吧，我不知道他是啥；看名字貌似是监听用户的什么动作的）。总之就是那种会再特定情况下触发的传感器。</p></li>
+  <li>
+    <p>连续性的传感器 比如：接近传感器，加速度传感器等。可以连续的反馈数据</p>
+  </li>
+  <li>
+    <p>触发性的传感器 比如：significant motion sensor（好吧，我不知道他是啥；看名字貌似是监听用户的什么动作的）。总之就是那种会再特定情况下触发的传感器。</p>
+  </li>
 </ul>
-
 
 <!--more-->
 
-
 <p>Sensor的使用过程如下：</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SensorActivity</span> <span class="kd">extends</span> <span class="n">Activity</span> <span class="kd">implements</span> <span class="n">SensorEventListener</span> <span class="o">{</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">SensorManager</span> <span class="n">mSensorManager</span><span class="o">;</span>
-</span><span class='line'>    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Sensor</span> <span class="n">mAccelerometer</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">public</span> <span class="nf">SensorActivity</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="c1">//获取SensorManager</span>
-</span><span class='line'>        <span class="n">mSensorManager</span> <span class="o">=</span> <span class="o">(</span><span class="n">SensorManager</span><span class="o">)</span> <span class="n">getSystemService</span><span class="o">(</span><span class="n">SENSOR_SERVICE</span><span class="o">);</span>
-</span><span class='line'>        <span class="c1">//获取对应的Sensor</span>
-</span><span class='line'>        <span class="n">mAccelerometer</span> <span class="o">=</span> <span class="n">mSensorManager</span><span class="o">.</span><span class="na">getDefaultSensor</span><span class="o">(</span><span class="n">Sensor</span><span class="o">.</span><span class="na">TYPE_ACCELEROMETER</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onResume</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="kd">super</span><span class="o">.</span><span class="na">onResume</span><span class="o">();</span>
-</span><span class='line'>        <span class="c1">//注册一个Sensor的监听器，监听器的回调函数是在主线程中被调用的，因此要尽量避免阻塞主线程！</span>
-</span><span class='line'>        <span class="n">mSensorManager</span><span class="o">.</span><span class="na">registerListener</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">mAccelerometer</span><span class="o">,</span> <span class="n">SensorManager</span><span class="o">.</span><span class="na">SENSOR_DELAY_NORMAL</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onPause</span><span class="o">()</span> <span class="o">{</span>
-</span><span class='line'>        <span class="kd">super</span><span class="o">.</span><span class="na">onPause</span><span class="o">();</span>
-</span><span class='line'>        <span class="c1">//取消注册一个Sensor的监听器</span>
-</span><span class='line'>        <span class="n">mSensorManager</span><span class="o">.</span><span class="na">unregisterListener</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="cm">/**</span>
-</span><span class='line'><span class="cm">     * SensorEventListener的回调方法</span>
-</span><span class='line'><span class="cm">     *</span>
-</span><span class='line'><span class="cm">     * @param sensor</span>
-</span><span class='line'><span class="cm">     * @param accuracy</span>
-</span><span class='line'><span class="cm">     */</span>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onAccuracyChanged</span><span class="o">(</span><span class="n">Sensor</span> <span class="n">sensor</span><span class="o">,</span> <span class="kt">int</span> <span class="n">accuracy</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="cm">/**</span>
-</span><span class='line'><span class="cm">     * SensorEventListener的回调方法</span>
-</span><span class='line'><span class="cm">     *</span>
-</span><span class='line'><span class="cm">     * @param event</span>
-</span><span class='line'><span class="cm">     */</span>
-</span><span class='line'>    <span class="nd">@Override</span>
-</span><span class='line'>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onSensorChanged</span><span class="o">(</span><span class="n">SensorEvent</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="kt">float</span><span class="o">[]</span> <span class="n">values</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="na">values</span><span class="o">;</span>
-</span><span class='line'>        <span class="cm">/**</span>
-</span><span class='line'><span class="cm">         * 这是传感器传送来的数据，根据不同的传感器，其值和数组长度会有所不同。</span>
-</span><span class='line'><span class="cm">         */</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+<span class="line-number">32</span>
+<span class="line-number">33</span>
+<span class="line-number">34</span>
+<span class="line-number">35</span>
+<span class="line-number">36</span>
+<span class="line-number">37</span>
+<span class="line-number">38</span>
+<span class="line-number">39</span>
+<span class="line-number">40</span>
+<span class="line-number">41</span>
+<span class="line-number">42</span>
+<span class="line-number">43</span>
+<span class="line-number">44</span>
+<span class="line-number">45</span>
+<span class="line-number">46</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">SensorActivity</span> <span class="kd">extends</span> <span class="n">Activity</span> <span class="kd">implements</span> <span class="n">SensorEventListener</span> <span class="o">{</span>
+</span><span class="line">    <span class="kd">private</span> <span class="kd">final</span> <span class="n">SensorManager</span> <span class="n">mSensorManager</span><span class="o">;</span>
+</span><span class="line">    <span class="kd">private</span> <span class="kd">final</span> <span class="n">Sensor</span> <span class="n">mAccelerometer</span><span class="o">;</span>
+</span><span class="line">
+</span><span class="line">    <span class="kd">public</span> <span class="nf">SensorActivity</span><span class="o">()</span> <span class="o">{</span>
+</span><span class="line">        <span class="c1">//获取SensorManager</span>
+</span><span class="line">        <span class="n">mSensorManager</span> <span class="o">=</span> <span class="o">(</span><span class="n">SensorManager</span><span class="o">)</span> <span class="n">getSystemService</span><span class="o">(</span><span class="n">SENSOR_SERVICE</span><span class="o">);</span>
+</span><span class="line">        <span class="c1">//获取对应的Sensor</span>
+</span><span class="line">        <span class="n">mAccelerometer</span> <span class="o">=</span> <span class="n">mSensorManager</span><span class="o">.</span><span class="na">getDefaultSensor</span><span class="o">(</span><span class="n">Sensor</span><span class="o">.</span><span class="na">TYPE_ACCELEROMETER</span><span class="o">);</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">
+</span><span class="line">    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onResume</span><span class="o">()</span> <span class="o">{</span>
+</span><span class="line">        <span class="kd">super</span><span class="o">.</span><span class="na">onResume</span><span class="o">();</span>
+</span><span class="line">        <span class="c1">//注册一个Sensor的监听器，监听器的回调函数是在主线程中被调用的，因此要尽量避免阻塞主线程！</span>
+</span><span class="line">        <span class="n">mSensorManager</span><span class="o">.</span><span class="na">registerListener</span><span class="o">(</span><span class="k">this</span><span class="o">,</span> <span class="n">mAccelerometer</span><span class="o">,</span> <span class="n">SensorManager</span><span class="o">.</span><span class="na">SENSOR_DELAY_NORMAL</span><span class="o">);</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">
+</span><span class="line">    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onPause</span><span class="o">()</span> <span class="o">{</span>
+</span><span class="line">        <span class="kd">super</span><span class="o">.</span><span class="na">onPause</span><span class="o">();</span>
+</span><span class="line">        <span class="c1">//取消注册一个Sensor的监听器</span>
+</span><span class="line">        <span class="n">mSensorManager</span><span class="o">.</span><span class="na">unregisterListener</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">
+</span><span class="line">    <span class="cm">/**</span>
+</span><span class="line"><span class="cm">     * SensorEventListener的回调方法</span>
+</span><span class="line"><span class="cm">     *</span>
+</span><span class="line"><span class="cm">     * @param sensor</span>
+</span><span class="line"><span class="cm">     * @param accuracy</span>
+</span><span class="line"><span class="cm">     */</span>
+</span><span class="line">    <span class="nd">@Override</span>
+</span><span class="line">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onAccuracyChanged</span><span class="o">(</span><span class="n">Sensor</span> <span class="n">sensor</span><span class="o">,</span> <span class="kt">int</span> <span class="n">accuracy</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">
+</span><span class="line">    <span class="cm">/**</span>
+</span><span class="line"><span class="cm">     * SensorEventListener的回调方法</span>
+</span><span class="line"><span class="cm">     *</span>
+</span><span class="line"><span class="cm">     * @param event</span>
+</span><span class="line"><span class="cm">     */</span>
+</span><span class="line">    <span class="nd">@Override</span>
+</span><span class="line">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onSensorChanged</span><span class="o">(</span><span class="n">SensorEvent</span> <span class="n">event</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">        <span class="kt">float</span><span class="o">[]</span> <span class="n">values</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="na">values</span><span class="o">;</span>
+</span><span class="line">        <span class="cm">/**</span>
+</span><span class="line"><span class="cm">         * 这是传感器传送来的数据，根据不同的传感器，其值和数组长度会有所不同。</span>
+</span><span class="line"><span class="cm">         */</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 <p>上面的注册监听器是针对以连续性的传感器，如果是触发性的传感器相应的换成：</p>
 
 <ul>
-<li><p>注册： <a href="http://developer.android.com/reference/android/hardware/SensorManager.html#requestTriggerSensor(android.hardware.TriggerEventListener,%20android.hardware.Sensor"><code>boolean SensorManager::requestTriggerSensor(TriggerEventListener listener, Sensor sensor)</code></a></p></li>
-<li><p>取消注册：<a href="http://developer.android.com/reference/android/hardware/SensorManager.html#cancelTriggerSensor(android.hardware.TriggerEventListener,%20android.hardware.Sensor"><code>boolean SensorManager::cancelTriggerSensor(TriggerEventListener listener, Sensor sensor)</code></a></p></li>
-<li><p>监听器：<a href="http://developer.android.com/reference/android/hardware/TriggerEventListener.html"><code>TriggerEventListener</code></a></p></li>
+  <li>
+    <p>注册： [<code>boolean SensorManager::requestTriggerSensor(TriggerEventListener listener, Sensor sensor)</code>](http://developer.android.com/reference/android/hardware/SensorManager.html#requestTriggerSensor(android.hardware.TriggerEventListener, android.hardware.Sensor)</p>
+  </li>
+  <li>
+    <p>取消注册：[<code>boolean SensorManager::cancelTriggerSensor(TriggerEventListener listener, Sensor sensor)</code>](http://developer.android.com/reference/android/hardware/SensorManager.html#cancelTriggerSensor(android.hardware.TriggerEventListener, android.hardware.Sensor)</p>
+  </li>
+  <li>
+    <p>监听器：<a href="http://developer.android.com/reference/android/hardware/TriggerEventListener.html"><code>TriggerEventListener </code></a></p>
+  </li>
 </ul>
-
 
 <p>上面registerListener中最后一个参数是传感器的频率，频率越高单位时间内数据采集就越多，相应的也就更费电！频率从高到低分别是：</p>
 
 <ol>
-<li><p><code>SensorManager.SENSOR_DELAY_FASTEST</code> : 获取数据尽可能的快</p></li>
-<li><p><code>SensorManager.SENSOR_DELAY_GAME</code> : 适合游戏的频率</p></li>
-<li><p><code>SensorManager.SENSOR_DELAY_NORMAL</code>： 正常的频率，一般实时性要求不高都可以用这个设定。</p></li>
-<li><p><code>SensorManager.SENSOR_DELAY_UI</code>：适合普通用户界面的平率。由于频率低，所以，延时大，但是也会更省电。</p></li>
+  <li>
+    <p><code>SensorManager.SENSOR_DELAY_FASTEST</code> : 获取数据尽可能的快</p>
+  </li>
+  <li>
+    <p><code>SensorManager.SENSOR_DELAY_GAME</code> : 适合游戏的频率</p>
+  </li>
+  <li>
+    <p><code>SensorManager.SENSOR_DELAY_NORMAL</code>： 正常的频率，一般实时性要求不高都可以用这个设定。</p>
+  </li>
+  <li>
+    <p><code>SensorManager.SENSOR_DELAY_UI</code>：适合普通用户界面的平率。由于频率低，所以，延时大，但是也会更省电。</p>
+  </li>
 </ol>
 
 </div>
@@ -240,7 +254,7 @@
 			</div>
 			<footer id="footer" class="inner">
 <p>
-  Copyright &copy; 2016 - LanderlYoung -
+  Copyright &copy; 2017 - LanderlYoung -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 </footer>
@@ -286,6 +300,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/03/08/android-zhi-chi-ping-mu-xuan-zhuan-de-fang-shi/">Android 支持屏幕旋转的方式</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/01/11/re-lambda-ce-shi-bao-gao/">Retro-lambda 测试报告</a>
       </li>
     
@@ -301,39 +319,35 @@
         <a href="/blog/2014/11/09/androidzhong-servicede-shi-yong/">Android中service的使用</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/10/31/androidzhong-de-wakelockshi-yong/">Android中的WakeLock使用</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/android/'>android (9)</a></li><li><a href='/blog/categories/git/'>git (2)</a></li><li><a href='/blog/categories/html5/'>html5 (5)</a></li><li><a href='/blog/categories/java/'>java (4)</a></li><li><a href='/blog/categories/javascript/'>javascript (3)</a></li><li><a href='/blog/categories/linux/'>linux (7)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/android/'>android (10)</a></li><li><a href='/blog/categories/git/'>git (2)</a></li><li><a href='/blog/categories/html5/'>html5 (5)</a></li><li><a href='/blog/categories/java/'>java (4)</a></li><li><a href='/blog/categories/javascript/'>javascript (3)</a></li><li><a href='/blog/categories/linux/'>linux (7)</a></li></ul>
 </section>
 <section>
 	<h1>Tags</h1>
 	<ul class="tag-cloud">
-		<li><a style="font-size: 81.0%" href="/tags/android/">Android</a></li>
-<li><a style="font-size: 97.6%" href="/tags/linux/">Linux</a></li>
-<li><a style="font-size: 102.2%" href="/tags/html5/">HTML5</a></li>
-<li><a style="font-size: 73.9%" href="/tags/java/">Java</a></li>
-<li><a style="font-size: 92.6%" href="/tags/node-dot-js/">Node.js</a></li>
-<li><a style="font-size: 103.8%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
-<li><a style="font-size: 95.8%" href="/tags/java/">java</a></li>
-<li><a style="font-size: 77.2%" href="/tags/android/">android</a></li>
-<li><a style="font-size: 81.9%" href="/tags/git/">Git</a></li>
-<li><a style="font-size: 74.0%" href="/tags/vim/">Vim</a></li>
-<li><a style="font-size: 73.3%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
-<li><a style="font-size: 93.8%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
-<li><a style="font-size: 110.9%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
-<li><a style="font-size: 85.3%" href="/tags/tencent/">tencent</a></li>
-<li><a style="font-size: 92.7%" href="/tags/zhuan-tie/">转贴</a></li>
-<li><a style="font-size: 104.3%" href="/tags/sensor/">sensor</a></li>
-<li><a style="font-size: 71.5%" href="/tags/ui/">UI</a></li>
-<li><a style="font-size: 79.7%" href="/tags/svg/">SVG</a></li>
-<li><a style="font-size: 73.4%" href="/tags/intellij/">IntelliJ</a></li>
-<li><a style="font-size: 93.9%" href="/tags/jni/">JNI</a></li>
+		<li><a style="font-size: 104.5%" href="/tags/android/">Android</a></li>
+<li><a style="font-size: 93.4%" href="/tags/linux/">Linux</a></li>
+<li><a style="font-size: 85.1%" href="/tags/html5/">HTML5</a></li>
+<li><a style="font-size: 80.2%" href="/tags/java/">Java</a></li>
+<li><a style="font-size: 106.8%" href="/tags/node-dot-js/">Node.js</a></li>
+<li><a style="font-size: 71.8%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
+<li><a style="font-size: 70.3%" href="/tags/java/">java</a></li>
+<li><a style="font-size: 106.9%" href="/tags/android/">android</a></li>
+<li><a style="font-size: 99.1%" href="/tags/git/">Git</a></li>
+<li><a style="font-size: 84.3%" href="/tags/vim/">Vim</a></li>
+<li><a style="font-size: 97.0%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
+<li><a style="font-size: 82.1%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
+<li><a style="font-size: 83.5%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
+<li><a style="font-size: 108.3%" href="/tags/tencent/">tencent</a></li>
+<li><a style="font-size: 106.5%" href="/tags/zhuan-tie/">转贴</a></li>
+<li><a style="font-size: 116.1%" href="/tags/sensor/">sensor</a></li>
+<li><a style="font-size: 71.4%" href="/tags/ui/">UI</a></li>
+<li><a style="font-size: 111.0%" href="/tags/svg/">SVG</a></li>
+<li><a style="font-size: 100.3%" href="/tags/intellij/">IntelliJ</a></li>
+<li><a style="font-size: 106.6%" href="/tags/jni/">JNI</a></li>
 
 	</ul>
 </section>

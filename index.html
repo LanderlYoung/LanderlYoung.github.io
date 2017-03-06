@@ -7,7 +7,8 @@
 	<meta name="author" content="LanderlYoung">
 
 	
-	<meta name="description" content="android Comments Retro-lambda 测试报告 retrolambda测试报告 先说结论 堆栈行号完全匹配！没有任何问题，包括最新的android build tools自身支持的switch string，MultiCatch，和retrolambda的所有特性都没问题 &hellip;">
+	<meta name="description" content="android Comments Android 支持屏幕旋转的方式 Android 支持屏幕旋转的方式 目录 [TOC] ###0. Preface
+在Android中activity默认是支持屏幕旋转操作的。在屏幕旋转过程中所在的Activity会重建。 所谓的重建大致是这样一个流程： &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -96,6 +97,372 @@
   
 
 
+<time datetime="2016-03-08T01:13:23+08:00" data-updated="true" itemprop="datePublished"></time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/android/'>android</a>
+
+
+</div>
+		
+			<span class="comments"><a href="/blog/2016/03/08/android-zhi-chi-ping-mu-xuan-zhuan-de-fang-shi/#disqus_thread">Comments</a></span>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2016/03/08/android-zhi-chi-ping-mu-xuan-zhuan-de-fang-shi/" itemprop="url">Android 支持屏幕旋转的方式</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<h1>Android 支持屏幕旋转的方式</h1>
+
+<p>目录</p>
+
+<p>[TOC]</p>
+
+<p>###0. Preface
+在Android中activity默认是支持屏幕旋转操作的。在屏幕旋转过程中所在的Activity会重建。</p>
+
+<p>所谓的重建大致是这样一个流程：</p>
+
+<ol>
+  <li>onSaceInstanceState</li>
+  <li>Destroy current activity</li>
+  <li>reCreate current activity</li>
+</ol>
+
+<p>因此Activity的状态都是保存在“InstanceState”中的，于是我们需要在重建Activity的时候恢复其状态。</p>
+
+<p>###1.  关于旋转</p>
+
+<p>####1.1 配置/禁用旋转
+屏幕旋转是在Manifest可以配置的，对应的attribute是<code>android:screenOrientation</code>，常用的配置有<code>portrait</code>和<code>landscape</code>，分别对应 “竖屏”和“横屏”。可以配置支持多种方向，中间用管道符号<code>|</code>隔开，像酱紫<code>portrait|landscap</code>.</p>
+
+<p>如果你只配置一个方向，就相当于禁用了屏幕旋转了。</p>
+
+<p>这个属性的取值还是相当丰富的，详细内容请参阅<a href="http://developer.android.com/intl/zh-cn/guide/topics/manifest/activity-element.html">官方文档</a>。</p>
+
+<p>当然还可以在代码中设置屏幕方向和获取当前方向。</p>
+
+<p><strong>设置</strong></p>
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="c1">//set orentation in java code programatically</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">//For Landscape mode</span>
+</span><span class="line"><span class="n">setRequestedOrientation</span><span class="o">(</span><span class="n">ActivityInfo</span><span class="o">.</span><span class="na">SCREEN_ORIENTATION_LANDSCAPE</span><span class="o">);</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">//For Portrait Mode</span>
+</span><span class="line"><span class="n">setRequestedOrientation</span><span class="o">(</span><span class="n">ActivityInfo</span><span class="o">.</span><span class="na">SCREEN_ORIENTATION_PORTRAIT</span><span class="o">);</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">//For ANYTHING, please RTFM</span>
+</span><span class="line"><span class="n">setRequestedOrientation</span><span class="o">(</span><span class="n">ActivityInfo</span><span class="o">.</span><span class="na">SCREEN_ORIENTATION_</span><span class="o">&lt;</span><span class="n">ANYTHING</span><span class="o">&gt;);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p><strong>获取</strong></p>
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="c1">//get current screen orientation</span>
+</span><span class="line"><span class="kd">public</span> <span class="n">String</span> <span class="nf">getOrientation</span><span class="o">()</span> <span class="o">{</span>
+</span><span class="line">    <span class="n">Display</span> <span class="n">display</span> <span class="o">=</span> <span class="o">((</span><span class="n">WindowManager</span><span class="o">)</span> <span class="n">getSystemService</span><span class="o">(</span><span class="n">WINDOW_SERVICE</span><span class="o">)).</span><span class="na">getDefaultDisplay</span><span class="o">();</span>
+</span><span class="line">    <span class="kt">int</span> <span class="n">orientation</span> <span class="o">=</span> <span class="n">display</span><span class="o">.</span><span class="na">getRotation</span><span class="o">();</span>
+</span><span class="line">    <span class="k">switch</span> <span class="o">(</span><span class="n">orientation</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">        <span class="k">case</span> <span class="n">Surface</span><span class="o">.</span><span class="na">ROTATION_0</span><span class="o">:</span>
+</span><span class="line">            <span class="k">return</span> <span class="s">&quot;portrait&quot;</span><span class="o">;</span>
+</span><span class="line">        <span class="k">case</span> <span class="n">Surface</span><span class="o">.</span><span class="na">ROTATION_90</span><span class="o">:</span>
+</span><span class="line">            <span class="k">return</span> <span class="s">&quot;land&quot;</span><span class="o">;</span>
+</span><span class="line">        <span class="k">case</span> <span class="n">Surface</span><span class="o">.</span><span class="na">ROTATION_180</span><span class="o">:</span>
+</span><span class="line">            <span class="k">return</span> <span class="s">&quot;portrait reverse&quot;</span><span class="o">;</span>
+</span><span class="line">        <span class="k">case</span> <span class="n">Surface</span><span class="o">.</span><span class="na">ROTATION_270</span><span class="o">:</span>
+</span><span class="line">            <span class="k">return</span> <span class="s">&quot;land reverse&quot;</span><span class="o">;</span>
+</span><span class="line">        <span class="k">default</span><span class="o">:</span>
+</span><span class="line">            <span class="k">throw</span> <span class="k">new</span> <span class="nf">AssertionError</span><span class="o">(</span><span class="s">&quot;not gonna happen&quot;</span><span class="o">);</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>####1.2 资源
+我们知道Android的<code>Resources</code>是配置了一个<code>android.content.res.Configuration</code>的，这个配置内容很丰富，其中就包括了屏幕方向。<code>Resources</code>会根据配置去取得相应的资源，比如根据语言去哪字符资源。
+在Resources的强力支持下，你可以给不同的屏幕方向相应的资源文件，默认都是竖屏的，把横屏的放在 xxx-land，如<code>layout-land</code>，你可以引用同一个资源id，在<code>Resources</code>加载资源时会根据<code>Configuration</code>自动选择。</p>
+
+<p>###2. Configuration
+根据Android的<code>android.content.res.Configuration</code>文档说明，这些“配置”是能够影响Resources怎么拿到资源的所有信息的集合。举个例子，系统语言设置会影响Resources拿到字符串资源，中文还是英文？详细信息可以参看<a href="http://developer.android.com/intl/zh-cn/reference/android/content/res/Configuration.html">官方文档</a>.
+因此当<code>Configuration</code>变化的时候，Activity能拿到的resources也会发生变化。于是Android系统会重建该Activity，来更新界面。其中屏幕方向也是<code>Configuration</code>中的一个维度。因此屏幕旋转时也会导致Activity重建。</p>
+
+<p>但是有时候Activity希望自行处理相应的<code>Configuration</code>变化事件，这时候系统给我们提供了这样的机会。</p>
+
+<p>在Manifest的Activity标签中有这样一个attribute <code>android:configChanges</code>，在这里声明希望自行处理的事件，多个事件之间用管道符号<code>|</code>来分隔，举个栗子</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+</pre></td><td class="code"><pre><code class="xml"><span class="line"><span class="nt">&lt;activity</span>
+</span><span class="line">    <span class="na">android:name=</span><span class="s">&quot;.mediacodec.MediaCodecActivity&quot;</span>
+</span><span class="line">    <span class="na">android:theme=</span><span class="s">&quot;@style/AppTheme&quot;</span>
+</span><span class="line">    <span class="na">android:label=</span><span class="s">&quot;MediaCodec&quot;</span>
+</span><span class="line">    <span class="na">android:configChanges=</span><span class="s">&quot;orientation|screenSize|locale&quot;</span>
+</span><span class="line">    <span class="nt">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>需要注意一点：在Android3.2 （API 13）之后，屏幕旋转会同时触发<code>orientation</code>和<code>screenSize</code>两个变化。</p>
+
+<p>然后在<code>Activity::onConfigurationChanged(Configuration)</code>中处理相应的变化即可，这时候不会重新创建Activity。</p>
+
+<p><strong>notice</strong>：
+&gt;即使不重建Activity，屏幕旋转的时候，界面也会跟着转过来，只是布局还是之前那个布局。</p>
+
+<p>###3. 状态保存</p>
+
+<p>我们知道Activity重建时ActivityThread直接通过反射创建了一个新的Activity实例，之前的所有实例相关的内容都会丢失。
+那么，界面重建时，==<strong>状态怎么保存</strong>==。</p>
+
+<p>前面我们说到了<code>onSaveInstanceState</code>，但是这个方法有一个超级，及其，特别严重的问题：他只能存可以被序列化的值类型。想象这样的场景，我正在下载文件，于是我有一个tcp的socket，我当然希望界面重建不会打断下载过程。我可以序列化下载进度，但是要让我序列化socket！！！请恕臣妾做不到啊！！！</p>
+
+<p>然后这时候脑海里开始蹦出来黑魔法：static变量！存在Application里！使用单例！</p>
+
+<p>嗯~淡定，淡定。系统已经考虑到这种情况了。并且专门提供了相应的方法给我们用。</p>
+
+<p>####3.1 Activity保存状态的方法</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="c1">//1</span>
+</span><span class="line"><span class="n">Object</span> <span class="nl">Activity:</span><span class="o">:</span><span class="n">onRetainNonConfigurationInstance</span><span class="o">();</span>
+</span><span class="line">
+</span><span class="line"><span class="c1">//2</span>
+</span><span class="line"><span class="n">Object</span> <span class="nl">Activity:</span><span class="o">:</span><span class="n">getLastNonConfigurationInstance</span><span class="o">();</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>Activity可以覆盖1，然后return需要保存的实例（比如Socket，数据库Cursor）。然后在onCreate中通过方法2拿到上面返回的内容。</p>
+
+<p>所以大致是这样一个使用方式：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="nd">@Override</span>
+</span><span class="line"><span class="kd">protected</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">(</span><span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">    <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
+</span><span class="line">    <span class="n">mDownloadTcpSocket</span> <span class="o">=</span> <span class="o">(</span><span class="n">Socket</span><span class="o">)</span> <span class="n">getLastNonConfigurationInstance</span><span class="o">();</span>
+</span><span class="line"><span class="o">}</span>
+</span><span class="line">
+</span><span class="line"><span class="nd">@Override</span>
+</span><span class="line"><span class="kd">public</span> <span class="n">Object</span> <span class="nf">onRetainNonConfigurationInstance</span><span class="o">()</span> <span class="o">{</span>
+</span><span class="line">    <span class="k">return</span> <span class="n">mDownloadTcpSocket</span><span class="o">;</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>关于<code>onRetainNonConfigurationInstance</code>需要注意的是：
+1. 文档中说你可以在中返回任何实例，甚至是Activity自身。但是这个只是理论上，因为这里返回的实例会被新创建的Activity引用住，如果真的返回了Activity自身，估计屏幕旋转几次就会OOM了。</p>
+
+<ol>
+  <li>
+    <p>尽量不要在这个方法中保存Resources相应的东西，甚至是View。因为Configuration变换本身会导致Resource（可能）拿到不同的资源。（取决于res的内容）。如果一定要保存，请三思而行，并留下充足的文档说明。</p>
+  </li>
+  <li>
+    <p>避免Activity自身实现一些回调的interface。原因你懂得。因为当前的实例会销毁，新创建的实例和前一个引用是不一样的。所以在Activity销毁之前发出的请求，永远不会回调给新创建的Activity。另外如果这个回调是被强引用的就更危险了，当你旋转几次屏幕时，系统就会给你发来贺电“恭喜你OOM了”。</p>
+  </li>
+  <li>
+    <p>文档中还说，这个方法再<code>onStop</code>和<code>onDestroy</code>之间调用。并且在<code>onDestroy</code>调用之后，会立即创建一个新的Activity，在这段时间里会阻止主线程的消息分发。</p>
+  </li>
+  <li>
+    <p>然后官方文档有一句是这样的话，让我很困惑
+ &gt; This function is called purely as an optimization, and you must not rely on it being called.  When it is called, a number of guarantees will be made to help optimize configuration switching…</p>
+
+    <p>这让我很害怕，如果这个方法不一定会调用那不是很糟！！于是我被迫看了看系统源代码，在<code>ActivityClientRecord ActivityThread::performDestroyActivity(...)</code>中找到了蛛丝马迹。只要Configuration change，<code>onRetainNonConfigurationInstance</code>一定会调用。API文档的意思估计是说非Configuration change的时候不调用吧__(:3」∠)_</p>
+  </li>
+  <li>
+    <p>这个方法被废弃了。。。。</p>
+  </li>
+</ol>
+
+<p>####3.2 Fragment保存状态的方法</p>
+
+<p>蛤？刚才说那个方法被废除了。嗯，是的，看到文档有这一句我也是这个心情。原话这么说的</p>
+
+<blockquote>
+  <p>@deprecated Use the new {@link Fragment} API {@link Fragment#setRetainInstance(boolean)} instead; this is also available on older platforms through the Android compatibility package.</p>
+</blockquote>
+
+<p>既然如此去了解一下Fragment的这方面内容吧。</p>
+
+<p><code>Fragment::setRetainInstance</code>的文档是这么说的.</p>
+
+<blockquote>
+  <p>Control whether a fragment instance is retained across Activity re-creation (such as from a configuration change).</p>
+</blockquote>
+
+<p>原来这个方法也是做状态保存的,通过设置这个flag为true你可以做到：
+1. 保证Fragment在Activity重建的过程中不被销毁
+2. 保存Fragment的实例，并在新的Activity重建的时候自动恢复所有Fragment的状态（包括BackStack）</p>
+
+<p>啊哈！新API果然牛叉！这次连Fragment自身都能保留了。</p>
+
+<blockquote>
+  <p>もう何も怖くない（已经没什么好害怕的了） —— ともえ まみ</p>
+</blockquote>
+
+<p>于是新的Fragment就可以在旋转屏幕的时候无缝切换了。简直爽呀！！！</p>
+
+<p>关于<code>setRetainInstance</code>需要注意的地方：
+1. 该方法的文档中说到
+	&gt; This can only be used with fragments not in the back stack.</p>
+
+<pre><code>然而经过亲身实践和查阅源代码我发现这里和BackStack并没有半毛钱的关系\_\_(:3」∠)\_，不信找代码看看。
+```java
+public void Fragment::setRetainInstance(boolean retain) {
+    if (retain &amp;&amp; mParentFragment != null) {
+        throw new IllegalStateException(
+                "Can't retain fragements that are nested in other fragments");
+    }
+	//直接set不判断是够在BackStack
+    mRetainInstance = retain;
+}
+
+ArrayList&lt;Fragment&gt; FragmentManager.FragmenagerImpl::retainNonConfig() {
+    ArrayList&lt;Fragment&gt; fragments = null;
+    if (mActive != null) {
+        for (int i=0; i&lt;mActive.size(); i++) {
+            Fragment f = mActive.get(i);
+			//这里只判断是否retainInstance，并没有判断BackStack之类的。
+            if (f != null &amp;&amp; f.mRetainInstance) {
+                if (fragments == null) {
+                    fragments = new ArrayList&lt;Fragment&gt;();
+                }
+                fragments.add(f);
+                f.mRetaining = true;
+                f.mTargetIndex = f.mTarget != null ? f.mTarget.mIndex : -1;
+                if (DEBUG) Log.v(TAG, "retainNonConfig: keeping retained " + f);
+            }
+        }
+    }
+    return fragments;
+}
+```
+所以不知这句doc意义何在。StackOverFlow有人说如果BackStack中有Fragment会retain有的不会retain，这样会导致问题，但是我觉得理由有点牵强，不retain的也会重新创建然后恢复状态呀。
+</code></pre>
+
+<p>###4. 生命周期</p>
+
+<p>####4.1 Activity
+在发生ConfigurationChange时，Activity会经历先销毁再重新创建的过程。该过程的生命周期和一般情况无疑。
+在从onPause开始的销毁过程中可以通过<code>Activity::isChangingConfigurations()</code>方法判断是因为ConfigurationChange导致销毁。</p>
+
+<p>####4.2 Fragment
+如果是一般的Fragment，和Activity一样会经历 <strong>销毁-&gt;FragmentManager恢复Fragment-&gt;重建新Fragment</strong> 的过程。
+如果调用了上面说到的<code>Fragment::setRetainInstance(true)</code>，则</p>
+
+<p>Fragment的声明周期会发生细微差别。总体的销毁创建的生命周期方法都会调用，除了下面的这一对</p>
+
+<ul>
+  <li>onDestroy</li>
+  <li>onCreate</li>
+</ul>
+
+<p>因为Fragment并没有真正的销毁，在Activiyt重建之后使用的Fragment引用还是重建之前的那一个。我认为这样处理也是很合理的。
+如果需要在onPause和onStop中判断是否彻底释放相应资源可以通过<code>getActivity().isConfigurationChanges()</code>来判断。</p>
+
+<p>整个生命周期变成这样子。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+</pre></td><td class="code"><pre><code class="text"><span class="line">graph TD;
+</span><span class="line">
+</span><span class="line">	subgraph destroy
+</span><span class="line">	A(Configuration change) -- destroy --&gt; B[onPause]
+</span><span class="line">	B --&gt; C[onStop]
+</span><span class="line">	C --&gt; D[onDestroyView]
+</span><span class="line">	D --&gt; E[onDetach]
+</span><span class="line">	end
+</span><span class="line">
+</span><span class="line">	subgraph restart
+</span><span class="line">	AA(Configuration change) -- restart --&gt; F[onAttach]
+</span><span class="line">	F --&gt; G[onCreateView]
+</span><span class="line">	G --&gt; H[onActivityCreated]
+</span><span class="line">	H --&gt; I[onStart]
+</span><span class="line">	I --&gt; J[onResume]
+</span><span class="line">	end
+</span><span class="line">
+</span><span class="line">	D -.not called.-&gt; onDestroy[onDestroy]
+</span><span class="line">	onDestroy -.-&gt; E;
+</span><span class="line">	F -.not called.-&gt; onCreate[onCreate]
+</span><span class="line">	onCreate -.-&gt; G;
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+
+		
+		
+	</div>
+
+</article>
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
 <time datetime="2016-01-11T00:10:42+08:00" data-updated="true" itemprop="datePublished"></time></div>
 		<div class="tags">
 
@@ -110,21 +477,20 @@
 	</div>
 	<h1 class="title" itemprop="name"><a href="/blog/2016/01/11/re-lambda-ce-shi-bao-gao/" itemprop="url">Retro-lambda 测试报告</a></h1>
 	<div class="entry-content" itemprop="articleBody">
-		<h1>retrolambda测试报告</h1>
+		<p>#retrolambda测试报告</p>
 
 <p>先说结论</p>
 
 <ol>
-<li>堆栈行号完全匹配！没有任何问题，包括最新的android build tools自身支持的switch string，MultiCatch，和retrolambda的所有特性都没问题。</li>
-<li>lambda是通过生成class来实现的，而且是生成static class而不是anonumous class，因此没有this$0引用。且支持<strong><a href="https://docs.oracle.com/javase/tutorial/java/javaOO/methodreferences.html">method reference （推荐阅读）</a></strong>。</li>
-<li>但是lambda会生成冗余方法，每个Lambda类4个方法（下面有代码），其中一个是原接口的方法；增加3个，一个是构造方法，两个是静态工厂方法。</li>
-<li>支持MultiCatch。</li>
-<li>支持interface加default方法，亲测可行，但是使用该特性必须禁用增量编译。</li>
-<li>支持interface加static方法，亲测不可行（可能版本bug），同上需要禁用增量编译。</li>
-<li>支持tryWithResource但是估计这个用的不多，问题在于默认会吞掉Exception。同时Android Studio会报错说API19才能用，但是可以编译。</li>
-<li>不支持Java8的新增API，包括Lambda相关的function包，和其他新包比如stream api。</li>
+  <li>堆栈行号完全匹配！没有任何问题，包括最新的android build tools自身支持的switch string，MultiCatch，和retrolambda的所有特性都没问题。</li>
+  <li>lambda是通过生成class来实现的，而且是生成static class而不是anonumous class，因此没有this$0引用。且支持<strong><a href="https://docs.oracle.com/javase/tutorial/java/javaOO/methodreferences.html">method reference （推荐阅读）</a></strong>。</li>
+  <li>但是lambda会生成冗余方法，每个Lambda类4个方法（下面有代码），其中一个是原接口的方法；增加3个，一个是构造方法，两个是静态工厂方法。</li>
+  <li>支持MultiCatch。</li>
+  <li>支持interface加default方法，亲测可行，但是使用该特性必须禁用增量编译。</li>
+  <li>支持interface加static方法，亲测不可行（可能版本bug），同上需要禁用增量编译。</li>
+  <li>支持tryWithResource但是估计这个用的不多，问题在于默认会吞掉Exception。同时Android Studio会报错说API19才能用，但是可以编译。</li>
+  <li>不支持Java8的新增API，包括Lambda相关的function包，和其他新包比如stream api。</li>
 </ol>
-
 
 
 		
@@ -162,22 +528,22 @@
 	</div>
 	<h1 class="title" itemprop="name"><a href="/blog/2015/07/09/ijkplyer-bian-yi-pei-zhi/" itemprop="url">Ijkplyer 编译配置</a></h1>
 	<div class="entry-content" itemprop="articleBody">
-		<h1>IjkMediaPlayer 使用手册</h1>
+		<p>#IjkMediaPlayer 使用手册</p>
 
-<blockquote><p><a href="&#x6d;&#97;&#105;&#108;&#x74;&#x6f;&#x3a;&#116;&#97;&#121;&#108;&#x6f;&#114;&#x63;&#121;&#x61;&#110;&#103;&#64;&#x74;&#101;&#x6e;&#99;&#101;&#110;&#x74;&#x2e;&#x63;&#x6f;&#109;">&#116;&#97;&#121;&#108;&#111;&#114;&#x63;&#x79;&#97;&#x6e;&#x67;&#x40;&#116;&#x65;&#110;&#99;&#101;&#x6e;&#x74;&#46;&#99;&#x6f;&#x6d;</a></p></blockquote>
-
-<ol>
-<li>首先编译环境是OS X或者linux或者其他*nix系统（Windows暂不支持，因为ijkplayer中使用了软链接o(╯□╰)o）。</li>
-<li>其次系统中需要安装以下工具：
+<blockquote>
+  <p>taylorcyang@tencent.com</p>
+</blockquote>
 
 <ol>
-<li>git</li>
-<li>Android ndk 并配置环境变量 <code>ANDROID_NDK</code></li>
-<li>Android sdk 并配置环境变量 <code>ANDROID_SDK</code></li>
+  <li>首先编译环境是OS X或者linux或者其他*nix系统（Windows暂不支持，因为ijkplayer中使用了软链接o(╯□╰)o）。</li>
+  <li>其次系统中需要安装以下工具：
+    <ol>
+      <li>git</li>
+      <li>Android ndk 并配置环境变量 <code>ANDROID_NDK</code></li>
+      <li>Android sdk 并配置环境变量 <code>ANDROID_SDK</code></li>
+    </ol>
+  </li>
 </ol>
-</li>
-</ol>
-
 
 <p>项目地址：<a href="">https://github.com/Bilibili/ijkplayer</a></p>
 
@@ -188,11 +554,10 @@
 <p>三个需要的文件分别是：</p>
 
 <ol>
-<li><a href="https://gist.github.com/LanderlYoung/046f4b90b0da26484d5e">init.sh</a></li>
-<li><a href="https://gist.github.com/LanderlYoung/63d4c59260bce20c4a0f">make.sh</a></li>
-<li><a href="https://gist.github.com/LanderlYoung/a28ddb1fb1e575be91ec">module.sh</a></li>
+  <li><a href="https://gist.github.com/LanderlYoung/046f4b90b0da26484d5e">init.sh</a></li>
+  <li><a href="https://gist.github.com/LanderlYoung/63d4c59260bce20c4a0f">make.sh</a></li>
+  <li><a href="https://gist.github.com/LanderlYoung/a28ddb1fb1e575be91ec">module.sh</a></li>
 </ol>
-
 
 
 		
@@ -270,18 +635,17 @@
 	</div>
 	<h1 class="title" itemprop="name"><a href="/blog/2014/11/09/androidzhong-servicede-shi-yong/" itemprop="url">Android中service的使用</a></h1>
 	<div class="entry-content" itemprop="articleBody">
-		<h2>Android 中service的使用 笔记</h2>
+		<p>##Android 中service的使用 笔记</p>
 
-<h3>Service是何物</h3>
+<p>###Service是何物<br />
+service是安卓四大组件（Activity、BroadcastReceiver、ContentProvider、Service）之一。Service用于执行耗时比较长的操作，在后台运行，没有界面显示。</p>
 
-<p>service是安卓四大组件（Activity、BroadcastReceiver、ContentProvider、Service）之一。Service用于执行耗时比较长的操作，在后台运行，没有界面显示。</p>
-
-<p><strong>Service与进程</strong>：<br/>
+<p><strong>Service与进程</strong>：<br />
 Service可以在应用的主进程中运行，也可以在单独的进程中运行。只需要在Service的[Manifest声明][manifest]中指明进程名即可。同一个应用中所有具有相同进程名的组件（四大组件，包括Activity）均可以运行在同一个进程中。</p>
 
-<p><strong>Service的寿命</strong>： <br/>
-这里说的<code>寿命</code>只是service什么时候运行什么时候终止而已并非生命周期的概念。service的启动方式有两种：<br/>
- 1. 通过<code>Context::strtService</code>来启动一个Service，这个Service会一直在后台运行，即使启动该Service的组件已经结束。它只能自己结束自己，通过<code>Service::stopSelf()</code>或者是被其他组件显示的结束，通过<code>Context::StopService</code>。或者系统可用内存不够，android系统会选择性的kill掉一些service，在需要的时候再重新启动他们。当然如果进程自己crash也是会结束的(╯‵□′)╯︵┻━┻（这不是废话）。 <br/>
+<p><strong>Service的寿命</strong>： <br />
+这里说的<code>寿命</code>只是service什么时候运行什么时候终止而已并非生命周期的概念。service的启动方式有两种：<br />
+ 1. 通过<code>Context::strtService</code>来启动一个Service，这个Service会一直在后台运行，即使启动该Service的组件已经结束。它只能自己结束自己，通过<code>Service::stopSelf()</code>或者是被其他组件显示的结束，通过<code>Context::StopService</code>。或者系统可用内存不够，android系统会选择性的kill掉一些service，在需要的时候再重新启动他们。当然如果进程自己crash也是会结束的(╯‵□′)╯︵┻━┻（这不是废话）。 <br />
  2. 通过<code>Context::bindService</code>启动Service。一个绑定的Service一般是 C-S（客户端-服务器）类型的，通常会和其他组件进行通信，包括：发送请求，收取返回结果，甚至是进程间通信——IPC。一个绑定的Service的寿命和绑定他的组件相关，当所有绑定到他上面的组件都结束（或者取消绑定——通过<code>Context::unbindService</code>方法）的时候，这个service就自然结束。</p>
 
 
@@ -400,7 +764,7 @@ Service可以在应用的主进程中运行，也可以在单独的进程中运�
 	<div class="entry-content" itemprop="articleBody">
 		<p>I came across <a href="http://stackoverflow.com/questions/8380693/run-e-g-calc-exe-before-build-in-intellij-with-android-projects">this question at <code>StackOverflow</code></a> when I was searching the same question in Google.</p>
 
-<p>I found that you don&rsquo;t need a ant build script, that is just use the IntelliJ default system is just fine. For example, I am doing my project with android-ndk, so I want intelliJ run <code>ndk-build NDK_DEBUG=1 -j4</code> before normal build.
+<p>I found that you don’t need a ant build script, that is just use the IntelliJ default system is just fine. For example, I am doing my project with android-ndk, so I want intelliJ run <code>ndk-build NDK_DEBUG=1 -j4</code> before normal build.
  
 		
 		<a href="/blog/2014/10/14/run-commamd-before-build-in-intellij-idea/" class="more-link">Read on &rarr;</a>
@@ -442,30 +806,27 @@ Service可以在应用的主进程中运行，也可以在单独的进程中运�
 <p><strong>获取短信的原始数据：</strong>
 原始数据被叫做<a href="http://en.wikipedia.org/wiki/Protocol_data_unit">PDU</a>，一个PDU就是一个数据段，如果短信比较长的话可能是由几个PDU组成的。</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Override</span>
-</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">onReceive</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">,</span> <span class="n">Intent</span> <span class="n">intent</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="c1">//监听到验证码短信后自动填写验证码</span>
-</span><span class='line'>    <span class="n">Log</span><span class="o">.</span><span class="na">i</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="s">&quot;SMSBroadcastReceiver SMS_RECEIVED&quot;</span><span class="o">);</span>
-</span><span class='line'>    <span class="n">Bundle</span> <span class="n">smsBundle</span> <span class="o">=</span> <span class="n">intent</span><span class="o">.</span><span class="na">getExtras</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">smsBundle</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">Object</span><span class="o">[]</span> <span class="n">pdus</span> <span class="o">=</span> <span class="o">(</span><span class="n">Object</span><span class="o">[])</span> <span class="n">smsBundle</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;pdus&quot;</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="nd">@Override</span>
+</span><span class="line"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">onReceive</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">,</span> <span class="n">Intent</span> <span class="n">intent</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">    <span class="c1">//监听到验证码短信后自动填写验证码</span>
+</span><span class="line">    <span class="n">Log</span><span class="o">.</span><span class="na">i</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="s">&quot;SMSBroadcastReceiver SMS_RECEIVED&quot;</span><span class="o">);</span>
+</span><span class="line">    <span class="n">Bundle</span> <span class="n">smsBundle</span> <span class="o">=</span> <span class="n">intent</span><span class="o">.</span><span class="na">getExtras</span><span class="o">();</span>
+</span><span class="line">
+</span><span class="line">    <span class="k">if</span> <span class="o">(</span><span class="n">smsBundle</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">        <span class="n">Object</span><span class="o">[]</span> <span class="n">pdus</span> <span class="o">=</span> <span class="o">(</span><span class="n">Object</span><span class="o">[])</span> <span class="n">smsBundle</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;pdus&quot;</span><span class="o">);</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 
 		
@@ -506,61 +867,15 @@ Service可以在应用的主进程中运行，也可以在单独的进程中运�
 		<p>java SE5提供了<code>java.util.concurrent.Executors</code>类来实现线程池的功能。
 <em>Thinking in Java</em> 中这么解释Executors：</p>
 
-<blockquote><p><code>Executors</code>允许你执行异步的任务（task）而不用显式的去管理线程的生命周期。</p></blockquote>
+<blockquote>
+  <p><code>Executors</code>允许你执行异步的任务（task）而不用显式的去管理线程的生命周期。</p>
+</blockquote>
 
 <p>可以说Executors是线程们的管理者，让线程们的生存方式从<strong>放养</strong>变成了<strong>圈养</strong>。Executors来处理一次能同时运行多少个线程，哪个线程在哪个线程的后面执行。总的来说Executors之于线程就像操作系统止于进程一样——管理者与被管理者的关系。</p>
 
 
 		
 		<a href="/blog/2014/09/23/javazhong-xian-cheng-chi-de-shi-yong/" class="more-link">Read on &rarr;</a>
-	</div>
-
-</article>
-
-
-    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-09-10T10:12:22+08:00" data-updated="true" itemprop="datePublished"></time></div>
-		<div class="tags">
-
-
-	<a class='category' href='/blog/categories/android/'>android</a>
-
-
-</div>
-		
-			<span class="comments"><a href="/blog/2014/09/10/an-zhuo-zhong-chuan-gan-qi-de-shi-yong/#disqus_thread">Comments</a></span>
-		
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2014/09/10/an-zhuo-zhong-chuan-gan-qi-de-shi-yong/" itemprop="url">安卓中传感器的使用</a></h1>
-	<div class="entry-content" itemprop="articleBody">
-		<p>由于需要一个像系统电话应用那样：打电话时可以使屏幕黑掉，手机离开时又能使屏幕亮起来的功能。所以需要能够获取「接近传感器」的数据。</p>
-
-<p>Android中的传感器只是一个抽象，它可能是硬件传感器，也可能是通过软件模拟的一个传感器。但是不管哪一种，对程序员来说都是一样的。</p>
-
-<p>Android中的传感器分为两类：</p>
-
-<ul>
-<li><p>连续性的传感器 比如：接近传感器，加速度传感器等。可以连续的反馈数据</p></li>
-<li><p>触发性的传感器 比如：significant motion sensor（好吧，我不知道他是啥；看名字貌似是监听用户的什么动作的）。总之就是那种会再特定情况下触发的传感器。</p></li>
-</ul>
-
-
-
-		
-		<a href="/blog/2014/09/10/an-zhuo-zhong-chuan-gan-qi-de-shi-yong/" class="more-link">Read on &rarr;</a>
 	</div>
 
 </article>
@@ -576,7 +891,7 @@ Service可以在应用的主进程中运行，也可以在单独的进程中运�
 			</div>
 			<footer id="footer" class="inner">
 <p>
-  Copyright &copy; 2016 - LanderlYoung -
+  Copyright &copy; 2017 - LanderlYoung -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 </footer>
@@ -619,6 +934,10 @@ Service可以在应用的主进程中运行，也可以在单独的进程中运�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/03/08/android-zhi-chi-ping-mu-xuan-zhuan-de-fang-shi/">Android 支持屏幕旋转的方式</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/01/11/re-lambda-ce-shi-bao-gao/">Retro-lambda 测试报告</a>
       </li>
     
@@ -634,39 +953,35 @@ Service可以在应用的主进程中运行，也可以在单独的进程中运�
         <a href="/blog/2014/11/09/androidzhong-servicede-shi-yong/">Android中service的使用</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/10/31/androidzhong-de-wakelockshi-yong/">Android中的WakeLock使用</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/android/'>android (9)</a></li><li><a href='/blog/categories/git/'>git (2)</a></li><li><a href='/blog/categories/html5/'>html5 (5)</a></li><li><a href='/blog/categories/java/'>java (4)</a></li><li><a href='/blog/categories/javascript/'>javascript (3)</a></li><li><a href='/blog/categories/linux/'>linux (7)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/android/'>android (10)</a></li><li><a href='/blog/categories/git/'>git (2)</a></li><li><a href='/blog/categories/html5/'>html5 (5)</a></li><li><a href='/blog/categories/java/'>java (4)</a></li><li><a href='/blog/categories/javascript/'>javascript (3)</a></li><li><a href='/blog/categories/linux/'>linux (7)</a></li></ul>
 </section>
 <section>
 	<h1>Tags</h1>
 	<ul class="tag-cloud">
-		<li><a style="font-size: 74.1%" href="/tags/android/">Android</a></li>
-<li><a style="font-size: 100.1%" href="/tags/linux/">Linux</a></li>
-<li><a style="font-size: 89.9%" href="/tags/html5/">HTML5</a></li>
-<li><a style="font-size: 114.3%" href="/tags/java/">Java</a></li>
-<li><a style="font-size: 112.8%" href="/tags/node-dot-js/">Node.js</a></li>
-<li><a style="font-size: 102.3%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
-<li><a style="font-size: 100.0%" href="/tags/java/">java</a></li>
-<li><a style="font-size: 115.4%" href="/tags/android/">android</a></li>
-<li><a style="font-size: 71.4%" href="/tags/git/">Git</a></li>
-<li><a style="font-size: 98.6%" href="/tags/vim/">Vim</a></li>
-<li><a style="font-size: 108.7%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
-<li><a style="font-size: 80.7%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
-<li><a style="font-size: 86.4%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
-<li><a style="font-size: 74.3%" href="/tags/tencent/">tencent</a></li>
-<li><a style="font-size: 74.2%" href="/tags/zhuan-tie/">转贴</a></li>
-<li><a style="font-size: 90.5%" href="/tags/sensor/">sensor</a></li>
-<li><a style="font-size: 107.5%" href="/tags/ui/">UI</a></li>
-<li><a style="font-size: 98.7%" href="/tags/svg/">SVG</a></li>
-<li><a style="font-size: 119.1%" href="/tags/intellij/">IntelliJ</a></li>
-<li><a style="font-size: 74.3%" href="/tags/jni/">JNI</a></li>
+		<li><a style="font-size: 76.6%" href="/tags/android/">Android</a></li>
+<li><a style="font-size: 84.0%" href="/tags/linux/">Linux</a></li>
+<li><a style="font-size: 119.6%" href="/tags/html5/">HTML5</a></li>
+<li><a style="font-size: 74.7%" href="/tags/java/">Java</a></li>
+<li><a style="font-size: 100.5%" href="/tags/node-dot-js/">Node.js</a></li>
+<li><a style="font-size: 78.7%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
+<li><a style="font-size: 95.4%" href="/tags/java/">java</a></li>
+<li><a style="font-size: 82.0%" href="/tags/android/">android</a></li>
+<li><a style="font-size: 72.0%" href="/tags/git/">Git</a></li>
+<li><a style="font-size: 84.0%" href="/tags/vim/">Vim</a></li>
+<li><a style="font-size: 116.7%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
+<li><a style="font-size: 83.1%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
+<li><a style="font-size: 106.9%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
+<li><a style="font-size: 96.7%" href="/tags/tencent/">tencent</a></li>
+<li><a style="font-size: 115.9%" href="/tags/zhuan-tie/">转贴</a></li>
+<li><a style="font-size: 105.2%" href="/tags/sensor/">sensor</a></li>
+<li><a style="font-size: 100.0%" href="/tags/ui/">UI</a></li>
+<li><a style="font-size: 80.7%" href="/tags/svg/">SVG</a></li>
+<li><a style="font-size: 92.7%" href="/tags/intellij/">IntelliJ</a></li>
+<li><a style="font-size: 80.7%" href="/tags/jni/">JNI</a></li>
 
 	</ul>
 </section>

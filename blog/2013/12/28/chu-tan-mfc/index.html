@@ -86,211 +86,207 @@
 
 <!--more-->
 
-
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-<span class='line-number'>67</span>
-<span class='line-number'>68</span>
-<span class='line-number'>69</span>
-<span class='line-number'>70</span>
-<span class='line-number'>71</span>
-<span class='line-number'>72</span>
-<span class='line-number'>73</span>
-<span class='line-number'>74</span>
-<span class='line-number'>75</span>
-<span class='line-number'>76</span>
-<span class='line-number'>77</span>
-<span class='line-number'>78</span>
-<span class='line-number'>79</span>
-<span class='line-number'>80</span>
-<span class='line-number'>81</span>
-<span class='line-number'>82</span>
-<span class='line-number'>83</span>
-<span class='line-number'>84</span>
-<span class='line-number'>85</span>
-<span class='line-number'>86</span>
-<span class='line-number'>87</span>
-<span class='line-number'>88</span>
-<span class='line-number'>89</span>
-<span class='line-number'>90</span>
-<span class='line-number'>91</span>
-<span class='line-number'>92</span>
-<span class='line-number'>93</span>
-<span class='line-number'>94</span>
-<span class='line-number'>95</span>
-<span class='line-number'>96</span>
-<span class='line-number'>97</span>
-<span class='line-number'>98</span>
-<span class='line-number'>99</span>
-<span class='line-number'>100</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="cp">#pragma once</span>
-</span><span class='line'><span class="cp">#include &lt;iostream&gt;</span>
-</span><span class='line'><span class="cp">#include &lt;Windows.h&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">CardManager</span> <span class="p">{</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">public</span><span class="o">:</span>
-</span><span class='line'>  <span class="k">enum</span> <span class="n">DATA_T</span> <span class="p">{</span>
-</span><span class='line'>      <span class="n">PUBLISHER</span><span class="p">,</span>
-</span><span class='line'>      <span class="n">CARD_ID</span><span class="p">,</span>
-</span><span class='line'>      <span class="n">USER_NAME</span><span class="p">,</span>
-</span><span class='line'>  <span class="p">};</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">private</span><span class="o">:</span>
-</span><span class='line'>  <span class="k">const</span> <span class="kt">short</span> <span class="n">PUBLISHER_ADDR</span> <span class="o">=</span> <span class="mh">0x30</span><span class="p">;</span>
-</span><span class='line'>  <span class="k">const</span> <span class="kt">short</span> <span class="n">PUBLISHER_LEN</span> <span class="o">=</span> <span class="mh">0x10</span><span class="p">;</span>
-</span><span class='line'>  <span class="k">const</span> <span class="kt">short</span> <span class="n">CARD_ID_ADDR</span> <span class="o">=</span>
-</span><span class='line'>      <span class="n">PUBLISHER_ADDR</span> <span class="o">+</span> <span class="n">PUBLISHER_LEN</span><span class="p">;</span>
-</span><span class='line'>  <span class="k">const</span> <span class="kt">short</span> <span class="n">CARD_ID_LEN</span> <span class="o">=</span> <span class="mh">0x10</span><span class="p">;</span>
-</span><span class='line'>  <span class="k">const</span> <span class="kt">short</span> <span class="n">USER_NAME_ADDR</span> <span class="o">=</span>
-</span><span class='line'>      <span class="n">CARD_ID_ADDR</span> <span class="o">+</span> <span class="n">CARD_ID_LEN</span><span class="p">;</span>
-</span><span class='line'>  <span class="k">const</span> <span class="kt">short</span> <span class="n">USER_NAME_LEN</span> <span class="o">=</span> <span class="mh">0x10</span><span class="p">;</span>
-</span><span class='line'>  <span class="k">const</span> <span class="kt">short</span> <span class="n">BALANCE_ADDR</span> <span class="o">=</span>
-</span><span class='line'>      <span class="n">USER_NAME_ADDR</span> <span class="o">+</span> <span class="n">USER_NAME_LEN</span><span class="p">;</span>
-</span><span class='line'>  <span class="k">const</span> <span class="kt">short</span> <span class="n">BALANCE_LEN</span> <span class="o">=</span> <span class="mh">0x04</span><span class="p">;</span> <span class="c1">//sizeof(float)</span>
-</span><span class='line'>  <span class="k">const</span> <span class="kt">short</span> <span class="n">BALANCE_BUF_ADDR</span> <span class="o">=</span>
-</span><span class='line'>      <span class="n">BALANCE_ADDR</span> <span class="o">+</span> <span class="n">BALANCE_LEN</span><span class="p">;</span>
-</span><span class='line'>  <span class="k">const</span> <span class="kt">short</span> <span class="n">BALANCE_BUF_LEN</span> <span class="o">=</span> <span class="n">BALANCE_LEN</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">HANDLE</span> <span class="n">m_icdev</span><span class="p">;</span>
-</span><span class='line'>  <span class="kt">bool</span> <span class="n">m_passwdChecked</span><span class="p">;</span>
-</span><span class='line'>  <span class="kt">void</span><span class="p">(</span><span class="o">*</span><span class="n">noPasswdFunc</span><span class="p">)(</span><span class="kt">void</span><span class="p">);</span>
-</span><span class='line'>  <span class="kt">void</span><span class="p">(</span><span class="o">*</span><span class="n">notInitFunc</span><span class="p">)(</span><span class="kt">void</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kr">inline</span> <span class="kt">bool</span> <span class="nf">passWordConfirm</span><span class="p">()</span>
-</span><span class='line'>  <span class="p">{</span>
-</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="n">noPasswdFunc</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">m_passwdChecked</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>          <span class="n">noPasswdFunc</span><span class="p">();</span>
-</span><span class='line'>      <span class="p">}</span>
-</span><span class='line'>      <span class="k">return</span> <span class="n">m_passwdChecked</span><span class="p">;</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kr">inline</span> <span class="kt">bool</span> <span class="nf">initConfirm</span><span class="p">()</span>
-</span><span class='line'>  <span class="p">{</span>
-</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="n">notInitFunc</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">m_icdev</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>          <span class="n">notInitFunc</span><span class="p">();</span>
-</span><span class='line'>      <span class="p">}</span>
-</span><span class='line'>      <span class="k">return</span> <span class="n">m_icdev</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'>  <span class="kt">bool</span> <span class="nf">writeBalance</span><span class="p">(</span><span class="kt">float</span> <span class="n">num</span><span class="p">);</span>
-</span><span class='line'>  <span class="kt">bool</span> <span class="nf">writeInfo</span><span class="p">(</span><span class="n">DATA_T</span> <span class="n">info_type</span><span class="p">,</span>
-</span><span class='line'>                 <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">data</span><span class="p">);</span>
-</span><span class='line'>  <span class="kt">float</span> <span class="nf">getBuffer</span><span class="p">();</span>
-</span><span class='line'>  <span class="kt">bool</span> <span class="nf">writeBuffer</span><span class="p">(</span><span class="kt">float</span> <span class="n">balance</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">static</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="nf">float2bytes</span><span class="p">(</span><span class="kt">float</span> <span class="n">num</span><span class="p">);</span>
-</span><span class='line'>  <span class="k">static</span> <span class="kt">float</span> <span class="nf">bytes2float</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">bytes</span><span class="p">);</span>
-</span><span class='line'><span class="k">public</span><span class="o">:</span>
-</span><span class='line'>  <span class="n">CardManager</span><span class="p">();</span>
-</span><span class='line'>  <span class="k">virtual</span> <span class="o">~</span><span class="n">CardManager</span><span class="p">();</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kr">inline</span> <span class="kt">bool</span> <span class="nf">isInited</span><span class="p">()</span>
-</span><span class='line'>  <span class="p">{</span>
-</span><span class='line'>      <span class="k">return</span> <span class="n">m_icdev</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kr">inline</span> <span class="kt">void</span> <span class="nf">setNoPasswdCallBack</span><span class="p">(</span><span class="kt">void</span><span class="p">(</span><span class="o">*</span><span class="n">callBack</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span>
-</span><span class='line'>  <span class="p">{</span>
-</span><span class='line'>      <span class="n">noPasswdFunc</span> <span class="o">=</span> <span class="n">callBack</span><span class="p">;</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kr">inline</span> <span class="kt">void</span> <span class="nf">setNotInitCallBack</span><span class="p">(</span><span class="kt">void</span><span class="p">(</span><span class="o">*</span><span class="n">callback</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span>
-</span><span class='line'>  <span class="p">{</span>
-</span><span class='line'>      <span class="n">notInitFunc</span> <span class="o">=</span> <span class="n">callback</span><span class="p">;</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="cm">/*</span>
-</span><span class='line'><span class="cm"> return 0 for ok</span>
-</span><span class='line'><span class="cm"> 1 for init device error</span>
-</span><span class='line'><span class="cm"> 2 for no card</span>
-</span><span class='line'><span class="cm"> */</span>
-</span><span class='line'>  <span class="kt">int</span> <span class="nf">init</span><span class="p">(</span><span class="kt">int</span> <span class="n">port</span><span class="p">,</span>  <span class="kt">long</span> <span class="n">baud</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kt">bool</span> <span class="nf">disConnect</span><span class="p">();</span>
-</span><span class='line'>  <span class="kt">int</span> <span class="nf">getInfo</span><span class="p">(</span><span class="n">DATA_T</span> <span class="n">data_type</span><span class="p">,</span>  <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">out</span><span class="p">);</span>
-</span><span class='line'>  <span class="kt">bool</span> <span class="nf">checkPassWd</span><span class="p">(</span><span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">key</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="cm">/*</span>
-</span><span class='line'><span class="cm"> return 0 for ok</span>
-</span><span class='line'><span class="cm"> */</span>
-</span><span class='line'>  <span class="kt">int</span> <span class="nf">release</span><span class="p">(</span><span class="kt">float</span> <span class="n">initialBalance</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="cm">/*</span>
-</span><span class='line'><span class="cm"> return 0 for ok</span>
-</span><span class='line'><span class="cm"> */</span>
-</span><span class='line'>  <span class="kt">int</span> <span class="nf">consume</span><span class="p">(</span><span class="kt">float</span> <span class="n">costs</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="kt">float</span> <span class="nf">getBalance</span><span class="p">();</span>
-</span><span class='line'>  <span class="kt">int</span> <span class="nf">charge</span><span class="p">(</span><span class="kt">float</span> <span class="n">amount</span><span class="p">);</span>
-</span><span class='line'><span class="p">};</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+<span class="line-number">32</span>
+<span class="line-number">33</span>
+<span class="line-number">34</span>
+<span class="line-number">35</span>
+<span class="line-number">36</span>
+<span class="line-number">37</span>
+<span class="line-number">38</span>
+<span class="line-number">39</span>
+<span class="line-number">40</span>
+<span class="line-number">41</span>
+<span class="line-number">42</span>
+<span class="line-number">43</span>
+<span class="line-number">44</span>
+<span class="line-number">45</span>
+<span class="line-number">46</span>
+<span class="line-number">47</span>
+<span class="line-number">48</span>
+<span class="line-number">49</span>
+<span class="line-number">50</span>
+<span class="line-number">51</span>
+<span class="line-number">52</span>
+<span class="line-number">53</span>
+<span class="line-number">54</span>
+<span class="line-number">55</span>
+<span class="line-number">56</span>
+<span class="line-number">57</span>
+<span class="line-number">58</span>
+<span class="line-number">59</span>
+<span class="line-number">60</span>
+<span class="line-number">61</span>
+<span class="line-number">62</span>
+<span class="line-number">63</span>
+<span class="line-number">64</span>
+<span class="line-number">65</span>
+<span class="line-number">66</span>
+<span class="line-number">67</span>
+<span class="line-number">68</span>
+<span class="line-number">69</span>
+<span class="line-number">70</span>
+<span class="line-number">71</span>
+<span class="line-number">72</span>
+<span class="line-number">73</span>
+<span class="line-number">74</span>
+<span class="line-number">75</span>
+<span class="line-number">76</span>
+<span class="line-number">77</span>
+<span class="line-number">78</span>
+<span class="line-number">79</span>
+<span class="line-number">80</span>
+<span class="line-number">81</span>
+<span class="line-number">82</span>
+<span class="line-number">83</span>
+<span class="line-number">84</span>
+<span class="line-number">85</span>
+<span class="line-number">86</span>
+<span class="line-number">87</span>
+<span class="line-number">88</span>
+<span class="line-number">89</span>
+<span class="line-number">90</span>
+<span class="line-number">91</span>
+<span class="line-number">92</span>
+<span class="line-number">93</span>
+<span class="line-number">94</span>
+<span class="line-number">95</span>
+<span class="line-number">96</span>
+<span class="line-number">97</span>
+<span class="line-number">98</span>
+<span class="line-number">99</span>
+<span class="line-number">100</span>
+</pre></td><td class="code"><pre><code class="cpp"><span class="line"><span class="cp">#pragma once</span>
+</span><span class="line"><span class="cp">#include &lt;iostream&gt;</span>
+</span><span class="line"><span class="cp">#include &lt;Windows.h&gt;</span>
+</span><span class="line">
+</span><span class="line"><span class="k">class</span> <span class="nc">CardManager</span> <span class="p">{</span>
+</span><span class="line">
+</span><span class="line"><span class="k">public</span><span class="o">:</span>
+</span><span class="line">	<span class="k">enum</span> <span class="n">DATA_T</span> <span class="p">{</span>
+</span><span class="line">		<span class="n">PUBLISHER</span><span class="p">,</span>
+</span><span class="line">		<span class="n">CARD_ID</span><span class="p">,</span>
+</span><span class="line">		<span class="n">USER_NAME</span><span class="p">,</span>
+</span><span class="line">	<span class="p">};</span>
+</span><span class="line">
+</span><span class="line"><span class="k">private</span><span class="o">:</span>
+</span><span class="line">	<span class="k">const</span> <span class="kt">short</span> <span class="n">PUBLISHER_ADDR</span> <span class="o">=</span> <span class="mh">0x30</span><span class="p">;</span>
+</span><span class="line">	<span class="k">const</span> <span class="kt">short</span> <span class="n">PUBLISHER_LEN</span> <span class="o">=</span> <span class="mh">0x10</span><span class="p">;</span>
+</span><span class="line">	<span class="k">const</span> <span class="kt">short</span> <span class="n">CARD_ID_ADDR</span> <span class="o">=</span>
+</span><span class="line">		<span class="n">PUBLISHER_ADDR</span> <span class="o">+</span> <span class="n">PUBLISHER_LEN</span><span class="p">;</span>
+</span><span class="line">	<span class="k">const</span> <span class="kt">short</span> <span class="n">CARD_ID_LEN</span> <span class="o">=</span> <span class="mh">0x10</span><span class="p">;</span>
+</span><span class="line">	<span class="k">const</span> <span class="kt">short</span> <span class="n">USER_NAME_ADDR</span> <span class="o">=</span>
+</span><span class="line">		<span class="n">CARD_ID_ADDR</span> <span class="o">+</span> <span class="n">CARD_ID_LEN</span><span class="p">;</span>
+</span><span class="line">	<span class="k">const</span> <span class="kt">short</span> <span class="n">USER_NAME_LEN</span> <span class="o">=</span> <span class="mh">0x10</span><span class="p">;</span>
+</span><span class="line">	<span class="k">const</span> <span class="kt">short</span> <span class="n">BALANCE_ADDR</span> <span class="o">=</span>
+</span><span class="line">		<span class="n">USER_NAME_ADDR</span> <span class="o">+</span> <span class="n">USER_NAME_LEN</span><span class="p">;</span>
+</span><span class="line">	<span class="k">const</span> <span class="kt">short</span> <span class="n">BALANCE_LEN</span> <span class="o">=</span> <span class="mh">0x04</span><span class="p">;</span> <span class="c1">//sizeof(float)</span>
+</span><span class="line">	<span class="k">const</span> <span class="kt">short</span> <span class="n">BALANCE_BUF_ADDR</span> <span class="o">=</span>
+</span><span class="line">		<span class="n">BALANCE_ADDR</span> <span class="o">+</span> <span class="n">BALANCE_LEN</span><span class="p">;</span>
+</span><span class="line">	<span class="k">const</span> <span class="kt">short</span> <span class="n">BALANCE_BUF_LEN</span> <span class="o">=</span> <span class="n">BALANCE_LEN</span><span class="p">;</span>
+</span><span class="line">
+</span><span class="line">	<span class="n">HANDLE</span> <span class="n">m_icdev</span><span class="p">;</span>
+</span><span class="line">	<span class="kt">bool</span> <span class="n">m_passwdChecked</span><span class="p">;</span>
+</span><span class="line">	<span class="kt">void</span><span class="p">(</span><span class="o">*</span><span class="n">noPasswdFunc</span><span class="p">)(</span><span class="kt">void</span><span class="p">);</span>
+</span><span class="line">	<span class="kt">void</span><span class="p">(</span><span class="o">*</span><span class="n">notInitFunc</span><span class="p">)(</span><span class="kt">void</span><span class="p">);</span>
+</span><span class="line">
+</span><span class="line">	<span class="kr">inline</span> <span class="kt">bool</span> <span class="nf">passWordConfirm</span><span class="p">()</span>
+</span><span class="line">	<span class="p">{</span>
+</span><span class="line">		<span class="k">if</span> <span class="p">(</span><span class="n">noPasswdFunc</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">m_passwdChecked</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="line">			<span class="n">noPasswdFunc</span><span class="p">();</span>
+</span><span class="line">		<span class="p">}</span>
+</span><span class="line">		<span class="k">return</span> <span class="n">m_passwdChecked</span><span class="p">;</span>
+</span><span class="line">	<span class="p">}</span>
+</span><span class="line">
+</span><span class="line">	<span class="kr">inline</span> <span class="kt">bool</span> <span class="nf">initConfirm</span><span class="p">()</span>
+</span><span class="line">	<span class="p">{</span>
+</span><span class="line">		<span class="k">if</span> <span class="p">(</span><span class="n">notInitFunc</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">m_icdev</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="line">			<span class="n">notInitFunc</span><span class="p">();</span>
+</span><span class="line">		<span class="p">}</span>
+</span><span class="line">		<span class="k">return</span> <span class="n">m_icdev</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class="line">	<span class="p">}</span>
+</span><span class="line">	<span class="kt">bool</span> <span class="nf">writeBalance</span><span class="p">(</span><span class="kt">float</span> <span class="n">num</span><span class="p">);</span>
+</span><span class="line">	<span class="kt">bool</span> <span class="nf">writeInfo</span><span class="p">(</span><span class="n">DATA_T</span> <span class="n">info_type</span><span class="p">,</span>
+</span><span class="line">				   <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">data</span><span class="p">);</span>
+</span><span class="line">	<span class="kt">float</span> <span class="nf">getBuffer</span><span class="p">();</span>
+</span><span class="line">	<span class="kt">bool</span> <span class="nf">writeBuffer</span><span class="p">(</span><span class="kt">float</span> <span class="n">balance</span><span class="p">);</span>
+</span><span class="line">
+</span><span class="line">	<span class="k">static</span> <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="nf">float2bytes</span><span class="p">(</span><span class="kt">float</span> <span class="n">num</span><span class="p">);</span>
+</span><span class="line">	<span class="k">static</span> <span class="kt">float</span> <span class="nf">bytes2float</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">bytes</span><span class="p">);</span>
+</span><span class="line"><span class="k">public</span><span class="o">:</span>
+</span><span class="line">	<span class="n">CardManager</span><span class="p">();</span>
+</span><span class="line">	<span class="k">virtual</span> <span class="o">~</span><span class="n">CardManager</span><span class="p">();</span>
+</span><span class="line">
+</span><span class="line">	<span class="kr">inline</span> <span class="kt">bool</span> <span class="nf">isInited</span><span class="p">()</span>
+</span><span class="line">	<span class="p">{</span>
+</span><span class="line">		<span class="k">return</span> <span class="n">m_icdev</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class="line">	<span class="p">}</span>
+</span><span class="line">
+</span><span class="line">	<span class="kr">inline</span> <span class="kt">void</span> <span class="nf">setNoPasswdCallBack</span><span class="p">(</span><span class="kt">void</span><span class="p">(</span><span class="o">*</span><span class="n">callBack</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span>
+</span><span class="line">	<span class="p">{</span>
+</span><span class="line">		<span class="n">noPasswdFunc</span> <span class="o">=</span> <span class="n">callBack</span><span class="p">;</span>
+</span><span class="line">	<span class="p">}</span>
+</span><span class="line">
+</span><span class="line">	<span class="kr">inline</span> <span class="kt">void</span> <span class="nf">setNotInitCallBack</span><span class="p">(</span><span class="kt">void</span><span class="p">(</span><span class="o">*</span><span class="n">callback</span><span class="p">)(</span><span class="kt">void</span><span class="p">))</span>
+</span><span class="line">	<span class="p">{</span>
+</span><span class="line">		<span class="n">notInitFunc</span> <span class="o">=</span> <span class="n">callback</span><span class="p">;</span>
+</span><span class="line">	<span class="p">}</span>
+</span><span class="line">
+</span><span class="line">	<span class="cm">/*</span>
+</span><span class="line"><span class="cm">	return 0 for ok</span>
+</span><span class="line"><span class="cm">	1 for init device error</span>
+</span><span class="line"><span class="cm">	2 for no card</span>
+</span><span class="line"><span class="cm">	*/</span>
+</span><span class="line">	<span class="kt">int</span> <span class="nf">init</span><span class="p">(</span><span class="kt">int</span> <span class="n">port</span><span class="p">,</span>  <span class="kt">long</span> <span class="n">baud</span><span class="p">);</span>
+</span><span class="line">
+</span><span class="line">	<span class="kt">bool</span> <span class="nf">disConnect</span><span class="p">();</span>
+</span><span class="line">	<span class="kt">int</span> <span class="nf">getInfo</span><span class="p">(</span><span class="n">DATA_T</span> <span class="n">data_type</span><span class="p">,</span>  <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span> <span class="n">out</span><span class="p">);</span>
+</span><span class="line">	<span class="kt">bool</span> <span class="nf">checkPassWd</span><span class="p">(</span><span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">key</span><span class="p">);</span>
+</span><span class="line">
+</span><span class="line">	<span class="cm">/*</span>
+</span><span class="line"><span class="cm">	return 0 for ok</span>
+</span><span class="line"><span class="cm">	*/</span>
+</span><span class="line">	<span class="kt">int</span> <span class="nf">release</span><span class="p">(</span><span class="kt">float</span> <span class="n">initialBalance</span><span class="p">);</span>
+</span><span class="line">
+</span><span class="line">	<span class="cm">/*</span>
+</span><span class="line"><span class="cm">	return 0 for ok</span>
+</span><span class="line"><span class="cm">	*/</span>
+</span><span class="line">	<span class="kt">int</span> <span class="nf">consume</span><span class="p">(</span><span class="kt">float</span> <span class="n">costs</span><span class="p">);</span>
+</span><span class="line">
+</span><span class="line">	<span class="kt">float</span> <span class="nf">getBalance</span><span class="p">();</span>
+</span><span class="line">	<span class="kt">int</span> <span class="nf">charge</span><span class="p">(</span><span class="kt">float</span> <span class="n">amount</span><span class="p">);</span>
+</span><span class="line"><span class="p">};</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 </div>
 
 </article>
@@ -321,7 +317,7 @@
 			</div>
 			<footer id="footer" class="inner">
 <p>
-  Copyright &copy; 2016 - LanderlYoung -
+  Copyright &copy; 2017 - LanderlYoung -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 </footer>
@@ -367,6 +363,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/03/08/android-zhi-chi-ping-mu-xuan-zhuan-de-fang-shi/">Android 支持屏幕旋转的方式</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/01/11/re-lambda-ce-shi-bao-gao/">Retro-lambda 测试报告</a>
       </li>
     
@@ -382,39 +382,35 @@
         <a href="/blog/2014/11/09/androidzhong-servicede-shi-yong/">Android中service的使用</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/10/31/androidzhong-de-wakelockshi-yong/">Android中的WakeLock使用</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/android/'>android (9)</a></li><li><a href='/blog/categories/git/'>git (2)</a></li><li><a href='/blog/categories/html5/'>html5 (5)</a></li><li><a href='/blog/categories/java/'>java (4)</a></li><li><a href='/blog/categories/javascript/'>javascript (3)</a></li><li><a href='/blog/categories/linux/'>linux (7)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/android/'>android (10)</a></li><li><a href='/blog/categories/git/'>git (2)</a></li><li><a href='/blog/categories/html5/'>html5 (5)</a></li><li><a href='/blog/categories/java/'>java (4)</a></li><li><a href='/blog/categories/javascript/'>javascript (3)</a></li><li><a href='/blog/categories/linux/'>linux (7)</a></li></ul>
 </section>
 <section>
 	<h1>Tags</h1>
 	<ul class="tag-cloud">
-		<li><a style="font-size: 98.3%" href="/tags/android/">Android</a></li>
-<li><a style="font-size: 115.6%" href="/tags/linux/">Linux</a></li>
-<li><a style="font-size: 110.9%" href="/tags/html5/">HTML5</a></li>
-<li><a style="font-size: 97.5%" href="/tags/java/">Java</a></li>
-<li><a style="font-size: 84.3%" href="/tags/node-dot-js/">Node.js</a></li>
-<li><a style="font-size: 97.9%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
-<li><a style="font-size: 96.1%" href="/tags/java/">java</a></li>
-<li><a style="font-size: 77.2%" href="/tags/android/">android</a></li>
-<li><a style="font-size: 86.4%" href="/tags/git/">Git</a></li>
-<li><a style="font-size: 118.8%" href="/tags/vim/">Vim</a></li>
-<li><a style="font-size: 96.4%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
-<li><a style="font-size: 87.0%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
-<li><a style="font-size: 94.0%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
-<li><a style="font-size: 119.7%" href="/tags/tencent/">tencent</a></li>
-<li><a style="font-size: 119.5%" href="/tags/zhuan-tie/">转贴</a></li>
-<li><a style="font-size: 114.3%" href="/tags/sensor/">sensor</a></li>
-<li><a style="font-size: 105.9%" href="/tags/ui/">UI</a></li>
-<li><a style="font-size: 116.5%" href="/tags/svg/">SVG</a></li>
-<li><a style="font-size: 102.4%" href="/tags/intellij/">IntelliJ</a></li>
-<li><a style="font-size: 73.6%" href="/tags/jni/">JNI</a></li>
+		<li><a style="font-size: 112.4%" href="/tags/android/">Android</a></li>
+<li><a style="font-size: 112.0%" href="/tags/linux/">Linux</a></li>
+<li><a style="font-size: 82.5%" href="/tags/html5/">HTML5</a></li>
+<li><a style="font-size: 105.8%" href="/tags/java/">Java</a></li>
+<li><a style="font-size: 80.5%" href="/tags/node-dot-js/">Node.js</a></li>
+<li><a style="font-size: 109.5%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
+<li><a style="font-size: 89.6%" href="/tags/java/">java</a></li>
+<li><a style="font-size: 110.2%" href="/tags/android/">android</a></li>
+<li><a style="font-size: 91.0%" href="/tags/git/">Git</a></li>
+<li><a style="font-size: 70.4%" href="/tags/vim/">Vim</a></li>
+<li><a style="font-size: 81.3%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
+<li><a style="font-size: 111.0%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
+<li><a style="font-size: 104.5%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
+<li><a style="font-size: 115.9%" href="/tags/tencent/">tencent</a></li>
+<li><a style="font-size: 98.6%" href="/tags/zhuan-tie/">转贴</a></li>
+<li><a style="font-size: 73.5%" href="/tags/sensor/">sensor</a></li>
+<li><a style="font-size: 92.8%" href="/tags/ui/">UI</a></li>
+<li><a style="font-size: 114.6%" href="/tags/svg/">SVG</a></li>
+<li><a style="font-size: 91.2%" href="/tags/intellij/">IntelliJ</a></li>
+<li><a style="font-size: 91.1%" href="/tags/jni/">JNI</a></li>
 
 	</ul>
 </section>

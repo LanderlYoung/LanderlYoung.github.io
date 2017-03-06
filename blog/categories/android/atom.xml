@@ -4,7 +4,7 @@
   <title><![CDATA[Category: android | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/blog/categories/android/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2016-01-11T23:46:35+08:00</updated>
+  <updated>2017-03-07T01:39:44+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -14,36 +14,341 @@
 
   
   <entry>
+    <title type="html"><![CDATA[Android 支持屏幕旋转的方式]]></title>
+    <link href="http://LanderlYoung.github.io/blog/2016/03/08/android-zhi-chi-ping-mu-xuan-zhuan-de-fang-shi/"/>
+    <updated>2016-03-08T01:13:23+08:00</updated>
+    <id>http://LanderlYoung.github.io/blog/2016/03/08/android-zhi-chi-ping-mu-xuan-zhuan-de-fang-shi</id>
+    <content type="html"><![CDATA[<h1>Android 支持屏幕旋转的方式</h1>
+
+<p>目录</p>
+
+<p>[TOC]</p>
+
+<p>###0. Preface
+在Android中activity默认是支持屏幕旋转操作的。在屏幕旋转过程中所在的Activity会重建。</p>
+
+<p>所谓的重建大致是这样一个流程：</p>
+
+<ol>
+  <li>onSaceInstanceState</li>
+  <li>Destroy current activity</li>
+  <li>reCreate current activity</li>
+</ol>
+
+<p>因此Activity的状态都是保存在“InstanceState”中的，于是我们需要在重建Activity的时候恢复其状态。</p>
+
+<p>###1.  关于旋转</p>
+
+<p>####1.1 配置/禁用旋转
+屏幕旋转是在Manifest可以配置的，对应的attribute是<code>android:screenOrientation</code>，常用的配置有<code>portrait</code>和<code>landscape</code>，分别对应 “竖屏”和“横屏”。可以配置支持多种方向，中间用管道符号<code>|</code>隔开，像酱紫<code>portrait|landscap</code>.</p>
+
+<p>如果你只配置一个方向，就相当于禁用了屏幕旋转了。</p>
+
+<p>这个属性的取值还是相当丰富的，详细内容请参阅<a href="http://developer.android.com/intl/zh-cn/guide/topics/manifest/activity-element.html">官方文档</a>。</p>
+
+<p>当然还可以在代码中设置屏幕方向和获取当前方向。</p>
+
+<p><strong>设置</strong>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="c1">//set orentation in java code programatically&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="c1">//For Landscape mode</span>
+</span><span class='line'><span class="n">setRequestedOrientation</span><span class="o">(</span><span class="n">ActivityInfo</span><span class="o">.</span><span class="na">SCREEN_ORIENTATION_LANDSCAPE</span><span class="o">);&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="c1">//For Portrait Mode</span>
+</span><span class='line'><span class="n">setRequestedOrientation</span><span class="o">(</span><span class="n">ActivityInfo</span><span class="o">.</span><span class="na">SCREEN_ORIENTATION_PORTRAIT</span><span class="o">);&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="c1">//For ANYTHING, please RTFM</span>
+</span><span class='line'><span class="n">setRequestedOrientation</span><span class="o">(</span><span class="n">ActivityInfo</span><span class="o">.</span><span class="na">SCREEN_ORIENTATION_</span><span class="o">&lt;</span><span class="n">anything</span><span class="o">&gt;);</span>
+</span></code></pre></td></tr></table></div></figure></anything></p>
+
+<p><strong>获取</strong>
+<code>java
+//get current screen orientation
+public String getOrientation() {
+    Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
+    int orientation = display.getRotation();
+    switch (orientation) {
+        case Surface.ROTATION_0:
+            return "portrait";
+        case Surface.ROTATION_90:
+            return "land";
+        case Surface.ROTATION_180:
+            return "portrait reverse";
+        case Surface.ROTATION_270:
+            return "land reverse";
+        default:
+            throw new AssertionError("not gonna happen");
+    }
+}
+</code></p>
+
+<p>####1.2 资源
+我们知道Android的<code>Resources</code>是配置了一个<code>android.content.res.Configuration</code>的，这个配置内容很丰富，其中就包括了屏幕方向。<code>Resources</code>会根据配置去取得相应的资源，比如根据语言去哪字符资源。
+在Resources的强力支持下，你可以给不同的屏幕方向相应的资源文件，默认都是竖屏的，把横屏的放在 xxx-land，如<code>layout-land</code>，你可以引用同一个资源id，在<code>Resources</code>加载资源时会根据<code>Configuration</code>自动选择。</p>
+
+<p>###2. Configuration
+根据Android的<code>android.content.res.Configuration</code>文档说明，这些“配置”是能够影响Resources怎么拿到资源的所有信息的集合。举个例子，系统语言设置会影响Resources拿到字符串资源，中文还是英文？详细信息可以参看<a href="http://developer.android.com/intl/zh-cn/reference/android/content/res/Configuration.html">官方文档</a>.
+因此当<code>Configuration</code>变化的时候，Activity能拿到的resources也会发生变化。于是Android系统会重建该Activity，来更新界面。其中屏幕方向也是<code>Configuration</code>中的一个维度。因此屏幕旋转时也会导致Activity重建。</p>
+
+<p>但是有时候Activity希望自行处理相应的<code>Configuration</code>变化事件，这时候系统给我们提供了这样的机会。</p>
+
+<p>在Manifest的Activity标签中有这样一个attribute <code>android:configChanges</code>，在这里声明希望自行处理的事件，多个事件之间用管道符号<code>|</code>来分隔，举个栗子</p>
+
+<pre><code class="language-xml">&lt;activity
+    android:name=".mediacodec.MediaCodecActivity"
+    android:theme="@style/AppTheme"
+    android:label="MediaCodec"
+    android:configChanges="orientation|screenSize|locale"
+    &gt;
+</code></pre>
+
+<p>需要注意一点：在Android3.2 （API 13）之后，屏幕旋转会同时触发<code>orientation</code>和<code>screenSize</code>两个变化。</p>
+
+<p>然后在<code>Activity::onConfigurationChanged(Configuration)</code>中处理相应的变化即可，这时候不会重新创建Activity。</p>
+
+<p><strong>notice</strong>：
+&gt;即使不重建Activity，屏幕旋转的时候，界面也会跟着转过来，只是布局还是之前那个布局。</p>
+
+<p>###3. 状态保存</p>
+
+<p>我们知道Activity重建时ActivityThread直接通过反射创建了一个新的Activity实例，之前的所有实例相关的内容都会丢失。
+那么，界面重建时，==<strong>状态怎么保存</strong>==。</p>
+
+<p>前面我们说到了<code>onSaveInstanceState</code>，但是这个方法有一个超级，及其，特别严重的问题：他只能存可以被序列化的值类型。想象这样的场景，我正在下载文件，于是我有一个tcp的socket，我当然希望界面重建不会打断下载过程。我可以序列化下载进度，但是要让我序列化socket！！！请恕臣妾做不到啊！！！</p>
+
+<p>然后这时候脑海里开始蹦出来黑魔法：static变量！存在Application里！使用单例！</p>
+
+<p>嗯~淡定，淡定。系统已经考虑到这种情况了。并且专门提供了相应的方法给我们用。</p>
+
+<p>####3.1 Activity保存状态的方法</p>
+
+<pre><code class="language-java">//1
+Object Activity::onRetainNonConfigurationInstance();
+
+//2
+Object Activity::getLastNonConfigurationInstance();
+</code></pre>
+
+<p>Activity可以覆盖1，然后return需要保存的实例（比如Socket，数据库Cursor）。然后在onCreate中通过方法2拿到上面返回的内容。</p>
+
+<p>所以大致是这样一个使用方式：</p>
+
+<pre><code class="language-java">@Override
+protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    mDownloadTcpSocket = (Socket) getLastNonConfigurationInstance();
+}
+
+@Override
+public Object onRetainNonConfigurationInstance() {
+    return mDownloadTcpSocket;
+}
+</code></pre>
+
+<p>关于<code>onRetainNonConfigurationInstance</code>需要注意的是：
+1. 文档中说你可以在中返回任何实例，甚至是Activity自身。但是这个只是理论上，因为这里返回的实例会被新创建的Activity引用住，如果真的返回了Activity自身，估计屏幕旋转几次就会OOM了。</p>
+
+<ol>
+  <li>
+    <p>尽量不要在这个方法中保存Resources相应的东西，甚至是View。因为Configuration变换本身会导致Resource（可能）拿到不同的资源。（取决于res的内容）。如果一定要保存，请三思而行，并留下充足的文档说明。</p>
+  </li>
+  <li>
+    <p>避免Activity自身实现一些回调的interface。原因你懂得。因为当前的实例会销毁，新创建的实例和前一个引用是不一样的。所以在Activity销毁之前发出的请求，永远不会回调给新创建的Activity。另外如果这个回调是被强引用的就更危险了，当你旋转几次屏幕时，系统就会给你发来贺电“恭喜你OOM了”。</p>
+  </li>
+  <li>
+    <p>文档中还说，这个方法再<code>onStop</code>和<code>onDestroy</code>之间调用。并且在<code>onDestroy</code>调用之后，会立即创建一个新的Activity，在这段时间里会阻止主线程的消息分发。</p>
+  </li>
+  <li>
+    <p>然后官方文档有一句是这样的话，让我很困惑
+ &gt; This function is called purely as an optimization, and you must not rely on it being called.  When it is called, a number of guarantees will be made to help optimize configuration switching…</p>
+
+    <p>这让我很害怕，如果这个方法不一定会调用那不是很糟！！于是我被迫看了看系统源代码，在<code>ActivityClientRecord ActivityThread::performDestroyActivity(...)</code>中找到了蛛丝马迹。只要Configuration change，<code>onRetainNonConfigurationInstance</code>一定会调用。API文档的意思估计是说非Configuration change的时候不调用吧__(:3」∠)_</p>
+  </li>
+  <li>
+    <p>这个方法被废弃了。。。。</p>
+  </li>
+</ol>
+
+<p>####3.2 Fragment保存状态的方法</p>
+
+<p>蛤？刚才说那个方法被废除了。嗯，是的，看到文档有这一句我也是这个心情。原话这么说的</p>
+
+<blockquote>
+  <p>@deprecated Use the new {@link Fragment} API {@link Fragment#setRetainInstance(boolean)} instead; this is also available on older platforms through the Android compatibility package.</p>
+</blockquote>
+
+<p>既然如此去了解一下Fragment的这方面内容吧。</p>
+
+<p><code>Fragment::setRetainInstance</code>的文档是这么说的.</p>
+
+<blockquote>
+  <p>Control whether a fragment instance is retained across Activity re-creation (such as from a configuration change).</p>
+</blockquote>
+
+<p>原来这个方法也是做状态保存的,通过设置这个flag为true你可以做到：
+1. 保证Fragment在Activity重建的过程中不被销毁
+2. 保存Fragment的实例，并在新的Activity重建的时候自动恢复所有Fragment的状态（包括BackStack）</p>
+
+<p>啊哈！新API果然牛叉！这次连Fragment自身都能保留了。</p>
+
+<blockquote>
+  <p>もう何も怖くない（已经没什么好害怕的了） —— ともえ まみ</p>
+</blockquote>
+
+<p>于是新的Fragment就可以在旋转屏幕的时候无缝切换了。简直爽呀！！！</p>
+
+<p>关于<code>setRetainInstance</code>需要注意的地方：
+1. 该方法的文档中说到
+	&gt; This can only be used with fragments not in the back stack.</p>
+
+<pre><code>然而经过亲身实践和查阅源代码我发现这里和BackStack并没有半毛钱的关系\_\_(:3」∠)\_，不信找代码看看。
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nl">Fragment:</span><span class="o">:</span><span class="n">setRetainInstance</span><span class="o">(</span><span class="kt">boolean</span> <span class="n">retain</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">retain</span> <span class="o">&amp;</span><span class="n">amp</span><span class="o">;&amp;</span><span class="n">amp</span><span class="o">;</span> <span class="n">mParentFragment</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">throw</span> <span class="k">new</span> <span class="nf">IllegalStateException</span><span class="o">(</span>
+</span><span class='line'>                <span class="s">&quot;Can&#39;t retain fragements that are nested in other fragments&quot;</span><span class="o">);</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>	<span class="c1">//直接set不判断是够在BackStack</span>
+</span><span class='line'>    <span class="n">mRetainInstance</span> <span class="o">=</span> <span class="n">retain</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">ArrayList</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">Fragment</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">FragmentManager</span><span class="o">.</span><span class="na">FragmenagerImpl</span><span class="o">::</span><span class="n">retainNonConfig</span><span class="o">()</span> <span class="o">{</span>
+</span><span class='line'>    <span class="n">ArrayList</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">Fragment</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span> <span class="n">fragments</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">mActive</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span> <span class="n">i</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">mActive</span><span class="o">.</span><span class="na">size</span><span class="o">();</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+</span><span class='line'>            <span class="n">Fragment</span> <span class="n">f</span> <span class="o">=</span> <span class="n">mActive</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+</span><span class='line'>			<span class="c1">//这里只判断是否retainInstance，并没有判断BackStack之类的。</span>
+</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">f</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;</span><span class="n">amp</span><span class="o">;&amp;</span><span class="n">amp</span><span class="o">;</span> <span class="n">f</span><span class="o">.</span><span class="na">mRetainInstance</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                <span class="k">if</span> <span class="o">(</span><span class="n">fragments</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class='line'>                    <span class="n">fragments</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">Fragment</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;();</span>
+</span><span class='line'>                <span class="o">}</span>
+</span><span class='line'>                <span class="n">fragments</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">f</span><span class="o">);</span>
+</span><span class='line'>                <span class="n">f</span><span class="o">.</span><span class="na">mRetaining</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+</span><span class='line'>                <span class="n">f</span><span class="o">.</span><span class="na">mTargetIndex</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="na">mTarget</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">?</span> <span class="n">f</span><span class="o">.</span><span class="na">mTarget</span><span class="o">.</span><span class="na">mIndex</span> <span class="o">:</span> <span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+</span><span class='line'>                <span class="k">if</span> <span class="o">(</span><span class="n">DEBUG</span><span class="o">)</span> <span class="n">Log</span><span class="o">.</span><span class="na">v</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="s">&quot;retainNonConfig: keeping retained &quot;</span> <span class="o">+</span> <span class="n">f</span><span class="o">);</span>
+</span><span class='line'>            <span class="o">}</span>
+</span><span class='line'>        <span class="o">}</span>
+</span><span class='line'>    <span class="o">}</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">fragments</span><span class="o">;</span>
+</span><span class='line'><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure>
+所以不知这句doc意义何在。StackOverFlow有人说如果BackStack中有Fragment会retain有的不会retain，这样会导致问题，但是我觉得理由有点牵强，不retain的也会重新创建然后恢复状态呀。
+</code></pre>
+
+<p>###4. 生命周期</p>
+
+<p>####4.1 Activity
+在发生ConfigurationChange时，Activity会经历先销毁再重新创建的过程。该过程的生命周期和一般情况无疑。
+在从onPause开始的销毁过程中可以通过<code>Activity::isChangingConfigurations()</code>方法判断是因为ConfigurationChange导致销毁。</p>
+
+<p>####4.2 Fragment
+如果是一般的Fragment，和Activity一样会经历 <strong>销毁-&gt;FragmentManager恢复Fragment-&gt;重建新Fragment</strong> 的过程。
+如果调用了上面说到的<code>Fragment::setRetainInstance(true)</code>，则</p>
+
+<p>Fragment的声明周期会发生细微差别。总体的销毁创建的生命周期方法都会调用，除了下面的这一对</p>
+
+<ul>
+  <li>onDestroy</li>
+  <li>onCreate</li>
+</ul>
+
+<p>因为Fragment并没有真正的销毁，在Activiyt重建之后使用的Fragment引用还是重建之前的那一个。我认为这样处理也是很合理的。
+如果需要在onPause和onStop中判断是否彻底释放相应资源可以通过<code>getActivity().isConfigurationChanges()</code>来判断。</p>
+
+<p>整个生命周期变成这样子。</p>
+
+<pre><code class="language-text">graph TD;
+
+	subgraph destroy
+	A(Configuration change) -- destroy --&gt; B[onPause]
+	B --&gt; C[onStop]
+	C --&gt; D[onDestroyView]
+	D --&gt; E[onDetach]
+	end
+
+	subgraph restart
+	AA(Configuration change) -- restart --&gt; F[onAttach]
+	F --&gt; G[onCreateView]
+	G --&gt; H[onActivityCreated]
+	H --&gt; I[onStart]
+	I --&gt; J[onResume]
+	end
+
+	D -.not called.-&gt; onDestroy[onDestroy]
+	onDestroy -.-&gt; E;
+	F -.not called.-&gt; onCreate[onCreate]
+	onCreate -.-&gt; G;
+</code></pre>
+
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[retro-lambda 测试报告]]></title>
     <link href="http://LanderlYoung.github.io/blog/2016/01/11/re-lambda-ce-shi-bao-gao/"/>
     <updated>2016-01-11T00:10:42+08:00</updated>
     <id>http://LanderlYoung.github.io/blog/2016/01/11/re-lambda-ce-shi-bao-gao</id>
-    <content type="html"><![CDATA[<h1>retrolambda测试报告</h1>
+    <content type="html"><![CDATA[<p>#retrolambda测试报告</p>
 
 <p>先说结论</p>
 
 <ol>
-<li>堆栈行号完全匹配！没有任何问题，包括最新的android build tools自身支持的switch string，MultiCatch，和retrolambda的所有特性都没问题。</li>
-<li>lambda是通过生成class来实现的，而且是生成static class而不是anonumous class，因此没有this$0引用。且支持<strong><a href="https://docs.oracle.com/javase/tutorial/java/javaOO/methodreferences.html">method reference （推荐阅读）</a></strong>。</li>
-<li>但是lambda会生成冗余方法，每个Lambda类4个方法（下面有代码），其中一个是原接口的方法；增加3个，一个是构造方法，两个是静态工厂方法。</li>
-<li>支持MultiCatch。</li>
-<li>支持interface加default方法，亲测可行，但是使用该特性必须禁用增量编译。</li>
-<li>支持interface加static方法，亲测不可行（可能版本bug），同上需要禁用增量编译。</li>
-<li>支持tryWithResource但是估计这个用的不多，问题在于默认会吞掉Exception。同时Android Studio会报错说API19才能用，但是可以编译。</li>
-<li>不支持Java8的新增API，包括Lambda相关的function包，和其他新包比如stream api。</li>
+  <li>堆栈行号完全匹配！没有任何问题，包括最新的android build tools自身支持的switch string，MultiCatch，和retrolambda的所有特性都没问题。</li>
+  <li>lambda是通过生成class来实现的，而且是生成static class而不是anonumous class，因此没有this$0引用。且支持<strong><a href="https://docs.oracle.com/javase/tutorial/java/javaOO/methodreferences.html">method reference （推荐阅读）</a></strong>。</li>
+  <li>但是lambda会生成冗余方法，每个Lambda类4个方法（下面有代码），其中一个是原接口的方法；增加3个，一个是构造方法，两个是静态工厂方法。</li>
+  <li>支持MultiCatch。</li>
+  <li>支持interface加default方法，亲测可行，但是使用该特性必须禁用增量编译。</li>
+  <li>支持interface加static方法，亲测不可行（可能版本bug），同上需要禁用增量编译。</li>
+  <li>支持tryWithResource但是估计这个用的不多，问题在于默认会吞掉Exception。同时Android Studio会报错说API19才能用，但是可以编译。</li>
+  <li>不支持Java8的新增API，包括Lambda相关的function包，和其他新包比如stream api。</li>
 </ol>
-
 
 <!--more-->
 
-
 <p>下面是测试细节以及源代码和反编译代码对比：</p>
 
-<h2>switch string（这个是java7自身的语法糖）</h2>
+<h2 id="switch-stringjava7">switch string（这个是java7自身的语法糖）</h2>
 
 <p>源代码：</p>
 
-<pre><code class="cpp">private static void switchWithString(String str) {
+<pre><code class="language-cpp">private static void switchWithString(String str) {
     System.out.println("switchWithString");
     switch (str) {
         case "hello":
@@ -59,7 +364,7 @@
 
 <p>class反编译：</p>
 
-<pre><code class="cpp">private static void switchWithString(String str) {
+<pre><code class="language-cpp">private static void switchWithString(String str) {
     System.out.println("switchWithString");
     byte var2 = -1;
     switch(str.hashCode()) {
@@ -91,11 +396,11 @@
 }
 </code></pre>
 
-<h2>lambda</h2>
+<h2 id="lambda">lambda</h2>
 
 <p>源代码：</p>
 
-<pre><code class="cpp">findViewById(R.id.stop).setOnClickListener((v) -&gt; {
+<pre><code class="language-cpp">findViewById(R.id.stop).setOnClickListener((v) -&gt; {
     //Yes! use "this" to refer to the MainActivity.this
     Toast.makeText(this, "Hello lambda", Toast.LENGTH_SHORT).show();
 
@@ -106,7 +411,7 @@
 
 <p>class反编译：</p>
 
-<pre><code class="cpp">this.findViewById(2131492943).setOnClickListener(MainActivity$$Lambda$1.lambdaFactory$(this));
+<pre><code class="language-cpp">this.findViewById(2131492943).setOnClickListener(MainActivity$$Lambda$1.lambdaFactory$(this));
 final class MainActivity$$Lambda$1 implements OnClickListener {
     private final MainActivity arg$1;
 
@@ -133,9 +438,8 @@ final class MainActivity$$Lambda$1 implements OnClickListener {
 <p>优：</p>
 
 <ol>
-<li>把InnerClass改成了外部static class。避免了this$0逸出。</li>
+  <li>把InnerClass改成了外部static class。避免了this$0逸出。</li>
 </ol>
-
 
 <p>劣：</p>
 
@@ -145,7 +449,7 @@ final class MainActivity$$Lambda$1 implements OnClickListener {
 
 <p>下面是lambda内部crash堆栈dump：</p>
 
-<pre><code class="bash">08-14 09:30:46.402  11348-11348/young.com.demo I/System.out﹕ crash in lambda
+<pre><code class="language-bash">08-14 09:30:46.402  11348-11348/young.com.demo I/System.out﹕ crash in lambda
 08-14 09:30:46.402  11348-11348/young.com.demo W/System.err﹕ java.lang.Throwable
 08-14 09:30:46.402  11348-11348/young.com.demo W/System.err﹕ at young.com.demo.MainActivity.lambda$onCreate$0(MainActivity.java:81)
 08-14 09:30:46.402  11348-11348/young.com.demo W/System.err﹕ at young.com.demo.MainActivity.access$lambda$0(MainActivity.java)
@@ -162,11 +466,11 @@ final class MainActivity$$Lambda$1 implements OnClickListener {
 08-14 09:30:46.403  11348-11348/young.com.demo W/System.err﹕ at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:699)
 </code></pre>
 
-<h2>Lambda Method Reference：</h2>
+<h2 id="lambda-method-reference">Lambda Method Reference：</h2>
 
 <p>源代码：</p>
 
-<pre><code class="cpp">private interface StringConsumer {
+<pre><code class="language-cpp">private interface StringConsumer {
     void consumeAString(String str);
 }
 
@@ -179,7 +483,7 @@ testMethodReference(System.out::println);
 
 <p>class反编译：</p>
 
-<pre><code class="cpp">testMethodReference(MainActivity$$Lambda$4.lambdaFactory$(var10000));
+<pre><code class="language-cpp">testMethodReference(MainActivity$$Lambda$4.lambdaFactory$(var10000));
 
 final class MainActivity$$Lambda$4 implements StringConsumer {
     private final PrintStream arg$1;
@@ -202,11 +506,11 @@ final class MainActivity$$Lambda$4 implements StringConsumer {
 }
 </code></pre>
 
-<h2>MultiCatch</h2>
+<h2 id="multicatch">MultiCatch</h2>
 
 <p>源代码：</p>
 
-<pre><code class="cpp">private static void testMultiCatch(int i) {
+<pre><code class="language-cpp">private static void testMultiCatch(int i) {
     System.out.println("testMultiCatch");
     try {
         switch (i) {
@@ -231,7 +535,7 @@ final class MainActivity$$Lambda$4 implements StringConsumer {
 
 <p>class反编译：</p>
 
-<pre><code class="cpp">private static void testMultiCatch(int i) {
+<pre><code class="language-cpp">private static void testMultiCatch(int i) {
     System.out.println("testMultiCatch");
 
     try {
@@ -258,11 +562,11 @@ final class MainActivity$$Lambda$4 implements StringConsumer {
 <pre><code>好像没什么区别，不是我粘错了，估计是JVM本来就支持这个特性。
 </code></pre>
 
-<h2>tryWithResource</h2>
+<h2 id="trywithresource">tryWithResource</h2>
 
 <p>源代码：</p>
 
-<pre><code class="cpp">
+<pre><code class="language-cpp">
 private static void testTryWithResource(ServerSocket ss) {
 if (ss == null) return;
 
@@ -272,11 +576,12 @@ try (Socket in = ss.accept();
 } catch (IOException e) {
 
 }
+
 </code></pre>
 
 <p>class反编译：</p>
 
-<pre><code class="cpp">
+<pre><code class="language-cpp">
 private static void testTryWithResource(ServerSocket ss) {
     if(ss != null) {
         try {
@@ -329,6 +634,7 @@ private static void testTryWithResource(ServerSocket ss) {
 
     }
 }
+
 </code></pre>
 
 <p>好™啰嗦啦！绝对不要用这个。</p>
@@ -341,7 +647,7 @@ private static void testTryWithResource(ServerSocket ss) {
 <p>Using sourceCompatibility 1.7
 With Android KitKat (buildToolsVersion 19) you can use the diamond operator, multi-catch, strings in switches, try with resources, etc. To do this, add the following to your build file:</p>
 
-<pre><code class="cpp">
+<pre><code class="language-cpp">
 android {
     compileSdkVersion 19
     buildToolsVersion "19.0.0"
@@ -356,66 +662,73 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
 }
+
 </code></pre>
 
 <p>Note that you can use minSdkVersion with a value earlier than 19, for all language features <em>except try with resources</em>. If you want to use try with resources, you will need to also use a minSdkVersion of 19.</p>
 
 <p>You also need to make sure that Gradle is using version 1.7 or later of the JDK. (And version 0.6.1 or later of the Android Gradle plugin.)</p>
 
-<h1>匿名类 VS Lambda</h1>
+<p>#匿名类 VS Lambda</p>
 
 <p>今天修复了几个listener导致内存泄露的问题。
 在review代码的过程中发现很多泄露是匿名类的this$0导致的，事实上挺多时候匿名类并没有显式的使用到this。</p>
 
-<h2>匿名类</h2>
+<p>##匿名类</p>
 
 <p><strong>匿名类必然会引用this，不管代码中是否真正用到。</strong>
 java中的匿名类和非static内部类（标准叫法是嵌套类nested class，内部类专指static inner class），都会有外部类的引用，通过构造函数传进来，并在内部类的this$0成员变量中保存；但是我们通常不会注意到他们，因为java编译器帮我们做了这些；如果我们查看反编译的class文件会发现他们是真真切切的存在。</p>
 
 <p>比如：</p>
 
-<pre><code class="cpp">
+<pre><code class="language-cpp">
 private BroadcastReceiver mCollectionReceiver = new BroadcastReceiver() {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            //...
+     		//...
         }
     };
+
 </code></pre>
 
 <p>反编译javac生成的class</p>
 
-<pre><code class="cpp">
+<pre><code class="language-cpp">
 class BroadcastDetailFragment$4
   extends BroadcastReceiver
 {
   BroadcastDetailFragment$4(BroadcastDetailFragment this$0) {}
-
+  
   public void onReceive(Context context, Intent intent)
   {
-    //...
+   	//...
   }
 }
+
 </code></pre>
 
 <p>可以看到构造函数中是有个this$0的参数的。</p>
 
-<h2>Lambda</h2>
+<p>##Lambda</p>
 
 <p><strong>lambda不一定会引用this，具体看lambda里面是否用到。</strong>
 Lambda中所有引用到的外部的变量都是通过参数的形式传给实现lambda的函数的。如果lambda中用到this或非static成员方法、非static成员变量，那么lambda就必须引用this，这个this就是作为参数传给实现lambda的函数；反之，若lambda不需要this，编译器就不会传this作为参数，这时候该lambda生成的类就不会泄露我们的Fragment，Activity。</p>
 
-<h2>总结：</h2>
+<p>##总结：</p>
 
 <p>使用Lambda除了可以使代码更优雅，还可以减少不必要的this泄露。
 之前我曾担心过：retro-lambda会给每个lambda生成一个类，会不会带来性能，内存之类的压力；但是想到scala语言就是用这种方式实现的lambda，而且玩的很欢乐，想必不用过度担心。</p>
 
-<h3>附录：</h3>
+<p>###附录：</p>
 
 <ol>
-<li><p>关于scala和java8是怎么分别实现lambda的，可以参看<a href="http://blog.takipi.com/compiling-lambda-expressions-scala-vs-java-8/">这篇文章</a>。PS：retro-lambda是模仿了scala的做法（因为android中不支持invokedynamic虚拟机指令，其在java7中引入，所以理论上javac生成的lambda在java7上也是能跑的）</p></li>
-<li><p>retrolambda测试报告，在项目引入retro-lambda之前，我做了几个实验，验证之前的疑问点。下面是之前的结论，再贴一遍~方便翻阅~</p></li>
+  <li>
+    <p>关于scala和java8是怎么分别实现lambda的，可以参看<a href="http://blog.takipi.com/compiling-lambda-expressions-scala-vs-java-8/">这篇文章</a>。PS：retro-lambda是模仿了scala的做法（因为android中不支持invokedynamic虚拟机指令，其在java7中引入，所以理论上javac生成的lambda在java7上也是能跑的）</p>
+  </li>
+  <li>
+    <p>retrolambda测试报告，在项目引入retro-lambda之前，我做了几个实验，验证之前的疑问点。下面是之前的结论，再贴一遍~方便翻阅~</p>
+  </li>
 </ol>
 
 ]]></content>
@@ -426,44 +739,41 @@ Lambda中所有引用到的外部的变量都是通过参数的形式传给实�
     <link href="http://LanderlYoung.github.io/blog/2014/11/09/androidzhong-servicede-shi-yong/"/>
     <updated>2014-11-09T18:07:03+08:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/11/09/androidzhong-servicede-shi-yong</id>
-    <content type="html"><![CDATA[<h2>Android 中service的使用 笔记</h2>
+    <content type="html"><![CDATA[<p>##Android 中service的使用 笔记</p>
 
-<h3>Service是何物</h3>
+<p>###Service是何物<br />
+service是安卓四大组件（Activity、BroadcastReceiver、ContentProvider、Service）之一。Service用于执行耗时比较长的操作，在后台运行，没有界面显示。</p>
 
-<p>service是安卓四大组件（Activity、BroadcastReceiver、ContentProvider、Service）之一。Service用于执行耗时比较长的操作，在后台运行，没有界面显示。</p>
-
-<p><strong>Service与进程</strong>：<br/>
+<p><strong>Service与进程</strong>：<br />
 Service可以在应用的主进程中运行，也可以在单独的进程中运行。只需要在Service的[Manifest声明][manifest]中指明进程名即可。同一个应用中所有具有相同进程名的组件（四大组件，包括Activity）均可以运行在同一个进程中。</p>
 
-<p><strong>Service的寿命</strong>： <br/>
-这里说的<code>寿命</code>只是service什么时候运行什么时候终止而已并非生命周期的概念。service的启动方式有两种：<br/>
- 1. 通过<code>Context::strtService</code>来启动一个Service，这个Service会一直在后台运行，即使启动该Service的组件已经结束。它只能自己结束自己，通过<code>Service::stopSelf()</code>或者是被其他组件显示的结束，通过<code>Context::StopService</code>。或者系统可用内存不够，android系统会选择性的kill掉一些service，在需要的时候再重新启动他们。当然如果进程自己crash也是会结束的(╯‵□′)╯︵┻━┻（这不是废话）。 <br/>
+<p><strong>Service的寿命</strong>： <br />
+这里说的<code>寿命</code>只是service什么时候运行什么时候终止而已并非生命周期的概念。service的启动方式有两种：<br />
+ 1. 通过<code>Context::strtService</code>来启动一个Service，这个Service会一直在后台运行，即使启动该Service的组件已经结束。它只能自己结束自己，通过<code>Service::stopSelf()</code>或者是被其他组件显示的结束，通过<code>Context::StopService</code>。或者系统可用内存不够，android系统会选择性的kill掉一些service，在需要的时候再重新启动他们。当然如果进程自己crash也是会结束的(╯‵□′)╯︵┻━┻（这不是废话）。 <br />
  2. 通过<code>Context::bindService</code>启动Service。一个绑定的Service一般是 C-S（客户端-服务器）类型的，通常会和其他组件进行通信，包括：发送请求，收取返回结果，甚至是进程间通信——IPC。一个绑定的Service的寿命和绑定他的组件相关，当所有绑定到他上面的组件都结束（或者取消绑定——通过<code>Context::unbindService</code>方法）的时候，这个service就自然结束。</p>
 
 <!--more-->
 
-
 <p>当然启动一个Service还可以同时用上面两个方法：先startService启动一个常驻service，然后bind到他上面进行通信——IPC。</p>
 
-<blockquote><p>Service运行在进程的主线程上。所以如果要执行长耗时或CPU高消耗任务的话还是要自行创建线程，以免阻塞主进程导致service的声明周期方法不能及时回调。</p></blockquote>
+<blockquote>
+  <p>Service运行在进程的主线程上。所以如果要执行长耗时或CPU高消耗任务的话还是要自行创建线程，以免阻塞主进程导致service的声明周期方法不能及时回调。</p>
+</blockquote>
 
-<h3>基础知识：</h3>
-
-<p>创建一个Service时，必须创建一个Service的子类，并覆盖相应的声明周期回调方法，来进行相应的处理。你需要覆盖的最重要的几个声明周期回调是：<br/>
- 1. onStartCommand：当其他组件（比如Activity）通过startService方法启动Service的时候，系统就会回调这个方法。一旦这个方法被调用，该service就会永久的运行下去。因此你将有义务来结束这个service，通过service自己调用<code>stopSelf</code>或者在其他组件中调用<code>Context::stopService</code>。如果你只是希望通过bind来启动这个service，则没有什么必要来覆盖这个方法。这个方法有三个参数，第一个是启动这个Service的Intent，第二个是启动Flag，第三个是startID，每次这个方法回调的时候这个ID就会增加一次（保证每次都不一样）。<br/>
- 2. onBind：当其他组件调用<code>Context::bindService</code>来绑定到service上的时候，一般会在onBind中返回一个IBinder对象的实例，提供给Client调用Service中的方法。相应的如果不希望客户端绑定到service上就返回<code>null</code>好了。 <br/>
- 3. onCreate：和Activity的onCreate一样，在整个生命周期中值调用一次——在service被创建的时候。 <br/>
+<p>###基础知识：<br />
+创建一个Service时，必须创建一个Service的子类，并覆盖相应的声明周期回调方法，来进行相应的处理。你需要覆盖的最重要的几个声明周期回调是：<br />
+ 1. onStartCommand：当其他组件（比如Activity）通过startService方法启动Service的时候，系统就会回调这个方法。一旦这个方法被调用，该service就会永久的运行下去。因此你将有义务来结束这个service，通过service自己调用<code>stopSelf</code>或者在其他组件中调用<code>Context::stopService</code>。如果你只是希望通过bind来启动这个service，则没有什么必要来覆盖这个方法。这个方法有三个参数，第一个是启动这个Service的Intent，第二个是启动Flag，第三个是startID，每次这个方法回调的时候这个ID就会增加一次（保证每次都不一样）。<br />
+ 2. onBind：当其他组件调用<code>Context::bindService</code>来绑定到service上的时候，一般会在onBind中返回一个IBinder对象的实例，提供给Client调用Service中的方法。相应的如果不希望客户端绑定到service上就返回<code>null</code>好了。 <br />
+ 3. onCreate：和Activity的onCreate一样，在整个生命周期中值调用一次——在service被创建的时候。 <br />
  4. onDestroy：也是和Activity一样，在整个生命周期中也只调用一次——在service被销毁的时候。这个方法是service中最后一个执行的方法。</p>
 
-<p><strong>重申</strong>：</p>
+<p><strong>重申</strong>： <br />
+&gt; 如果Service是通过<code>Context::startService</code>来启动的话，它将一直运行下去，知道他结束自己（通过<code>Service::stopSelf</code>方法）或者其他组件结束掉他（通过<code>Context:stopService</code>方法）。<strong>另外</strong>：即使上面所说两个方法（<code>Service::stopSelf</code>和<code>Context:stopService</code>）已经调用，只要有bind到这个service上的组件没有unbind这个service也不会立即结束。</p>
 
-<blockquote><p>如果Service是通过<code>Context::startService</code>来启动的话，它将一直运行下去，知道他结束自己（通过<code>Service::stopSelf</code>方法）或者其他组件结束掉他（通过<code>Context:stopService</code>方法）。<strong>另外</strong>：即使上面所说两个方法（<code>Service::stopSelf</code>和<code>Context:stopService</code>）已经调用，只要有bind到这个service上的组件没有unbind这个service也不会立即结束。</p></blockquote>
+<p>###在Manifest中声明你的service： <br />
+语法如下：</p>
 
-<h3>在Manifest中声明你的service：</h3>
-
-<p>语法如下：</p>
-
-<pre><code class="xml">&lt;service android:enabled=["true" | "false"]
+<pre><code class="language-xml">&lt;service android:enabled=["true" | "false"]
          android:exported=["true" | "false"]
          android:icon="drawable resource"
          android:isolatedProcess=["true" | "false"]
@@ -475,37 +785,35 @@ Service可以在应用的主进程中运行，也可以在单独的进程中运�
 &lt;/service&gt;
 </code></pre>
 
-<p>上面的attribute和大部分的组件都是一样的。<br/>
+<p>上面的attribute和大部分的组件都是一样的。<br />
  1. <code>android:isolatedProcess</code>：如果是true的话这个service将运行在一个隔离的特殊进程中，并且不具备任何权限（包括你在Manifest中声明的）。唯一能和service通信的方式就是bind和start。
  2. <code>android:process</code>：进程名。就是这个service运行的进程的名字。虽然其他三个组件也可以指定进程名，但是service才是真正需要这个属性的组件！因为一些进程往往需要长时间运行，在主进程之外运行。
-     1. 如果不指定这个属性的话，组件将在默认进程中执行，进程名就是包名。<br/>
-     2. 如果指定了进程名，则运行在指定的进程中，其他组件也可以访问该service，只要满足service指定的权限。
-     3. 特殊情况：如果进程名以「冒号」开头（<code>:</code>），则该service是应用私有的service，其他应用不能访问到。</p>
+	 1. 如果不指定这个属性的话，组件将在默认进程中执行，进程名就是包名。<br />
+	 2. 如果指定了进程名，则运行在指定的进程中，其他组件也可以访问该service，只要满足service指定的权限。
+	 3. 特殊情况：如果进程名以「冒号」开头（<code>:</code>），则该service是应用私有的service，其他应用不能访问到。</p>
 
 <p>**bindService和unbindService：
-bind和onBind必须成对出现，否则service不会终止。加入你的onBind卸载activity的onDestroy中，然后activity被系统终止而没有调用onDestroy，此时系统会帮你调用onBind并log一个warnning警告你！<br/>
+bind和onBind必须成对出现，否则service不会终止。加入你的onBind卸载activity的onDestroy中，然后activity被系统终止而没有调用onDestroy，此时系统会帮你调用onBind并log一个warnning警告你！<br />
 <code>boolean bindService(Intent service, ServiceConnection conn, int flags)</code>:其中intent是启动service的Intent，conn是回调。定义是：</p>
 
-<pre><code class="java">public interface ServiceConnection {
-    //service连接成功时的回调，IBinder就是service返回的Binder
+<pre><code class="language-java">public interface ServiceConnection {
+	//service连接成功时的回调，IBinder就是service返回的Binder
     public void onServiceConnected(ComponentName name, IBinder service);
-    //service**意外**终止时的回调，一般是service进程crash或者被系统杀掉。他并不会关闭与service的连接。
+	//service**意外**终止时的回调，一般是service进程crash或者被系统杀掉。他并不会关闭与service的连接。
     public void onServiceDisconnected(ComponentName name);
 }
 </code></pre>
 
 <p><code>public void unbindService(ServiceConnection conn)</code>:unbind中有个conn参数，就是你在bind是传入的那个回调。</p>
 
-<h3>Android中的进程间通信——IPC</h3>
+<p>###Android中的进程间通信——IPC
+这个是一个很精彩的内容，用过android的ipc机制才发现<strong>IPC从未如此简单！</strong>。</p>
 
-<p>这个是一个很精彩的内容，用过android的ipc机制才发现<strong>IPC从未如此简单！</strong>。</p>
+<p>####Android Interface Definition Language (AIDL)<br />
+android的IPC通过<code>aidl</code>文件来指定接口，aidl的含义是「Android Interface Definition Language 」，其使用了一种很类似java的语法来制定IPC接口。<br />
+<a name="aidl_chestnut">举个栗子&lt;/&gt;，比如在com.example.service包中，写一个aidl文件，内容如下：</a></p>
 
-<h4>Android Interface Definition Language (AIDL)</h4>
-
-<p>android的IPC通过<code>aidl</code>文件来指定接口，aidl的含义是「Android Interface Definition Language 」，其使用了一种很类似java的语法来制定IPC接口。<br/>
-<a name="aidl_chestnut">举个栗子</>，比如在com.example.service包中，写一个aidl文件，内容如下：</p>
-
-<pre><code class="java">package com.example.service;
+<pre><code class="language-java">package com.example.service;
 
 import com.example.service.ICallback;
 import android.os.Bundle;
@@ -518,48 +826,53 @@ interface IDemoServiceController {
 }
 </code></pre>
 
-<p>可以看到基本上和JAVA一模一样！<br/>
-<strong>需要注意</strong>：<br/>
- 1. AIDL支持的数据类型<a name="aidl_types"></>：<br/>
-     1. <a href="#aidl_default_type">AIDL默认支持的数据类型</a><br/>
-     2. <a href="#parcelable">实现了Parcelable接口</a>任意类<br/>
- 2. 另外你必须import所有使用到的class到你的AIDL文件中，即使他跟你的aidl文件在同一个包中！<br/>
- 3. 方法可以有0到多个参数，也可以返回void。<br/>
- 4. 参数中的所有的非java原始类型（必须指定一个参数的数据走向，是<code>int</code>，<code>out</code>，<code>inout</code>，三者之一）。<br/>
- 5. 参数中的所有的原始类型都是in，而且不能被修改。</p>
+<p>可以看到基本上和JAVA一模一样！<br />
+<strong>需要注意</strong>：<br />
+ 1. AIDL支持的数据类型<a name="aidl_types">&lt;/&gt;：<br />
+	 1. <a href="#aidl_default_type">AIDL默认支持的数据类型</a><br />
+	 2. <a href="#parcelable">实现了Parcelable接口</a>任意类<br />
+ 2. 另外你必须import所有使用到的class到你的AIDL文件中，即使他跟你的aidl文件在同一个包中！<br />
+ 3. 方法可以有0到多个参数，也可以返回void。<br />
+ 4. 参数中的所有的非java原始类型（必须指定一个参数的数据走向，是<code>int</code>，<code>out</code>，<code>inout</code>，三者之一）。<br />
+ 5. 参数中的所有的原始类型都是in，而且不能被修改。</a></p>
 
 <p><a name="aidl_default_type"></a>AIDL默认支持的数据类型如下：</p>
 
 <ol>
-<li><p>java语言中的所有原始类型（primitive type，比如：int, long, char, boolean)</p></li>
-<li><p>String</p></li>
-<li><p>CharSequence</p></li>
-<li><p>支持数组！虽然文档没说，但经过实验证明是支持数组的。但是数组的元素必须是AIDL所支持的<a href="#aidl_types">数据类型</a>。</p></li>
-<li><p>List <strong>注意</strong></p>
-
-<ol>
-<li>List中的所有类型也必须是AIDL所支持的<a href="#aidl_types">数据类型</a>。</li>
-<li>List可以被当做泛型类来使用（比如<code>List&lt;String&gt;</code>）。</li>
-<li>接收参数的另一端（对于client，另一端指service；对于service另一端指  client）收到的List实际类型总是ArrayList。</li>
+  <li>
+    <p>java语言中的所有原始类型（primitive type，比如：int, long, char, boolean)</p>
+  </li>
+  <li>
+    <p>String</p>
+  </li>
+  <li>
+    <p>CharSequence</p>
+  </li>
+  <li>
+    <p>支持数组！虽然文档没说，但经过实验证明是支持数组的。但是数组的元素必须是AIDL所支持的<a href="#aidl_types">数据类型</a>。</p>
+  </li>
+  <li>List <strong>注意</strong>
+    <ol>
+      <li>List中的所有类型也必须是AIDL所支持的<a href="#aidl_types">数据类型</a>。</li>
+      <li>List可以被当做泛型类来使用（比如<code>List&lt;String&gt;</code>）。</li>
+      <li>接收参数的另一端（对于client，另一端指service；对于service另一端指  client）收到的List实际类型总是ArrayList。</li>
+    </ol>
+  </li>
+  <li>Map <strong>注意</strong>
+    <ol>
+      <li>Map所支持的类型同上。</li>
+      <li>泛型Map并不支持。</li>
+      <li>接收参数的另一端接收到的Map实际类型是HashMap。</li>
+    </ol>
+  </li>
 </ol>
-</li>
-<li><p>Map <strong>注意</strong></p>
 
-<ol>
-<li>Map所支持的类型同上。</li>
-<li>泛型Map并不支持。</li>
-<li>接收参数的另一端接收到的Map实际类型是HashMap。</li>
-</ol>
-</li>
-</ol>
+<p>####实现Parcelable接口</p>
 
-
-<h4>实现Parcelable接口</h4>
-
-<p>因为实例是要在进程间传递的因此必须序列化才行。Parcelable就是android定义的一个用于class序列化的即轻量级又高效的机制。<br/>
+<p>因为实例是要在进程间传递的因此必须序列化才行。Parcelable就是android定义的一个用于class序列化的即轻量级又高效的机制。<br />
 Parcelable接口的定义如下：</p>
 
-<pre><code class="java">public interface Parcelable {
+<pre><code class="language-java">public interface Parcelable {
     public int describeContents();
     public void writeToParcel(Parcel dest, int flags);
     public interface Creator&lt;T&gt; {
@@ -570,15 +883,15 @@ Parcelable接口的定义如下：</p>
 </code></pre>
 
 <p>其中<code>describeContents()</code>用于描述数据类型，可以简单的返回0。
-然后是用于序列化的方法<code>writeToParcel(Parcel dest, int flags)</code>：<br/>
-dest就是用于存储序列的类的容器，然后flags可以是普通的0，或者是<code>PARCELABLE_WRITE_RETURN_VALUE</code>用来告诉你这个object是被写回返回值的（比如下列方法中  <code>Parcelable someFunction()</code>, <code>void someFunction(out Parcelable)</code>, or <code>void someFunction(inout Parcelable)</code>），以此来告诉你该清理资源就赶紧的！</p>
+然后是用于序列化的方法<code>writeToParcel(Parcel dest, int flags)</code>：<br />
+dest就是用于存储序列的类的容器，然后flags可以是普通的0，或者是<code> PARCELABLE_WRITE_RETURN_VALUE</code>用来告诉你这个object是被写回返回值的（比如下列方法中  <code>Parcelable someFunction()</code>, <code>void someFunction(out Parcelable)</code>, or <code>void someFunction(inout Parcelable)</code>），以此来告诉你该清理资源就赶紧的！</p>
 
-<p>然后问题来了：怎么只有序列化没有反序列化！这只出不进不是要弹尽粮绝（<del>精尽人亡</del>）吗？！<br/>
-好了，Parcelable接口是有魔力的，他并不是一个普通的接口。android规定，要实现这个接口除了实现上面两个接口还要在类中定义一个static成员变量，名字必须叫“CREATOR”（此处需要注意配置proguard混淆，很明显android会用反射来获取这个变量，<del>忍不住吐槽一句！google你怎么那么喜欢反射！！</del>），然后这个CREATOR必须是<code>Parcelable.Creator&lt;T&gt;</code>的实现，android系统将使用这个实例来进行反序列化。</p>
+<p>然后问题来了：怎么只有序列化没有反序列化！这只出不进不是要弹尽粮绝（~~精尽人亡~~）吗？！<br />
+好了，Parcelable接口是有魔力的，他并不是一个普通的接口。android规定，要实现这个接口除了实现上面两个接口还要在类中定义一个static成员变量，名字必须叫“CREATOR”（此处需要注意配置proguard混淆，很明显android会用反射来获取这个变量，~~忍不住吐槽一句！google你怎么那么喜欢反射！！~~），然后这个CREATOR必须是<code>Parcelable.Creator&lt;T&gt;</code>的实现，android系统将使用这个实例来进行反序列化。</p>
 
 <p>举个栗子（盗自android文档Parcelable篇）：</p>
 
-<pre><code class="java">public class MyParcelable implements Parcelable {
+<pre><code class="language-java">public class MyParcelable implements Parcelable {
      private int mData;
 
      public int describeContents() {
@@ -599,21 +912,20 @@ dest就是用于存储序列的类的容器，然后flags可以是普通的0，�
              return new MyParcelable[size];
          }
      };
-
+     
      private MyParcelable(Parcel in) {
          mData = in.readInt();
      }
  }
 </code></pre>
 
-<h4>在Client和Service端调用aidl指定的方法</h4>
+<p>####在Client和Service端调用aidl指定的方法
+android sdk tool会自动根据aidl文件生成相应的java文件。因此可以直接使用之。</p>
 
-<p>android sdk tool会自动根据aidl文件生成相应的java文件。因此可以直接使用之。</p>
-
-<p><strong>在server端</strong><br/>
+<p><strong>在server端</strong><br />
 前面说过onBind方法会返回一个IBinder的实例给client调用。这里返回的IBinder实例就和你的aidl有关。你需要在server中实现aidl中指定的接口的实现，还举<a href="#aidl_chestnut">刚才的栗子</a>。你需要在server中这样：</p>
 
-<pre><code class="java">private class MyBinder extends IDemoServiceController.Stub {
+<pre><code class="language-java">private class MyBinder extends IDemoServiceController.Stub {
         @Override
         public int getPid() throws RemoteException {
             return android.os.Process.myPid();
@@ -662,20 +974,19 @@ public IBinder onBind(Intent intent) {
 <p><strong>client端</strong>：
 记得上面说的bindService的回调吗在<code>onServiceConnected</code>中：</p>
 
-<pre><code class="java">public void onServiceConnected(ComponentName name, IBinder service) {
+<pre><code class="language-java">public void onServiceConnected(ComponentName name, IBinder service) {
     log("service name:" + name);
     mDemoServiceBinder = IDemoServiceController.Stub.asInterface(service);
 }
 </code></pre>
 
-<p>是的，这里还是要用那个Stub。然后你只需要在Client中调用mDemoServiceBinder 中的所有方法即可。因为Stub是实现了AIDL中的接口的，所以它提供给你了你定义的所有方法。<br/>
+<p>是的，这里还是要用那个Stub。然后你只需要在Client中调用mDemoServiceBinder 中的所有方法即可。因为Stub是实现了AIDL中的接口的，所以它提供给你了你定义的所有方法。<br />
 <strong>需要注意</strong>：AIDL中定义的方法会抛出RemoteException，所以记得捕获之。</p>
 
-<h3>好奇：“AIDL是怎么实现跨进程方法调用的  ”</h3>
+<p>###好奇：“AIDL是怎么实现跨进程方法调用的  ”
+这里点很类似于java EE中的RMI（Remote Method Invoke）。但是比他轻量级，简单，方便。想知道android中怎么实现RMI的，不妨从上面用的的神器Stub入手。于是我们就打开了sdk tool从aidl生成的java文件。看看Stub到底长啥样！！</p>
 
-<p>这里点很类似于java EE中的RMI（Remote Method Invoke）。但是比他轻量级，简单，方便。想知道android中怎么实现RMI的，不妨从上面用的的神器Stub入手。于是我们就打开了sdk tool从aidl生成的java文件。看看Stub到底长啥样！！</p>
-
-<pre><code class="java">public static abstract class Stub extends android.os.Binder implements com.example.service.IDemoServiceController {
+<pre><code class="language-java">public static abstract class Stub extends android.os.Binder implements com.example.service.IDemoServiceController {
     private static final java.lang.String DESCRIPTOR = "com.example.service.IDemoServiceController";
 
     /**
@@ -737,11 +1048,11 @@ public IBinder onBind(Intent intent) {
     }
 
     private static class Proxy implements com.example.service.IDemoServiceController { ... }
-
+    
     ...
     static final int TRANSACTION_paramInAndOut = (android.os.IBinder.FIRST_CALL_TRANSACTION + 3);
     ...
-
+        
 }
 </code></pre>
 
@@ -753,7 +1064,7 @@ public IBinder onBind(Intent intent) {
 
 <p>举个栗子呗：</p>
 
-<pre><code class="java">@Override
+<pre><code class="language-java">@Override
 public int paramInAndOut(android.os.Bundle bundleIn, android.os.Bundle bundleOut) throws android.os.RemoteException {
     android.os.Parcel _data = android.os.Parcel.obtain();
     android.os.Parcel _reply = android.os.Parcel.obtain();
@@ -782,24 +1093,25 @@ public int paramInAndOut(android.os.Bundle bundleIn, android.os.Bundle bundleOut
 
 <p>吼吼吼，所以就是把参数写进Parcel，调用Binder的transact，再从返回的parcel中取得数据，最后返回。其中readException会捕获service中抛出的异常，然后丢回给client。</p>
 
-<h3>附录——Service回调Client</h3>
-
-<p>通过AIDL可以很方便的让client调用service的方法，但是有时候service需要回调Client。（比如报告任务的进度从而更新进度条。）</p>
+<p>###附录——Service回调Client
+通过AIDL可以很方便的让client调用service的方法，但是有时候service需要回调Client。（比如报告任务的进度从而更新进度条。）</p>
 
 <p>最简单粗暴的方式就是发广播！这个方法怎么样？好啊！真的不错，但是不够轻量级吧。而且有点不够方便。</p>
 
-<blockquote><p>有没有像AIDL中Client调Service中的方法呢，还是那样方便呀！
-答案是：<strong>有！</strong></p></blockquote>
+<blockquote>
+  <p>有没有像AIDL中Client调Service中的方法呢，还是那样方便呀！
+答案是：<strong>有！</strong></p>
+</blockquote>
 
 <p>好了，关子卖完了。说正事！</p>
 
-<p>这里需要定义一个回调函数的AIDL接口（比如 &ldquo;ICallback.aidl&#8221;），然后还要在Client——Service通信的AIDL中添加类似<code>boolean addCallback(in ICallback callback);</code>、<code>void invokeCallback();</code>的方法。</p>
+<p>这里需要定义一个回调函数的AIDL接口（比如 “ICallback.aidl”），然后还要在Client——Service通信的AIDL中添加类似<code>boolean addCallback(in ICallback callback);</code>、<code>void invokeCallback();</code>的方法。</p>
 
 <p>然后你在Client实现一个<code>ICallback.Stub</code>类，在<code>addCallback</code>中把他传给service，service收到之后存下来，当你调用<code>invokeCallback</code>的时候service就会调用刚才传进来的callback。</p>
 
 <p>栗子——Client:</p>
 
-<pre><code class="java">private ICallback mServiceCallback = new ICallback.Stub() {
+<pre><code class="language-java">private ICallback mServiceCallback = new ICallback.Stub() {
     @Override
     public void call(int code) {
         log("pid:" + android.os.Process.myPid());
@@ -821,9 +1133,9 @@ if (mDemoServiceBinder != null) {
 
 <p>栗子——Service：</p>
 
-<pre><code class="java">private class MyBinder extends IDemoServiceController.Stub {
+<pre><code class="language-java">private class MyBinder extends IDemoServiceController.Stub {
 ...
-    @Override
+	@Override
     public boolean addCallback(ICallback callback) throws RemoteException {
         clientCallback = callback;
         return true;
@@ -841,11 +1153,11 @@ if (mDemoServiceBinder != null) {
 
 <p>很简单，就酱！</p>
 
-<h3>参考资料</h3>
+<p>###参考资料
+[API Guide——Service]：http://developer.android.com/guide/components/services.html</p>
 
-<p>[API Guide——Service]：<a href="http://developer.android.com/guide/components/services.html">http://developer.android.com/guide/components/services.html</a></p>
+<p>[API Guide——AIDL]: http://developer.android.com/guide/components/aidl.html</p>
 
-<p>[API Guide——AIDL]: <a href="http://developer.android.com/guide/components/aidl.html">http://developer.android.com/guide/components/aidl.html</a></p>
 ]]></content>
   </entry>
   
@@ -858,83 +1170,112 @@ if (mDemoServiceBinder != null) {
 
 <!--more-->
 
+<p>###WakeLock的创建是：</p>
 
-<h3>WakeLock的创建是：</h3>
-
-<pre><code class="java">
+<pre><code class="language-java">
 PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
 
 Wakelock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
 
         "MyWakelockTag");
+
 </code></pre>
 
 <p>另外如果要使用WakeLock需要在Manifest中添加如下权限</p>
 
 <p><code>&lt;uses-permission android:name="android.permission.WAKE_LOCK" /&gt;</code></p>
 
-<h3>WakeLock的等级</h3>
+<p>###WakeLock的等级</p>
 
 <p>上面的第一个参数是WakeLock levelAndFlag，分别代表了一种WakeLock等级，并且可以通过「或」位操作组合使用。他们是：</p>
 
 <ol>
-<li><p>PARTIAL_WAKE_LOCK：保证CPU保持高性能运行，而屏幕和键盘背光（也可能是触摸按键的背光）关闭。一般情况下都会使用这个WakeLock。</p></li>
-<li><p>ACQUIRE_CAUSES_WAKEUP：这个WakeLock除了会使CPU高性能运行外还会导致屏幕亮起，即使屏幕原先处于关闭的状态下。</p></li>
-<li><p>ON_AFTER_RELEASE：如果释放WakeLock的时候屏幕处于亮着的状态，则在释放WakeLock之后让屏幕再保持亮一小会。如果释放WakeLock的时候屏幕本身就没亮，则不会有动作。</p></li>
+  <li>
+    <p>PARTIAL_WAKE_LOCK：保证CPU保持高性能运行，而屏幕和键盘背光（也可能是触摸按键的背光）关闭。一般情况下都会使用这个WakeLock。</p>
+  </li>
+  <li>
+    <p>ACQUIRE_CAUSES_WAKEUP：这个WakeLock除了会使CPU高性能运行外还会导致屏幕亮起，即使屏幕原先处于关闭的状态下。</p>
+  </li>
+  <li>
+    <p>ON_AFTER_RELEASE：如果释放WakeLock的时候屏幕处于亮着的状态，则在释放WakeLock之后让屏幕再保持亮一小会。如果释放WakeLock的时候屏幕本身就没亮，则不会有动作。</p>
+  </li>
 </ol>
-
 
 <p>被<strong>弃用</strong>的WakeLock：</p>
 
 <ol>
-<li><p>SCREEN_DIM_WAKE_LOCK：保证屏幕亮起，但是亮度可能比较低。同时键盘背光也可以不亮。</p></li>
-<li><p>SCREEN_BRIGHT_WAKE_LOCK ：保证屏幕全亮，同时键盘背光也亮。</p></li>
-<li><p>FULL_WAKE_LOCK：表现和SCREEN_BRIGHT_WAKE_LOCK 类似，但是区别在于这个等级的WakeLock使用的是<strong>最高亮度</strong>！</p></li>
+  <li>
+    <p>SCREEN_DIM_WAKE_LOCK：保证屏幕亮起，但是亮度可能比较低。同时键盘背光也可以不亮。</p>
+  </li>
+  <li>
+    <p>SCREEN_BRIGHT_WAKE_LOCK ：保证屏幕全亮，同时键盘背光也亮。</p>
+  </li>
+  <li>
+    <p>FULL_WAKE_LOCK：表现和SCREEN_BRIGHT_WAKE_LOCK 类似，但是区别在于这个等级的WakeLock使用的是<strong>最高亮度</strong>！</p>
+  </li>
 </ol>
-
 
 <p>这三个Level在API17被弃用。被弃用说明肯定有替代品吗，上面三个类型的作用无非就是保持屏幕长亮。所以推荐是用WindowFlag<code>WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON</code>。使用方法是：</p>
 
 <ol>
-<li><p>在Activity中： <code>getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);</code></p></li>
-<li><p>甚至可以在布局中添加这个属性：<code>android:keepScreenOn="true"</code></p></li>
+  <li>
+    <p>在Activity中： <code>getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);</code></p>
+  </li>
+  <li>
+    <p>甚至可以在布局中添加这个属性：<code>android:keepScreenOn="true"</code></p>
+  </li>
 </ol>
-
 
 <p>被<strong>隐藏</strong>的WakeLock：</p>
 
 <p>android中的部分api并不对用户应用开放，他们通过在注释中加入<code>{@hide}</code>来注明。但是在SDK提供的源代码中是可以看到的。</p>
 
 <ul>
-<li>WAIT_FOR_PROXIMITY_NEGATIVE：用于和接近传感器配合使用，来实现电话应用中打电话时可以使屏幕黑掉，手机离开时又能使屏幕亮起来的功能。acqure的时候屏幕会暗下来，release之后屏幕会亮。其值是32（int）。虽然被hide起来，但是感觉这个超实用的好吗！！！为啥要hide起来。。。「话说在API21 上终于开放了（开放这么晚有个屁用啊(╯‵□′)╯︵┻━┻）」经试验，不过newWakeLock的时候flag直接用32代替是可以创建这个等级的WakeLock的，但是因为是非开放API，不能保证第三方OEM修改这个代码实现！因此使用起来并不安全。「说的好像开放的API第三方OEM就不会乱改一样。。。(╯‵□′)╯︵┻━┻」</li>
+  <li>WAIT_FOR_PROXIMITY_NEGATIVE：用于和接近传感器配合使用，来实现电话应用中打电话时可以使屏幕黑掉，手机离开时又能使屏幕亮起来的功能。acqure的时候屏幕会暗下来，release之后屏幕会亮。其值是32（int）。虽然被hide起来，但是感觉这个超实用的好吗！！！为啥要hide起来。。。「话说在API21 上终于开放了（开放这么晚有个屁用啊(╯‵□′)╯︵┻━┻）」经试验，不过newWakeLock的时候flag直接用32代替是可以创建这个等级的WakeLock的，但是因为是非开放API，不能保证第三方OEM修改这个代码实现！因此使用起来并不安全。「说的好像开放的API第三方OEM就不会乱改一样。。。(╯‵□′)╯︵┻━┻」</li>
 </ul>
 
-
-<h3>WakeLock的使用：</h3>
+<p>###WakeLock的使用：</p>
 
 <ul>
-<li><p>获取WakeLock：</p>
+  <li>
+    <p>获取WakeLock：</p>
 
-<ol>
-<li><p><code>void acquire()</code>:获得WakeLock</p></li>
-<li><p><code>void acquire(long timeOut)</code>:获得WakeLock timeOut时长，当超过timeOut之后系统自动释放WakeLock。</p></li>
-</ol>
-</li>
-<li><p>释放WakeLock：<code>release()</code></p></li>
-<li><p>判断是否已经获取WakeLock：<code>boolean isHeld()</code></p></li>
-<li><p><code>void setReferenceCounted(boolean value)</code>：是否使用引用计数。类似于垃圾回收策略，只是把垃圾回收改成了WakeLock回收。如果value是true的话将启用该特性，如果一个WakeLock acquire了多次也必须release多次才能释放掉。但是如果释放次数比acquire多则会抛出<code>RuntimeException("WakeLock under-locked " + mTag)</code>异常。<strong>默认是开启了引用计数的！</strong></p></li>
+    <ol>
+      <li>
+        <p><code>void acquire()</code>:获得WakeLock</p>
+      </li>
+      <li>
+        <p><code>void acquire(long timeOut)</code>:获得WakeLock timeOut时长，当超过timeOut之后系统自动释放WakeLock。</p>
+      </li>
+    </ol>
+  </li>
+  <li>
+    <p>释放WakeLock：<code>release()</code></p>
+  </li>
+  <li>
+    <p>判断是否已经获取WakeLock：<code>boolean isHeld()</code></p>
+  </li>
+  <li>
+    <p><code>void setReferenceCounted(boolean value)</code>：是否使用引用计数。类似于垃圾回收策略，只是把垃圾回收改成了WakeLock回收。如果value是true的话将启用该特性，如果一个WakeLock acquire了多次也必须release多次才能释放掉。但是如果释放次数比acquire多则会抛出<code>RuntimeException("WakeLock under-locked " + mTag)</code>异常。<strong>默认是开启了引用计数的！</strong></p>
+  </li>
 </ul>
 
-
-<h3>PowerManager的几个实用方法</h3>
+<p>###PowerManager的几个实用方法</p>
 
 <ol>
-<li><p><code>boolean PowerManager::isScreenOn ()</code>判断屏幕是否亮着（不管是暗的dimed还是正常亮度），在API20被弃用，推荐<code>boolean PowerManager::isInteractive ()</code></p></li>
-<li><p><code>void PowerManager::goToSleep(long time)</code>time是时间戳，一般是System.currentTimeMillis()+timeDelay。强制系统立刻休眠，需要Manifest中添加权限<code>"android.permission.DEVICE_POWER"</code>。按下电源键锁屏时调用的就是这个方法。</p></li>
-<li><p><code>void PowerManager::wakeUp(long time)</code>与上面对应。参数含义，所需权限与上同。按下电源键解锁屏幕时调用的就是这个方法。</p></li>
-<li><p><code>void PowerManager::reboot(String reason)</code>重启手机，reason是要传给linux内核的参数，比如“recovery”重启进recovery模式，“fastboot”重启进fastboot模式。需要权限<code>"android.permission.REBOOT"</code>。</p></li>
+  <li>
+    <p><code>boolean PowerManager::isScreenOn ()</code>判断屏幕是否亮着（不管是暗的dimed还是正常亮度），在API20被弃用，推荐<code>boolean PowerManager::isInteractive ()</code></p>
+  </li>
+  <li>
+    <p><code>void PowerManager::goToSleep(long time)</code>time是时间戳，一般是System.currentTimeMillis()+timeDelay。强制系统立刻休眠，需要Manifest中添加权限<code>"android.permission.DEVICE_POWER"</code>。按下电源键锁屏时调用的就是这个方法。</p>
+  </li>
+  <li>
+    <p><code>void PowerManager::wakeUp(long time)</code>与上面对应。参数含义，所需权限与上同。按下电源键解锁屏幕时调用的就是这个方法。</p>
+  </li>
+  <li>
+    <p><code>void PowerManager::reboot(String reason)</code>重启手机，reason是要传给linux内核的参数，比如“recovery”重启进recovery模式，“fastboot”重启进fastboot模式。需要权限<code>"android.permission.REBOOT"</code>。</p>
+  </li>
 </ol>
-
 ]]></content>
   </entry>
   
@@ -948,7 +1289,7 @@ Wakelock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
 <p><strong>获取短信的原始数据：</strong>
 原始数据被叫做<a href="http://en.wikipedia.org/wiki/Protocol_data_unit">PDU</a>，一个PDU就是一个数据段，如果短信比较长的话可能是由几个PDU组成的。</p>
 
-<pre><code class="java">@Override
+<pre><code class="language-java">@Override
 public void onReceive(Context context, Intent intent) {
     //监听到验证码短信后自动填写验证码
     Log.i(TAG, "SMSBroadcastReceiver SMS_RECEIVED");
@@ -962,17 +1303,16 @@ public void onReceive(Context context, Intent intent) {
 
 <!--more-->
 
-
 <p>上面的<code>smsBundle.get("pdus")</code>返回的实际类型是<code>byte[][]</code>，二位数组的每一个子数组就是一个pdu。</p>
 
 <p><strong>解码短信内容：</strong>
 这里主要使用到的是<a href="http://developer.android.com/reference/android/telephony/SmsMessage.html#createFromPdu(byte[])"><code>SmsMessage.createFromPdu</code></a>方法。</p>
 
-<pre><code class="java">private String parseMessageFromRawData(Object[] pdus) {
+<pre><code class="language-java">private String parseMessageFromRawData(Object[] pdus) {
     if (pdus == null) return null;
 
     try {
-        StringBuilder message = new StringBuilder();
+	    StringBuilder message = new StringBuilder();
         for (Object pdu : pdus) {
             SmsMessage smsMessage = SmsMessage.createFromPdu((byte[]) pdu);
             if (smsMessage == null) continue;
@@ -998,7 +1338,7 @@ public void onReceive(Context context, Intent intent) {
 
 <p>出于好奇我看了一眼<a href="http://developer.android.com/reference/android/telephony/SmsMessage.html#createFromPdu(byte[])"><code>SmsMessage.createFromPdu</code></a>的代码实现，发现他本身就做了制式判断的（=_=!），代码写的还是不错的，粘出来。万一以后这个方法被废弃了，还有个参考。</p>
 
-<pre><code class="java">public static SmsMessage createFromPdu(byte[] pdu) {
+<pre><code class="language-java">public static SmsMessage createFromPdu(byte[] pdu) {
      SmsMessage message = null;
 
     // cdma(3gpp2) vs gsm(3gpp) format info was not given,
@@ -1017,96 +1357,6 @@ public void onReceive(Context context, Intent intent) {
     return message;
 }
 </code></pre>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[安卓中传感器的使用]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/09/10/an-zhuo-zhong-chuan-gan-qi-de-shi-yong/"/>
-    <updated>2014-09-10T10:12:22+08:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/09/10/an-zhuo-zhong-chuan-gan-qi-de-shi-yong</id>
-    <content type="html"><![CDATA[<p>由于需要一个像系统电话应用那样：打电话时可以使屏幕黑掉，手机离开时又能使屏幕亮起来的功能。所以需要能够获取「接近传感器」的数据。</p>
-
-<p>Android中的传感器只是一个抽象，它可能是硬件传感器，也可能是通过软件模拟的一个传感器。但是不管哪一种，对程序员来说都是一样的。</p>
-
-<p>Android中的传感器分为两类：</p>
-
-<ul>
-<li><p>连续性的传感器 比如：接近传感器，加速度传感器等。可以连续的反馈数据</p></li>
-<li><p>触发性的传感器 比如：significant motion sensor（好吧，我不知道他是啥；看名字貌似是监听用户的什么动作的）。总之就是那种会再特定情况下触发的传感器。</p></li>
-</ul>
-
-
-<!--more-->
-
-
-<p>Sensor的使用过程如下：</p>
-
-<pre><code class="java">public class SensorActivity extends Activity implements SensorEventListener {
-    private final SensorManager mSensorManager;
-    private final Sensor mAccelerometer;
-
-    public SensorActivity() {
-        //获取SensorManager
-        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        //获取对应的Sensor
-        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-    }
-
-    protected void onResume() {
-        super.onResume();
-        //注册一个Sensor的监听器，监听器的回调函数是在主线程中被调用的，因此要尽量避免阻塞主线程！
-        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
-    }
-
-    protected void onPause() {
-        super.onPause();
-        //取消注册一个Sensor的监听器
-        mSensorManager.unregisterListener(this);
-    }
-
-    /**
-     * SensorEventListener的回调方法
-     *
-     * @param sensor
-     * @param accuracy
-     */
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-    }
-
-    /**
-     * SensorEventListener的回调方法
-     *
-     * @param event
-     */
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        float[] values = event.values;
-        /**
-         * 这是传感器传送来的数据，根据不同的传感器，其值和数组长度会有所不同。
-         */
-    }
-}
-</code></pre>
-
-<p>上面的注册监听器是针对以连续性的传感器，如果是触发性的传感器相应的换成：</p>
-
-<ul>
-<li><p>注册： <a href="http://developer.android.com/reference/android/hardware/SensorManager.html#requestTriggerSensor(android.hardware.TriggerEventListener,%20android.hardware.Sensor"><code>boolean SensorManager::requestTriggerSensor(TriggerEventListener listener, Sensor sensor)</code></a></p></li>
-<li><p>取消注册：<a href="http://developer.android.com/reference/android/hardware/SensorManager.html#cancelTriggerSensor(android.hardware.TriggerEventListener,%20android.hardware.Sensor"><code>boolean SensorManager::cancelTriggerSensor(TriggerEventListener listener, Sensor sensor)</code></a></p></li>
-<li><p>监听器：<a href="http://developer.android.com/reference/android/hardware/TriggerEventListener.html"><code>TriggerEventListener</code></a></p></li>
-</ul>
-
-
-<p>上面registerListener中最后一个参数是传感器的频率，频率越高单位时间内数据采集就越多，相应的也就更费电！频率从高到低分别是：</p>
-
-<ol>
-<li><p><code>SensorManager.SENSOR_DELAY_FASTEST</code> : 获取数据尽可能的快</p></li>
-<li><p><code>SensorManager.SENSOR_DELAY_GAME</code> : 适合游戏的频率</p></li>
-<li><p><code>SensorManager.SENSOR_DELAY_NORMAL</code>： 正常的频率，一般实时性要求不高都可以用这个设定。</p></li>
-<li><p><code>SensorManager.SENSOR_DELAY_UI</code>：适合普通用户界面的平率。由于频率低，所以，延时大，但是也会更省电。</p></li>
-</ol>
 
 ]]></content>
   </entry>

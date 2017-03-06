@@ -86,83 +86,78 @@
 <p><strong>获取短信的原始数据：</strong>
 原始数据被叫做<a href="http://en.wikipedia.org/wiki/Protocol_data_unit">PDU</a>，一个PDU就是一个数据段，如果短信比较长的话可能是由几个PDU组成的。</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="nd">@Override</span>
-</span><span class='line'><span class="kd">public</span> <span class="kt">void</span> <span class="nf">onReceive</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">,</span> <span class="n">Intent</span> <span class="n">intent</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="c1">//监听到验证码短信后自动填写验证码</span>
-</span><span class='line'>    <span class="n">Log</span><span class="o">.</span><span class="na">i</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="s">&quot;SMSBroadcastReceiver SMS_RECEIVED&quot;</span><span class="o">);</span>
-</span><span class='line'>    <span class="n">Bundle</span> <span class="n">smsBundle</span> <span class="o">=</span> <span class="n">intent</span><span class="o">.</span><span class="na">getExtras</span><span class="o">();</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">smsBundle</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">Object</span><span class="o">[]</span> <span class="n">pdus</span> <span class="o">=</span> <span class="o">(</span><span class="n">Object</span><span class="o">[])</span> <span class="n">smsBundle</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;pdus&quot;</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="nd">@Override</span>
+</span><span class="line"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">onReceive</span><span class="o">(</span><span class="n">Context</span> <span class="n">context</span><span class="o">,</span> <span class="n">Intent</span> <span class="n">intent</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">    <span class="c1">//监听到验证码短信后自动填写验证码</span>
+</span><span class="line">    <span class="n">Log</span><span class="o">.</span><span class="na">i</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="s">&quot;SMSBroadcastReceiver SMS_RECEIVED&quot;</span><span class="o">);</span>
+</span><span class="line">    <span class="n">Bundle</span> <span class="n">smsBundle</span> <span class="o">=</span> <span class="n">intent</span><span class="o">.</span><span class="na">getExtras</span><span class="o">();</span>
+</span><span class="line">
+</span><span class="line">    <span class="k">if</span> <span class="o">(</span><span class="n">smsBundle</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">        <span class="n">Object</span><span class="o">[]</span> <span class="n">pdus</span> <span class="o">=</span> <span class="o">(</span><span class="n">Object</span><span class="o">[])</span> <span class="n">smsBundle</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="s">&quot;pdus&quot;</span><span class="o">);</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 <!--more-->
-
 
 <p>上面的<code>smsBundle.get("pdus")</code>返回的实际类型是<code>byte[][]</code>，二位数组的每一个子数组就是一个pdu。</p>
 
 <p><strong>解码短信内容：</strong>
 这里主要使用到的是<a href="http://developer.android.com/reference/android/telephony/SmsMessage.html#createFromPdu(byte[])"><code>SmsMessage.createFromPdu</code></a>方法。</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">private</span> <span class="n">String</span> <span class="nf">parseMessageFromRawData</span><span class="o">(</span><span class="n">Object</span><span class="o">[]</span> <span class="n">pdus</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="n">pdus</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">try</span> <span class="o">{</span>
-</span><span class='line'>      <span class="n">StringBuilder</span> <span class="n">message</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">StringBuilder</span><span class="o">();</span>
-</span><span class='line'>        <span class="k">for</span> <span class="o">(</span><span class="n">Object</span> <span class="n">pdu</span> <span class="o">:</span> <span class="n">pdus</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>            <span class="n">SmsMessage</span> <span class="n">smsMessage</span> <span class="o">=</span> <span class="n">SmsMessage</span><span class="o">.</span><span class="na">createFromPdu</span><span class="o">((</span><span class="kt">byte</span><span class="o">[])</span> <span class="n">pdu</span><span class="o">);</span>
-</span><span class='line'>            <span class="k">if</span> <span class="o">(</span><span class="n">smsMessage</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">continue</span><span class="o">;</span>
-</span><span class='line'>            <span class="n">message</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">smsMessage</span><span class="o">.</span><span class="na">getDisplayMessageBody</span><span class="o">());</span>
-</span><span class='line'>        <span class="o">}</span>
-</span><span class='line'>        <span class="k">return</span> <span class="n">message</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">Log</span><span class="o">.</span><span class="na">e</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="s">&quot;SMSBroadcastReceiver read sms failed&quot;</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">OutOfMemoryError</span> <span class="n">oom</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="n">Log</span><span class="o">.</span><span class="na">e</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="s">&quot;SMSBroadcastReceiver caused OOM =_=!&quot;</span><span class="o">,</span> <span class="n">oom</span><span class="o">);</span>
-</span><span class='line'>        <span class="c1">//为了避免后续操作出现问题，gc一下</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">gc</span><span class="o">();</span>
-</span><span class='line'>        <span class="n">System</span><span class="o">.</span><span class="na">gc</span><span class="o">();</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>    <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="kd">private</span> <span class="n">String</span> <span class="nf">parseMessageFromRawData</span><span class="o">(</span><span class="n">Object</span><span class="o">[]</span> <span class="n">pdus</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">    <span class="k">if</span> <span class="o">(</span><span class="n">pdus</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class="line">
+</span><span class="line">    <span class="k">try</span> <span class="o">{</span>
+</span><span class="line">	    <span class="n">StringBuilder</span> <span class="n">message</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">StringBuilder</span><span class="o">();</span>
+</span><span class="line">        <span class="k">for</span> <span class="o">(</span><span class="n">Object</span> <span class="n">pdu</span> <span class="o">:</span> <span class="n">pdus</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">            <span class="n">SmsMessage</span> <span class="n">smsMessage</span> <span class="o">=</span> <span class="n">SmsMessage</span><span class="o">.</span><span class="na">createFromPdu</span><span class="o">((</span><span class="kt">byte</span><span class="o">[])</span> <span class="n">pdu</span><span class="o">);</span>
+</span><span class="line">            <span class="k">if</span> <span class="o">(</span><span class="n">smsMessage</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="k">continue</span><span class="o">;</span>
+</span><span class="line">            <span class="n">message</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">smsMessage</span><span class="o">.</span><span class="na">getDisplayMessageBody</span><span class="o">());</span>
+</span><span class="line">        <span class="o">}</span>
+</span><span class="line">        <span class="k">return</span> <span class="n">message</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
+</span><span class="line">    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">        <span class="n">Log</span><span class="o">.</span><span class="na">e</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="s">&quot;SMSBroadcastReceiver read sms failed&quot;</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+</span><span class="line">    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">OutOfMemoryError</span> <span class="n">oom</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">        <span class="n">Log</span><span class="o">.</span><span class="na">e</span><span class="o">(</span><span class="n">TAG</span><span class="o">,</span> <span class="s">&quot;SMSBroadcastReceiver caused OOM =_=!&quot;</span><span class="o">,</span> <span class="n">oom</span><span class="o">);</span>
+</span><span class="line">        <span class="c1">//为了避免后续操作出现问题，gc一下</span>
+</span><span class="line">        <span class="n">System</span><span class="o">.</span><span class="na">gc</span><span class="o">();</span>
+</span><span class="line">        <span class="n">System</span><span class="o">.</span><span class="na">gc</span><span class="o">();</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">    <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 <p>上面的重点就是<code>SmsMessage smsMessage = SmsMessage.createFromPdu((byte[]) pdu);</code>这一句了。需要注意的是这个操作容易导致OOM（已经有好多Crash上报了。。。），所以要特别处理一下。</p>
 
@@ -171,45 +166,43 @@
 
 <p>出于好奇我看了一眼<a href="http://developer.android.com/reference/android/telephony/SmsMessage.html#createFromPdu(byte[])"><code>SmsMessage.createFromPdu</code></a>的代码实现，发现他本身就做了制式判断的（=_=!），代码写的还是不错的，粘出来。万一以后这个方法被废弃了，还有个参考。</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="kd">public</span> <span class="kd">static</span> <span class="n">SmsMessage</span> <span class="nf">createFromPdu</span><span class="o">(</span><span class="kt">byte</span><span class="o">[]</span> <span class="n">pdu</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>     <span class="n">SmsMessage</span> <span class="n">message</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="c1">// cdma(3gpp2) vs gsm(3gpp) format info was not given,</span>
-</span><span class='line'>    <span class="c1">// guess from active voice phone type</span>
-</span><span class='line'>    <span class="kt">int</span> <span class="n">activePhone</span> <span class="o">=</span> <span class="n">TelephonyManager</span><span class="o">.</span><span class="na">getDefault</span><span class="o">().</span><span class="na">getCurrentPhoneType</span><span class="o">();</span>
-</span><span class='line'>    <span class="n">String</span> <span class="n">format</span> <span class="o">=</span> <span class="o">(</span><span class="n">PHONE_TYPE_CDMA</span> <span class="o">==</span> <span class="n">activePhone</span><span class="o">)</span> <span class="o">?</span>
-</span><span class='line'>            <span class="n">SmsConstants</span><span class="o">.</span><span class="na">FORMAT_3GPP2</span> <span class="o">:</span> <span class="n">SmsConstants</span><span class="o">.</span><span class="na">FORMAT_3GPP</span><span class="o">;</span>
-</span><span class='line'>    <span class="n">message</span> <span class="o">=</span> <span class="n">createFromPdu</span><span class="o">(</span><span class="n">pdu</span><span class="o">,</span> <span class="n">format</span><span class="o">);</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">if</span> <span class="o">(</span><span class="kc">null</span> <span class="o">==</span> <span class="n">message</span> <span class="o">||</span> <span class="kc">null</span> <span class="o">==</span> <span class="n">message</span><span class="o">.</span><span class="na">mWrappedSmsMessage</span><span class="o">)</span> <span class="o">{</span>
-</span><span class='line'>        <span class="c1">// decoding pdu failed based on activePhone type, must be other format</span>
-</span><span class='line'>        <span class="n">format</span> <span class="o">=</span> <span class="o">(</span><span class="n">PHONE_TYPE_CDMA</span> <span class="o">==</span> <span class="n">activePhone</span><span class="o">)</span> <span class="o">?</span>
-</span><span class='line'>                <span class="n">SmsConstants</span><span class="o">.</span><span class="na">FORMAT_3GPP</span> <span class="o">:</span> <span class="n">SmsConstants</span><span class="o">.</span><span class="na">FORMAT_3GPP2</span><span class="o">;</span>
-</span><span class='line'>        <span class="n">message</span> <span class="o">=</span> <span class="n">createFromPdu</span><span class="o">(</span><span class="n">pdu</span><span class="o">,</span> <span class="n">format</span><span class="o">);</span>
-</span><span class='line'>    <span class="o">}</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">message</span><span class="o">;</span>
-</span><span class='line'><span class="o">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+</pre></td><td class="code"><pre><code class="java"><span class="line"><span class="kd">public</span> <span class="kd">static</span> <span class="n">SmsMessage</span> <span class="nf">createFromPdu</span><span class="o">(</span><span class="kt">byte</span><span class="o">[]</span> <span class="n">pdu</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">     <span class="n">SmsMessage</span> <span class="n">message</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+</span><span class="line">
+</span><span class="line">    <span class="c1">// cdma(3gpp2) vs gsm(3gpp) format info was not given,</span>
+</span><span class="line">    <span class="c1">// guess from active voice phone type</span>
+</span><span class="line">    <span class="kt">int</span> <span class="n">activePhone</span> <span class="o">=</span> <span class="n">TelephonyManager</span><span class="o">.</span><span class="na">getDefault</span><span class="o">().</span><span class="na">getCurrentPhoneType</span><span class="o">();</span>
+</span><span class="line">    <span class="n">String</span> <span class="n">format</span> <span class="o">=</span> <span class="o">(</span><span class="n">PHONE_TYPE_CDMA</span> <span class="o">==</span> <span class="n">activePhone</span><span class="o">)</span> <span class="o">?</span>
+</span><span class="line">            <span class="n">SmsConstants</span><span class="o">.</span><span class="na">FORMAT_3GPP2</span> <span class="o">:</span> <span class="n">SmsConstants</span><span class="o">.</span><span class="na">FORMAT_3GPP</span><span class="o">;</span>
+</span><span class="line">    <span class="n">message</span> <span class="o">=</span> <span class="n">createFromPdu</span><span class="o">(</span><span class="n">pdu</span><span class="o">,</span> <span class="n">format</span><span class="o">);</span>
+</span><span class="line">
+</span><span class="line">    <span class="k">if</span> <span class="o">(</span><span class="kc">null</span> <span class="o">==</span> <span class="n">message</span> <span class="o">||</span> <span class="kc">null</span> <span class="o">==</span> <span class="n">message</span><span class="o">.</span><span class="na">mWrappedSmsMessage</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="line">        <span class="c1">// decoding pdu failed based on activePhone type, must be other format</span>
+</span><span class="line">        <span class="n">format</span> <span class="o">=</span> <span class="o">(</span><span class="n">PHONE_TYPE_CDMA</span> <span class="o">==</span> <span class="n">activePhone</span><span class="o">)</span> <span class="o">?</span>
+</span><span class="line">                <span class="n">SmsConstants</span><span class="o">.</span><span class="na">FORMAT_3GPP</span> <span class="o">:</span> <span class="n">SmsConstants</span><span class="o">.</span><span class="na">FORMAT_3GPP2</span><span class="o">;</span>
+</span><span class="line">        <span class="n">message</span> <span class="o">=</span> <span class="n">createFromPdu</span><span class="o">(</span><span class="n">pdu</span><span class="o">,</span> <span class="n">format</span><span class="o">);</span>
+</span><span class="line">    <span class="o">}</span>
+</span><span class="line">    <span class="k">return</span> <span class="n">message</span><span class="o">;</span>
+</span><span class="line"><span class="o">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 </div>
 
@@ -241,7 +234,7 @@
 			</div>
 			<footer id="footer" class="inner">
 <p>
-  Copyright &copy; 2016 - LanderlYoung -
+  Copyright &copy; 2017 - LanderlYoung -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 </footer>
@@ -287,6 +280,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/03/08/android-zhi-chi-ping-mu-xuan-zhuan-de-fang-shi/">Android 支持屏幕旋转的方式</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/01/11/re-lambda-ce-shi-bao-gao/">Retro-lambda 测试报告</a>
       </li>
     
@@ -302,39 +299,35 @@
         <a href="/blog/2014/11/09/androidzhong-servicede-shi-yong/">Android中service的使用</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/10/31/androidzhong-de-wakelockshi-yong/">Android中的WakeLock使用</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/android/'>android (9)</a></li><li><a href='/blog/categories/git/'>git (2)</a></li><li><a href='/blog/categories/html5/'>html5 (5)</a></li><li><a href='/blog/categories/java/'>java (4)</a></li><li><a href='/blog/categories/javascript/'>javascript (3)</a></li><li><a href='/blog/categories/linux/'>linux (7)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/android/'>android (10)</a></li><li><a href='/blog/categories/git/'>git (2)</a></li><li><a href='/blog/categories/html5/'>html5 (5)</a></li><li><a href='/blog/categories/java/'>java (4)</a></li><li><a href='/blog/categories/javascript/'>javascript (3)</a></li><li><a href='/blog/categories/linux/'>linux (7)</a></li></ul>
 </section>
 <section>
 	<h1>Tags</h1>
 	<ul class="tag-cloud">
-		<li><a style="font-size: 105.1%" href="/tags/android/">Android</a></li>
-<li><a style="font-size: 103.6%" href="/tags/linux/">Linux</a></li>
-<li><a style="font-size: 107.6%" href="/tags/html5/">HTML5</a></li>
-<li><a style="font-size: 87.2%" href="/tags/java/">Java</a></li>
-<li><a style="font-size: 74.2%" href="/tags/node-dot-js/">Node.js</a></li>
-<li><a style="font-size: 100.3%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
-<li><a style="font-size: 92.3%" href="/tags/java/">java</a></li>
-<li><a style="font-size: 113.9%" href="/tags/android/">android</a></li>
-<li><a style="font-size: 106.1%" href="/tags/git/">Git</a></li>
-<li><a style="font-size: 118.1%" href="/tags/vim/">Vim</a></li>
-<li><a style="font-size: 82.6%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
-<li><a style="font-size: 113.2%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
-<li><a style="font-size: 98.1%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
-<li><a style="font-size: 81.9%" href="/tags/tencent/">tencent</a></li>
-<li><a style="font-size: 89.5%" href="/tags/zhuan-tie/">转贴</a></li>
-<li><a style="font-size: 119.2%" href="/tags/sensor/">sensor</a></li>
-<li><a style="font-size: 118.6%" href="/tags/ui/">UI</a></li>
-<li><a style="font-size: 116.7%" href="/tags/svg/">SVG</a></li>
-<li><a style="font-size: 110.5%" href="/tags/intellij/">IntelliJ</a></li>
-<li><a style="font-size: 74.9%" href="/tags/jni/">JNI</a></li>
+		<li><a style="font-size: 119.4%" href="/tags/android/">Android</a></li>
+<li><a style="font-size: 72.5%" href="/tags/linux/">Linux</a></li>
+<li><a style="font-size: 104.3%" href="/tags/html5/">HTML5</a></li>
+<li><a style="font-size: 102.5%" href="/tags/java/">Java</a></li>
+<li><a style="font-size: 114.7%" href="/tags/node-dot-js/">Node.js</a></li>
+<li><a style="font-size: 90.8%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
+<li><a style="font-size: 74.0%" href="/tags/java/">java</a></li>
+<li><a style="font-size: 75.6%" href="/tags/android/">android</a></li>
+<li><a style="font-size: 108.5%" href="/tags/git/">Git</a></li>
+<li><a style="font-size: 88.3%" href="/tags/vim/">Vim</a></li>
+<li><a style="font-size: 81.9%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
+<li><a style="font-size: 90.1%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
+<li><a style="font-size: 77.6%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
+<li><a style="font-size: 75.8%" href="/tags/tencent/">tencent</a></li>
+<li><a style="font-size: 91.5%" href="/tags/zhuan-tie/">转贴</a></li>
+<li><a style="font-size: 95.3%" href="/tags/sensor/">sensor</a></li>
+<li><a style="font-size: 79.0%" href="/tags/ui/">UI</a></li>
+<li><a style="font-size: 82.1%" href="/tags/svg/">SVG</a></li>
+<li><a style="font-size: 75.4%" href="/tags/intellij/">IntelliJ</a></li>
+<li><a style="font-size: 105.9%" href="/tags/jni/">JNI</a></li>
 
 	</ul>
 </section>

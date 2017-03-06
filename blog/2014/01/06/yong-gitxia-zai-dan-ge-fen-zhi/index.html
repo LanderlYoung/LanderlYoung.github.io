@@ -82,76 +82,55 @@
 	<h1 class="title" itemprop="name">用git下载单个分支</h1>
 	<div class="entry-content" itemprop="articleBody"><p>最近在玩octpress。开始一直在我的Debian系统里面玩的，后来因为一夹些软件必须在windows下面跑，只能在虚拟机里写博客了。然后就打算把github上的网页项目下载下来。但是这个项目有点不一样。github.io的博客项目有两个分支，master和source;其实他们根本不是分支的概念，没有什么交集的。在octpress项目文件夹里面是source分支里的内容，除了_deploy目录内的东西是用gitignore忽略的，_deploy里面的内容就是master分支的东西了。</p>
 
-<p>所以我的需求是把两个分支单独下载下来，开始的方案失败（其实是不完美），后来搜了好多东西在stackoverflow上面找到了解决方案。</p>
-
-<!--more-->
-
+<p>所以我的需求是把两个分支单独下载下来，开始的方案失败（其实是不完美），后来搜了好多东西在stackoverflow上面找到了解决方案。
+<!--more--></p>
 
 <hr />
 
-<p> 1.新建一个文件夹，假设名字是blog</p>
+<p>1.新建一个文件夹，假设名字是blog</p>
 
-<p> 2.cd进去输入</p>
-
+<p>2.cd进去输入</p>
 <pre>
-    git init
+	git init
 </pre>
 
-
-<p> 3.配置git，比如</p>
-
+<p>3.配置git，比如</p>
 <pre>
-    git remote add origin git@xxx
+	git remote add origin git@xxx
 </pre>
 
-
-<p> 4.然后是</p>
-
+<p>4.然后是</p>
 <pre>
-    git fetch origin
+	git fetch origin
+</pre>
+<p>把仓库的状态取回来</p>
+
+<p>5.因为_deploy目录里面也是这个项目，所以索性把.git目录复制进去</p>
+<pre>
+	cp -r .git _deploy/
 </pre>
 
-
-<p>   把仓库的状态取回来</p>
-
-<p> 5.因为_deploy目录里面也是这个项目，所以索性把.git目录复制进去</p>
-
+<p>6.然后是下载分支，可以使用</p>
 <pre>
-    cp -r .git _deploy/
+	git branch -b branch_name origin/source
+</pre>
+<p>从source分支新建一个分支。或者简单点，用：</p>
+<pre>
+	git branch -t origin/source
+</pre>
+<p>直接吧source分支搞下来，其作用等同于</p>
+<pre>
+	git branch -b source origin/source
 </pre>
 
-
-<p> 6.然后是下载分支，可以使用</p>
-
+<p>7.cd 到_deploy目录，干同样的事</p>
 <pre>
-    git branch -b branch_name origin/source
+	git branch -t origin/source
 </pre>
-
-
-<p>   从source分支新建一个分支。或者简单点，用：</p>
-
-<pre>
-    git branch -t origin/source
-</pre>
-
-
-<p>   直接吧source分支搞下来，其作用等同于</p>
-
-<pre>
-    git branch -b source origin/source
-</pre>
-
-
-<p> 7.cd 到_deploy目录，干同样的事</p>
-
-<pre>
-    git branch -t origin/source
-</pre>
-
-
 <p>这样两个分支就放到了不同的目录里面，接着按照octpress官方教程安装jekyll和rake等就可以开始博客了！</p>
 
 <p>对了，顺便提一句。Debian里不允许使用gem安装ruby软件，只能使用apt安装bundler之类的东西。不过我在fedoral和基于Ubuntu的Deepin Linux上都没发现这个问题。</p>
+
 </div>
 
 </article>
@@ -182,7 +161,7 @@
 			</div>
 			<footer id="footer" class="inner">
 <p>
-  Copyright &copy; 2016 - LanderlYoung -
+  Copyright &copy; 2017 - LanderlYoung -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 </footer>
@@ -228,6 +207,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/03/08/android-zhi-chi-ping-mu-xuan-zhuan-de-fang-shi/">Android 支持屏幕旋转的方式</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/01/11/re-lambda-ce-shi-bao-gao/">Retro-lambda 测试报告</a>
       </li>
     
@@ -243,39 +226,35 @@
         <a href="/blog/2014/11/09/androidzhong-servicede-shi-yong/">Android中service的使用</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/10/31/androidzhong-de-wakelockshi-yong/">Android中的WakeLock使用</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/android/'>android (9)</a></li><li><a href='/blog/categories/git/'>git (2)</a></li><li><a href='/blog/categories/html5/'>html5 (5)</a></li><li><a href='/blog/categories/java/'>java (4)</a></li><li><a href='/blog/categories/javascript/'>javascript (3)</a></li><li><a href='/blog/categories/linux/'>linux (7)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/android/'>android (10)</a></li><li><a href='/blog/categories/git/'>git (2)</a></li><li><a href='/blog/categories/html5/'>html5 (5)</a></li><li><a href='/blog/categories/java/'>java (4)</a></li><li><a href='/blog/categories/javascript/'>javascript (3)</a></li><li><a href='/blog/categories/linux/'>linux (7)</a></li></ul>
 </section>
 <section>
 	<h1>Tags</h1>
 	<ul class="tag-cloud">
-		<li><a style="font-size: 107.2%" href="/tags/android/">Android</a></li>
-<li><a style="font-size: 110.7%" href="/tags/linux/">Linux</a></li>
-<li><a style="font-size: 70.6%" href="/tags/html5/">HTML5</a></li>
-<li><a style="font-size: 85.1%" href="/tags/java/">Java</a></li>
-<li><a style="font-size: 86.3%" href="/tags/node-dot-js/">Node.js</a></li>
-<li><a style="font-size: 117.7%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
-<li><a style="font-size: 119.7%" href="/tags/java/">java</a></li>
-<li><a style="font-size: 94.2%" href="/tags/android/">android</a></li>
-<li><a style="font-size: 86.2%" href="/tags/git/">Git</a></li>
-<li><a style="font-size: 93.1%" href="/tags/vim/">Vim</a></li>
-<li><a style="font-size: 73.2%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
-<li><a style="font-size: 77.0%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
-<li><a style="font-size: 85.2%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
-<li><a style="font-size: 95.3%" href="/tags/tencent/">tencent</a></li>
-<li><a style="font-size: 73.1%" href="/tags/zhuan-tie/">转贴</a></li>
-<li><a style="font-size: 74.8%" href="/tags/sensor/">sensor</a></li>
-<li><a style="font-size: 73.5%" href="/tags/ui/">UI</a></li>
-<li><a style="font-size: 91.9%" href="/tags/svg/">SVG</a></li>
-<li><a style="font-size: 89.1%" href="/tags/intellij/">IntelliJ</a></li>
-<li><a style="font-size: 119.7%" href="/tags/jni/">JNI</a></li>
+		<li><a style="font-size: 101.5%" href="/tags/android/">Android</a></li>
+<li><a style="font-size: 71.9%" href="/tags/linux/">Linux</a></li>
+<li><a style="font-size: 100.5%" href="/tags/html5/">HTML5</a></li>
+<li><a style="font-size: 88.5%" href="/tags/java/">Java</a></li>
+<li><a style="font-size: 110.9%" href="/tags/node-dot-js/">Node.js</a></li>
+<li><a style="font-size: 102.7%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
+<li><a style="font-size: 73.1%" href="/tags/java/">java</a></li>
+<li><a style="font-size: 112.6%" href="/tags/android/">android</a></li>
+<li><a style="font-size: 93.0%" href="/tags/git/">Git</a></li>
+<li><a style="font-size: 110.8%" href="/tags/vim/">Vim</a></li>
+<li><a style="font-size: 99.1%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
+<li><a style="font-size: 79.8%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
+<li><a style="font-size: 94.7%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
+<li><a style="font-size: 97.3%" href="/tags/tencent/">tencent</a></li>
+<li><a style="font-size: 101.1%" href="/tags/zhuan-tie/">转贴</a></li>
+<li><a style="font-size: 95.5%" href="/tags/sensor/">sensor</a></li>
+<li><a style="font-size: 84.9%" href="/tags/ui/">UI</a></li>
+<li><a style="font-size: 102.7%" href="/tags/svg/">SVG</a></li>
+<li><a style="font-size: 105.3%" href="/tags/intellij/">IntelliJ</a></li>
+<li><a style="font-size: 97.2%" href="/tags/jni/">JNI</a></li>
 
 	</ul>
 </section>

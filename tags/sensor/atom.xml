@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: sensor | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/tags/sensor/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2016-01-11T23:46:35+08:00</updated>
+  <updated>2017-03-07T01:39:44+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -25,17 +25,19 @@
 <p>Android中的传感器分为两类：</p>
 
 <ul>
-<li><p>连续性的传感器 比如：接近传感器，加速度传感器等。可以连续的反馈数据</p></li>
-<li><p>触发性的传感器 比如：significant motion sensor（好吧，我不知道他是啥；看名字貌似是监听用户的什么动作的）。总之就是那种会再特定情况下触发的传感器。</p></li>
+  <li>
+    <p>连续性的传感器 比如：接近传感器，加速度传感器等。可以连续的反馈数据</p>
+  </li>
+  <li>
+    <p>触发性的传感器 比如：significant motion sensor（好吧，我不知道他是啥；看名字貌似是监听用户的什么动作的）。总之就是那种会再特定情况下触发的传感器。</p>
+  </li>
 </ul>
-
 
 <!--more-->
 
-
 <p>Sensor的使用过程如下：</p>
 
-<pre><code class="java">public class SensorActivity extends Activity implements SensorEventListener {
+<pre><code class="language-java">public class SensorActivity extends Activity implements SensorEventListener {
     private final SensorManager mSensorManager;
     private final Sensor mAccelerometer;
 
@@ -86,19 +88,32 @@
 <p>上面的注册监听器是针对以连续性的传感器，如果是触发性的传感器相应的换成：</p>
 
 <ul>
-<li><p>注册： <a href="http://developer.android.com/reference/android/hardware/SensorManager.html#requestTriggerSensor(android.hardware.TriggerEventListener,%20android.hardware.Sensor"><code>boolean SensorManager::requestTriggerSensor(TriggerEventListener listener, Sensor sensor)</code></a></p></li>
-<li><p>取消注册：<a href="http://developer.android.com/reference/android/hardware/SensorManager.html#cancelTriggerSensor(android.hardware.TriggerEventListener,%20android.hardware.Sensor"><code>boolean SensorManager::cancelTriggerSensor(TriggerEventListener listener, Sensor sensor)</code></a></p></li>
-<li><p>监听器：<a href="http://developer.android.com/reference/android/hardware/TriggerEventListener.html"><code>TriggerEventListener</code></a></p></li>
+  <li>
+    <p>注册： [<code>boolean SensorManager::requestTriggerSensor(TriggerEventListener listener, Sensor sensor)</code>](http://developer.android.com/reference/android/hardware/SensorManager.html#requestTriggerSensor(android.hardware.TriggerEventListener, android.hardware.Sensor)</p>
+  </li>
+  <li>
+    <p>取消注册：[<code>boolean SensorManager::cancelTriggerSensor(TriggerEventListener listener, Sensor sensor)</code>](http://developer.android.com/reference/android/hardware/SensorManager.html#cancelTriggerSensor(android.hardware.TriggerEventListener, android.hardware.Sensor)</p>
+  </li>
+  <li>
+    <p>监听器：<a href="http://developer.android.com/reference/android/hardware/TriggerEventListener.html"><code>TriggerEventListener </code></a></p>
+  </li>
 </ul>
-
 
 <p>上面registerListener中最后一个参数是传感器的频率，频率越高单位时间内数据采集就越多，相应的也就更费电！频率从高到低分别是：</p>
 
 <ol>
-<li><p><code>SensorManager.SENSOR_DELAY_FASTEST</code> : 获取数据尽可能的快</p></li>
-<li><p><code>SensorManager.SENSOR_DELAY_GAME</code> : 适合游戏的频率</p></li>
-<li><p><code>SensorManager.SENSOR_DELAY_NORMAL</code>： 正常的频率，一般实时性要求不高都可以用这个设定。</p></li>
-<li><p><code>SensorManager.SENSOR_DELAY_UI</code>：适合普通用户界面的平率。由于频率低，所以，延时大，但是也会更省电。</p></li>
+  <li>
+    <p><code>SensorManager.SENSOR_DELAY_FASTEST</code> : 获取数据尽可能的快</p>
+  </li>
+  <li>
+    <p><code>SensorManager.SENSOR_DELAY_GAME</code> : 适合游戏的频率</p>
+  </li>
+  <li>
+    <p><code>SensorManager.SENSOR_DELAY_NORMAL</code>： 正常的频率，一般实时性要求不高都可以用这个设定。</p>
+  </li>
+  <li>
+    <p><code>SensorManager.SENSOR_DELAY_UI</code>：适合普通用户界面的平率。由于频率低，所以，延时大，但是也会更省电。</p>
+  </li>
 </ol>
 
 ]]></content>

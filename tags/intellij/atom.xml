@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: IntelliJ | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/tags/intellij/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2016-01-11T23:46:35+08:00</updated>
+  <updated>2017-03-07T01:39:44+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -20,20 +20,19 @@
     <id>http://LanderlYoung.github.io/blog/2014/10/14/run-commamd-before-build-in-intellij-idea</id>
     <content type="html"><![CDATA[<p>I came across <a href="http://stackoverflow.com/questions/8380693/run-e-g-calc-exe-before-build-in-intellij-with-android-projects">this question at <code>StackOverflow</code></a> when I was searching the same question in Google.</p>
 
-<p>I found that you don&rsquo;t need a ant build script, that is just use the IntelliJ default system is just fine. For example, I am doing my project with android-ndk, so I want intelliJ run <code>ndk-build NDK_DEBUG=1 -j4</code> before normal build.
+<p>I found that you don’t need a ant build script, that is just use the IntelliJ default system is just fine. For example, I am doing my project with android-ndk, so I want intelliJ run <code>ndk-build NDK_DEBUG=1 -j4</code> before normal build.
  <!--more--></p>
 
 <p>Here is the solution:</p>
 
 <ol>
-<li>Run -> Editor configuration</li>
-<li>Select on of you build configuration in the left side of the dialog.</li>
-<li>On the right side there is an area marked as <strong>Before Launch</strong></li>
-<li>Click the &ldquo;plus&rdquo; button, choose <code>Run External Tool</code> in the popup menu.</li>
-<li>Click the &ldquo;plus&rdquo; button in the new popup window</li>
-<li>Then you get into the real configuration window.</li>
+  <li>Run -&gt; Editor configuration</li>
+  <li>Select on of you build configuration in the left side of the dialog.</li>
+  <li>On the right side there is an area marked as <strong>Before Launch</strong></li>
+  <li>Click the “plus” button, choose <code>Run External Tool</code> in the popup menu.</li>
+  <li>Click the “plus” button in the new popup window</li>
+  <li>Then you get into the real configuration window.</li>
 </ol>
-
 
 <p>Let me show you some fine picture:</p>
 
@@ -47,15 +46,16 @@
 
 <p>3. Select on of you build configuration in the left side of the dialog.</p>
 
-<p> <img src="/assets/storage/run_commamd_before_build_in_intellij/step3.png" alt="enter image description here" /></p>
+<p><img src="/assets/storage/run_commamd_before_build_in_intellij/step3.png" alt="enter image description here" /></p>
 
-<p>4. Click the &ldquo;plus&rdquo; button in the new popup window</p>
+<p>4. Click the “plus” button in the new popup window</p>
 
 <p><img src="/assets/storage/run_commamd_before_build_in_intellij/step4.png" alt="Click the &quot;plus&quot; button in the new popup window" /></p>
 
 <p>5. Then you get into the real configuration window.</p>
 
 <p><img src="/assets/storage/run_commamd_before_build_in_intellij/step5.png" alt="Then you get into the real configuration window." /></p>
+
 ]]></content>
   </entry>
   

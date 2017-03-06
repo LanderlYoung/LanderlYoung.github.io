@@ -7,8 +7,7 @@
 	<meta name="author" content="LanderlYoung">
 
 	
-	<meta name="description" content="dictionary_Node.js-版本v2.0 &lt; 开场白 &gt; 基于Node.js的命令行词典应用 &lt;/ 开场白 &gt; 版本2.0新加入发音功能，该功能的实现都在pnc.js文件内，分成一下几个功能模块： 下载mp3格式的音频文件
-把文件存到临时文件里 &hellip;">
+	<meta name="description" content="dictionary_Node.js-版本v2.0 &lt; 开场白 &gt; 基于Node.js的命令行词典应用 &lt;/ 开场白 &gt; 版本2.0新加入发音功能，该功能的实现都在pnc.js文件内，分成一下几个功能模块： 下载mp3格式的音频文件 把文件存到临时文件里 &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -90,138 +89,124 @@
 <p>版本2.0新加入发音功能，该功能的实现都在pnc.js文件内，分成一下几个功能模块：</p>
 
 <ol>
-<li>下载mp3格式的音频文件</li>
-<li>把文件存到临时文件里</li>
-<li>调用系统工具播放音频文件</li>
+  <li>下载mp3格式的音频文件</li>
+  <li>把文件存到临时文件里</li>
+  <li>调用系统工具播放音频文件</li>
 </ol>
 
-
 <!--more-->
-
-
 <p>其中第一步下载文件和1.0版本的下载xml是完全一样的，不再赘述。</p>
 
 <p>首要说明存储文件这个。</p>
 
-<h2>保存临时文件</h2>
-
+<h2 id="section">保存临时文件</h2>
 <p>因为要保存到临时文件（播放完成之后还要删除），所以差了一下Node.js的文档，找到下面的方法。</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">var</span> <span class="n">fa</span> <span class="o">=</span> <span class="n">require</span><span class="p">(</span><span class="err">&#39;</span><span class="n">fs</span><span class="err">&#39;</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">var</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-</span><span class='line'><span class="k">while</span> <span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>  <span class="c1">//avoid dead loop</span>
-</span><span class='line'>  <span class="k">if</span><span class="p">(</span> <span class="n">count</span><span class="o">++</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">)</span> <span class="k">return</span> <span class="n">null</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">var</span> <span class="n">fileName</span> <span class="o">=</span> <span class="err">&#39;</span><span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">NodeDict</span><span class="p">.</span><span class="err">&#39;</span> <span class="o">+</span> <span class="n">genRandomString</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span> <span class="o">+</span> <span class="err">&#39;</span><span class="p">.</span><span class="n">mp3</span><span class="err">&#39;</span><span class="p">;</span>
-</span><span class='line'>  <span class="n">try</span> <span class="p">{</span>
-</span><span class='line'>      <span class="n">var</span> <span class="n">fd</span> <span class="o">=</span> <span class="n">fs</span><span class="p">.</span><span class="n">openSync</span><span class="p">(</span><span class="n">fileName</span><span class="p">,</span> <span class="err">&#39;</span><span class="n">wx</span><span class="err">&#39;</span><span class="p">);</span>
-</span><span class='line'>      <span class="c1">//console.log(&#39;S file: &#39; + fileName );</span>
-</span><span class='line'>      <span class="k">return</span> <span class="p">{</span> <span class="nl">fileName</span> <span class="p">:</span> <span class="n">fileName</span><span class="p">,</span> <span class="nl">fd</span> <span class="p">:</span> <span class="n">fd</span> <span class="p">};</span>
-</span><span class='line'>  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>      <span class="c1">//file alreadyExist</span>
-</span><span class='line'>      <span class="c1">//console.log(e);</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+</pre></td><td class="code"><pre><code class="cpp"><span class="line"><span class="n">var</span> <span class="n">fa</span> <span class="o">=</span> <span class="n">require</span><span class="p">(</span><span class="err">&#39;</span><span class="n">fs</span><span class="err">&#39;</span><span class="p">);</span>
+</span><span class="line">
+</span><span class="line"><span class="n">var</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class="line"><span class="k">while</span> <span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="line">	<span class="c1">//avoid dead loop</span>
+</span><span class="line">	<span class="k">if</span><span class="p">(</span> <span class="n">count</span><span class="o">++</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">)</span> <span class="k">return</span> <span class="n">null</span><span class="p">;</span>
+</span><span class="line">
+</span><span class="line">	<span class="n">var</span> <span class="n">fileName</span> <span class="o">=</span> <span class="err">&#39;</span><span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">NodeDict</span><span class="p">.</span><span class="err">&#39;</span> <span class="o">+</span> <span class="n">genRandomString</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span> <span class="o">+</span> <span class="err">&#39;</span><span class="p">.</span><span class="n">mp3</span><span class="err">&#39;</span><span class="p">;</span>
+</span><span class="line">	<span class="n">try</span> <span class="p">{</span>
+</span><span class="line">		<span class="n">var</span> <span class="n">fd</span> <span class="o">=</span> <span class="n">fs</span><span class="p">.</span><span class="n">openSync</span><span class="p">(</span><span class="n">fileName</span><span class="p">,</span> <span class="err">&#39;</span><span class="n">wx</span><span class="err">&#39;</span><span class="p">);</span>
+</span><span class="line">		<span class="c1">//console.log(&#39;S file: &#39; + fileName );</span>
+</span><span class="line">		<span class="k">return</span> <span class="p">{</span> <span class="nl">fileName</span> <span class="p">:</span> <span class="n">fileName</span><span class="p">,</span> <span class="nl">fd</span> <span class="p">:</span> <span class="n">fd</span> <span class="p">};</span>
+</span><span class="line">	<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="line">		<span class="c1">//file alreadyExist</span>
+</span><span class="line">		<span class="c1">//console.log(e);</span>
+</span><span class="line">	<span class="p">}</span>
+</span><span class="line"><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 <p>其中<code>genRandomString(len)</code>返回长度为len的随机字符串。主要说明的是openSync方法，他是open方法的同步版，不过参数含义都是相同的。Node.js<a href="http://www.nodejs.org/api/fs.html#fs_fs_open_path_flags_mode_callback">官方文档</a>这么解释open的</p>
+<blockquote><p>&#8230;</p><p>&#8216;w&#8217; - Open file for writing. The file is created (if it does not exist) or truncated (if it exists).<br />&#8216;wx&#8217; - Like &#8216;w&#8217; but fails if path exists.<br />&#8216;w+&#8217; - Open file for reading and writing. The file is created (if it does not exist) or truncated (if it exists).<br />&#8216;wx+&#8217; - Like &#8216;w+&#8217; but fails if path exists.</p><p>&#8230;</p></blockquote>
 
-<blockquote><p>&#8230;</p><p>&#8216;w&#8217; - Open file for writing. The file is created (if it does not exist) or truncated (if it exists).<br/>&#8216;wx&#8217; - Like &#8216;w&#8217; but fails if path exists.<br/>&#8216;w+&#8217; - Open file for reading and writing. The file is created (if it does not exist) or truncated (if it exists).<br/>&#8216;wx+&#8217; - Like &#8216;w+&#8217; but fails if path exists.</p><p>&#8230;</p></blockquote>
-
-
-<p>也就是说当flags是&#8217;wx&#8217;时，如果文件已经存在会抛出异常（原文只说会fail，实验之后才确定是抛异常）。这样当检测到异常时在生成一个文件名看看能不能生成临时文件就行了。上诉代码就是这个思路。为了极端情况发生导致死循环，设置了循环的最大次数——10。</p>
+<p>也就是说当flags是’wx’时，如果文件已经存在会抛出异常（原文只说会fail，实验之后才确定是抛异常）。这样当检测到异常时在生成一个文件名看看能不能生成临时文件就行了。上诉代码就是这个思路。为了极端情况发生导致死循环，设置了循环的最大次数——10。</p>
 
 <p>然后就是把缓存里的mp3文件写道文件中，这个更简单了：</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">function</span> <span class="nf">saveFile</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>  <span class="n">var</span> <span class="n">file</span> <span class="o">=</span> <span class="n">makeTemp</span><span class="p">();</span>
-</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">file</span><span class="p">)</span> <span class="n">err_exit</span><span class="p">();</span>
-</span><span class='line'>  <span class="n">fs</span><span class="p">.</span><span class="n">writeFileSync</span><span class="p">(</span><span class="n">file</span><span class="p">.</span><span class="n">fileName</span><span class="p">,</span> <span class="n">data</span><span class="p">);</span>
-</span><span class='line'>  <span class="n">fs</span><span class="p">.</span><span class="n">closeSync</span><span class="p">(</span><span class="n">file</span><span class="p">.</span><span class="n">fd</span><span class="p">);</span>
-</span><span class='line'>  <span class="k">return</span> <span class="n">file</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+</pre></td><td class="code"><pre><code class="cpp"><span class="line"><span class="n">function</span> <span class="nf">saveFile</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="line">	<span class="n">var</span> <span class="n">file</span> <span class="o">=</span> <span class="n">makeTemp</span><span class="p">();</span>
+</span><span class="line">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">file</span><span class="p">)</span> <span class="n">err_exit</span><span class="p">();</span>
+</span><span class="line">	<span class="n">fs</span><span class="p">.</span><span class="n">writeFileSync</span><span class="p">(</span><span class="n">file</span><span class="p">.</span><span class="n">fileName</span><span class="p">,</span> <span class="n">data</span><span class="p">);</span>
+</span><span class="line">	<span class="n">fs</span><span class="p">.</span><span class="n">closeSync</span><span class="p">(</span><span class="n">file</span><span class="p">.</span><span class="n">fd</span><span class="p">);</span>
+</span><span class="line">	<span class="k">return</span> <span class="n">file</span><span class="p">;</span>
+</span><span class="line"><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 <p>代码自解释，无需多言。</p>
 
-<h2>调用系统命令播放mp3文件</h2>
-
+<h2 id="mp3">调用系统命令播放mp3文件</h2>
 <p>这里面用到了Node.js的child process技术。说来简单，还是先上代码:</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">var</span> <span class="n">spawn</span> <span class="o">=</span> <span class="n">require</span><span class="p">(</span><span class="err">&#39;</span><span class="n">child_process</span><span class="err">&#39;</span><span class="p">).</span><span class="n">spawn</span><span class="p">;</span>
-</span><span class='line'><span class="n">function</span> <span class="nf">playAndClean</span><span class="p">(</span><span class="n">file</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>  <span class="n">var</span> <span class="n">play</span> <span class="o">=</span> <span class="n">spawn</span><span class="p">(</span><span class="err">&#39;</span><span class="n">play</span><span class="err">&#39;</span><span class="p">,</span> <span class="p">[</span> <span class="n">file</span><span class="p">.</span><span class="n">fileName</span> <span class="p">]);</span>
-</span><span class='line'>  <span class="n">play</span><span class="p">.</span><span class="n">on</span><span class="p">(</span><span class="err">&#39;</span><span class="n">exit</span><span class="err">&#39;</span><span class="p">,</span> <span class="n">function</span> <span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">signal</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>          <span class="c1">//delete temp file</span>
-</span><span class='line'>          <span class="n">fs</span><span class="p">.</span><span class="n">unlinkSync</span><span class="p">(</span><span class="n">file</span><span class="p">.</span><span class="n">fileName</span><span class="p">);</span>
-</span><span class='line'>          <span class="p">});</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+</pre></td><td class="code"><pre><code class="cpp"><span class="line"><span class="n">var</span> <span class="n">spawn</span> <span class="o">=</span> <span class="n">require</span><span class="p">(</span><span class="err">&#39;</span><span class="n">child_process</span><span class="err">&#39;</span><span class="p">).</span><span class="n">spawn</span><span class="p">;</span>
+</span><span class="line"><span class="n">function</span> <span class="nf">playAndClean</span><span class="p">(</span><span class="n">file</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="line">	<span class="n">var</span> <span class="n">play</span> <span class="o">=</span> <span class="n">spawn</span><span class="p">(</span><span class="err">&#39;</span><span class="n">play</span><span class="err">&#39;</span><span class="p">,</span> <span class="p">[</span> <span class="n">file</span><span class="p">.</span><span class="n">fileName</span> <span class="p">]);</span>
+</span><span class="line">	<span class="n">play</span><span class="p">.</span><span class="n">on</span><span class="p">(</span><span class="err">&#39;</span><span class="n">exit</span><span class="err">&#39;</span><span class="p">,</span> <span class="n">function</span> <span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="n">signal</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="line">			<span class="c1">//delete temp file</span>
+</span><span class="line">			<span class="n">fs</span><span class="p">.</span><span class="n">unlinkSync</span><span class="p">(</span><span class="n">file</span><span class="p">.</span><span class="n">fileName</span><span class="p">);</span>
+</span><span class="line">			<span class="p">});</span>
+</span><span class="line"><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 <p>spawn函数的第一个参数是命令的名字，后面是一个数组存的是参数列表。假设这里的文件名是NodeDict.123456.mp3, 那么调用的系统命令就是<code>play NodeDict.123456.mp3</code>。这个play命令来自于sox软件包。然后给新进程添加退出时的事件，就是删除临时文件。</p>
 
-<h2>然后就是在主文件dict.js 中调用pnc.js</h2>
-
+<h2 id="dictjs-pncjs">然后就是在主文件dict.js 中调用pnc.js</h2>
 <p>老规矩，先上代码:</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">var</span> <span class="n">cp</span> <span class="o">=</span> <span class="n">require</span><span class="p">(</span><span class="err">&#39;</span><span class="n">child_process</span><span class="err">&#39;</span><span class="p">);</span>
-</span><span class='line'><span class="n">try</span> <span class="p">{</span>
-</span><span class='line'>  <span class="n">var</span> <span class="n">pncUrl</span> <span class="o">=</span> <span class="n">genPncURL</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="n">pnc</span><span class="p">);</span>
-</span><span class='line'>  <span class="n">cp</span><span class="p">.</span><span class="n">fork</span><span class="p">(</span><span class="n">pnc_js_Path</span><span class="p">,</span> <span class="p">[</span> <span class="n">pncUrl</span> <span class="p">]);</span>
-</span><span class='line'><span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>  <span class="n">console</span><span class="p">.</span><span class="n">log</span><span class="p">(</span><span class="err">&#39;</span><span class="n">please</span> <span class="n">set</span> <span class="n">variable</span> <span class="n">pnc_js_Path</span><span class="p">,</span> <span class="n">which</span> <span class="n">presents</span> <span class="n">the</span> <span class="n">absolute</span> <span class="n">path</span> <span class="n">of</span> <span class="n">pnc</span><span class="p">.</span><span class="n">js</span><span class="err">&#39;</span><span class="p">);</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+</pre></td><td class="code"><pre><code class="cpp"><span class="line"><span class="n">var</span> <span class="n">cp</span> <span class="o">=</span> <span class="n">require</span><span class="p">(</span><span class="err">&#39;</span><span class="n">child_process</span><span class="err">&#39;</span><span class="p">);</span>
+</span><span class="line"><span class="n">try</span> <span class="p">{</span>
+</span><span class="line">	<span class="n">var</span> <span class="n">pncUrl</span> <span class="o">=</span> <span class="n">genPncURL</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="n">pnc</span><span class="p">);</span>
+</span><span class="line">	<span class="n">cp</span><span class="p">.</span><span class="n">fork</span><span class="p">(</span><span class="n">pnc_js_Path</span><span class="p">,</span> <span class="p">[</span> <span class="n">pncUrl</span> <span class="p">]);</span>
+</span><span class="line"><span class="p">}</span> <span class="k">catch</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="line">	<span class="n">console</span><span class="p">.</span><span class="n">log</span><span class="p">(</span><span class="err">&#39;</span><span class="n">please</span> <span class="n">set</span> <span class="n">variable</span> <span class="n">pnc_js_Path</span><span class="p">,</span> <span class="n">which</span> <span class="n">presents</span> <span class="n">the</span> <span class="n">absolute</span> <span class="n">path</span> <span class="n">of</span> <span class="n">pnc</span><span class="p">.</span><span class="n">js</span><span class="err">&#39;</span><span class="p">);</span>
+</span><span class="line"><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 <p>这里使用了child process中的fork，于linux的fork不同，Node.js中的fork要指定运行的js脚本, 这里就指定了pnc.js脚本（要写绝对路径，因为要创建软链接，所以无奈只能手动制定了）。</p>
 
-<p>这样就可以开两个进程了，一个下载解析xml显示单词解释，另一个进程下载发音文件在播放（其实播放又开了一个进程）。<br/>
+<p>这样就可以开两个进程了，一个下载解析xml显示单词解释，另一个进程下载发音文件在播放（其实播放又开了一个进程）。<br />
 恩，还不错。</p>
+
 </div>
 
 </article>
@@ -252,7 +237,7 @@
 			</div>
 			<footer id="footer" class="inner">
 <p>
-  Copyright &copy; 2016 - LanderlYoung -
+  Copyright &copy; 2017 - LanderlYoung -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 </footer>
@@ -298,6 +283,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/03/08/android-zhi-chi-ping-mu-xuan-zhuan-de-fang-shi/">Android 支持屏幕旋转的方式</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/01/11/re-lambda-ce-shi-bao-gao/">Retro-lambda 测试报告</a>
       </li>
     
@@ -313,39 +302,35 @@
         <a href="/blog/2014/11/09/androidzhong-servicede-shi-yong/">Android中service的使用</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/10/31/androidzhong-de-wakelockshi-yong/">Android中的WakeLock使用</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/android/'>android (9)</a></li><li><a href='/blog/categories/git/'>git (2)</a></li><li><a href='/blog/categories/html5/'>html5 (5)</a></li><li><a href='/blog/categories/java/'>java (4)</a></li><li><a href='/blog/categories/javascript/'>javascript (3)</a></li><li><a href='/blog/categories/linux/'>linux (7)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/android/'>android (10)</a></li><li><a href='/blog/categories/git/'>git (2)</a></li><li><a href='/blog/categories/html5/'>html5 (5)</a></li><li><a href='/blog/categories/java/'>java (4)</a></li><li><a href='/blog/categories/javascript/'>javascript (3)</a></li><li><a href='/blog/categories/linux/'>linux (7)</a></li></ul>
 </section>
 <section>
 	<h1>Tags</h1>
 	<ul class="tag-cloud">
-		<li><a style="font-size: 75.6%" href="/tags/android/">Android</a></li>
-<li><a style="font-size: 93.1%" href="/tags/linux/">Linux</a></li>
-<li><a style="font-size: 98.2%" href="/tags/html5/">HTML5</a></li>
-<li><a style="font-size: 102.9%" href="/tags/java/">Java</a></li>
-<li><a style="font-size: 110.7%" href="/tags/node-dot-js/">Node.js</a></li>
-<li><a style="font-size: 83.6%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
-<li><a style="font-size: 86.8%" href="/tags/java/">java</a></li>
-<li><a style="font-size: 95.5%" href="/tags/android/">android</a></li>
-<li><a style="font-size: 76.1%" href="/tags/git/">Git</a></li>
-<li><a style="font-size: 94.6%" href="/tags/vim/">Vim</a></li>
-<li><a style="font-size: 100.0%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
-<li><a style="font-size: 80.5%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
-<li><a style="font-size: 86.0%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
-<li><a style="font-size: 88.1%" href="/tags/tencent/">tencent</a></li>
-<li><a style="font-size: 80.1%" href="/tags/zhuan-tie/">转贴</a></li>
-<li><a style="font-size: 74.5%" href="/tags/sensor/">sensor</a></li>
-<li><a style="font-size: 111.3%" href="/tags/ui/">UI</a></li>
-<li><a style="font-size: 79.0%" href="/tags/svg/">SVG</a></li>
-<li><a style="font-size: 117.2%" href="/tags/intellij/">IntelliJ</a></li>
-<li><a style="font-size: 104.3%" href="/tags/jni/">JNI</a></li>
+		<li><a style="font-size: 74.4%" href="/tags/android/">Android</a></li>
+<li><a style="font-size: 101.6%" href="/tags/linux/">Linux</a></li>
+<li><a style="font-size: 95.7%" href="/tags/html5/">HTML5</a></li>
+<li><a style="font-size: 75.2%" href="/tags/java/">Java</a></li>
+<li><a style="font-size: 91.2%" href="/tags/node-dot-js/">Node.js</a></li>
+<li><a style="font-size: 110.6%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
+<li><a style="font-size: 84.3%" href="/tags/java/">java</a></li>
+<li><a style="font-size: 84.2%" href="/tags/android/">android</a></li>
+<li><a style="font-size: 70.4%" href="/tags/git/">Git</a></li>
+<li><a style="font-size: 95.5%" href="/tags/vim/">Vim</a></li>
+<li><a style="font-size: 80.2%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
+<li><a style="font-size: 91.9%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
+<li><a style="font-size: 103.9%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
+<li><a style="font-size: 75.6%" href="/tags/tencent/">tencent</a></li>
+<li><a style="font-size: 92.1%" href="/tags/zhuan-tie/">转贴</a></li>
+<li><a style="font-size: 87.6%" href="/tags/sensor/">sensor</a></li>
+<li><a style="font-size: 117.0%" href="/tags/ui/">UI</a></li>
+<li><a style="font-size: 70.5%" href="/tags/svg/">SVG</a></li>
+<li><a style="font-size: 70.6%" href="/tags/intellij/">IntelliJ</a></li>
+<li><a style="font-size: 99.2%" href="/tags/jni/">JNI</a></li>
 
 	</ul>
 </section>

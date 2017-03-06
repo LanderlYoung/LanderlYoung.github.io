@@ -1,0 +1,18 @@
+.pages{padding:1em;margin:1em
+0;clear:right;float:right}.compact{margin:0;padding:0}.pages a, .pages
+span{display:block;float:left;padding:0.2em 0.5em;margin-right:0.1em;border:1px
+solid #fff;background:#fff}.pages
+span.current{border:1px
+solid #2E6AB1;font-weight:bold;background:#2E6AB1;color:#fff}.pages
+a{border:1px
+solid #9AAFE5;text-decoration:none}.pages a:hover{border-color:#2E6AB1;background:#CFF none repeat scroll 0 0;color:#F60}.pages
+a.nextprev{font-weight:bold}.pages
+span.nextprev{color:#666}.pages
+span.nextprev{border:1px
+solid #ddd;color:#999}.pages .nextprev-next{float:right}.tooltip{border:1px
+solid #85be35;padding:5px;background-color:#fff;width:150px;font-size:85%;color:#777;opacity:0.95;text-align:left}.tooltip
+h6{background:#85be35;color:#fff;margin: -5px -5px 4px -5px;padding:2px
+5px;font-size:100%;font-weight:bold}.tooltip
+img{vertical-align:middle;border:1px
+solid #85be35;margin:2px
+0}

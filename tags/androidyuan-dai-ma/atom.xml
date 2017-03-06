@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: Android源代码 | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/tags/androidyuan-dai-ma/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2016-01-11T23:46:35+08:00</updated>
+  <updated>2017-03-07T01:39:44+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -20,7 +20,7 @@
     <id>http://LanderlYoung.github.io/blog/2014/06/24/android-zhong-de-handlerxiang-guan-yuan-dai-ma-qian-xi</id>
     <content type="html"><![CDATA[<p>简单用法示例：</p>
 
-<pre><code class="java">//在主线程中
+<pre><code class="language-java">//在主线程中
 private Handler handler = new Handler() {
     // 处理子线程给我们发送的消息。
     @Override
@@ -36,9 +36,7 @@ private Handler handler = new Handler() {
         }
 }
 </code></pre>
-
 <!--more-->
-
 
 <p>然后开启新的线程，在新的线程里面完成后台任务，任务完成后给这个handler发一个消息让它来处理。因为Handler是在主线程实例化(并且在实例化的时候没有指明Looper)，因此handler的handleMessage方法也是在主线程被调用的。</p>
 
@@ -74,7 +72,7 @@ private Handler handler = new Handler() {
 
 <p>分析一下整个过程的大致流程,首先从Handler的sendMessage下手：从源代码中看，sendMessage最终会调用到Handler中的sendMessageAtTime。</p>
 
-<pre><code class="java">public boolean sendMessageAtTime(Message msg, long uptimeMillis)
+<pre><code class="language-java">public boolean sendMessageAtTime(Message msg, long uptimeMillis)
 {
     boolean sent = false;
     MessageQueue queue = mQueue;
@@ -117,7 +115,7 @@ public Handler() {
 
 <p>使用提供的消息队列，而不是使用默认的。</p>
 
-<pre><code class="java">/**
+<pre><code class="language-java">/**
  * Use the provided queue instead of the default one.
  */
 public Handler(Looper looper) {
@@ -133,7 +131,7 @@ public Handler(Looper looper) {
 
 <p>然后是Looper 中的loop方法</p>
 
-<pre><code class="java">/**
+<pre><code class="language-java">/**
  * Run the message queue in this thread. Be sure to call
  * {@link #quit()} to end the loop.
  */
@@ -196,7 +194,7 @@ Message中的target是这么定义的：</p>
 <p>当然还有各种带有Handler参数的obtain方法，都会给target赋值。
 于是看看Handler.dispatchMessage(Message)是做什么的：</p>
 
-<pre><code class="java">public void dispatchMessage(Message msg) {
+<pre><code class="language-java">public void dispatchMessage(Message msg) {
     if (msg.callback != null) {
         handleCallback(msg);
     } else {
@@ -213,6 +211,7 @@ Message中的target是这么定义的：</p>
 <p>如果msg的callback不为null就调用callback，否则如果就看看mCallback有没有设置，如果有的话就让callback来处理消息，如果没有就是用默认的处理方法。默认的处理方法是什么都不多，但是子类如果覆盖了handleMessage方法就可以执行子类想要做的代码了。</p>
 
 <p>但是 事情没有那么简单！还有一个无参数的obtain方法，那么没有指定target的message是怎么成功发送到相应的handler的呢？还是圆润的滚过去看Looper的代码吧。</p>
+
 ]]></content>
   </entry>
   

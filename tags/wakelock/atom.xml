@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: wakelock | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/tags/wakelock/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2016-01-11T23:46:35+08:00</updated>
+  <updated>2017-03-07T01:39:44+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -22,83 +22,112 @@
 
 <!--more-->
 
+<p>###WakeLock的创建是：</p>
 
-<h3>WakeLock的创建是：</h3>
-
-<pre><code class="java">
+<pre><code class="language-java">
 PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
 
 Wakelock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
 
         "MyWakelockTag");
+
 </code></pre>
 
 <p>另外如果要使用WakeLock需要在Manifest中添加如下权限</p>
 
 <p><code>&lt;uses-permission android:name="android.permission.WAKE_LOCK" /&gt;</code></p>
 
-<h3>WakeLock的等级</h3>
+<p>###WakeLock的等级</p>
 
 <p>上面的第一个参数是WakeLock levelAndFlag，分别代表了一种WakeLock等级，并且可以通过「或」位操作组合使用。他们是：</p>
 
 <ol>
-<li><p>PARTIAL_WAKE_LOCK：保证CPU保持高性能运行，而屏幕和键盘背光（也可能是触摸按键的背光）关闭。一般情况下都会使用这个WakeLock。</p></li>
-<li><p>ACQUIRE_CAUSES_WAKEUP：这个WakeLock除了会使CPU高性能运行外还会导致屏幕亮起，即使屏幕原先处于关闭的状态下。</p></li>
-<li><p>ON_AFTER_RELEASE：如果释放WakeLock的时候屏幕处于亮着的状态，则在释放WakeLock之后让屏幕再保持亮一小会。如果释放WakeLock的时候屏幕本身就没亮，则不会有动作。</p></li>
+  <li>
+    <p>PARTIAL_WAKE_LOCK：保证CPU保持高性能运行，而屏幕和键盘背光（也可能是触摸按键的背光）关闭。一般情况下都会使用这个WakeLock。</p>
+  </li>
+  <li>
+    <p>ACQUIRE_CAUSES_WAKEUP：这个WakeLock除了会使CPU高性能运行外还会导致屏幕亮起，即使屏幕原先处于关闭的状态下。</p>
+  </li>
+  <li>
+    <p>ON_AFTER_RELEASE：如果释放WakeLock的时候屏幕处于亮着的状态，则在释放WakeLock之后让屏幕再保持亮一小会。如果释放WakeLock的时候屏幕本身就没亮，则不会有动作。</p>
+  </li>
 </ol>
-
 
 <p>被<strong>弃用</strong>的WakeLock：</p>
 
 <ol>
-<li><p>SCREEN_DIM_WAKE_LOCK：保证屏幕亮起，但是亮度可能比较低。同时键盘背光也可以不亮。</p></li>
-<li><p>SCREEN_BRIGHT_WAKE_LOCK ：保证屏幕全亮，同时键盘背光也亮。</p></li>
-<li><p>FULL_WAKE_LOCK：表现和SCREEN_BRIGHT_WAKE_LOCK 类似，但是区别在于这个等级的WakeLock使用的是<strong>最高亮度</strong>！</p></li>
+  <li>
+    <p>SCREEN_DIM_WAKE_LOCK：保证屏幕亮起，但是亮度可能比较低。同时键盘背光也可以不亮。</p>
+  </li>
+  <li>
+    <p>SCREEN_BRIGHT_WAKE_LOCK ：保证屏幕全亮，同时键盘背光也亮。</p>
+  </li>
+  <li>
+    <p>FULL_WAKE_LOCK：表现和SCREEN_BRIGHT_WAKE_LOCK 类似，但是区别在于这个等级的WakeLock使用的是<strong>最高亮度</strong>！</p>
+  </li>
 </ol>
-
 
 <p>这三个Level在API17被弃用。被弃用说明肯定有替代品吗，上面三个类型的作用无非就是保持屏幕长亮。所以推荐是用WindowFlag<code>WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON</code>。使用方法是：</p>
 
 <ol>
-<li><p>在Activity中： <code>getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);</code></p></li>
-<li><p>甚至可以在布局中添加这个属性：<code>android:keepScreenOn="true"</code></p></li>
+  <li>
+    <p>在Activity中： <code>getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);</code></p>
+  </li>
+  <li>
+    <p>甚至可以在布局中添加这个属性：<code>android:keepScreenOn="true"</code></p>
+  </li>
 </ol>
-
 
 <p>被<strong>隐藏</strong>的WakeLock：</p>
 
 <p>android中的部分api并不对用户应用开放，他们通过在注释中加入<code>{@hide}</code>来注明。但是在SDK提供的源代码中是可以看到的。</p>
 
 <ul>
-<li>WAIT_FOR_PROXIMITY_NEGATIVE：用于和接近传感器配合使用，来实现电话应用中打电话时可以使屏幕黑掉，手机离开时又能使屏幕亮起来的功能。acqure的时候屏幕会暗下来，release之后屏幕会亮。其值是32（int）。虽然被hide起来，但是感觉这个超实用的好吗！！！为啥要hide起来。。。「话说在API21 上终于开放了（开放这么晚有个屁用啊(╯‵□′)╯︵┻━┻）」经试验，不过newWakeLock的时候flag直接用32代替是可以创建这个等级的WakeLock的，但是因为是非开放API，不能保证第三方OEM修改这个代码实现！因此使用起来并不安全。「说的好像开放的API第三方OEM就不会乱改一样。。。(╯‵□′)╯︵┻━┻」</li>
+  <li>WAIT_FOR_PROXIMITY_NEGATIVE：用于和接近传感器配合使用，来实现电话应用中打电话时可以使屏幕黑掉，手机离开时又能使屏幕亮起来的功能。acqure的时候屏幕会暗下来，release之后屏幕会亮。其值是32（int）。虽然被hide起来，但是感觉这个超实用的好吗！！！为啥要hide起来。。。「话说在API21 上终于开放了（开放这么晚有个屁用啊(╯‵□′)╯︵┻━┻）」经试验，不过newWakeLock的时候flag直接用32代替是可以创建这个等级的WakeLock的，但是因为是非开放API，不能保证第三方OEM修改这个代码实现！因此使用起来并不安全。「说的好像开放的API第三方OEM就不会乱改一样。。。(╯‵□′)╯︵┻━┻」</li>
 </ul>
 
-
-<h3>WakeLock的使用：</h3>
+<p>###WakeLock的使用：</p>
 
 <ul>
-<li><p>获取WakeLock：</p>
+  <li>
+    <p>获取WakeLock：</p>
 
-<ol>
-<li><p><code>void acquire()</code>:获得WakeLock</p></li>
-<li><p><code>void acquire(long timeOut)</code>:获得WakeLock timeOut时长，当超过timeOut之后系统自动释放WakeLock。</p></li>
-</ol>
-</li>
-<li><p>释放WakeLock：<code>release()</code></p></li>
-<li><p>判断是否已经获取WakeLock：<code>boolean isHeld()</code></p></li>
-<li><p><code>void setReferenceCounted(boolean value)</code>：是否使用引用计数。类似于垃圾回收策略，只是把垃圾回收改成了WakeLock回收。如果value是true的话将启用该特性，如果一个WakeLock acquire了多次也必须release多次才能释放掉。但是如果释放次数比acquire多则会抛出<code>RuntimeException("WakeLock under-locked " + mTag)</code>异常。<strong>默认是开启了引用计数的！</strong></p></li>
+    <ol>
+      <li>
+        <p><code>void acquire()</code>:获得WakeLock</p>
+      </li>
+      <li>
+        <p><code>void acquire(long timeOut)</code>:获得WakeLock timeOut时长，当超过timeOut之后系统自动释放WakeLock。</p>
+      </li>
+    </ol>
+  </li>
+  <li>
+    <p>释放WakeLock：<code>release()</code></p>
+  </li>
+  <li>
+    <p>判断是否已经获取WakeLock：<code>boolean isHeld()</code></p>
+  </li>
+  <li>
+    <p><code>void setReferenceCounted(boolean value)</code>：是否使用引用计数。类似于垃圾回收策略，只是把垃圾回收改成了WakeLock回收。如果value是true的话将启用该特性，如果一个WakeLock acquire了多次也必须release多次才能释放掉。但是如果释放次数比acquire多则会抛出<code>RuntimeException("WakeLock under-locked " + mTag)</code>异常。<strong>默认是开启了引用计数的！</strong></p>
+  </li>
 </ul>
 
-
-<h3>PowerManager的几个实用方法</h3>
+<p>###PowerManager的几个实用方法</p>
 
 <ol>
-<li><p><code>boolean PowerManager::isScreenOn ()</code>判断屏幕是否亮着（不管是暗的dimed还是正常亮度），在API20被弃用，推荐<code>boolean PowerManager::isInteractive ()</code></p></li>
-<li><p><code>void PowerManager::goToSleep(long time)</code>time是时间戳，一般是System.currentTimeMillis()+timeDelay。强制系统立刻休眠，需要Manifest中添加权限<code>"android.permission.DEVICE_POWER"</code>。按下电源键锁屏时调用的就是这个方法。</p></li>
-<li><p><code>void PowerManager::wakeUp(long time)</code>与上面对应。参数含义，所需权限与上同。按下电源键解锁屏幕时调用的就是这个方法。</p></li>
-<li><p><code>void PowerManager::reboot(String reason)</code>重启手机，reason是要传给linux内核的参数，比如“recovery”重启进recovery模式，“fastboot”重启进fastboot模式。需要权限<code>"android.permission.REBOOT"</code>。</p></li>
+  <li>
+    <p><code>boolean PowerManager::isScreenOn ()</code>判断屏幕是否亮着（不管是暗的dimed还是正常亮度），在API20被弃用，推荐<code>boolean PowerManager::isInteractive ()</code></p>
+  </li>
+  <li>
+    <p><code>void PowerManager::goToSleep(long time)</code>time是时间戳，一般是System.currentTimeMillis()+timeDelay。强制系统立刻休眠，需要Manifest中添加权限<code>"android.permission.DEVICE_POWER"</code>。按下电源键锁屏时调用的就是这个方法。</p>
+  </li>
+  <li>
+    <p><code>void PowerManager::wakeUp(long time)</code>与上面对应。参数含义，所需权限与上同。按下电源键解锁屏幕时调用的就是这个方法。</p>
+  </li>
+  <li>
+    <p><code>void PowerManager::reboot(String reason)</code>重启手机，reason是要传给linux内核的参数，比如“recovery”重启进recovery模式，“fastboot”重启进fastboot模式。需要权限<code>"android.permission.REBOOT"</code>。</p>
+  </li>
 </ol>
-
 ]]></content>
   </entry>
   

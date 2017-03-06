@@ -7,7 +7,7 @@
 	<meta name="author" content="LanderlYoung">
 
 	
-	<meta name="description" content="Ijkplyer 编译配置 IjkMediaPlayer 使用手册 &#116;&#97;&#121;&#108;&#111;&#114;&#x63;&#x79;&#97;&#x6e;&#x67;&#x40;&#116;&#x65;&#110;&#99;&#101;&#x6e;&#x74;&# &hellip;">
+	<meta name="description" content="Ijkplyer 编译配置 #IjkMediaPlayer 使用手册 taylorcyang@tencent.com 首先编译环境是OS X或者linux或者其他*nix系统（Windows暂不支持，因为ijkplayer中使用了软链接o(╯□╰)o）。 其次系统中需要安装以下工具： git &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,22 +80,22 @@
 			<div class="mid-col-container">
 				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 	<h1 class="title" itemprop="name">Ijkplyer 编译配置</h1>
-	<div class="entry-content" itemprop="articleBody"><h1>IjkMediaPlayer 使用手册</h1>
+	<div class="entry-content" itemprop="articleBody"><p>#IjkMediaPlayer 使用手册</p>
 
-<blockquote><p><a href="&#x6d;&#97;&#105;&#108;&#x74;&#x6f;&#x3a;&#116;&#97;&#121;&#108;&#x6f;&#114;&#x63;&#121;&#x61;&#110;&#103;&#64;&#x74;&#101;&#x6e;&#99;&#101;&#110;&#x74;&#x2e;&#x63;&#x6f;&#109;">&#116;&#97;&#121;&#108;&#111;&#114;&#x63;&#x79;&#97;&#x6e;&#x67;&#x40;&#116;&#x65;&#110;&#99;&#101;&#x6e;&#x74;&#46;&#99;&#x6f;&#x6d;</a></p></blockquote>
-
-<ol>
-<li>首先编译环境是OS X或者linux或者其他*nix系统（Windows暂不支持，因为ijkplayer中使用了软链接o(╯□╰)o）。</li>
-<li>其次系统中需要安装以下工具：
+<blockquote>
+  <p>taylorcyang@tencent.com</p>
+</blockquote>
 
 <ol>
-<li>git</li>
-<li>Android ndk 并配置环境变量 <code>ANDROID_NDK</code></li>
-<li>Android sdk 并配置环境变量 <code>ANDROID_SDK</code></li>
+  <li>首先编译环境是OS X或者linux或者其他*nix系统（Windows暂不支持，因为ijkplayer中使用了软链接o(╯□╰)o）。</li>
+  <li>其次系统中需要安装以下工具：
+    <ol>
+      <li>git</li>
+      <li>Android ndk 并配置环境变量 <code>ANDROID_NDK</code></li>
+      <li>Android sdk 并配置环境变量 <code>ANDROID_SDK</code></li>
+    </ol>
+  </li>
 </ol>
-</li>
-</ol>
-
 
 <p>项目地址：<a href="">https://github.com/Bilibili/ijkplayer</a></p>
 
@@ -106,64 +106,56 @@
 <p>三个需要的文件分别是：</p>
 
 <ol>
-<li><a href="https://gist.github.com/LanderlYoung/046f4b90b0da26484d5e">init.sh</a></li>
-<li><a href="https://gist.github.com/LanderlYoung/63d4c59260bce20c4a0f">make.sh</a></li>
-<li><a href="https://gist.github.com/LanderlYoung/a28ddb1fb1e575be91ec">module.sh</a></li>
+  <li><a href="https://gist.github.com/LanderlYoung/046f4b90b0da26484d5e">init.sh</a></li>
+  <li><a href="https://gist.github.com/LanderlYoung/63d4c59260bce20c4a0f">make.sh</a></li>
+  <li><a href="https://gist.github.com/LanderlYoung/a28ddb1fb1e575be91ec">module.sh</a></li>
 </ol>
-
 
 <!--more-->
 
+<p>##编译步骤：</p>
 
-<h2>编译步骤：</h2>
+<p>###1. 下载代码</p>
 
-<h3>1. 下载代码</h3>
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line">git clone https://github.com/Bilibili/ijkplayer.git
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>git clone https://github.com/Bilibili/ijkplayer.git
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>2. 切换到稳定分支</h3>
+<p>###2. 切换到稳定分支</p>
 
 <p>在开发视频播放组件时ijkplayer的稳定版本是n0.2.2因此本手册以n0.2.2为实例。若发布新版本可以切换分支并测试兼容性。可以使用<code>git tag</code>命令查看release版本。</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>git checkout -B n_0.2.2 n0.2.2
-</span></code></pre></td></tr></table></div></figure>
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line">git checkout -B n_0.2.2 n0.2.2
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
-
-<h3>3. 初始化</h3>
+<p>###3. 初始化</p>
 
 <p>首先进入工程根目录</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd </span>ijkplayer
-</span></code></pre></td></tr></table></div></figure>
-
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line"><span class="nb">cd </span>ijkplayer
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 <p>然后执行</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>./init-android.sh
-</span></code></pre></td></tr></table></div></figure>
-
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line">./init-android.sh
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 <p>执行初始化操作：包括下载ffmpeg源代码，配置ffmpeg编译选项，下载。</p>
 
 <p><strong>注意</strong>：n0.2.2版本的ffmpeg仓库换成了videolan的，如果发现不能下载可以把init-android.sh中的</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">IJK_FFMPEG_UPSTREAM</span><span class="o">=</span>git://git.videolan.org/ffmpeg.git
-</span></code></pre></td></tr></table></div></figure>
-
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line"><span class="nv">IJK_FFMPEG_UPSTREAM</span><span class="o">=</span>git://git.videolan.org/ffmpeg.git
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 <p>替换成</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nv">IJK_FFMPEG_UPSTREAM</span><span class="o">=</span>https://github.com/bbcallen/FFmpeg.git
-</span></code></pre></td></tr></table></div></figure>
-
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line"><span class="nv">IJK_FFMPEG_UPSTREAM</span><span class="o">=</span>https://github.com/bbcallen/FFmpeg.git
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 <p>然后再进行初始化操作。</p>
 
@@ -171,166 +163,75 @@
 
 <p>这个module.sh文件已经去处了绝大部分不用的组件，并且启用了硬件加速。</p>
 
-<h3>4. 编译</h3>
+<p>###4. 编译</p>
 
 <p>进入项目根目录下的android目录</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'><span class="nb">cd </span>android
-</span></code></pre></td></tr></table></div></figure>
-
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line"><span class="nb">cd </span>android
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 <p>编译 ffmpeg 依赖库。由于大多数设备都为 armv7a 架构，故在这里使用之。使用 armv5|armv7a|x86 作为输入来设定平台，或传入 all|clean|check 进行[编译所有平台/清理/检查]。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>./compile-ffmpeg.sh clean
-</span><span class='line'>./compile-ffmpeg.sh armv7a
-</span></code></pre></td></tr></table></div></figure>
-
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line">./compile-ffmpeg.sh clean
+</span><span class="line">./compile-ffmpeg.sh armv7a
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 <p>若报错，请检查以上各项配置是否正确；否则耐心等待编译完毕即可。</p>
 
 <p>接下来就可以编译 ijkplayer 了：</p>
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="bash"><span class="line">./compile-ijk.sh
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='bash'><span class='line'>./compile-ijk.sh
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>使用ijkplayer</h2>
+<p>##使用ijkplayer</p>
 
 <p>android目录下的ijkmediaplayer就是ijk播放器的本体了，编译完成之后会在libs目录中生成相应的so动态库。这时候只需要把这些库拷到工程目录的ijkmdediaplayer module的libs下就好了。</p>
 
 <p>当然你可以把整个android目录导入Android Studio，作者已经写好了gradle配置，这里是一个demo工程。它有三个module：</p>
 
 <ol>
-<li>ijkmediademo是demo本体，是个很好的教学示例</li>
-<li>ijkmediaplayer就是播放器了，这里是一个library module</li>
-<li>ijkmediawidget是基于ijkmediaplayer的各种控件，主要提供类似VideoView的控件方便使用。当然这个是可选组件。</li>
+  <li>ijkmediademo是demo本体，是个很好的教学示例</li>
+  <li>ijkmediaplayer就是播放器了，这里是一个library module</li>
+  <li>ijkmediawidget是基于ijkmediaplayer的各种控件，主要提供类似VideoView的控件方便使用。当然这个是可选组件。</li>
 </ol>
-
 
 <p>如果看到这说明你很有研究精神，给自己点个赞吧n(<em>≧▽≦</em>)n</p>
 
-<h3>附录-关于module.sh</h3>
+<p>###附录-关于module.sh</p>
 
 <p>module.sh中配置了ffmpeg使用哪些decoder，demuser等信息。我给的模板中配置了如下信息</p>
 
-<h4>解码器</h4>
+<p>####解码器
+| 解码器 | 支持格式 |
+| :—-: | :—-: |
+| aac、aac_latm | aac 音频 |
+| ac3 | ac3 音频 |
+| mp3* | mp3 音频|
+| flv | flv 视频 |
+| h263、h263i、h263p | h263 视频（可以考虑舍弃）|
+| h264 | h264 视频（重要！）|
+| msmpeg4v_crystalhd、msmpeg4v1、msmpeg4v2、msmpeg4v3 | wmv 视频 |
+| wmav1、wmav2、wmavoice | wmv 音频 |</p>
 
-<table>
-<thead>
-<tr>
-<th style="text-align:center;"> 解码器 </th>
-<th style="text-align:center;"> 支持格式 </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center;"> aac、aac_latm </td>
-<td style="text-align:center;"> aac 音频 </td>
-</tr>
-<tr>
-<td style="text-align:center;"> ac3 </td>
-<td style="text-align:center;"> ac3 音频 </td>
-</tr>
-<tr>
-<td style="text-align:center;"> mp3* </td>
-<td style="text-align:center;"> mp3 音频</td>
-</tr>
-<tr>
-<td style="text-align:center;"> flv </td>
-<td style="text-align:center;"> flv 视频 </td>
-</tr>
-<tr>
-<td style="text-align:center;"> h263、h263i、h263p </td>
-<td style="text-align:center;"> h263 视频（可以考虑舍弃）</td>
-</tr>
-<tr>
-<td style="text-align:center;"> h264 </td>
-<td style="text-align:center;"> h264 视频（重要！）</td>
-</tr>
-<tr>
-<td style="text-align:center;"> msmpeg4v_crystalhd、msmpeg4v1、msmpeg4v2、msmpeg4v3 </td>
-<td style="text-align:center;"> wmv 视频 </td>
-</tr>
-<tr>
-<td style="text-align:center;"> wmav1、wmav2、wmavoice </td>
-<td style="text-align:center;"> wmv 音频 </td>
-</tr>
-</tbody>
-</table>
-
-
-<h3>解容器</h3>
-
-<table>
-<thead>
-<tr>
-<th style="text-align:center;"> 解容器 </th>
-<th style="text-align:center;"> 支持容器格式 </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center;"> aac </td>
-<td style="text-align:center;"> aac 音频容器 </td>
-</tr>
-<tr>
-<td style="text-align:center;"> ac3 </td>
-<td style="text-align:center;"> ac3 音频容器 </td>
-</tr>
-<tr>
-<td style="text-align:center;"> flv </td>
-<td style="text-align:center;"> flv 视频容器 </td>
-</tr>
-<tr>
-<td style="text-align:center;"> hls </td>
-<td style="text-align:center;"> HTTP Live Streaming </td>
-</tr>
-<tr>
-<td style="text-align:center;"> latm </td>
-<td style="text-align:center;"> aac latm封装格式</td>
-</tr>
-<tr>
-<td style="text-align:center;"> live_flv </td>
-<td style="text-align:center;">直播 flv格式</td>
-</tr>
-<tr>
-<td style="text-align:center;"> loas</td>
-<td style="text-align:center;"> aac loas封装格式</td>
-</tr>
-<tr>
-<td style="text-align:center;"> m4v </td>
-<td style="text-align:center;"> m4v/mp4 视频 </td>
-</tr>
-<tr>
-<td style="text-align:center;"> mov </td>
-<td style="text-align:center;"> mov 视频 </td>
-</tr>
-<tr>
-<td style="text-align:center;"> mp3</td>
-<td style="text-align:center;"> mp3 音频</td>
-</tr>
-<tr>
-<td style="text-align:center;">matroska </td>
-<td style="text-align:center;"> mkv 视频</td>
-</tr>
-<tr>
-<td style="text-align:center;">avi </td>
-<td style="text-align:center;"> avi 视频</td>
-</tr>
-<tr>
-<td style="text-align:center;">mpegps、mpegts、mpegvideo</td>
-<td style="text-align:center;"> mpeg封装格式</td>
-</tr>
-<tr>
-<td style="text-align:center;">asf </td>
-<td style="text-align:center;"> wmv 格式</td>
-</tr>
-</tbody>
-</table>
+<p>###解容器
+| 解容器 | 支持容器格式 |
+| :—: | : ——-: |
+| aac | aac 音频容器 |
+| ac3 | ac3 音频容器 |
+| flv | flv 视频容器 |
+| hls | HTTP Live Streaming |
+| latm | aac latm封装格式|
+| live_flv |直播 flv格式|
+| loas| aac loas封装格式|
+| m4v | m4v/mp4 视频 |
+| mov | mov 视频 |
+| mp3| mp3 音频|
+|matroska | mkv 视频|
+|avi | avi 视频|
+|mpegps、mpegts、mpegvideo| mpeg封装格式|
+|asf | wmv 格式|</p>
 
 </div>
 
@@ -362,7 +263,7 @@
 			</div>
 			<footer id="footer" class="inner">
 <p>
-  Copyright &copy; 2016 - LanderlYoung -
+  Copyright &copy; 2017 - LanderlYoung -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 </footer>
@@ -408,6 +309,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/03/08/android-zhi-chi-ping-mu-xuan-zhuan-de-fang-shi/">Android 支持屏幕旋转的方式</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/01/11/re-lambda-ce-shi-bao-gao/">Retro-lambda 测试报告</a>
       </li>
     
@@ -423,39 +328,35 @@
         <a href="/blog/2014/11/09/androidzhong-servicede-shi-yong/">Android中service的使用</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/10/31/androidzhong-de-wakelockshi-yong/">Android中的WakeLock使用</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/android/'>android (9)</a></li><li><a href='/blog/categories/git/'>git (2)</a></li><li><a href='/blog/categories/html5/'>html5 (5)</a></li><li><a href='/blog/categories/java/'>java (4)</a></li><li><a href='/blog/categories/javascript/'>javascript (3)</a></li><li><a href='/blog/categories/linux/'>linux (7)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/android/'>android (10)</a></li><li><a href='/blog/categories/git/'>git (2)</a></li><li><a href='/blog/categories/html5/'>html5 (5)</a></li><li><a href='/blog/categories/java/'>java (4)</a></li><li><a href='/blog/categories/javascript/'>javascript (3)</a></li><li><a href='/blog/categories/linux/'>linux (7)</a></li></ul>
 </section>
 <section>
 	<h1>Tags</h1>
 	<ul class="tag-cloud">
-		<li><a style="font-size: 98.2%" href="/tags/android/">Android</a></li>
-<li><a style="font-size: 114.5%" href="/tags/linux/">Linux</a></li>
-<li><a style="font-size: 107.5%" href="/tags/html5/">HTML5</a></li>
-<li><a style="font-size: 116.4%" href="/tags/java/">Java</a></li>
-<li><a style="font-size: 76.4%" href="/tags/node-dot-js/">Node.js</a></li>
-<li><a style="font-size: 78.6%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
-<li><a style="font-size: 80.4%" href="/tags/java/">java</a></li>
-<li><a style="font-size: 96.7%" href="/tags/android/">android</a></li>
-<li><a style="font-size: 87.5%" href="/tags/git/">Git</a></li>
-<li><a style="font-size: 115.7%" href="/tags/vim/">Vim</a></li>
-<li><a style="font-size: 93.0%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
-<li><a style="font-size: 104.5%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
-<li><a style="font-size: 79.1%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
-<li><a style="font-size: 112.2%" href="/tags/tencent/">tencent</a></li>
-<li><a style="font-size: 107.0%" href="/tags/zhuan-tie/">转贴</a></li>
-<li><a style="font-size: 108.6%" href="/tags/sensor/">sensor</a></li>
-<li><a style="font-size: 106.1%" href="/tags/ui/">UI</a></li>
-<li><a style="font-size: 92.7%" href="/tags/svg/">SVG</a></li>
-<li><a style="font-size: 104.6%" href="/tags/intellij/">IntelliJ</a></li>
-<li><a style="font-size: 108.9%" href="/tags/jni/">JNI</a></li>
+		<li><a style="font-size: 77.0%" href="/tags/android/">Android</a></li>
+<li><a style="font-size: 116.9%" href="/tags/linux/">Linux</a></li>
+<li><a style="font-size: 108.1%" href="/tags/html5/">HTML5</a></li>
+<li><a style="font-size: 87.4%" href="/tags/java/">Java</a></li>
+<li><a style="font-size: 113.7%" href="/tags/node-dot-js/">Node.js</a></li>
+<li><a style="font-size: 89.6%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
+<li><a style="font-size: 73.3%" href="/tags/java/">java</a></li>
+<li><a style="font-size: 70.0%" href="/tags/android/">android</a></li>
+<li><a style="font-size: 102.5%" href="/tags/git/">Git</a></li>
+<li><a style="font-size: 82.8%" href="/tags/vim/">Vim</a></li>
+<li><a style="font-size: 101.0%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
+<li><a style="font-size: 81.1%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
+<li><a style="font-size: 100.7%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
+<li><a style="font-size: 109.6%" href="/tags/tencent/">tencent</a></li>
+<li><a style="font-size: 85.3%" href="/tags/zhuan-tie/">转贴</a></li>
+<li><a style="font-size: 107.9%" href="/tags/sensor/">sensor</a></li>
+<li><a style="font-size: 75.7%" href="/tags/ui/">UI</a></li>
+<li><a style="font-size: 109.5%" href="/tags/svg/">SVG</a></li>
+<li><a style="font-size: 110.4%" href="/tags/intellij/">IntelliJ</a></li>
+<li><a style="font-size: 105.6%" href="/tags/jni/">JNI</a></li>
 
 	</ul>
 </section>

@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: Linux | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/tags/linux/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2016-01-11T23:46:35+08:00</updated>
+  <updated>2017-03-07T01:39:44+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -18,10 +18,8 @@
     <link href="http://LanderlYoung.github.io/blog/2014/05/07/vimcha-jian-quan-gong-lue/"/>
     <updated>2014-05-07T11:42:23+08:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/05/07/vimcha-jian-quan-gong-lue</id>
-    <content type="html"><![CDATA[<p>原来配置vim插件的时候因为总是要下载解压，试用然后把.vim目录弄得乱七八糟。所以也就用了那几个插件，本着够用就好的原则。今天才发现Vim也有自己的插件管理工具<a href="https://github.com/gmarik/Vundle.vim">Vundle</a>真的是太开心了。然后又发现了有大神共享的<a href="https://github.com/humiaozuzu/dot-vimrc">插件列表</a>，于是我就开始了开开心心的Vim插件攻略。</p>
-
-<!--more-->
-
+    <content type="html"><![CDATA[<p>原来配置vim插件的时候因为总是要下载解压，试用然后把.vim目录弄得乱七八糟。所以也就用了那几个插件，本着够用就好的原则。今天才发现Vim也有自己的插件管理工具<a href="https://github.com/gmarik/Vundle.vim">Vundle</a>真的是太开心了。然后又发现了有大神共享的<a href="https://github.com/humiaozuzu/dot-vimrc">插件列表</a>，于是我就开始了开开心心的Vim插件攻略。
+<!--more--></p>
 
 <p>除了上面共享的插件列表我还装了另外几个插件：
 * TagList
@@ -36,13 +34,11 @@
     <link href="http://LanderlYoung.github.io/blog/2014/04/29/zhuan-linuxchu-shi-pei-zhi/"/>
     <updated>2014-04-29T10:11:07+08:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/04/29/zhuan-linuxchu-shi-pei-zhi</id>
-    <content type="html"><![CDATA[<p>转载自：<a target="_blank" href="http://www.2cto.com/Article/201304/200418.html"><a href="http://www.2cto.com/Article/201304/200418.html">http://www.2cto.com/Article/201304/200418.html</a></a></p>
+    <content type="html"><![CDATA[<p>转载自：<a target="_blank" href="http://www.2cto.com/Article/201304/200418.html">http://www.2cto.com/Article/201304/200418.html</a></p>
 
 <p>昨天折腾了 Kali Linux 1.0，把大概的配置过程记录下来，希望对想接触或使用Kali Linux的同学有所帮助。</p>
 
 <!--more-->
-
-
 <p>请注意：</p>
 
 <p>1.本文为<strong>面向新手的教程</strong>，没技术含量，没事瞎折腾，感觉好玩…..如果您可以熟练使用Debian Linux或者使用过Arch Linux、Gentoo或者是自己LFS你完全可以无视本文。</p>
@@ -59,29 +55,29 @@
 
 <p>Kali Linux 介绍：</p>
 
-<p><a href="http://cn.docs.kali.org/category/introduction-cn">http://cn.docs.kali.org/category/introduction-cn</a></p>
+<p>http://cn.docs.kali.org/category/introduction-cn</p>
 
 <p>（官方文档）</p>
 
 <p>Kali Linux 下载：</p>
 
-<p><a href="http://www.kali.org/downloads/">http://www.kali.org/downloads/</a></p>
+<p>http://www.kali.org/downloads/</p>
 
 <p>安装Kali Linux：</p>
 
 <p>请参考官方文档，以及在线搜索“Deiban Linux安装教程”或者 “Debian windows 双系统”。</p>
 
-<p>比如： <a href="http://wenku.baidu.com/view/2b5b3149767f5acfa1c7cd51.html">http://wenku.baidu.com/view/2b5b3149767f5acfa1c7cd51.html</a></p>
+<p>比如： http://wenku.baidu.com/view/2b5b3149767f5acfa1c7cd51.html</p>
 
 <p>强烈建议参考官方在线文档：</p>
 
-<p><a href="http://cn.docs.kali.org/category/installing-kali-linux-cn">http://cn.docs.kali.org/category/installing-kali-linux-cn</a></p>
+<p>http://cn.docs.kali.org/category/installing-kali-linux-cn</p>
 
 <p>没有Linux安装经验的朋友建议先用虚拟机折腾</p>
 
 <p>rootoorotor下载的是kali Linux 1.0 64位版本，在安装好之后就会进入kali linux默认的桌面环境(gnome-fallback)，如图所示：</p>
 
-<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053037648.png">http://www.2cto.com/uploadfile/2013/0405/20130405053037648.png</a>&#8221; width=&#8221;345&#8221; height=&#8221;614&#8221;></p>
+<p><img class="center" src="http://www.2cto.com/uploadfile/2013/0405/20130405053037648.png" width="345" height="614"></p>
 
 <p>然后打开终端，输入</p>
 
@@ -89,26 +85,26 @@
 
 <p>看看里面有没有一下三行kali官方源的地址（如果是断网安装，kali的默认源可能不会写入到这个文件里），如果没有，请在<code>/etc/apt/sources.list</code>中入这三行。</p>
 
-<pre><code class="cpp">deb http://http.kali.org/kali kali main non-free contrib
+<pre><code class="language-cpp">deb http://http.kali.org/kali kali main non-free contrib
 deb-src http://http.kali.org/kali kali main non-free contrib
 deb http://security.kali.org/kali-security kali/updates main contrib non-free
 </code></pre>
 
 <p>加入之后就可以对系统进行更新了，终端中输入：</p>
 
-<pre><code class="cpp">apt-get update &amp;amp;&amp;amp; apt-get dist-upgrade
+<pre><code class="language-cpp">apt-get update &amp;amp;&amp;amp; apt-get dist-upgrade
 </code></pre>
 
 <p>安装BCM43XX系列无线网卡驱动：</p>
 
 <p>由于我的本本比较渣，kali 默认不识别我的无线网卡（博通 BCM 4312）</p>
 
-<pre><code class="cpp">aptitude install firmware-b43-lpphy-installer
+<pre><code class="language-cpp">aptitude install firmware-b43-lpphy-installer
 </code></pre>
 
 <p>关于BCM43XX系列的无线网卡驱动请参考Debian官方文档：</p>
 
-<p><a href="http://wiki.debian.org/bcm43xx">http://wiki.debian.org/bcm43xx</a></p>
+<p>http://wiki.debian.org/bcm43xx</p>
 
 <p>安装完成之后重启在终端中输入：</p>
 
@@ -128,12 +124,12 @@ deb http://security.kali.org/kali-security kali/updates main contrib non-free
 
 <p>如果还不行也有可能是中文包没有安装，在终端中运行：</p>
 
-<pre><code class="cpp">dpkg-reconfigure locales
+<pre><code class="language-cpp">dpkg-reconfigure locales
 </code></pre>
 
 <p>汉化浏iceweasel<a target="_blank" href="http://www.2cto.com/os/liulanqi/" class="keylink" style="color:rgb(51, 51, 51); text-decoration:none">浏览器</a>（Firefox）</p>
 
-<pre><code class="cpp">apt-get install iceweasel-l10n-zh-cn
+<pre><code class="language-cpp">apt-get install iceweasel-l10n-zh-cn
 </code></pre>
 
 <p>在提示框中往下拉，开头位zh_CN的全部选择，然后确定，r然后在设置本地中文语言环境时选择 zh_CN.GBK 或者 zh_CN.UTF-8 确定，如果提示已经安装请，按照第一步的办法进入System Settings设置为中文。</p>
@@ -142,24 +138,24 @@ deb http://security.kali.org/kali-security kali/updates main contrib non-free
 
 <p>ibus:</p>
 
-<pre><code class="cpp">apt-get install ibus ibus-pinyin
+<pre><code class="language-cpp">apt-get install ibus ibus-pinyin
 </code></pre>
 
 <p>或者</p>
 
 <p>fcitx</p>
 
-<pre><code class="cpp">apt-get install fcitx fcitx-pinyin fcitx-module-cloudpinyin fcitx-googlepinyin
+<pre><code class="language-cpp">apt-get install fcitx fcitx-pinyin fcitx-module-cloudpinyin fcitx-googlepinyin
 </code></pre>
 
 <p>安装完成之后，打开终端输入：</p>
 
-<pre><code class="cpp ">im-config
+<pre><code class="language-cpp">im-config
 </code></pre>
 
 <p>确认手工配置，选择你喜欢的输入法，如图：</p>
 
-<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053039870.png">http://www.2cto.com/uploadfile/2013/0405/20130405053039870.png</a>&#8221; width=&#8221;440&#8221; height=&#8221;610&#8221;>
+<p><img class="center" src="http://www.2cto.com/uploadfile/2013/0405/20130405053039870.png" width="440" height="610">
 然后重启系统~</p>
 
 <p>如果你使用的是ibus：</p>
@@ -180,25 +176,25 @@ deb http://security.kali.org/kali-security kali/updates main contrib non-free
 
 <p>打开终端：</p>
 
-<pre><code class="cpp">adduser 用户名
+<pre><code class="language-cpp">adduser 用户名
 </code></pre>
 
 <p>如图所示：</p>
 
-<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053040253.png">http://www.2cto.com/uploadfile/2013/0405/20130405053040253.png</a>&#8221; width=&#8221;415&#8221; height=&#8221;745&#8221;></p>
+<p><img class="center" src="http://www.2cto.com/uploadfile/2013/0405/20130405053040253.png" width="415" height="745"></p>
 
 <p>在终端下输入：</p>
 
-<pre><code class="cpp">visudo
+<pre><code class="language-cpp">visudo
 </code></pre>
 
-<p>按i之后进入编辑模式（插入），然后在文件的 root ALL=(ALL:ALL) ALL 的下方添加一个新的sudo用户例如XXX用户：XXX&nbsp;&nbsp; ALL=(ALL:ALL)</p>
+<p>按i之后进入编辑模式（插入），然后在文件的 root ALL=(ALL:ALL) ALL 的下方添加一个新的sudo用户例如XXX用户：XXX   ALL=(ALL:ALL)</p>
 
 <p>（ALL在文件visudo中被定义授予用户所有的命令权限）</p>
 
 <p>如图所示：</p>
 
-<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053041263.png">http://www.2cto.com/uploadfile/2013/0405/20130405053041263.png</a>&#8221; width=&#8221;514&#8221; height=&#8221;659&#8221;></p>
+<p><img class="center" src="http://www.2cto.com/uploadfile/2013/0405/20130405053041263.png" width="514" height="659"></p>
 
 <p>完成后按Esc键进入命令行模式，键入:w来保存</p>
 
@@ -210,8 +206,8 @@ deb http://security.kali.org/kali-security kali/updates main contrib non-free
 
 <p>终端中输入（root权限）：</p>
 
-<pre><code class="cpp">cp -rf /root/. /home/新用户名
-
+<pre><code class="language-cpp">cp -rf /root/. /home/新用户名
+ 
 chown -R 新用户名:新用户名 /home/新用户名
 </code></pre>
 
@@ -221,17 +217,18 @@ chown -R 新用户名:新用户名 /home/新用户名
 
 <p>Kali Linux的桌面环境已经升级为Gnome 3，但默认运行在fallback模式。想<strong>临时</strong>切换成gnome3的标准模式请在终端输入：</p>
 
-<pre><code class="cpp">gnome-shell –replace
+<pre><code class="language-cpp">gnome-shell –replace
+
 </code></pre>
 
 <p>gnome 3的标准模式支持一些桌面特效开启还有很多gnome-shell插件，如果您觉得比较好用请输入下面的命令使系统在启动时，自动进入gnome-shell的标准模式。</p>
 
-<pre><code class="cpp">gsettings set org.gnome.desktop.session session-name gnome
+<pre><code class="language-cpp">gsettings set org.gnome.desktop.session session-name gnome
 </code></pre>
 
 <p>若想还原默认的桌面请输入：</p>
 
-<pre><code class="cpp ">gsettings set org.gnome.desktop.session session-name gnome-fallback
+<pre><code class="language-cpp">gsettings set org.gnome.desktop.session session-name gnome-fallback
 </code></pre>
 
 <p>注销或者重启之后进入桌面即可直接进入您要切换的模式。</p>
@@ -248,50 +245,50 @@ chown -R 新用户名:新用户名 /home/新用户名
 
 <p>1.官方源中的软件（可以通过apt-get install直接安装）：</p>
 
-<pre><code class="cpp">apt-get install gnome-tweak-tool 
-
+<pre><code class="language-cpp">apt-get install gnome-tweak-tool 
+ 
 （gnome-shell管理软件可以修改字体、管理插件、管理桌面主题。必备！） 
-
+ 
 apt-get install gdebi 
-
+ 
 (有了这个安装软件就不用在终端中dpkg -i 安装了，提供图形化软件安装方式) 
-
+ 
 apt-get install nautilus-open-terminal 
-
+ 
 (鼠标右键在当前目录打开终端) 
-
+ 
 apt-get install flashplugin-nonfree 
-
+ 
 （浏览器flash插件） 
-
+ 
 apt-get install synaptic 
-
+ 
 （新立得软件包管理器） 
-
+ 
 apt-get install file-roller 
-
+ 
 （压缩文件管理工具） 
-
+ 
 apt-get install amule 
-
+ 
 （电骡） 
-
+ 
 apt-get install remmina* 
-
+ 
 （远程桌面+扩展） 
-
+ 
 apt-get install geany 
-
+ 
 （一个轻巧的IDE，如果您喜欢折腾emacs或者VIM就不用安装这个了） 
-
+ 
 apt-get install bluefish 
-
+ 
 （一个强大的Web编辑器） 
-
+ 
 apt-get install&amp;nbsp; meld 
-
+ 
 （一款可视化的文件及目录对比、合并工具） 
-
+ 
 apt-get install audacious&lt;br&gt;
 （一个轻量级音乐播放器） 
 </code></pre>
@@ -308,10 +305,10 @@ apt-get install audacious&lt;br&gt;
 
 <p>使用前要先</p>
 
-<pre><code class="cpp">apt-get install libqt4-opengl 
+<pre><code class="language-cpp">apt-get install libqt4-opengl 
 </code></pre>
 
-<p><a href="https://www.virtualbox.org/wiki/Linux_Downloads">https://www.virtualbox.org/wiki/Linux_Downloads</a></p>
+<p>https://www.virtualbox.org/wiki/Linux_Downloads</p>
 
 <p>Gnome3有扩展系统，可以在线安装扩展，</p>
 
@@ -323,32 +320,32 @@ apt-get install audacious&lt;br&gt;
 
 <p>如图：</p>
 
-<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053042483.png">http://www.2cto.com/uploadfile/2013/0405/20130405053042483.png</a>&#8221; width=&#8221;440&#8221; height=&#8221;614&#8221;></p>
+<p><img class="center" src="http://www.2cto.com/uploadfile/2013/0405/20130405053042483.png" width="440" height="614"></p>
 
 <p>如果想隐藏图标，可以打开系统工具——主菜单 来选择隐藏，如果您再使用这个工具时没有看见Kali Linux菜单, 请下载我修改好的文件放入 /home/你的用户名/.config/menus 文件夹，然后使用组合键alt+F2输入r ——回车，既可重启gome-shell</p>
 
 <p>然后在重新打开系统工具——主菜单即可，去掉构√即可隐藏图标：</p>
 
-<p>下载地址：<a href="http://dl.vmall.com/c09noj4d81">http://dl.vmall.com/c09noj4d81</a></p>
+<p>下载地址：http://dl.vmall.com/c09noj4d81</p>
 
 <p>（注意：“.”开头的目录或文件是隐藏的，按ctrl+H才可查看，或者在终端中输入 ls -a）</p>
 
-<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053044953.png">http://www.2cto.com/uploadfile/2013/0405/20130405053044953.png</a>&#8221; width=&#8221;364&#8221; height=&#8221;446&#8221;></p>
+<p><img class="center" src="http://www.2cto.com/uploadfile/2013/0405/20130405053044953.png" width="364" height="446"></p>
 
-<h2>安装Faenza图标：</h2>
+<p>##安装Faenza图标：</p>
 
-<pre><code class="cpp">wget http://faenza-icon-theme.googlecode.com/files/faenza-icon-theme_1.3.zip
-
+<pre><code class="language-cpp">wget http://faenza-icon-theme.googlecode.com/files/faenza-icon-theme_1.3.zip
+ 
 unzip faenza-icon-theme_1.3.zip
-
+ 
 chmod u+x INSTALL
-
+ 
 ./INSTALL
 </code></pre>
 
 <p>然后根据提示安装即可，安装完成之后使用gnome-tweak-tool工具更换图标：</p>
 
-<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053045872.png">http://www.2cto.com/uploadfile/2013/0405/20130405053045872.png</a>&#8221; width=&#8221;499&#8221; height=&#8221;643&#8221;></p>
+<p><img class="center" src="http://www.2cto.com/uploadfile/2013/0405/20130405053045872.png" width="499" height="643"></p>
 
 <p><strong>优化字体显示：</strong></p>
 
@@ -374,7 +371,7 @@ chmod u+x INSTALL
 
 <p>渲染之后的显示效果截图：</p>
 
-<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053046521.png">http://www.2cto.com/uploadfile/2013/0405/20130405053046521.png</a>&#8221;&#8221; width=&#8221;544&#8221; height=&#8221;587&#8221;></p>
+<p><img class="center" src="http://www.2cto.com/uploadfile/2013/0405/20130405053046521.png”" width="544" height="587"></p>
 
 <p><strong>修改启动分辨率：</strong></p>
 
@@ -388,7 +385,7 @@ chmod u+x INSTALL
 
 <p><code>vim /etc/default/grub</code></p>
 
-<p>找到 #GRUB_GFXMODE=640×480&nbsp; 取消这一行前面的注释符“#”并将后面的数字修改为一个合适的值，不需要太高，比如1024×768。这个值同时会影响grub启动菜单和控制台里文字的分辨率。</p>
+<p>找到 #GRUB_GFXMODE=640×480  取消这一行前面的注释符“#”并将后面的数字修改为一个合适的值，不需要太高，比如1024×768。这个值同时会影响grub启动菜单和控制台里文字的分辨率。</p>
 
 <p>2.修改 /etc/grub.d/00_header 这个文件</p>
 
@@ -401,13 +398,13 @@ chmod u+x INSTALL
 
 <p><strong>总结：</strong></p>
 
-<p>如果使用Kali&nbsp;<a target="_blank" href="http://www.2cto.com/os/linux/" class="keylink" style="color:rgb(51, 51, 51); text-decoration:none">Linux</a>用与日常使用统，按照以上的配置也差不多了，以后我会继续补充。</p>
+<p>如果使用Kali <a target="_blank" href="http://www.2cto.com/os/linux/" class="keylink" style="color:rgb(51, 51, 51); text-decoration:none">Linux</a>用与日常使用统，按照以上的配置也差不多了，以后我会继续补充。</p>
 
 <p>到此为止，Kali Linux的桌面环境基本折腾完成，上图：</p>
 
-<p><img class="center  <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053047828.png">http://www.2cto.com/uploadfile/2013/0405/20130405053047828.png</a>&#8221; width=&#8221;345&#8221; height=&#8221;614&#8221;></p>
+<p><img class="center" src="http://www.2cto.com/uploadfile/2013/0405/20130405053047828.png" width="345" height="614"></p>
 
-<p><img class="center <a" src="href="http://www.2cto.com/uploadfile/2013/0405/20130405053049272.png">http://www.2cto.com/uploadfile/2013/0405/20130405053049272.png</a>&#8221; width=&#8221;345&#8221; height=&#8221;614&#8221;></p>
+<p><img class="center" src="http://www.2cto.com/uploadfile/2013/0405/20130405053049272.png" width="345" height="614"></p>
 ]]></content>
   </entry>
   
@@ -426,68 +423,63 @@ chmod u+x INSTALL
     <link href="http://LanderlYoung.github.io/blog/2014/01/13/linux-forkhe-execxi-lie-han-shu/"/>
     <updated>2014-01-13T00:31:29+08:00</updated>
     <id>http://LanderlYoung.github.io/blog/2014/01/13/linux-forkhe-execxi-lie-han-shu</id>
-    <content type="html"><![CDATA[<p>linux 中的<a href="http://en.wikipedia.org/wiki/Fork_(system_call)">fork</a>和<a href="http://en.wikipedia.org/wiki/Exec_(operating_system)">exec</a>函数是进程相关的两个函数，最早在大二的操作系统课上了解到。今天要写个小东西偶尔用到就研究了一下。</p>
-
-<h2>1.fork</h2>
-
-<p>fork的功能是创建一个和进程完全一样的子进程。完全的意思是指子进程的堆和栈和父进程是完全相同的。在子进程创建完成时，子进程和父进程共享内存。但是一旦共享的内存区域要被写入时（不管是父进程要写还是子进程要写）这块区域就会从父进程的进程空间复制到子进程，然后再执行写入。这就是通常说的<a href="http://en.wikipedia.org/wiki/Fork_(system_call)">copy on write</a>，目的很明显，就是要节省不必要的内存消耗 。</p>
+    <content type="html"><![CDATA[<p>linux 中的<a href="http://en.wikipedia.org/wiki/Fork_(system_call)">fork</a>和<a href="http://en.wikipedia.org/wiki/Exec_(operating_system)">exec</a>函数是进程相关的两个函数，最早在大二的操作系统课上了解到。今天要写个小东西偶尔用到就研究了一下。
+## 1.fork
+fork的功能是创建一个和进程完全一样的子进程。完全的意思是指子进程的堆和栈和父进程是完全相同的。在子进程创建完成时，子进程和父进程共享内存。但是一旦共享的内存区域要被写入时（不管是父进程要写还是子进程要写）这块区域就会从父进程的进程空间复制到子进程，然后再执行写入。这就是通常说的<a href="http://en.wikipedia.org/wiki/Fork_(system_call)">copy on write</a>，目的很明显，就是要节省不必要的内存消耗 。</p>
 
 <!--more-->
-
 
 <p>这一点在安卓的虚拟机孵化进程zygote被使用，zygote在开机时就把所有系统java类的字节码加载到内存，当一个app启动时zygote就fork一下然后fork的子进程去执行app。这样所有app可以调用系统class而整个系统的内存中只有一份系统类，可以很大程度的节省内存, 同时也加快了app的启动。</p>
 
 <p>linux系统中的所有进程都是init进程fork出来的，查看的话可以发现他的pid是1, 是系统内所有进程的父进程（或者祖先进程）。其实init也有个pid为0的父进程，开机完成后就不存在了，本文不涉及这方面。</p>
 
-<p>fork包含在&lt;unistd.h>头文件中， 其原型是：<code>pid_t fork(void)</code>其中pid_t是进程pid的数据结构，可以被cast成int等类型，当frok成功时在父进程中的返回值是子进程的pid, 子进程中是0, 若没能创建子进程则返回负值。</p>
+<p>fork包含在<unistd.h>头文件中， 其原型是：` pid_t fork(void)`其中pid\_t是进程pid的数据结构，可以被cast成int等类型，当frok成功时在父进程中的返回值是子进程的pid, 子进程中是0, 若没能创建子进程则返回负值。</unistd.h></p>
 
 <p>写个小程序看看：</p>
 
-<pre><code class="cpp">#include &lt;stdio.h&gt;
+<pre><code class="language-cpp">#include &lt;stdio.h&gt;
 #include &lt;unistd.h&gt;
 #include &lt;stdlib.h&gt;//for exit()
 
 int main(void) {
-    pid_t pid;
-    printf("parent pid:%d\n", getpid());
-    if(pid = fork()) {
-        // pid != 0, in parent process
-        printf("in parent child pid:%d\n", pid);
-        exit(0);
-    }
+	pid_t pid;
+	printf("parent pid:%d\n", getpid());
+	if(pid = fork()) {
+		// pid != 0, in parent process
+		printf("in parent child pid:%d\n", pid);
+		exit(0);
+	}
 
-    //in child process
-    printf("I\'m Child process.\n"
-            "My pid :%d, parent pid:%d\n",
-            getpid(), getppid());
+	//in child process
+	printf("I\'m Child process.\n"
+			"My pid :%d, parent pid:%d\n",
+			getpid(), getppid());
 
-    return 0;
+	return 0;
 }
 </code></pre>
 
 <p>编译运行看看</p>
 
-<pre><code class="cpp">young@Y470:~/Desktop$gcc f.c -o f
+<pre><code class="language-cpp">young@Y470:~/Desktop$gcc f.c -o f
 young@Y470:~/Desktop$./f
 parent pid:8627
 in parent child pid:8628
 I'm Child process.
 My pid :8628,  parent pid:8627
 </code></pre>
-
 <p>getpid()返回当前进程的pid，getppid（）返回父进程的pid。</p>
 
 <p>这里在fork之后通过返回值知道自己是父进程还是子进程，然后通过if判断进行流程控制，父、子进程各自执行自己的任务。</p>
 
-<h2>2.exec系列函数</h2>
-
+<h2 id="exec">2.exec系列函数</h2>
 <p>刚才说道linux系统内所有进程都是init进程的子孙进程，但是可能会让人不解：“这样的话所有进程不都是一样的吗”。这里我们要用到exec系列函数了。</p>
 
 <p>exec系列函数在执行时会首先清空当前进程（调用exec函数的进程）的栈和堆等内存空间。然后创建新的空间。但是进程的pid和父进程等信息不会变。</p>
 
 <p>exec系列函数有一下几个：</p>
 
-<pre><code class="cpp">int execl(char const *path,  char const *arg0,  ...);
+<pre><code class="language-cpp">int execl(char const *path,  char const *arg0,  ...);
 int execle(char const *path,  char const *arg0,  ...,  char const *envp);
 int execlp(char const *file,  char const *arg0,  ...);
 int execv(char const *path,  char const *argv);
@@ -504,29 +496,27 @@ p - 使用系统环境变量PATH搜索可执行文件
 v - 命令的参数通过一个数组`vector`传入
 </pre>
 
-
 <p>需要说明的是：</p>
 
 <ol>
-<li>如果使用带<code>l</code>的函数，即execl、execle、execlp应该在参数列表最后传入一个NULL标记参数完毕。</li>
-<li>如果是带v的函数就应该在数组的最后一项设置成NULL标记数组的完毕。</li>
-<li>并且arg0（就是第一个参数）通常情况下都是可执行文件自身的名字，否则可能会导致函数调用失败，<a name="list"></a>当然也有特例，为了行文通畅，放到<a href="#appendix"> 最后</a>再说。</li>
-<li>如果使用带有e的函数那么环境变量数组envp的最后也要有NULL标记数组的结束。</li>
-<li>实验证明对于带有e的函数在传入正确的envp的前提下还要写对正确的路径，否则不能执行。</li>
+  <li>如果使用带<code>l</code>的函数，即execl、execle、execlp应该在参数列表最后传入一个NULL标记参数完毕。</li>
+  <li>如果是带v的函数就应该在数组的最后一项设置成NULL标记数组的完毕。</li>
+  <li>并且arg0（就是第一个参数）通常情况下都是可执行文件自身的名字，否则可能会导致函数调用失败，<a name="list"></a>当然也有特例，为了行文通畅，放到<a href="#appendix"> 最后</a>再说。</li>
+  <li>如果使用带有e的函数那么环境变量数组envp的最后也要有NULL标记数组的结束。</li>
+  <li>实验证明对于带有e的函数在传入正确的envp的前提下还要写对正确的路径，否则不能执行。</li>
 </ol>
-
 
 <p>函数返回0表示正常。</p>
 
 <p>写个小程序试试看：</p>
 
-<pre><code class="cpp">#include &lt;stdio.h&gt;
+<pre><code class="language-cpp">#include &lt;stdio.h&gt;
 #include &lt;unistd.h&gt;
 int main() {
-    printf("process pid: %d\n", getpid());
-    execlp("./child", "child", NULL);
-    printf("hello\n");
-    return 0;
+	printf("process pid: %d\n", getpid());
+	execlp("./child", "child", NULL);
+	printf("hello\n");
+	return 0;
 }
 </code></pre>
 
@@ -538,81 +528,80 @@ pid: 12369
 </code>
 执行了<code>./child</code>命令，第一行输出是原进程的输出，第二行输出是新进程（不是子进程）child的输出，注意printf没有执行。那是因为exec函数执行是清理了当强进程的内存空间整个进程可以说是直接换成了child进程。这个child是一个小程序，代码如下：</p>
 
-<pre><code class="cpp">#include &lt;stdio.h&gt;
+<pre><code class="language-cpp">#include &lt;stdio.h&gt;
 #include &lt;unistd.h&gt;
 int main(void) {
-    printf("pid: %d\n", getpid());
-    return 0;
+	printf("pid: %d\n", getpid());
+	return 0;
 }
 </code></pre>
-
 <p>通过这段代码我们也可以证明，<strong>exec创建的进程和调用进程pid一样</strong>。</p>
 
 <p>然后我们写个程序测试并说明上述所有exec函数的用法：</p>
 
-<pre><code class="cpp">#include &lt;stdio.h&gt;
+<pre><code class="language-cpp">#include &lt;stdio.h&gt;
 #include &lt;unistd.h&gt;
 
 int main(int argc, char *argv[]) {
-    char c = argv[1][0];
-    pid_t p;
-    char* m_argv[] = {
-        "echo", "echo", "Hello world", NULL, 
-    };
-    char *envp[] = {
-        "/usr/bin", 
-        "/bin", 
-        NULL, 
-    };
+	char c = argv[1][0];
+	pid_t p;
+	char* m_argv[] = {
+		"echo", "echo", "Hello world", NULL, 
+	};
+	char *envp[] = {
+		"/usr/bin", 
+		"/bin", 
+		NULL, 
+	};
 
-    printf("parent pid: %d\n", getpid());
+	printf("parent pid: %d\n", getpid());
 
 
-    switch (c){
-        case '1':
-            if (!fork()) {
-                printf("from execl pid: %d\n", getpid());
-                execl("/bin/echo", "echo", "Hello world", NULL);
-            }
-            break;
-        case '2':
-            if (!fork()) {
-                printf("from execle pid: %d\n", getpid());
-                execle("/bin/echo", "echo", "Hello world", NULL, envp);
-            }
-            break;
-        case '3':
-            if (!fork()) {
-                printf("from execlp pid: %d\n", getpid());
-                execlp("echo", "echo", "Hello world", NULL);
-            }
-            break;
-        case '4':
+	switch (c){
+		case '1':
+			if (!fork()) {
+				printf("from execl pid: %d\n", getpid());
+				execl("/bin/echo", "echo", "Hello world", NULL);
+			}
+			break;
+		case '2':
+			if (!fork()) {
+				printf("from execle pid: %d\n", getpid());
+				execle("/bin/echo", "echo", "Hello world", NULL, envp);
+			}
+			break;
+		case '3':
+			if (!fork()) {
+				printf("from execlp pid: %d\n", getpid());
+				execlp("echo", "echo", "Hello world", NULL);
+			}
+			break;
+		case '4':
 
-            if (!fork()) {
-                printf("from execv pid: %d\n", getpid());
-                execv("/bin/echo", m_argv);
-            }
-            break;
-        case '5':
-            if (!fork()) {
-                printf("from execve pid: %d\n", getpid());
-                execve("/bin/echo", m_argv, envp);
-            }
-            break;
-        default:
-            if (!fork()) {
-                printf("from execvp pid: %d\n", getpid());
-                execvp("echo", m_argv);
-            }
-    }
-    return 0;
+			if (!fork()) {
+				printf("from execv pid: %d\n", getpid());
+				execv("/bin/echo", m_argv);
+			}
+			break;
+		case '5':
+			if (!fork()) {
+				printf("from execve pid: %d\n", getpid());
+				execve("/bin/echo", m_argv, envp);
+			}
+			break;
+		default:
+			if (!fork()) {
+				printf("from execvp pid: %d\n", getpid());
+				execvp("echo", m_argv);
+			}
+	}
+	return 0;
 }
 </code></pre>
 
 <p>编译执行看看能不能出来结果：</p>
 
-<pre><code class="cpp ">young@Y470:~/Desktop$for ((i = 1; i &lt; 7; i++));do ./exec_test $i; echo ;done
+<pre><code class="language-cpp">young@Y470:~/Desktop$for ((i = 1; i &lt; 7; i++));do ./exec_test $i; echo ;done
 parent pid: 11046
 from execl pid: 11047
 
@@ -638,35 +627,29 @@ from execvp pid: 11057
 
 echo Hello world
 </code></pre>
-
 <p>共六个hello world，虽然有点乱，不过也是没办法的事，谁让人家来自不同进程呢！想想也够吊的，六个hello world来六个自不同进程。</p>
 
 <p>这里也展示了<strong>如何开启一个进程</strong>，就是fork之后在子进程执行exec。</p>
 
-<h2>3.附录</h2>
-
-<p><a name="appendix"></a>
+<p>##3.附录
+<a name="appendix"></a>
 在<a href="#list">上面</a>说到arg0和可执行文件名不一样的情况。比如大家读知道的busybox就这一个例子。</p>
 
 <p>在c/c++语言中main函数想使用命令行参数的话就得使用下面的声明方式：</p>
-
 <pre>
 int main(int argc, char *argv[])
 </pre>
-
-
 <p>在程序执行是，argc至少是1, 所以argv<a href="http://en.wikipedia.org/wiki/Fork_(system_call)">0</a>始终有值，他就是程序调用的可执行文件的名字。比如ls命令他的argv<a href="http://en.wikipedia.org/wiki/Fork_(system_call)">0</a>始终都是“ls“。不妨写个程序测试：</p>
 
-<pre><code class="cpp">#include &lt;stdio.h&gt;
+<pre><code class="language-cpp">#include &lt;stdio.h&gt;
 int main(int argc, char *argv[]) {
-    printf("%s\n", argv[0]);
-    return 0;
+	printf("%s\n", argv[0]);
+	return 0;
 }
 </code></pre>
-
 <p>编译执行，请看仔细：</p>
 
-<pre><code class="cpp">young@Y470:~/Desktop$make name
+<pre><code class="language-cpp">young@Y470:~/Desktop$make name
 cc     name.c   -o name
 young@Y470:~/Desktop$./name
 ./name
@@ -683,19 +666,19 @@ young@Y470:~/Desktop$../Desktop/name
 
 <p>最后在写个程序测试一下：</p>
 
-<pre><code class="cpp">
+<pre><code class="language-cpp">
 #include &lt;stdio.h&gt;
 #include &lt;unistd.h&gt;
 
 int main(void) {
-    if(!fork()) {
-        execlp("busybox", "busybox", NULL);
-    }
-    if(!fork()) {
-        //arg0 和可执行文件名不一样
-        execlp("busybox", "ls", "-l", NULL);
-    }
-    return 0;
+	if(!fork()) {
+		execlp("busybox", "busybox", NULL);
+	}
+	if(!fork()) {
+		//arg0 和可执行文件名不一样
+		execlp("busybox", "ls", "-l", NULL);
+	}
+	return 0;
 }
 </code></pre>
 
@@ -720,133 +703,136 @@ int main(void) {
 <span class='line-number'>18</span>
 <span class='line-number'>19</span>
 <span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">young</span><span class="err">@</span><span class="nl">Y470</span><span class="p">:</span><span class="o">~/</span><span class="n">Desktop</span><span class="o">/</span><span class="n">busy</span><span class="err">$</span><span class="n">Copyright</span> <span class="o">&amp;</span><span class="n">copy</span><span class="p">;</span> <span class="mi">1998</span><span class="o">-</span><span class="mi">2011</span> <span class="n">Erik</span> <span class="n">Andersen</span><span class="p">,</span>  <span class="n">Rob</span> <span class="n">Landley</span><span class="p">,</span>  <span class="n">Denys</span> <span class="n">Vlasenko</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">young</span><span class="err">@</span><span class="nl">Y470</span><span class="p">:</span><span class="o">~/</span><span class="n">Desktop</span><span class="o">/</span><span class="n">busy</span><span class="err">$</span><span class="n">Copyright</span> <span class="p">(</span><span class="n">C</span><span class="p">)</span> <span class="mi">1998</span><span class="o">-</span><span class="mi">2011</span> <span class="n">Erik</span> <span class="n">Andersen</span><span class="p">,</span>  <span class="n">Rob</span> <span class="n">Landley</span><span class="p">,</span>  <span class="n">Denys</span> <span class="n">Vlasenko</span>
 </span><span class='line'><span class="n">and</span> <span class="n">others</span><span class="p">.</span> <span class="n">Licensed</span> <span class="n">under</span> <span class="n">GPLv2</span><span class="p">.</span>
 </span><span class='line'><span class="n">See</span> <span class="n">source</span> <span class="n">distribution</span> <span class="k">for</span> <span class="n">full</span> <span class="n">notice</span><span class="p">.</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
 </span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="nl">Usage</span><span class="p">:</span> <span class="n">busybox</span> <span class="p">[</span><span class="n">function</span><span class="p">]</span> <span class="p">[</span><span class="n">arguments</span><span class="p">]</span><span class="o">&amp;</span><span class="n">hellip</span><span class="p">;</span>
-</span><span class='line'>   <span class="nl">or</span><span class="p">:</span> <span class="n">busybox</span> <span class="o">&amp;</span><span class="n">ndash</span><span class="p">;</span><span class="n">list</span><span class="p">[</span><span class="o">-</span><span class="n">full</span><span class="p">]</span>
-</span><span class='line'>   <span class="nl">or</span><span class="p">:</span> <span class="n">busybox</span> <span class="o">&amp;</span><span class="n">ndash</span><span class="p">;</span><span class="n">install</span> <span class="p">[</span><span class="o">-</span><span class="n">s</span><span class="p">]</span> <span class="p">[</span><span class="kt">DIR</span><span class="p">]</span>
-</span><span class='line'>   <span class="nl">or</span><span class="p">:</span> <span class="n">function</span> <span class="p">[</span><span class="n">arguments</span><span class="p">]</span><span class="o">&amp;</span><span class="n">hellip</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="nl">Usage</span><span class="p">:</span> <span class="n">busybox</span> <span class="p">[</span><span class="n">function</span><span class="p">]</span> <span class="p">[</span><span class="n">arguments</span><span class="p">]</span><span class="err">…</span>
+</span><span class='line'>   <span class="nl">or</span><span class="p">:</span> <span class="n">busybox</span> <span class="err">–</span><span class="n">list</span><span class="p">[</span><span class="o">-</span><span class="n">full</span><span class="p">]</span>
+</span><span class='line'>   <span class="nl">or</span><span class="p">:</span> <span class="n">busybox</span> <span class="err">–</span><span class="n">install</span> <span class="p">[</span><span class="o">-</span><span class="n">s</span><span class="p">]</span> <span class="p">[</span><span class="kt">DIR</span><span class="p">]</span>
+</span><span class='line'>   <span class="nl">or</span><span class="p">:</span> <span class="n">function</span> <span class="p">[</span><span class="n">arguments</span><span class="p">]</span><span class="err">…</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
 </span><span class='line'>
 </span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">BusyBox</span> <span class="n">is</span> <span class="n">a</span> <span class="n">multi</span><span class="o">-</span><span class="n">call</span> <span class="n">binary</span> <span class="n">that</span> <span class="n">combines</span> <span class="n">many</span> <span class="n">common</span> <span class="n">Unix</span>
 </span><span class='line'><span class="n">utilities</span> <span class="n">into</span> <span class="n">a</span> <span class="n">single</span> <span class="n">executable</span><span class="p">.</span>  <span class="n">Most</span> <span class="n">people</span> <span class="n">will</span> <span class="n">create</span> <span class="n">a</span>
-</span><span class='line'>                <span class="err">…………</span>
-</span><span class='line'><span class="n">cttyhack</span><span class="p">,</span>  <span class="n">cut</span><span class="p">,</span>  <span class="n">date</span><span class="p">,</span>  <span class="n">dc</span><span class="p">,</span>  <span class="o">-</span><span class="n">rwxr</span><span class="o">-</span><span class="n">xr</span><span class="o">-</span><span class="n">x</span>    <span class="mi">1</span> <span class="n">young</span>    <span class="n">young</span>       <span class="mi">697656</span> <span class="n">Jan</span> <span class="mi">13</span> <span class="mo">03</span><span class="o">:</span><span class="mi">29</span> <span class="n">busybox</span>
+</span><span class='line'>				<span class="err">…………</span>
+</span><span class='line'><span class="n">cttyhack</span><span class="p">,</span>  <span class="n">cut</span><span class="p">,</span>  <span class="n">date</span><span class="p">,</span>  <span class="n">dc</span><span class="p">,</span>  <span class="o">-</span><span class="n">rwxr</span><span class="o">-</span><span class="n">xr</span><span class="o">-</span><span class="n">x</span>    <span class="mi">1</span> <span class="n">young</span>    <span class="n">young</span>       <span class="mi">697656</span> <span class="n">Jan</span> <span class="mi">13</span> <span class="mo">03</span><span class="o">:</span><span class="mi">29</span> <span class="n">busybox</span> <span class="n">dd</span><span class="p">,</span>  <span class="o">-</span><span class="n">rwxr</span><span class="o">-</span><span class="n">xr</span><span class="o">-</span><span class="n">x</span>    <span class="mi">1</span> <span class="n">young</span>    <span class="n">young</span>         <span class="mi">6935</span> <span class="n">Jan</span> <span class="mi">13</span> <span class="mo">03</span><span class="o">:</span><span class="mi">35</span> <span class="n">t</span> <span class="n">deallocvt</span><span class="p">,</span>  <span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">--</span><span class="n">r</span><span class="o">--</span>    <span class="mi">1</span> <span class="n">young</span>    <span class="n">young</span>          <span class="mi">476</span> <span class="n">Jan</span> <span class="mi">13</span> <span class="mo">03</span><span class="o">:</span><span class="mi">35</span> <span class="n">t</span><span class="p">.</span><span class="n">c</span> <span class="n">depmod</span><span class="p">,</span>  <span class="n">df</span><span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">--</span><span class="n">r</span><span class="o">--</span>    <span class="mi">1</span> <span class="n">young</span>    <span class="n">young</span>            <span class="mi">0</span> <span class="n">Jan</span> <span class="mi">13</span> <span class="mo">03</span><span class="o">:</span><span class="mi">30</span> <span class="o">??</span> <span class="p">,</span>  <span class="n">diff</span><span class="p">,</span>
+</span><span class='line'>				<span class="err">…………</span> <span class="err">```</span> <span class="n">busybox</span> <span class="err">的输出太长了，我删掉了一部分并用省略号标记。可以看到</span><span class="n">ls</span><span class="err">的输出（夹杂在</span><span class="n">busybox</span><span class="err">之间，因为是两个进程的输出）。</span>
 </span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
 </span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">dd</span><span class="p">,</span>  <span class="o">-</span><span class="n">rwxr</span><span class="o">-</span><span class="n">xr</span><span class="o">-</span><span class="n">x</span>    <span class="mi">1</span> <span class="n">young</span>    <span class="n">young</span>         <span class="mi">6935</span> <span class="n">Jan</span> <span class="mi">13</span> <span class="mo">03</span><span class="o">:</span><span class="mi">35</span> <span class="n">t</span>
-</span><span class='line'><span class="n">deallocvt</span><span class="p">,</span>  <span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">&amp;</span><span class="n">ndash</span><span class="p">;</span><span class="n">r</span><span class="o">&amp;</span><span class="n">ndash</span><span class="p">;</span>    <span class="mi">1</span> <span class="n">young</span>    <span class="n">young</span>          <span class="mi">476</span> <span class="n">Jan</span> <span class="mi">13</span> <span class="mo">03</span><span class="o">:</span><span class="mi">35</span> <span class="n">t</span><span class="p">.</span><span class="n">c</span>
-</span><span class='line'><span class="n">depmod</span><span class="p">,</span>  <span class="n">df</span><span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">&amp;</span><span class="n">ndash</span><span class="p">;</span><span class="n">r</span><span class="o">&amp;</span><span class="n">ndash</span><span class="p">;</span>    <span class="mi">1</span> <span class="n">young</span>    <span class="n">young</span>            <span class="mi">0</span> <span class="n">Jan</span> <span class="mi">13</span> <span class="mo">03</span><span class="o">:</span><span class="mi">30</span> <span class="o">??</span>
-</span><span class='line'><span class="p">,</span>  <span class="n">diff</span><span class="p">,</span>
-</span><span class='line'>                    <span class="err">…………</span>
-</span></code></pre></td></tr></table></div></figure>
-busybox 的输出太长了，我删掉了一部分并用省略号标记。可以看到ls的输出（夹杂在busybox之间，因为是两个进程的输出）。</p>
-
-<p>大功告成，没想到好好写一篇博客需要3个小时！！！困死我了，怒睡！</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[linux触摸板自然滚动]]></title>
-    <link href="http://LanderlYoung.github.io/blog/2014/01/12/linuxchong-mo-ban-zi-ran-gun-dong/"/>
-    <updated>2014-01-12T20:11:36+08:00</updated>
-    <id>http://LanderlYoung.github.io/blog/2014/01/12/linuxchong-mo-ban-zi-ran-gun-dong</id>
-    <content type="html"><![CDATA[<p>触摸板的自然滚动最早是乔帮主发明的。</p>
-
-<p>所谓自然滚动是指触摸板双指滚动的功能，当用两个手指向上滑动触摸板时，屏幕向上滚动，当双指向下化时，屏幕向下滚动。若是反过来就和鼠标一样了。自然滚动让人觉是得在用爽指控制屏幕而不是在控制触摸板。</p>
-
-<p>开始觉得反人类，谁知道用习惯了才知道那真的很爽！爽到不想再用鼠标了。但是在linux系统里面触摸板还不是自然滚动。</p>
-
-<!--more-->
-
-
-<p>我是synaptics的触摸板，方法一对其他触摸板不见得管用。如果不是synaptics的触摸板貌似也有利用xorg来改的方法，在文章后面再介绍。</p>
-
-<h3>1. synaptics 触摸板</h3>
-
-<p>首先要安装synapclient的驱动：<code>xserver-xorg-input-synaptics</code>。
-其实在大多数linux系统内都已经默认按装了。</p>
-
-<pre>
-sudo apt-get install xserver-xorg-input-synaptics
-</pre>
-
-
-<p>然后你可以用两个命令来设置垂直滚动和水平滚动的<code>速度</code>:</p>
-
-<pre>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">大功告成，没想到好好写一篇博客需要</span><span class="mi">3</span><span class="err">个小时！！！困死我了，怒睡！</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">]]</span><span class="o">&gt;&lt;/</span><span class="n">content</span><span class="o">&gt;</span>
+</span><span class='line'>  <span class="o">&lt;/</span><span class="n">entry</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="o">&lt;</span><span class="n">entry</span><span class="o">&gt;</span>
+</span><span class='line'>    <span class="o">&lt;</span><span class="n">title</span> <span class="n">type</span><span class="o">=</span><span class="s">&quot;html&quot;</span><span class="o">&gt;&lt;!</span><span class="p">[</span><span class="n">CDATA</span><span class="p">[</span><span class="n">linux</span><span class="err">触摸板自然滚动</span><span class="p">]]</span><span class="o">&gt;&lt;/</span><span class="n">title</span><span class="o">&gt;</span>
+</span><span class='line'>    <span class="o">&lt;</span><span class="n">link</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;http://LanderlYoung.github.io/blog/2014/01/12/linuxchong-mo-ban-zi-ran-gun-dong/&quot;</span><span class="o">/&gt;</span>
+</span><span class='line'>    <span class="o">&lt;</span><span class="n">updated</span><span class="o">&gt;</span><span class="mi">2014</span><span class="o">-</span><span class="mo">01</span><span class="o">-</span><span class="mi">12</span><span class="nl">T20</span><span class="p">:</span><span class="mi">11</span><span class="o">:</span><span class="mi">36</span><span class="o">+</span><span class="mi">08</span><span class="o">:</span><span class="mo">00</span><span class="o">&lt;/</span><span class="n">updated</span><span class="o">&gt;</span>
+</span><span class='line'>    <span class="o">&lt;</span><span class="n">id</span><span class="o">&gt;</span><span class="nl">http</span><span class="p">:</span><span class="c1">//LanderlYoung.github.io/blog/2014/01/12/linuxchong-mo-ban-zi-ran-gun-dong&lt;/id&gt;</span>
+</span><span class='line'>    <span class="o">&lt;</span><span class="n">content</span> <span class="n">type</span><span class="o">=</span><span class="s">&quot;html&quot;</span><span class="o">&gt;&lt;!</span><span class="p">[</span><span class="n">CDATA</span><span class="p">[</span><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">触摸板的自然滚动最早是乔帮主发明的。</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">所谓自然滚动是指触摸板双指滚动的功能，当用两个手指向上滑动触摸板时，屏幕向上滚动，当双指向下化时，屏幕向下滚动。若是反过来就和鼠标一样了。自然滚动让人觉是得在用爽指控制屏幕而不是在控制触摸板。</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">开始觉得反人类，谁知道用习惯了才知道那真的很爽！爽到不想再用鼠标了。但是在</span><span class="n">linux</span><span class="err">系统里面触摸板还不是自然滚动。</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;!--</span><span class="n">more</span><span class="o">--&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">我是</span><span class="n">synaptics</span><span class="err">的触摸板，方法一对其他触摸板不见得管用。如果不是</span><span class="n">synaptics</span><span class="err">的触摸板貌似也有利用</span><span class="n">xorg</span><span class="err">来改的方法，在文章后面再介绍。</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">###</span><span class="mf">1.</span> <span class="n">synaptics</span> <span class="err">触摸板</span>
+</span><span class='line'><span class="err">首先要安装</span><span class="n">synapclient</span><span class="err">的驱动：</span><span class="o">&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">xserver</span><span class="o">-</span><span class="n">xorg</span><span class="o">-</span><span class="n">input</span><span class="o">-</span><span class="n">synaptics</span><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;</span><span class="err">。</span>
+</span><span class='line'><span class="err">其实在大多数</span><span class="n">linux</span><span class="err">系统内都已经默认按装了。</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">xserver</span><span class="o">-</span><span class="n">xorg</span><span class="o">-</span><span class="n">input</span><span class="o">-</span><span class="n">synaptics</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">然后你可以用两个命令来设置垂直滚动和水平滚动的</span><span class="o">&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="err">速度</span><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;:&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'><span class="n">synclient</span> <span class="n">VertScrollDelta</span><span class="o">=-</span><span class="mi">103</span>
+</span><span class='line'><span class="n">synclient</span> <span class="n">HorizScrollDelta</span><span class="o">=-</span><span class="mi">103</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">这里把速度设置成负值意思就是让触摸板按照与原来方向的相反方向移动。需要说明的是数值的绝对值越大滚动越慢。</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">然后我们就达到目的了。为了让这两个命令开机的之后就能自动执行可以</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">ol</span><span class="o">&gt;</span>
+</span><span class='line'>  <span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;</span><span class="err">把他们加到</span><span class="n">home</span><span class="err">目录里的</span><span class="o">&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="p">.</span><span class="n">bashrc</span><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;</span><span class="err">文件里。</span><span class="o">&lt;/</span><span class="n">li</span><span class="o">&gt;</span>
+</span><span class='line'>  <span class="o">&lt;</span><span class="n">li</span><span class="o">&gt;</span><span class="err">或者在</span><span class="o">&lt;</span><span class="n">code</span><span class="o">&gt;/</span><span class="n">etc</span><span class="o">/</span><span class="n">profile</span><span class="p">.</span><span class="n">d</span><span class="o">/&lt;/</span><span class="n">code</span><span class="o">&gt;</span><span class="err">里面创建一个脚本，比如我建立的是</span><span class="o">&lt;</span><span class="n">br</span> <span class="o">/&gt;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">code</span><span class="o">&gt;/</span><span class="n">etc</span><span class="o">/</span><span class="n">profile</span><span class="p">.</span><span class="n">d</span><span class="o">/</span><span class="n">synaptics</span><span class="err">\</span><span class="n">_natural</span><span class="err">\</span><span class="n">_scrolling</span><span class="p">.</span><span class="n">sh</span><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure> cpp
+###################################################################
+# File Name:		/etc/profile.d/synaptics_natural_scrolling.sh
+# Author:			Landerl Young
+# e-Mail:			LanderlYoung@gmail.com
+# Created Time:		Thu 31 Oct 2013 01:41:46 PM HST
+###################################################################
+#!/bin/bash
 synclient VertScrollDelta=-103
-synclient HorizScrollDelta=-103
-</pre>
-
-
-<p>这里把速度设置成负值意思就是让触摸板按照与原来方向的相反方向移动。需要说明的是数值的绝对值越大滚动越慢。</p>
-
-<p>然后我们就达到目的了。为了让这两个命令开机的之后就能自动执行可以</p>
-
-<ol>
-<li>把他们加到home目录里的<code>.bashrc</code>文件里。</li>
-<li>或者在<code>/etc/profile.d/</code>里面创建一个脚本，比如我建立的是<br/>
-<code>/etc/profile.d/synaptics\_natural\_scrolling.sh</code>
-&#8220;` cpp
-
-<h6>#</h6>
-
-<h1>File Name:        /etc/profile.d/synaptics_natural_scrolling.sh</h1>
-
-<h1>Author:           Landerl Young</h1>
-
-<h1>e-Mail:           <a href="&#x6d;&#97;&#105;&#x6c;&#x74;&#111;&#x3a;&#76;&#x61;&#x6e;&#100;&#101;&#114;&#x6c;&#x59;&#111;&#117;&#x6e;&#x67;&#64;&#103;&#x6d;&#97;&#x69;&#x6c;&#46;&#99;&#x6f;&#x6d;">&#x4c;&#97;&#x6e;&#x64;&#101;&#114;&#x6c;&#x59;&#111;&#x75;&#110;&#x67;&#64;&#103;&#x6d;&#x61;&#x69;&#108;&#x2e;&#99;&#x6f;&#x6d;</a></h1>
-
-<h1>Created Time:     Thu 31 Oct 2013 01:41:46 PM HST</h1>
-
-<h6>#</h6>
-
-<h1>!/bin/bash</h1>
-
-<p>synclient VertScrollDelta=-103
-synclient HorizScrollDelta=-103</p></li>
+synclient HorizScrollDelta=-103</li>
 </ol>
 
-
-<p>&#8220;`
-最后别忘了加可执行权限</p>
-
-<pre>
+<pre><code>最后别忘了加可执行权限
+&lt;pre&gt;
 sudo chmod a+x /etc/profile.d/synaptics_natural_scrolling.sh
-</pre>
+&lt;/pre&gt;
+大功告成。
 
-
-<p>大功告成。</p>
-
-<h3>2. 其他方法（所有触摸板通用）</h3>
-
-<p>xorg有个<code>xinput</code>命令。如果，我是说如果，你没有这个命令的话，我帮你查好了它所在的软件包名——<code>xinput</code>：</p>
-
-<pre>
+### 2. 其他方法（所有触摸板通用）
+xorg有个`xinput`命令。如果，我是说如果，你没有这个命令的话，我帮你查好了它所在的软件包名——`xinput`：
+&lt;pre&gt;
 young@Y470:~/Documents/octopress$dpkg -S /usr/bin/xinput 
 xinput: /usr/bin/xinput
-</pre>
+&lt;/pre&gt;
+输入之后（不加任何参数），有如下输出：
 
-
-<p>输入之后（不加任何参数），有如下输出：</p>
-
-<pre><code class="cpp">young@Y470:~/Documents/octopress$xinput
-⎡ Virtual core pointer                        id=2    [master pointer  (3)]
-⎜   ↳ Virtual core XTEST pointer                id=4    [slave  pointer  (2)]
-⎜   ↳ SynPS/2 Synaptics TouchPad                id=14   [slave  pointer  (2)]
-⎣ Virtual core keyboard                       id=3    [master keyboard (2)]
-    ↳ Virtual core XTEST keyboard             id=5    [slave  keyboard (3)]
-    ↳ Power Button                                id=6    [slave  keyboard (3)]
-    ↳ Video Bus                                   id=7    [slave  keyboard (3)]
-    ↳ Power Button                                id=8    [slave  keyboard (3)]
-    ↳ Sleep Button                                id=9    [slave  keyboard (3)]
-    ↳ Video Bus                                   id=10   [slave  keyboard (3)]
-    ↳ Lenovo EasyCamera                           id=12   [slave  keyboard (3)]
-    ↳ AT Translated Set 2 keyboard                id=13   [slave  keyboard (3)]
-    ↳ Ideapad extra buttons                       id=15   [slave  keyboard (3)]
-    ↳ ACPI Virtual Keyboard Device                id=16   [slave  keyboard (3)]
+``` cpp
+young@Y470:~/Documents/octopress$xinput
+⎡ Virtual core pointer						id=2	[master pointer  (3)]
+⎜   ↳ Virtual core XTEST pointer				id=4	[slave  pointer  (2)]
+⎜   ↳ SynPS/2 Synaptics TouchPad				id=14	[slave  pointer  (2)]
+⎣ Virtual core keyboard						id=3	[master keyboard (2)]
+    ↳ Virtual core XTEST keyboard				id=5	[slave  keyboard (3)]
+    ↳ Power Button								id=6	[slave  keyboard (3)]
+    ↳ Video Bus									id=7	[slave  keyboard (3)]
+    ↳ Power Button								id=8	[slave  keyboard (3)]
+    ↳ Sleep Button								id=9	[slave  keyboard (3)]
+    ↳ Video Bus									id=10	[slave  keyboard (3)]
+    ↳ Lenovo EasyCamera							id=12	[slave  keyboard (3)]
+    ↳ AT Translated Set 2 keyboard				id=13	[slave  keyboard (3)]
+    ↳ Ideapad extra buttons						id=15	[slave  keyboard (3)]
+    ↳ ACPI Virtual Keyboard Device				id=16	[slave  keyboard (3)]
 </code></pre>
 
 <p>这里面就是各个输入设备了，看名字就猜得出来。可以使用<code>xinput --get-button-map &lt;设备名&gt;</code>显示按键映射，显示如下：</p>
@@ -856,18 +842,14 @@ young@Y470:~/Documents/octopress$xinput --get-button-map "SynPS/2 Synaptics Touc
 1 2 3 4 5 6 7 8 9 10 11 12 
 </pre>
 
-
 <p>于是下面要做的事就很明显了——改按键映射！既然有个<code>--get-button-map</code>参数肯定也有<code>--set-button-map</code>，没错，看了man手册发现真的有。经过测试各个按键的功能发现如下：
 4、5、6、7四个值是控制触摸板滚动方向的，修改如下：</p>
-
 <pre>
 young@Y470:~/Documents/octopress$xinput --set-button-map "SynPS/2 Synaptics TouchPad" 1 2 3 5 4 7 6 8 9 10 11 12
 </pre>
-
-
 <p>为了使命令开机自动执行，可以使用方法一中介绍的两个方法。</p>
 
-<p>当然方法二放在后面说是因为他有缺点——在一些少数程序比如文件管理器<code>nautilus</code>里面自然滚动失效的T^T。</p>
+<p>当然方法二放在后面说是因为他有缺点——在一些少数程序比如文件管理器<code>nautilus</code>里面自然滚动失效的T\^T。</p>
 ]]></content>
   </entry>
   

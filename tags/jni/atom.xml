@@ -4,7 +4,7 @@
   <title><![CDATA[Tag: JNI | Young_Blog]]></title>
   <link href="http://LanderlYoung.github.io/tags/jni/atom.xml" rel="self"/>
   <link href="http://LanderlYoung.github.io/"/>
-  <updated>2016-01-11T23:46:35+08:00</updated>
+  <updated>2017-03-07T01:39:44+08:00</updated>
   <id>http://LanderlYoung.github.io/</id>
   <author>
     <name><![CDATA[LanderlYoung]]></name>
@@ -24,23 +24,21 @@
 
 <!--more-->
 
-
-<h3>JNI基础篇</h3>
+<p>###JNI基础篇</p>
 
 <p>Java通过JNI调用本地方法的过程大致是</p>
 
 <ol>
-<li>写一个Java类，在其中声明对应要调用的native方法，用<code>native</code>关键字修饰。 比如<code>private static native int native_newInstance();</code></li>
-<li>通过<code>javah</code>命令生成java类对应的C/C++头文件。<code>javah -encoding utf-8 -cp src com.young.soundtouch.SoundTouch</code></li>
-<li>在C/C++中实现头文件中声明的函数</li>
-<li>编译C/C++代码为动态库（Windows中的dll，linux(Android)中的so，MAC OSX中的dylib）。</li>
-<li>在java代码中加载动态库，即可像调用Java方法一样，调用到native函数。</li>
+  <li>写一个Java类，在其中声明对应要调用的native方法，用<code>native</code>关键字修饰。 比如<code>private static native int native_newInstance();</code></li>
+  <li>通过<code>javah</code>命令生成java类对应的C/C++头文件。<code>javah -encoding utf-8 -cp src com.young.soundtouch.SoundTouch</code></li>
+  <li>在C/C++中实现头文件中声明的函数</li>
+  <li>编译C/C++代码为动态库（Windows中的dll，linux(Android)中的so，MAC OSX中的dylib）。</li>
+  <li>在java代码中加载动态库，即可像调用Java方法一样，调用到native函数。</li>
 </ol>
-
 
 <p>其中第三步在Java1.2中增加了<code>JNI_OnLoad</code>方法之后有另一种实现方式（<a href="#jni_onload">后面</a>说）。</p>
 
-<p>javah生成的头文件大致是这样的：
+<p>javah生成的头文件大致是这样的： 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
@@ -63,199 +61,194 @@
 <span class='line-number'>20</span>
 <span class='line-number'>21</span>
 <span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-<span class='line-number'>67</span>
-<span class='line-number'>68</span>
-<span class='line-number'>69</span>
-<span class='line-number'>70</span>
-<span class='line-number'>71</span>
-<span class='line-number'>72</span>
-<span class='line-number'>73</span>
-<span class='line-number'>74</span>
-<span class='line-number'>75</span>
-<span class='line-number'>76</span>
-<span class='line-number'>77</span>
-<span class='line-number'>78</span>
-<span class='line-number'>79</span>
-<span class='line-number'>80</span>
-<span class='line-number'>81</span>
-<span class='line-number'>82</span>
-<span class='line-number'>83</span>
-<span class='line-number'>84</span>
-<span class='line-number'>85</span>
-<span class='line-number'>86</span>
-<span class='line-number'>87</span>
-<span class='line-number'>88</span>
-<span class='line-number'>89</span>
-<span class='line-number'>90</span>
-<span class='line-number'>91</span>
-<span class='line-number'>92</span>
-<span class='line-number'>93</span>
-<span class='line-number'>94</span>
-<span class='line-number'>95</span>
-<span class='line-number'>96</span>
-<span class='line-number'>97</span>
-<span class='line-number'>98</span>
-<span class='line-number'>99</span>
-<span class='line-number'>100</span>
-<span class='line-number'>101</span>
-<span class='line-number'>102</span>
-<span class='line-number'>103</span>
-<span class='line-number'>104</span>
-<span class='line-number'>105</span>
-<span class='line-number'>106</span>
-<span class='line-number'>107</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="o">/&lt;</span><span class="n">em</span><span class="o">&gt;</span> <span class="n">DO</span> <span class="n">NOT</span> <span class="n">EDIT</span> <span class="n">THIS</span> <span class="n">FILE</span> <span class="o">-</span> <span class="n">it</span> <span class="n">is</span> <span class="n">machine</span> <span class="n">generated</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;/&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="cm">/* DO NOT EDIT THIS FILE - it is machine generated */</span>
+</span><span class='line'><span class="err">#</span><span class="n">include</span> <span class="o">&lt;</span><span class="n">jni</span><span class="o">.</span><span class="na">h</span><span class="o">&gt;</span>
+</span><span class='line'><span class="cm">/* Header for class com_young_soundtouch_SoundTouch */</span><span class="o">&lt;/</span><span class="n">jni</span><span class="o">.</span><span class="na">h</span><span class="o">&gt;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
 </span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">jni</span><span class="o">.</span><span class="na">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;/&lt;</span><span class="n">em</span><span class="o">&gt;</span> <span class="n">Header</span> <span class="k">for</span> <span class="kd">class</span> <span class="nc">com_young_soundtouch_SoundTouch</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;/&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">ifndef</span> <span class="n">_Included_com_young_soundtouch_SoundTouch</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">define</span> <span class="n">_Included_com_young_soundtouch_SoundTouch</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">ifdef</span> <span class="n">__cplusplus</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">extern</span> <span class="o">&amp;</span><span class="n">ldquo</span><span class="o">;</span><span class="n">C</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="o">;</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">endif</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">undef</span> <span class="n">com_young_soundtouch_SoundTouch_SETTING_USE_AA_FILTER</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">define</span> <span class="n">com_young_soundtouch_SoundTouch_SETTING_USE_AA_FILTER</span> <span class="mi">0L</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="cm">/*</span>
-</span><span class='line'><span class="cm">* Class:     com_young_soundtouch_SoundTouch</span>
-</span><span class='line'><span class="cm">* Method:    native_getDefaultSampleElementSize</span>
-</span><span class='line'><span class="cm">* Signature: ()I</span>
-</span><span class='line'><span class="cm">*/</span>
-</span><span class='line'><span class="n">JNIEXPORT</span> <span class="n">jint</span> <span class="n">JNICALL</span> <span class="nf">Java_com_young_soundtouch_SoundTouch_native_1getDefaultSampleElementSize</span>
-</span><span class='line'>    <span class="o">(</span><span class="n">JNIEnv</span> <span class="o">*,</span> <span class="n">jclass</span><span class="o">);</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">ifdef</span> <span class="n">__cplusplus</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;}&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">endif</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">endif</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>
-</span><span class='line'><span class="n">文件开头就是普通的头文件</span><span class="err">，</span><span class="n">但是可以发现</span><span class="err">：</span>
-</span><span class='line'>
-</span><span class='line'> <span class="mi">1</span><span class="o">.</span> <span class="n">包含了jni</span><span class="o">.</span><span class="na">h头文件</span><span class="err">（</span><span class="n">一般位于</span><span class="err">`</span><span class="n">$JAVA_HOME</span><span class="o">/</span><span class="n">jd</span><span class="o">{</span><span class="n">jdk</span><span class="o">-</span><span class="n">version</span><span class="o">}/</span><span class="n">include</span><span class="err">`</span><span class="n">文目录内</span><span class="err">）。</span><span class="n">这是JNI中所有的</span><span class="o">[</span><span class="n">类型</span><span class="o">][</span><span class="n">jni_type</span><span class="o">]</span><span class="err">、</span><span class="n">函数</span><span class="err">、</span><span class="n">宏等定义的地方</span><span class="err">。</span><span class="n">所以C</span><span class="o">/</span><span class="n">C</span><span class="o">++</span><span class="n">世界的JNI是由他制定的游戏规则</span><span class="err">。</span>
-</span><span class='line'>
-</span><span class='line'> <span class="mi">2</span><span class="o">.</span> <span class="n">在类中生命的常量</span><span class="err">（`</span><span class="kd">static</span> <span class="kd">final</span><span class="err">`）</span><span class="n">类型会在头文件中以宏的形式出现</span><span class="err">，</span><span class="n">这一点还是很方便的</span><span class="err">。</span>
-</span><span class='line'>
-</span><span class='line'> <span class="mi">3</span><span class="o">.</span> <span class="n">函数的注释还是比较全的</span><span class="err">，</span><span class="n">包括了</span><span class="err">：</span>
-</span><span class='line'>     <span class="mi">1</span><span class="o">.</span> <span class="n">对应的class</span>
-</span><span class='line'>     <span class="mi">2</span><span class="o">.</span> <span class="n">对应的java方法名</span>
-</span><span class='line'>     <span class="mi">3</span><span class="o">.</span> <span class="n">对应java方法的</span><span class="o">[</span><span class="n">签名</span><span class="o">][</span><span class="n">signature</span><span class="o">]</span>
-</span><span class='line'> <span class="mi">4</span><span class="o">.</span> <span class="n">方法的声明显得有点奇怪</span><span class="err">，</span><span class="n">由以下及部分组成</span><span class="err">：</span>
-</span><span class='line'>     <span class="mi">1</span><span class="o">.</span> <span class="err">`</span><span class="n">JNIEXPORT</span><span class="err">`</span><span class="n">这是函数的导出方式</span>
-</span><span class='line'>     <span class="mi">2</span><span class="o">.</span> <span class="n">jint</span> <span class="n">返回值类型</span><span class="err">（</span><span class="n">jint由jni</span><span class="o">.</span><span class="na">h定义</span><span class="err">，</span><span class="n">对应int</span><span class="err">，</span><span class="o">[</span><span class="n">下面</span><span class="o">][</span><span class="n">jni_type</span><span class="o">]</span><span class="n">具体再说吧</span>
-</span><span class='line'>     <span class="mi">3</span><span class="o">.</span> <span class="n">JNICALL</span> <span class="n">函数的调用方式也就是汇编级别参数的传入方式</span>
-</span><span class='line'>     <span class="mi">4</span><span class="o">.</span>  <span class="n">Java_com_young_soundtouch_SoundTouch_native_1getDefaultSampleElementSize</span> <span class="err">——</span> <span class="n">超级长的函数名</span><span class="err">！！！</span><span class="n">格式是</span><span class="err">`</span><span class="n">Java_</span><span class="err">`</span> <span class="o">+</span> <span class="err">`</span><span class="n">类全名</span><span class="err">`</span> <span class="o">+</span> <span class="err">`</span><span class="n">_</span><span class="err">`</span> <span class="o">+</span> <span class="n">JAVA中声明的native方法名</span><span class="err">。</span><span class="n">其中会把包名中的点</span><span class="err">（`</span><span class="o">.</span><span class="err">`）</span><span class="n">替换成下划线</span><span class="err">（`</span><span class="n">_</span><span class="err">`），</span><span class="n">同时为了避免冲突把下划线替换成</span><span class="err">`</span><span class="n">_1</span><span class="err">`。</span>
-</span><span class='line'>     <span class="mi">5</span><span class="o">.</span> <span class="n">方法的参数</span><span class="err">，</span><span class="n">上面的这个方法在JAVA的声明中实际上是没有参数的</span><span class="err">，</span><span class="n">其中的</span><span class="err">`</span><span class="n">JNIENV</span><span class="err">`</span><span class="n">顾名思义是JNI环境</span><span class="err">，</span><span class="n">和具体的线程绑定</span><span class="err">。</span><span class="n">而第二个参数</span><span class="err">`</span><span class="n">jclass</span><span class="err">`</span><span class="n">其实是java中的</span><span class="err">`</span><span class="n">Class</span><span class="err">`</span><span class="n">因为上面是一个</span><span class="err">`</span><span class="kd">static</span><span class="err">`</span><span class="n">方法</span><span class="err">，</span><span class="n">因此第二个参数是</span><span class="err">`</span><span class="n">jclass</span><span class="err">`。</span><span class="n">如果是一个实例方法则对应第二个参数是</span><span class="err">`</span><span class="n">jobject</span><span class="err">`，</span><span class="n">相当于java中的</span><span class="err">`</span><span class="k">this</span><span class="err">`。</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">下面在C</span><span class="o">/</span><span class="n">C</span><span class="o">++</span><span class="n">中实现这个方法就行啦</span><span class="err">。</span><span class="n">但是在动手前现大致了解以下jni</span><span class="o">.</span><span class="na">h制定的游戏规则</span><span class="err">。</span>
-</span><span class='line'>
-</span><span class='line'><span class="err">####</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;</span><span class="n">a</span> <span class="n">name</span><span class="o">=</span><span class="s">&quot;jni_type&quot;</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span><span class="n">类型转换</span><span class="o">&amp;</span><span class="n">lt</span><span class="o">;/</span><span class="n">a</span><span class="o">&amp;</span><span class="n">gt</span><span class="o">;</span><span class="err">：</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">javah生成的头文件里面使用的类型都是jni</span><span class="o">.</span><span class="na">h定义的</span><span class="err">，</span><span class="n">目的是做到</span><span class="o">**</span><span class="n">平台无关</span><span class="o">**</span><span class="err">，</span><span class="n">比如保证在所有平台上jint都是32位的有符号整型</span><span class="err">。</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">**</span><span class="n">基本对应关系如下</span><span class="err">：</span><span class="o">**</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">|</span>  <span class="n">jni</span> <span class="n">类型</span> <span class="o">|</span> <span class="n">JAVA类型</span> <span class="o">|</span> <span class="n">对应本地类型</span>  <span class="o">|</span>  <span class="n">类型</span><span class="o">[</span><span class="n">签名</span><span class="o">][</span><span class="n">signature</span><span class="o">]</span> <span class="o">|</span>
-</span><span class='line'><span class="o">|</span> <span class="o">:------:</span> <span class="o">|</span> <span class="o">:------:</span> <span class="o">|</span> <span class="o">:--------:</span> <span class="o">|</span> <span class="o">:----------------:</span> <span class="o">|</span>
-</span><span class='line'><span class="o">|</span>  <span class="n">jboolean</span> <span class="o">|</span> <span class="kt">boolean</span> <span class="o">|</span> <span class="n">uint8_t</span> <span class="o">|</span> <span class="n">Z</span><span class="o">|</span>
-</span><span class='line'><span class="o">|</span>  <span class="n">jbyte</span> <span class="o">|</span> <span class="kt">byte</span> <span class="o">|</span> <span class="kt">char</span> <span class="o">|</span> <span class="n">B</span> <span class="o">|</span>
-</span><span class='line'><span class="o">|</span>  <span class="n">jcahr</span> <span class="o">|</span> <span class="kt">char</span> <span class="o">|</span> <span class="n">uint16_t</span> <span class="o">|</span> <span class="n">C</span> <span class="o">|</span>
-</span><span class='line'><span class="o">|</span>  <span class="n">jshort</span> <span class="o">|</span> <span class="kt">short</span> <span class="o">|</span> <span class="n">int16_t</span> <span class="o">|</span> <span class="n">S</span> <span class="o">|</span>
-</span><span class='line'><span class="o">|</span>  <span class="n">jint</span> <span class="o">|</span> <span class="kt">int</span> <span class="o">|</span> <span class="n">int32_t</span> <span class="o">|</span> <span class="n">I</span> <span class="o">|</span>
-</span><span class='line'><span class="o">|</span>  <span class="n">jlong</span> <span class="o">|</span> <span class="kt">long</span> <span class="o">|</span> <span class="n">int64_t</span> <span class="o">|</span> <span class="n">J</span> <span class="o">|</span>
-</span><span class='line'><span class="o">|</span>  <span class="n">jfloat</span> <span class="o">|</span> <span class="kt">float</span> <span class="o">|</span> <span class="kt">float</span> <span class="o">|</span> <span class="n">F</span> <span class="o">|</span>
-</span><span class='line'><span class="o">|</span>  <span class="n">jdouble</span> <span class="o">|</span> <span class="kt">double</span> <span class="o">|</span> <span class="kt">double</span> <span class="o">|</span> <span class="n">D</span> <span class="o">|</span>
-</span><span class='line'><span class="o">|</span>  <span class="kt">void</span> <span class="o">|</span> <span class="kt">void</span> <span class="o">|</span> <span class="kt">void</span> <span class="o">|</span> <span class="n">V</span> <span class="o">|</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">**</span><span class="n">引用类型对应关系</span><span class="err">：</span><span class="o">**</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">|</span> <span class="n">java类型</span> <span class="o">|</span>  <span class="n">JNI</span> <span class="n">类型</span> <span class="o">|</span> <span class="n">java类型</span> <span class="o">|</span>  <span class="n">JNI</span> <span class="n">类型</span> <span class="o">|</span>
-</span><span class='line'><span class="o">|</span> <span class="o">:-----:</span> <span class="o">|</span> <span class="o">:------:</span> <span class="o">|</span> <span class="o">:------:</span> <span class="o">|</span> <span class="o">:------:</span> <span class="o">|</span>
-</span><span class='line'><span class="o">|</span> <span class="n">所有的实例引用</span> <span class="o">|</span> <span class="n">jobject</span> <span class="o">|</span><span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Class</span> <span class="o">|</span>  <span class="n">jclass</span> <span class="o">|</span>
-</span><span class='line'><span class="o">|</span> <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">String</span> <span class="o">|</span> <span class="n">jstring</span> <span class="o">|</span> <span class="n">Ocject</span><span class="o">[]</span> <span class="o">|</span> <span class="n">jobjectArray</span> <span class="o">|</span>
-</span><span class='line'><span class="o">|</span> <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Throwable</span> <span class="o">|</span> <span class="n">jthrowable</span> <span class="o">|</span> <span class="n">基本类型</span><span class="o">[]</span> <span class="o">|</span> <span class="n">jxxxArray</span> <span class="o">|</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">通过表格发现</span><span class="err">，</span><span class="n">除了上面定义的</span><span class="err">`</span><span class="n">String</span><span class="err">`，`</span><span class="n">Class</span><span class="err">`，`</span><span class="n">Throwable</span><span class="err">`，</span><span class="n">其他的类</span><span class="err">（</span><span class="n">除了数组</span><span class="err">）</span><span class="n">都是以</span><span class="err">`</span><span class="n">jobject</span><span class="err">`</span><span class="n">的形式出现的</span><span class="err">！</span><span class="n">事实上jstring</span><span class="err">，</span> <span class="n">jclass也都是object的子类</span><span class="err">。</span><span class="n">所以这里还是和java层一样</span><span class="err">，</span><span class="n">一切皆jobject</span><span class="err">。（</span><span class="n">当然</span><span class="err">，</span><span class="n">如果jni在C语言中编译的话是没有继承的概念的</span><span class="err">，</span><span class="n">此时jstring</span><span class="err">，</span><span class="n">jclass等其实就是jobject</span><span class="err">！</span><span class="n">用了typedef转换而已</span><span class="err">！！）</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">接下来是</span><span class="err">`</span><span class="n">JNIEnv</span> <span class="o">*</span><span class="err">`</span><span class="n">这个指针</span><span class="err">，</span><span class="n">他提供了JNI中的一系列操作的接口函数</span><span class="err">。</span>
-</span><span class='line'>
-</span><span class='line'><span class="err">####</span> <span class="n">JNI中操作jobject</span>
-</span><span class='line'><span class="n">其实也就是在native层操作java层的实例</span><span class="err">。</span>
-</span><span class='line'><span class="n">要操作一个实例无疑是</span><span class="err">：</span>
-</span><span class='line'>
-</span><span class='line'> <span class="mi">1</span><span class="o">.</span> <span class="n">获取</span><span class="o">/</span><span class="n">设置</span> <span class="err">（</span><span class="n">即</span> <span class="n">get</span><span class="o">/</span><span class="n">set</span> <span class="err">）</span><span class="n">成员变量</span><span class="err">（</span><span class="n">field</span><span class="err">）</span><span class="n">的值</span>
-</span><span class='line'>
-</span><span class='line'> <span class="mi">2</span><span class="o">.</span> <span class="n">调用成员方法</span><span class="err">（</span><span class="n">method</span><span class="err">）</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">所以问题来了</span><span class="err">：（</span><span class="n">挖掘机技术哪家强</span><span class="err">？！</span> <span class="n">o</span><span class="o">(*</span><span class="err">≧▽≦</span><span class="o">)</span><span class="n">ツ</span><span class="err">┏━┓</span> <span class="err">）</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">**</span><span class="n">怎么得到field</span> <span class="n">和</span> <span class="n">method</span><span class="err">？</span><span class="o">**</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">通过使用</span><span class="o">**</span><span class="n">jfieldID和jmethodID</span><span class="o">**</span><span class="err">：</span>
-</span><span class='line'><span class="n">在JNI中使用类似于放射的方式来进行field和method的操作</span><span class="err">。</span><span class="n">JNI中使用jfieldID和jmethodID来表示成员变量和成员方法</span><span class="err">，</span><span class="n">获取方式是</span><span class="err">：</span>
-</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">jfieldID</span> <span class="nf">GetFieldID</span><span class="o">(</span><span class="n">jclass</span> <span class="n">clazz</span><span class="o">,</span> <span class="kd">const</span> <span class="kt">char</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">name</span><span class="o">,</span> <span class="kd">const</span> <span class="kt">char</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">sig</span><span class="o">);</span>
-</span><span class='line'><span class="n">jfieldID</span> <span class="nf">GetStaticFieldID</span><span class="o">(</span><span class="n">jclass</span> <span class="n">clazz</span><span class="o">,</span> <span class="kd">const</span> <span class="kt">char</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">name</span><span class="o">,</span> <span class="kd">const</span> <span class="kt">char</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">sig</span><span class="o">);</span>
-</span><span class='line'><span class="n">jmethodID</span> <span class="nf">GetMethodID</span><span class="o">(</span><span class="n">jclass</span> <span class="n">clazz</span><span class="o">,</span> <span class="kd">const</span> <span class="kt">char</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">name</span><span class="o">,</span> <span class="kd">const</span> <span class="kt">char</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">sig</span><span class="o">);</span>
-</span><span class='line'><span class="n">jmethodID</span> <span class="nf">GetStaticMethodID</span><span class="o">(</span><span class="n">jclass</span> <span class="n">clazz</span><span class="o">,</span> <span class="kd">const</span> <span class="kt">char</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">name</span><span class="o">,</span> <span class="kd">const</span> <span class="kt">char</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">sig</span><span class="o">)</span> <span class="o">;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">#</span><span class="n">ifndef</span> <span class="n">_Included_com_young_soundtouch_SoundTouch</span>
+</span><span class='line'><span class="err">#</span><span class="n">define</span> <span class="n">_Included_com_young_soundtouch_SoundTouch</span>
+</span><span class='line'><span class="err">#</span><span class="n">ifdef</span> <span class="n">__cplusplus</span>
+</span><span class='line'><span class="n">extern</span> <span class="err">“</span><span class="n">C</span><span class="err">”</span> <span class="o">{</span>
+</span><span class='line'><span class="err">#</span><span class="n">endif</span>
+</span><span class='line'><span class="err">#</span><span class="n">undef</span> <span class="n">com_young_soundtouch_SoundTouch_SETTING_USE_AA_FILTER</span>
+</span><span class='line'><span class="err">#</span><span class="n">define</span> <span class="n">com_young_soundtouch_SoundTouch_SETTING_USE_AA_FILTER</span> <span class="mi">0L</span>
+</span><span class='line'>	<span class="cm">/*</span>
+</span><span class='line'><span class="cm">	* Class:     com_young_soundtouch_SoundTouch</span>
+</span><span class='line'><span class="cm">	* Method:    native_getDefaultSampleElementSize</span>
+</span><span class='line'><span class="cm">	* Signature: ()I</span>
+</span><span class='line'><span class="cm">	*/</span>
+</span><span class='line'>	<span class="n">JNIEXPORT</span> <span class="n">jint</span> <span class="n">JNICALL</span> <span class="nf">Java_com_young_soundtouch_SoundTouch_native_1getDefaultSampleElementSize</span>
+</span><span class='line'>		<span class="o">(</span><span class="n">JNIEnv</span> <span class="o">*,</span> <span class="n">jclass</span><span class="o">);</span>
+</span><span class='line'><span class="err">#</span><span class="n">ifdef</span> <span class="n">__cplusplus</span>
+</span><span class='line'><span class="o">}</span>
+</span><span class='line'><span class="err">#</span><span class="n">endif</span>
+</span><span class='line'><span class="err">#</span><span class="n">endif</span>
 </span></code></pre></td></tr></table></div></figure></p>
+
+<p>文件开头就是普通的头文件，但是可以发现：</p>
+
+<ol>
+  <li>
+    <p>包含了jni.h头文件（一般位于<code>$JAVA_HOME/jd{jdk-version}/include</code>文目录内）。这是JNI中所有的<a href="#jni_type">类型</a>、函数、宏等定义的地方。所以C/C++世界的JNI是由他制定的游戏规则。</p>
+  </li>
+  <li>
+    <p>在类中生命的常量（<code>static final</code>）类型会在头文件中以宏的形式出现，这一点还是很方便的。</p>
+  </li>
+  <li>函数的注释还是比较全的，包括了：
+    <ol>
+      <li>对应的class</li>
+      <li>对应的java方法名</li>
+      <li>对应java方法的<a href="#signature">签名</a></li>
+    </ol>
+  </li>
+  <li>方法的声明显得有点奇怪，由以下及部分组成：
+    <ol>
+      <li><code>JNIEXPORT</code>这是函数的导出方式</li>
+      <li>jint 返回值类型（jint由jni.h定义，对应int，<a href="#jni_type">下面</a>具体再说吧</li>
+      <li>JNICALL 函数的调用方式也就是汇编级别参数的传入方式</li>
+      <li>Java_com_young_soundtouch_SoundTouch_native_1getDefaultSampleElementSize —— 超级长的函数名！！！格式是<code>Java_</code> + <code>类全名</code> + <code>_</code> + JAVA中声明的native方法名。其中会把包名中的点（<code>.</code>）替换成下划线（<code>_</code>），同时为了避免冲突把下划线替换成<code>_1</code>。</li>
+      <li>方法的参数，上面的这个方法在JAVA的声明中实际上是没有参数的，其中的<code>JNIENV</code>顾名思义是JNI环境，和具体的线程绑定。而第二个参数<code>jclass</code>其实是java中的<code>Class</code>因为上面是一个<code>static</code>方法，因此第二个参数是<code>jclass</code>。如果是一个实例方法则对应第二个参数是<code>jobject</code>，相当于java中的<code>this</code>。</li>
+    </ol>
+  </li>
+</ol>
+
+<p>下面在C/C++中实现这个方法就行啦。但是在动手前现大致了解以下jni.h制定的游戏规则。</p>
+
+<p>####<a name="jni_type">类型转换</a>：</p>
+
+<p>javah生成的头文件里面使用的类型都是jni.h定义的，目的是做到<strong>平台无关</strong>，比如保证在所有平台上jint都是32位的有符号整型。</p>
+
+<p><strong>基本对应关系如下：</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">jni 类型</th>
+      <th style="text-align: center">JAVA类型</th>
+      <th style="text-align: center">对应本地类型</th>
+      <th style="text-align: center">类型<a href="#signature">签名</a></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">jboolean</td>
+      <td style="text-align: center">boolean</td>
+      <td style="text-align: center">uint8_t</td>
+      <td style="text-align: center">Z</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">jbyte</td>
+      <td style="text-align: center">byte</td>
+      <td style="text-align: center">char</td>
+      <td style="text-align: center">B</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">jcahr</td>
+      <td style="text-align: center">char</td>
+      <td style="text-align: center">uint16_t</td>
+      <td style="text-align: center">C</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">jshort</td>
+      <td style="text-align: center">short</td>
+      <td style="text-align: center">int16_t</td>
+      <td style="text-align: center">S</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">jint</td>
+      <td style="text-align: center">int</td>
+      <td style="text-align: center">int32_t</td>
+      <td style="text-align: center">I</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">jlong</td>
+      <td style="text-align: center">long</td>
+      <td style="text-align: center">int64_t</td>
+      <td style="text-align: center">J</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">jfloat</td>
+      <td style="text-align: center">float</td>
+      <td style="text-align: center">float</td>
+      <td style="text-align: center">F</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">jdouble</td>
+      <td style="text-align: center">double</td>
+      <td style="text-align: center">double</td>
+      <td style="text-align: center">D</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">void</td>
+      <td style="text-align: center">void</td>
+      <td style="text-align: center">void</td>
+      <td style="text-align: center">V</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>引用类型对应关系：</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">java类型</th>
+      <th style="text-align: center">JNI 类型</th>
+      <th style="text-align: center">java类型</th>
+      <th style="text-align: center">JNI 类型</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">所有的实例引用</td>
+      <td style="text-align: center">jobject</td>
+      <td style="text-align: center">java.lang.Class</td>
+      <td style="text-align: center">jclass</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">java.lang.String</td>
+      <td style="text-align: center">jstring</td>
+      <td style="text-align: center">Ocject[]</td>
+      <td style="text-align: center">jobjectArray</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">java.lang.Throwable</td>
+      <td style="text-align: center">jthrowable</td>
+      <td style="text-align: center">基本类型[]</td>
+      <td style="text-align: center">jxxxArray</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>通过表格发现，除了上面定义的<code>String</code>，<code>Class</code>，<code>Throwable</code>，其他的类（除了数组）都是以<code>jobject</code>的形式出现的！事实上jstring， jclass也都是object的子类。所以这里还是和java层一样，一切皆jobject。（当然，如果jni在C语言中编译的话是没有继承的概念的，此时jstring，jclass等其实就是jobject！用了typedef转换而已！！）</p>
+
+<p>接下来是<code>JNIEnv *</code>这个指针，他提供了JNI中的一系列操作的接口函数。</p>
+
+<h4 id="jnijobject">JNI中操作jobject</h4>
+<p>其实也就是在native层操作java层的实例。
+要操作一个实例无疑是：</p>
+
+<ol>
+  <li>
+    <p>获取/设置 （即 get/set ）成员变量（field）的值</p>
+  </li>
+  <li>
+    <p>调用成员方法（method）</p>
+  </li>
+</ol>
+
+<p>所以问题来了：（挖掘机技术哪家强？！ o(*≧▽≦)ツ┏━┓ ）</p>
+
+<p><strong>怎么得到field 和 method？</strong></p>
+
+<p>通过使用<strong>jfieldID和jmethodID</strong>：
+在JNI中使用类似于放射的方式来进行field和method的操作。JNI中使用jfieldID和jmethodID来表示成员变量和成员方法，获取方式是：</p>
+
+<pre><code class="language-java">jfieldID GetFieldID(jclass clazz, const char *name, const char *sig);
+jfieldID GetStaticFieldID(jclass clazz, const char *name, const char *sig);
+jmethodID GetMethodID(jclass clazz, const char *name, const char *sig);
+jmethodID GetStaticMethodID(jclass clazz, const char *name, const char *sig) ;
+</code></pre>
 
 <p>其中最后一个参数是<a href="#signature">签名</a>。
 <strong>获取jclass的方法</strong>除了实用上面静态方法的第二个参数外，还可以手动获取。
@@ -267,40 +260,53 @@
 <p><strong>成员变量:</strong></p>
 
 <ol>
-<li><p>get:</p>
+  <li>
+    <p>get:</p>
 
-<ol>
-<li><p><code>&lt;type&gt; Get&lt;type&gt;Field(jobject , jfieldID);</code>即可获得对应的field，其中field的类型是type，可以是上面<a href="#jni_type">类型</a>所叙述的任何一种。</p></li>
-<li><p><code>&lt;type&gt; GetStatic&lt;type&gt;Field(jobject , jfieldID);</code>同1，唯一的区别是用来获取静态成员。</p></li>
-</ol>
-</li>
-<li><p>set:</p>
+    <ol>
+      <li>
+        <p><code>&lt;type&gt; Get&lt;type&gt;Field(jobject , jfieldID);</code>即可获得对应的field，其中field的类型是type，可以是上面<a href="#jni_type">类型</a>所叙述的任何一种。</p>
+      </li>
+      <li>
+        <p><code>&lt;type&gt; GetStatic&lt;type&gt;Field(jobject , jfieldID);</code>同1，唯一的区别是用来获取静态成员。</p>
+      </li>
+    </ol>
+  </li>
+  <li>
+    <p>set:</p>
 
-<ol>
-<li><p><code>void Set&lt;type&gt;Field(jobject obj, jfieldID fieldID, &lt;type&gt; val)</code></p></li>
-<li><p><code>void SetStatic&lt;type&gt;Field(jclass clazz, jfieldID fieldID, &lt;type&gt; value);</code></p></li>
+    <ol>
+      <li>
+        <p><code>void Set&lt;type&gt;Field(jobject obj, jfieldID fieldID, &lt;type&gt; val)</code></p>
+      </li>
+      <li>
+        <p><code>void SetStatic&lt;type&gt;Field(jclass clazz, jfieldID fieldID, &lt;type&gt; value);</code></p>
+      </li>
+    </ol>
+  </li>
 </ol>
-</li>
-</ol>
-
 
 <p><strong>成员方法：</strong></p>
 
 <p>调用方法自然要把方法的参数传递进去，JNI中实现了三种参数的传递方式：</p>
 
 <ol>
-<li><p><code>Call&lt;type&gt;Method(jobject obj, jmethod jmethodID, ...)</code>其中<code>...</code>是C中的可变长参数，类似于<code>printf</code>那样，可以传递不定长个参数。于是你可以把java方法需要的参数在这里面传递进去。</p></li>
-<li><p><code>Call&lt;type&gt;MethodV(jobject obj, jmethodID methodID, va_list args)</code>其中的<code>va_list</code>也是C中可变长参数相关的内容（我不了解，不敢瞎说。。。偷懒粘一下Oracle的文档）Programmers place all arguments to the method in an args argument of type va_list that immediately follows the methodID argument. The Call<type>MethodV routine accepts the arguments, and, in turn, passes them to the Java method that the programmer wishes to invoke.</p></li>
-<li><p><code>Call&lt;type&gt;MethodA(jobject obj, jmethodID methodID, const jvalue * args)</code>哎！这个我知道可以说两句LOL~~这里的<code>jvalue</code>通过查代码发现就是JNI中各个数据类型的union，所以可以使用任何类型复制！所以参数的传入方式是通过一个jvalue的数组，数组内的元素可以是任何jni类型。</p></li>
+  <li>
+    <p><code>Call&lt;type&gt;Method(jobject obj, jmethod jmethodID, ...)</code>其中<code>...</code>是C中的可变长参数，类似于<code>printf</code>那样，可以传递不定长个参数。于是你可以把java方法需要的参数在这里面传递进去。</p>
+  </li>
+  <li>
+    <p><code>Call&lt;type&gt;MethodV(jobject obj, jmethodID methodID, va_list args)</code>其中的<code>va_list</code>也是C中可变长参数相关的内容（我不了解，不敢瞎说。。。偷懒粘一下Oracle的文档）Programmers place all arguments to the method in an args argument of type va_list that immediately follows the methodID argument. The Call<type>MethodV routine accepts the arguments, and, in turn, passes them to the Java method that the programmer wishes to invoke.</type></p>
+  </li>
+  <li>
+    <p><code>Call&lt;type&gt;MethodA(jobject obj, jmethodID methodID, const jvalue * args)</code>哎！这个我知道可以说两句LOL~~这里的<code>jvalue</code>通过查代码发现就是JNI中各个数据类型的union，所以可以使用任何类型复制！所以参数的传入方式是通过一个jvalue的数组，数组内的元素可以是任何jni类型。</p>
+  </li>
 </ol>
 
-
 <p>然后问题又来了：（挖掘机技术到底哪家强？！o(*≧▽≦)ツ┏━┓）
-如果传进来的参数和java声明的参数的不一致会怎么样！（即不符合<a href="#signature">方法签名</a>）这里文档中没用明确解释，但是说道:</p>
+如果传进来的参数和java声明的参数的不一致会怎么样！（即不符合<a href="#signature">方法签名</a>）这里文档中没用明确解释，但是说道:
+&gt; Exceptions raised during the execution of the Java method.</p>
 
-<blockquote><p>Exceptions raised during the execution of the Java method.</p></blockquote>
-
-<pre><code class="java">typedef union jvalue {
+<pre><code class="language-java">typedef union jvalue {
     jboolean z;
     jbyte    b;
     jchar    c;
@@ -314,120 +320,137 @@
 </code></pre>
 
 <ol>
-<li>调用实例方法（instance method）：
-
-<ol>
-<li><code>&lt;type&gt; Call&lt;type&gt;Method(jobject obj, jmethodID methodID, ...);</code>调用一个具有<code>&lt;type&gt;</code>类型返回值的方法。</li>
-<li><code>&lt;type&gt; Call&lt;type&gt;MethodV(jobject obj, jmethodID methodID, va_list args);</code></li>
-<li><code>Call&lt;type&gt;MethodA(jobject obj, jmethodID methodID, const jvalue * args)</code></li>
-</ol>
-</li>
-<li>调用静态方法（static method）：
-
-<ol>
-<li><code>&lt;type&gt; CallStatic&lt;type&gt;Method(jobject obj, jmethodID methodID, ...);</code></li>
-<li><code>&lt;type&gt; CallStatic&lt;type&gt;MethodV(jobject obj, jmethodID methodID, va_list args);</code></li>
-<li><code>CallStatic&lt;type&gt;MethodA(jobject obj, jmethodID methodID, const jvalue * args)</code></li>
-</ol>
-</li>
-<li>调用父类方法（super.method)，这个就有点不一样了。多了一个jclass参数，jclass可以使obj的父类，也可以是obj自己的class，但是methodID必须是从jclass获取到的，这样就可以调用到父类的方法。
-
-<ol>
-<li><code>&lt;type&gt; CallNonvirtual&lt;type&gt;Method(jobject obj, jclass clazz, jmethodID methodID, ...)</code></li>
-<li><code>&lt;type&gt; CallNonvirtual&lt;type&gt;MethodV(JNIEnv *env, jobject obj, jclass clazz, jmethodID methodID, va_list args);</code></li>
-<li><code>&lt;type&gt; CallNonvirtual&lt;type&gt;MethodA(JNIEnv *env, jobject obj, jclass clazz, jmethodID methodID, const jvalue *args);</code></li>
-</ol>
-</li>
+  <li>调用实例方法（instance method）：
+    <ol>
+      <li><code>&lt;type&gt; Call&lt;type&gt;Method(jobject obj, jmethodID methodID, ...);</code>调用一个具有<code>&lt;type&gt;</code>类型返回值的方法。</li>
+      <li><code>&lt;type&gt; Call&lt;type&gt;MethodV(jobject obj, jmethodID methodID, va_list args);</code></li>
+      <li><code>Call&lt;type&gt;MethodA(jobject obj, jmethodID methodID, const jvalue * args)</code></li>
+    </ol>
+  </li>
+  <li>调用静态方法（static method）：
+    <ol>
+      <li><code>&lt;type&gt; CallStatic&lt;type&gt;Method(jobject obj, jmethodID methodID, ...);</code></li>
+      <li><code>&lt;type&gt; CallStatic&lt;type&gt;MethodV(jobject obj, jmethodID methodID, va_list args);</code></li>
+      <li><code>CallStatic&lt;type&gt;MethodA(jobject obj, jmethodID methodID, const jvalue * args)</code></li>
+    </ol>
+  </li>
+  <li>调用父类方法（super.method)，这个就有点不一样了。多了一个jclass参数，jclass可以使obj的父类，也可以是obj自己的class，但是methodID必须是从jclass获取到的，这样就可以调用到父类的方法。
+    <ol>
+      <li><code>&lt;type&gt; CallNonvirtual&lt;type&gt;Method(jobject obj, jclass clazz, jmethodID methodID, ...)</code></li>
+      <li><code>&lt;type&gt; CallNonvirtual&lt;type&gt;MethodV(JNIEnv *env, jobject obj, jclass clazz, jmethodID methodID, va_list args);</code></li>
+      <li><code>&lt;type&gt; CallNonvirtual&lt;type&gt;MethodA(JNIEnv *env, jobject obj, jclass clazz, jmethodID methodID, const jvalue *args);</code></li>
+    </ol>
+  </li>
 </ol>
 
-
-<h4>数组的操作</h4>
+<p>####数组的操作</p>
 
 <p>数组是一个很常用的数据类型，在但是在JNI中并不能直接操作jni数组（比如jshortArray，jfloatArray）。使用方法是：</p>
 
 <ol>
-<li>获取数组长度：<code>jsize GetArrayLength(jarray array)</code></li>
-<li>创建新数组： <code>ArrayType New&lt;PrimitiveType&gt;Array(jsize length);</code></li>
-<li>通过JNI数组获取一个C/C++数组：<code>&lt;type&gt;* Get&lt;type&gt;ArrayElements(jshortArray array, jboolean *isCopy)</code></li>
-<li>指定原数组的范围获取一个C/C++数组（该方法只针对于原始数据数组，不包括Object数组）：<code>void Get&lt;PrimitiveType&gt;ArrayRegion(JNIEnv *env, ArrayType array, jsize start, jsize len, NativeType *buf);</code></li>
-<li>设置数组元素：<code>void Set&lt;type&gt;ArrayRegion(jshortArray array, jsize start, jsize len,const &lt;type&gt; *buf)</code>。again，如果是Object数组需要使用：<code>void SetObjectArrayElement(JNIEnv *env, jobjectArray array, jsize index, jobject value);</code></li>
-<li>使用完之后，释放数组：<code>void Release&lt;type&gt;ArrayElements(jshortArray array, jshort *elems, jint mode)</code></li>
+  <li>获取数组长度：<code>jsize GetArrayLength(jarray array)</code></li>
+  <li>创建新数组： <code>ArrayType New&lt;PrimitiveType&gt;Array(jsize length);</code></li>
+  <li>通过JNI数组获取一个C/C++数组：<code>&lt;type&gt;* Get&lt;type&gt;ArrayElements(jshortArray array, jboolean *isCopy)</code></li>
+  <li>指定原数组的范围获取一个C/C++数组（该方法只针对于原始数据数组，不包括Object数组）：<code>void Get&lt;PrimitiveType&gt;ArrayRegion(JNIEnv *env, ArrayType array, jsize start, jsize len, NativeType *buf);</code></li>
+  <li>设置数组元素：<code>void Set&lt;type&gt;ArrayRegion(jshortArray array, jsize start, jsize len,const &lt;type&gt; *buf)</code>。again，如果是Object数组需要使用：<code>void SetObjectArrayElement(JNIEnv *env, jobjectArray array, jsize index, jobject value);</code></li>
+  <li>使用完之后，释放数组：<code>void Release&lt;type&gt;ArrayElements(jshortArray array, jshort *elems, jint mode)</code></li>
 </ol>
-
 
 <p>有点要说明的：</p>
 
 <ol>
-<li><p>上面的3中的isCopy：当你调用getArrayElements时JVM（Runtime）可以直接返回数组的原始指针，或者是copy一份，返回给你，这是由JVM决定的。所以isCopy就是用来记录这个的。他的值是<code>JNI_TURE</code>或者<code>JNI_FALSE</code>。</p></li>
-<li><p>6释放数组。<strong>一定要释放你所获得数组</strong>。其中有一个<code>mode</code>参数，其有三个可选值，分别表示：</p></li>
-<li><p> 0</p>
-
-<ul>
-<li><p>原始数组：允许原数组被垃圾回收。</p></li>
-<li><p>copy： 数据会从get返回的buffer copy回去，同时buffer也会被释放。</p></li>
-</ul>
-</li>
-<li><p> JNI_COMMIT</p>
-
-<ul>
-<li><p>原始数组：什么也不做</p></li>
-<li><p>copy： 数据会从get返回的buffer copy回去，同时buffer<strong>不会</strong>被释放。</p></li>
-</ul>
-</li>
-<li><p> JNI_ABORT</p>
-
-<ul>
-<li><p>原始数组：允许原数组被垃圾回收。之前由JNI_COMMIT提交的对数组的修改将得以保留。</p></li>
-<li><p>copy： buffer会被释放，同时buffer中的修改将不会copy回数组！</p></li>
-</ul>
-</li>
+  <li>
+    <p>上面的3中的isCopy：当你调用getArrayElements时JVM（Runtime）可以直接返回数组的原始指针，或者是copy一份，返回给你，这是由JVM决定的。所以isCopy就是用来记录这个的。他的值是<code>JNI_TURE</code>或者<code>JNI_FALSE</code>。</p>
+  </li>
+  <li>
+    <p>6释放数组。<strong>一定要释放你所获得数组</strong>。其中有一个<code>mode</code>参数，其有三个可选值，分别表示：</p>
+  </li>
 </ol>
 
+<ul>
+  <li>
+    <p>0</p>
 
-<h4>关于引用与垃圾回收</h4>
+    <ul>
+      <li>
+        <p>原始数组：允许原数组被垃圾回收。</p>
+      </li>
+      <li>
+        <p>copy： 数据会从get返回的buffer copy回去，同时buffer也会被释放。</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>JNI_COMMIT</p>
 
-<p>比如上面有个方法传了一个jobject进来，然后我把她保存下来，方便以后使用。这样做是<strong>不行哒</strong>！因为他是一个LocalReference，所以不能保证jobject指向的真正的实例不被回收。也就是说有可能你用的时候那个指针已经是个野指针的。然后你的程序就直接Segment Fault了，呵呵。。。</p>
+    <ul>
+      <li>
+        <p>原始数组：什么也不做</p>
+      </li>
+      <li>
+        <p>copy： 数据会从get返回的buffer copy回去，同时buffer<strong>不会</strong>被释放。</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>JNI_ABORT</p>
+
+    <ul>
+      <li>
+        <p>原始数组：允许原数组被垃圾回收。之前由JNI_COMMIT提交的对数组的修改将得以保留。</p>
+      </li>
+      <li>
+        <p>copy： buffer会被释放，同时buffer中的修改将不会copy回数组！</p>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>####关于引用与垃圾回收
+比如上面有个方法传了一个jobject进来，然后我把她保存下来，方便以后使用。这样做是<strong>不行哒</strong>！因为他是一个LocalReference，所以不能保证jobject指向的真正的实例不被回收。也就是说有可能你用的时候那个指针已经是个野指针的。然后你的程序就直接Segment Fault了，呵呵。。。</p>
 
 <p>在JNI中提供了三种类型的引用：</p>
 
 <ol>
-<li>Local Reference：即本地引用。在JNI层的函数，所有非全局引用对象都是Local Reference， 它包括函数调用是传入的jobject和JNI成函数创建的jobject。Local Reference的特点是一旦JNI层的函数返回，这些jobject就可能被垃圾回收。</li>
-<li>Glocal Reference：全局引用，这些对象不会主动释放，永远不会被垃圾回收。</li>
-<li>Weak Glocal Reference：弱全局引用，一种特殊的Global Reference，在运行过程中有可能被垃圾回收。所以使用之前需要使用<code>jboolean IsSameObject(jobject obj1, jobject obj2)</code>判断它是否已被回收。</li>
+  <li>Local Reference：即本地引用。在JNI层的函数，所有非全局引用对象都是Local Reference， 它包括函数调用是传入的jobject和JNI成函数创建的jobject。Local Reference的特点是一旦JNI层的函数返回，这些jobject就可能被垃圾回收。</li>
+  <li>Glocal Reference：全局引用，这些对象不会主动释放，永远不会被垃圾回收。</li>
+  <li>Weak Glocal Reference：弱全局引用，一种特殊的Global Reference，在运行过程中有可能被垃圾回收。所以使用之前需要使用<code>jboolean IsSameObject(jobject obj1, jobject obj2)</code>判断它是否已被回收。</li>
 </ol>
 
-
-<p>Glocal Reference:<br/>
- 1. 创建：<code>jobject NewGlobalRef(jobject lobj);</code><br/>
+<p>Glocal Reference:<br />
+ 1. 创建：<code>jobject NewGlobalRef(jobject lobj);</code><br />
  2. 释放：<code>void DeleteGlobalRef(jobject gref);</code></p>
 
-<p>Local Reference:<br/>
+<p>Local Reference:<br />
 LocalReference也有一个释放的函数：<code>void DeleteLocalRef(jobject obj)</code>，他会立即释放Local Reference。
 这个方法可能略显多余，其实也是有它的用处的。刚才说Local Reference会再函数返回后释放掉，但是假如函数返回前就有很多引用占了很多内存，最好函数内就尽早释放不必要的内存。</p>
 
-<h4>关于JNI_OnLoad<a name="jni_onload"></a></h4>
-
-<p>开头提到JNI_OnLoad是java1.2中新增加的方法，对应的还有一个JNI_OnUnload，分别是动态库被JVM加载、卸载的时候调用的函数。有点类似于WIndows里的DllMain。<br/>
+<p>####关于JNI_OnLoad<a name="jni_onload"></a>
+开头提到JNI_OnLoad是java1.2中新增加的方法，对应的还有一个JNI_OnUnload，分别是动态库被JVM加载、卸载的时候调用的函数。有点类似于WIndows里的DllMain。<br />
 前面提到的实现对应native的方法是实现javah生成的头文件中定义的方法，这样有几个弊端：</p>
 
 <ol>
-<li>函数名太长。很长。。相当长。。。</li>
-<li>函数会被导出，也就谁说可以在动态库的导出函数表里面找到这些函数。这将有利于别人对动态库的逆向工程，因此带来安全问题。</li>
+  <li>函数名太长。很长。。相当长。。。</li>
+  <li>函数会被导出，也就谁说可以在动态库的导出函数表里面找到这些函数。这将有利于别人对动态库的逆向工程，因此带来安全问题。</li>
 </ol>
-
 
 <p>现在有了JNI_OnLoad，情况好多了。你不光能在其中完成动态注册native函数的工作还可以完成一些初始化工作。java对应的有了<code>jint RegisterNatives(jclass clazz, const JNINativeMethod *methods,jint nMethods)</code>函数。参数分别是：</p>
 
 <ol>
-<li><p>jclass clazz，于native层对应的java class</p></li>
-<li><p>const JNINativeMethod *methods这是一个数组，数组的元素是JNI定义的一个结构体JNINativeMethod</p></li>
-<li><p>上面的数组的长度</p></li>
+  <li>
+    <p>jclass clazz，于native层对应的java class</p>
+  </li>
+  <li>
+    <p>const JNINativeMethod *methods这是一个数组，数组的元素是JNI定义的一个结构体JNINativeMethod</p>
+  </li>
+  <li>
+    <p>上面的数组的长度</p>
+  </li>
 </ol>
-
 
 <p><strong>JNINativeMethod</strong>：代码中的定义如下：</p>
 
-<pre><code class="java">
+<pre><code class="language-java">
 /*
  * used in RegisterNatives to describe native method name, signature,
  * and function pointer.
@@ -439,38 +462,36 @@ typedef struct {
     void *fnPtr;
 } JNINativeMethod;
 </code></pre>
-
 <p>所以他有三个字段，分别是</p>
 
 <table>
-<thead>
-<tr>
-<th style="text-align:left;"> 字段 </th>
-<th style="text-align:left;"> 含义 </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">char *name </td>
-<td style="text-align:left;"> java class中的native方法名，只需要方法名即可 </td>
-</tr>
-<tr>
-<td style="text-align:left;"> char *signature </td>
-<td style="text-align:left;"> 方法<a href="#signature">签名</a></td>
-</tr>
-<tr>
-<td style="text-align:left;"> void *fnPtr </td>
-<td style="text-align:left;"> 对应native方法的函数指针 </td>
-</tr>
-</tbody>
+  <thead>
+    <tr>
+      <th style="text-align: left">字段</th>
+      <th style="text-align: left">含义</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">char *name</td>
+      <td style="text-align: left">java class中的native方法名，只需要方法名即可</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">char *signature</td>
+      <td style="text-align: left">方法<a href="#signature">签名</a></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">void *fnPtr</td>
+      <td style="text-align: left">对应native方法的函数指针</td>
+    </tr>
+  </tbody>
 </table>
-
 
 <p>于是现在你可以不用导出native函数了，而且可以随意给函数命名，唯一要保证的是参数及返回值的统一。然后需要一个<code>const JNINativeMethod *methods</code>数组来完成映射工作。</p>
 
 <p>看起来大概是这样的:</p>
 
-<pre><code class="cpp">//只需导出JNI_OnLoad和JNI_OnUnload（这个函数不实现也行）
+<pre><code class="language-cpp">//只需导出JNI_OnLoad和JNI_OnUnload（这个函数不实现也行）
 /**
  * These are the exported function in this library.
 */
@@ -489,67 +510,66 @@ static jint native_newInstance (JNIEnv *env, jclass);
 */
 static jint native_newInstance
 (JNIEnv *env, jclass ) {
-    int instanceID = ++sInstanceIdentifer;
-    SoundTouchWrapper *instance = new SoundTouchWrapper();
-    if (instance != NULL) {
-        sInstancePool[instanceID] = instance;
-        ++sInstanceCount;
-    }
-    LOGDBG("create new SouncTouch instance:%d", instanceID);
-    return instanceID;
+	int instanceID = ++sInstanceIdentifer;
+	SoundTouchWrapper *instance = new SoundTouchWrapper();
+	if (instance != NULL) {
+		sInstancePool[instanceID] = instance;
+		++sInstanceCount;
+	}
+	LOGDBG("create new SouncTouch instance:%d", instanceID);
+	return instanceID;
 }
 
 //构造JNINativeMethod数组
 static JNINativeMethod gsNativeMethods[] = {
-        {
-            "native_newInstance",
-            "()I",
-            reinterpret_cast&lt;void *&gt; (native_newInstance)
-        }
+		{
+			"native_newInstance",
+			"()I",
+			reinterpret_cast&lt;void *&gt; (native_newInstance)
+		}
 }；
 //计算数组大小
 static const int gsMethodCount = sizeof(gsNativeMethods) / sizeof(JNINativeMethod)；
 
 //JNI_OnLoad，注册native方法。
 JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
-    JNIEnv* env;
-    jclass clazz;
-    LOGD("JNI_OnLoad called");
-    if (vm-&gt;GetEnv(reinterpret_cast&lt;void**&gt;(&amp;env), JNI_VERSION_1_6) != JNI_OK) {
-        return -1;
-    }
-    //FULL_CLASS_NAME是个宏定义，定义了对应java类的全名（要把包名中的点(.)_替换成斜杠(/)）
-    clazz = env-&gt;FindClass(FULL_CLASS_NAME);
-    LOGDBG("register method, method count:%d", gsMethodCount);
-    //注册JNI函数
-    env-&gt;RegisterNatives(clazz, gsNativeMethods,
-        gsMethodCount);
-    //必须返回一个JNI_VERSION_1_1以上（不含）的版本号，否则直接加载失败
-    return JNI_VERSION_1_6;
+	JNIEnv* env;
+	jclass clazz;
+	LOGD("JNI_OnLoad called");
+	if (vm-&gt;GetEnv(reinterpret_cast&lt;void**&gt;(&amp;env), JNI_VERSION_1_6) != JNI_OK) {
+		return -1;
+	}
+	//FULL_CLASS_NAME是个宏定义，定义了对应java类的全名（要把包名中的点(.)_替换成斜杠(/)）
+	clazz = env-&gt;FindClass(FULL_CLASS_NAME);
+	LOGDBG("register method, method count:%d", gsMethodCount);
+	//注册JNI函数
+	env-&gt;RegisterNatives(clazz, gsNativeMethods,
+		gsMethodCount);
+	//必须返回一个JNI_VERSION_1_1以上（不含）的版本号，否则直接加载失败
+	return JNI_VERSION_1_6;
 }
 </code></pre>
 
-<h3>实战技巧篇</h3>
+<p>###实战技巧篇</p>
 
 <p>这里主要是巧用C中的宏来减少重复工作：</p>
 
-<h4>迅速生成全名</h4>
+<p>####迅速生成全名</p>
 
-<pre><code class="cpp">//修改包名时只需要改以下的宏定义即可
+<pre><code class="language-cpp">//修改包名时只需要改以下的宏定义即可
 #define FULL_CLASS_NAME "com/young/soundtouch/SoundTouch"
 #define func(name) Java_ ## com_young_soundtouch_SoundTouch_ ## name
 #define constance(cons) com_young_soundtouch_SoundTouch_ ## cons
 </code></pre>
-
 <p>比如<code>func(native_1newInstance)</code>展开成：<code>Java_com_young_soundtouch_SoundTouch_native_1newInstance</code>即JNI中需要导出的函数名（不过用动态注册方式没太大用了）</p>
 
 <p><code>constance(AUDIO_FORMAT_PCM16)</code>展开成<code>com_young_soundtouch_SoundTouch_AUDIO_FORMAT_PCM16</code>这个着实有用。</p>
 
 <p>而且如果包名改了也可以很方便的适应之。</p>
 
-<h3>安卓的log</h3>
+<p>###安卓的log</p>
 
-<pre><code class="cpp">//define __USE_ANDROID_LOG__ in makefile to enable android log
+<pre><code class="language-cpp">//define __USE_ANDROID_LOG__ in makefile to enable android log
 #if defined(__ANDROID__) &amp;&amp; defined(__USE_ANDROID_LOG__)
 #include &lt;android/log.h&gt;
 #define LOGV(...)   __android_log_print((int)ANDROID_LOG_VERBOSE, "ST_jni", __VA_ARGS__)
@@ -561,18 +581,16 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
 #define LOGDBG(fmt, ...) 
 #endif
 </code></pre>
-
 <p>通过这样的宏定义在打LOGD或者LOGDBG的时候还能自动加上行号！调试起来爽多了！</p>
 
-<h4>C++中清理内存的方式</h4>
+<p>####C++中清理内存的方式</p>
 
 <p>由于C++里面需要手动清楚内存，因此我的解决方案是定义一个map，给每个实例一个id，用id把java中的对象和native中的对象绑定起来。在java层定义一个<code>release</code>方法，用来释放本地的对象。
 本地的 KEY-对象 映射
 <code>static std::map&lt;int, SoundTouchWrapper*&gt; sInstancePool;</code></p>
 
-<h4>关于NDK</h4>
-
-<p>因为安卓的约定是把本地代码放到jni目录下面，但是假如有多个jni lib的时候会比较混乱，所以方案是每一个lib都在jni里面建一个子目录，然后jni里面的Android.mk就可以去构建子目录中的lib了。</p>
+<p>####关于NDK
+因为安卓的约定是把本地代码放到jni目录下面，但是假如有多个jni lib的时候会比较混乱，所以方案是每一个lib都在jni里面建一个子目录，然后jni里面的Android.mk就可以去构建子目录中的lib了。</p>
 
 <p>jni/Android.mk如下（超级简单）：
 <code>makefile
@@ -586,16 +604,15 @@ include $(call all-subdir-makefiles)
 有时候源文件是一个目录下的所有.cpp/.c文件，这时候<code>wildcard</code>来统配会很方便。但是Android.mk与普通的Makefile的不同在于：</p>
 
 <ol>
-<li>调用Android.mkmingling的${CWD}并不是Android.ml所在的目录。所以Android.mk中有一个变量<code>LOCAL_PATH := $(call my-dir)</code>来记录当前 Android.mk所在的目录。</li>
-<li>同时还会把所有的<code>LOCAL_SRC_FILES</code> 前面加上<code>$(LOCAL_PATH)</code>这样写makefile的时候就可以用相对路径了，提供了方便。但是这也导致了坑！</li>
+  <li>调用Android.mkmingling的${CWD}并不是Android.ml所在的目录。所以Android.mk中有一个变量<code>LOCAL_PATH := $(call my-dir)</code>来记录当前 Android.mk所在的目录。</li>
+  <li>同时还会把所有的<code>LOCAL_SRC_FILES</code> 前面加上<code>$(LOCAL_PATH)</code>这样写makefile的时候就可以用相对路径了，提供了方便。但是这也导致了坑！</li>
 </ol>
-
 
 <p>因为1，直接使用相对路径会导致<code>wildcard</code>匹配不到源文件。所以最好这么写<code>FILE_LIST := $(wildcard $(LOCAL_PATH)/soundtouch_source/source/SoundTouch/*.cpp)</code>。然而又因为2，这样还是不行的。所以还需要匹配之后把<code>$(LOCAL_PATH)</code>的部分去掉，因此还得这样<code>$(FILE_LIST:$(LOCAL_PATH)/%=%)</code>.</p>
 
 <p>还有个小tip：<code>LOCAL_CFLAGS</code>中最好加上这个定义<code>-fvisibility=hidden</code>这样就不会在动态库中导出不必要的函数了。</p>
 
-<h3>附录<a name="signature">签名</a></h3>
+<p>###附录<a name="signature">签名</a></p>
 
 <p>JAVA中的函数签名包括了函数的参数类型，返回值类型。因此即使是重载了的函数，其函数签名也不一样。java编译器就会根据函数签名来判断你调用的到地址哪个方法。
 签名中表示类型是这样的</p>
@@ -603,52 +620,51 @@ include $(call all-subdir-makefiles)
 <p>1.基本类型都对应一个大写字母，如下：</p>
 
 <table>
-<thead>
-<tr>
-<th style="text-align:center;"> JAVA类型 </th>
-<th style="text-align:center;">  类型签名 </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center;"> boolean </td>
-<td style="text-align:center;"> Z </td>
-</tr>
-<tr>
-<td style="text-align:center;">byte </td>
-<td style="text-align:center;"> B </td>
-</tr>
-<tr>
-<td style="text-align:center;"> char  </td>
-<td style="text-align:center;"> C </td>
-</tr>
-<tr>
-<td style="text-align:center;"> short </td>
-<td style="text-align:center;"> S </td>
-</tr>
-<tr>
-<td style="text-align:center;"> int </td>
-<td style="text-align:center;"> I </td>
-</tr>
-<tr>
-<td style="text-align:center;"> long </td>
-<td style="text-align:center;"> J </td>
-</tr>
-<tr>
-<td style="text-align:center;"> float </td>
-<td style="text-align:center;"> F </td>
-</tr>
-<tr>
-<td style="text-align:center;"> double </td>
-<td style="text-align:center;"> D </td>
-</tr>
-<tr>
-<td style="text-align:center;"> void </td>
-<td style="text-align:center;"> V </td>
-</tr>
-</tbody>
+  <thead>
+    <tr>
+      <th style="text-align: center">JAVA类型</th>
+      <th style="text-align: center">类型签名</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">boolean</td>
+      <td style="text-align: center">Z</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">byte</td>
+      <td style="text-align: center">B</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">char</td>
+      <td style="text-align: center">C</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">short</td>
+      <td style="text-align: center">S</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">int</td>
+      <td style="text-align: center">I</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">long</td>
+      <td style="text-align: center">J</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">float</td>
+      <td style="text-align: center">F</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">double</td>
+      <td style="text-align: center">D</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">void</td>
+      <td style="text-align: center">V</td>
+    </tr>
+  </tbody>
 </table>
-
 
 <p>2.如果是类则是：
 L + 类全名（报名中的点(.)用(/)代替）+ ；
@@ -663,13 +679,14 @@ L + 类全名（报名中的点(.)用(/)代替）+ ；
 
 <p>[全文完]</p>
 
-<h4>参考资料</h4>
+<p>####参考资料</p>
 
 <p>[1] : <a href="http://docs.oracle.com/javase/7/docs/technotes/guides/jni/spec/functions.html">Oracle java SE documents</a></p>
 
 <p>[2] : <a href="http://baike.baidu.com/view/6415820.htm">深入理解Android 卷 1</a> 第二章 ，邓凡平著，机械工业出版社</p>
 
-<p>[3]: <a href="http://developer.android.com/training/articles/perf-jni.html">Google Android documents &ndash; JNI Tips</a></p>
+<p>[3]: <a href="http://developer.android.com/training/articles/perf-jni.html">Google Android documents – JNI Tips</a></p>
+
 ]]></content>
   </entry>
   

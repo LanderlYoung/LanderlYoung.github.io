@@ -7,7 +7,9 @@
 	<meta name="author" content="LanderlYoung">
 
 	
-	<meta name="description" content="Linux Fork和exec系列函数 linux 中的fork和exec函数是进程相关的两个函数，最早在大二的操作系统课上了解到。今天要写个小东西偶尔用到就研究了一下。 1.fork fork的功能是创建一个和进程完全一样的子进程。完全的意思是指子进程的堆和栈和父进程是完全相同的。 &hellip;">
+	<meta name="description" content="Linux Fork和exec系列函数 linux 中的fork和exec函数是进程相关的两个函数，最早在大二的操作系统课上了解到。今天要写个小东西偶尔用到就研究了一下。
+## 1.fork
+fork的功能是创建一个和进程完全一样的子进程。完全的意思是指子进程的堆和栈和父进程是完全相同的。 &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,109 +82,101 @@
 			<div class="mid-col-container">
 				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
 	<h1 class="title" itemprop="name">Linux Fork和exec系列函数</h1>
-	<div class="entry-content" itemprop="articleBody"><p>linux 中的<a href="http://en.wikipedia.org/wiki/Fork_(system_call)">fork</a>和<a href="http://en.wikipedia.org/wiki/Exec_(operating_system)">exec</a>函数是进程相关的两个函数，最早在大二的操作系统课上了解到。今天要写个小东西偶尔用到就研究了一下。</p>
-
-<h2>1.fork</h2>
-
-<p>fork的功能是创建一个和进程完全一样的子进程。完全的意思是指子进程的堆和栈和父进程是完全相同的。在子进程创建完成时，子进程和父进程共享内存。但是一旦共享的内存区域要被写入时（不管是父进程要写还是子进程要写）这块区域就会从父进程的进程空间复制到子进程，然后再执行写入。这就是通常说的<a href="http://en.wikipedia.org/wiki/Fork_(system_call)">copy on write</a>，目的很明显，就是要节省不必要的内存消耗 。</p>
+	<div class="entry-content" itemprop="articleBody"><p>linux 中的<a href="http://en.wikipedia.org/wiki/Fork_(system_call)">fork</a>和<a href="http://en.wikipedia.org/wiki/Exec_(operating_system)">exec</a>函数是进程相关的两个函数，最早在大二的操作系统课上了解到。今天要写个小东西偶尔用到就研究了一下。
+## 1.fork
+fork的功能是创建一个和进程完全一样的子进程。完全的意思是指子进程的堆和栈和父进程是完全相同的。在子进程创建完成时，子进程和父进程共享内存。但是一旦共享的内存区域要被写入时（不管是父进程要写还是子进程要写）这块区域就会从父进程的进程空间复制到子进程，然后再执行写入。这就是通常说的<a href="http://en.wikipedia.org/wiki/Fork_(system_call)">copy on write</a>，目的很明显，就是要节省不必要的内存消耗 。</p>
 
 <!--more-->
-
 
 <p>这一点在安卓的虚拟机孵化进程zygote被使用，zygote在开机时就把所有系统java类的字节码加载到内存，当一个app启动时zygote就fork一下然后fork的子进程去执行app。这样所有app可以调用系统class而整个系统的内存中只有一份系统类，可以很大程度的节省内存, 同时也加快了app的启动。</p>
 
 <p>linux系统中的所有进程都是init进程fork出来的，查看的话可以发现他的pid是1, 是系统内所有进程的父进程（或者祖先进程）。其实init也有个pid为0的父进程，开机完成后就不存在了，本文不涉及这方面。</p>
 
-<p>fork包含在&lt;unistd.h>头文件中， 其原型是：<code>pid_t fork(void)</code>其中pid_t是进程pid的数据结构，可以被cast成int等类型，当frok成功时在父进程中的返回值是子进程的pid, 子进程中是0, 若没能创建子进程则返回负值。</p>
+<p>fork包含在<unistd.h>头文件中， 其原型是：` pid_t fork(void)`其中pid\_t是进程pid的数据结构，可以被cast成int等类型，当frok成功时在父进程中的返回值是子进程的pid, 子进程中是0, 若没能创建子进程则返回负值。</unistd.h></p>
 
 <p>写个小程序看看：</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="cp">#include &lt;stdio.h&gt;</span>
-</span><span class='line'><span class="cp">#include &lt;unistd.h&gt;</span>
-</span><span class='line'><span class="cp">#include &lt;stdlib.h&gt;</span><span class="c1">//for exit()</span>
-</span><span class='line'>
-</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>  <span class="kt">pid_t</span> <span class="n">pid</span><span class="p">;</span>
-</span><span class='line'>  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;parent pid:%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">getpid</span><span class="p">());</span>
-</span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="n">pid</span> <span class="o">=</span> <span class="n">fork</span><span class="p">())</span> <span class="p">{</span>
-</span><span class='line'>      <span class="c1">// pid != 0, in parent process</span>
-</span><span class='line'>      <span class="n">printf</span><span class="p">(</span><span class="s">&quot;in parent child pid:%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">pid</span><span class="p">);</span>
-</span><span class='line'>      <span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="c1">//in child process</span>
-</span><span class='line'>  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;I</span><span class="se">\&#39;</span><span class="s">m Child process.</span><span class="se">\n</span><span class="s">&quot;</span>
-</span><span class='line'>          <span class="s">&quot;My pid :%d, parent pid:%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
-</span><span class='line'>          <span class="n">getpid</span><span class="p">(),</span> <span class="n">getppid</span><span class="p">());</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+</pre></td><td class="code"><pre><code class="cpp"><span class="line"><span class="cp">#include &lt;stdio.h&gt;</span>
+</span><span class="line"><span class="cp">#include &lt;unistd.h&gt;</span>
+</span><span class="line"><span class="cp">#include &lt;stdlib.h&gt;</span><span class="c1">//for exit()</span>
+</span><span class="line">
+</span><span class="line"><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="line">	<span class="kt">pid_t</span> <span class="n">pid</span><span class="p">;</span>
+</span><span class="line">	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;parent pid:%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">getpid</span><span class="p">());</span>
+</span><span class="line">	<span class="k">if</span><span class="p">(</span><span class="n">pid</span> <span class="o">=</span> <span class="n">fork</span><span class="p">())</span> <span class="p">{</span>
+</span><span class="line">		<span class="c1">// pid != 0, in parent process</span>
+</span><span class="line">		<span class="n">printf</span><span class="p">(</span><span class="s">&quot;in parent child pid:%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">pid</span><span class="p">);</span>
+</span><span class="line">		<span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</span><span class="line">	<span class="p">}</span>
+</span><span class="line">
+</span><span class="line">	<span class="c1">//in child process</span>
+</span><span class="line">	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;I</span><span class="se">\&#39;</span><span class="s">m Child process.</span><span class="se">\n</span><span class="s">&quot;</span>
+</span><span class="line">			<span class="s">&quot;My pid :%d, parent pid:%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span>
+</span><span class="line">			<span class="n">getpid</span><span class="p">(),</span> <span class="n">getppid</span><span class="p">());</span>
+</span><span class="line">
+</span><span class="line">	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class="line"><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 <p>编译运行看看</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">young</span><span class="err">@</span><span class="nl">Y470</span><span class="p">:</span><span class="o">~/</span><span class="n">Desktop</span><span class="err">$</span><span class="n">gcc</span> <span class="n">f</span><span class="p">.</span><span class="n">c</span> <span class="o">-</span><span class="n">o</span> <span class="n">f</span>
-</span><span class='line'><span class="n">young</span><span class="err">@</span><span class="nl">Y470</span><span class="p">:</span><span class="o">~/</span><span class="n">Desktop</span><span class="err">$</span><span class="p">.</span><span class="o">/</span><span class="n">f</span>
-</span><span class='line'><span class="n">parent</span> <span class="nl">pid</span><span class="p">:</span><span class="mi">8627</span>
-</span><span class='line'><span class="n">in</span> <span class="n">parent</span> <span class="n">child</span> <span class="nl">pid</span><span class="p">:</span><span class="mi">8628</span>
-</span><span class='line'><span class="n">I</span><span class="err">&#39;</span><span class="n">m</span> <span class="n">Child</span> <span class="n">process</span><span class="p">.</span>
-</span><span class='line'><span class="n">My</span> <span class="nl">pid</span> <span class="p">:</span><span class="mi">8628</span><span class="p">,</span>  <span class="n">parent</span> <span class="nl">pid</span><span class="p">:</span><span class="mi">8627</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+</pre></td><td class="code"><pre><code class="cpp"><span class="line"><span class="n">young</span><span class="err">@</span><span class="nl">Y470</span><span class="p">:</span><span class="o">~/</span><span class="n">Desktop</span><span class="err">$</span><span class="n">gcc</span> <span class="n">f</span><span class="p">.</span><span class="n">c</span> <span class="o">-</span><span class="n">o</span> <span class="n">f</span>
+</span><span class="line"><span class="n">young</span><span class="err">@</span><span class="nl">Y470</span><span class="p">:</span><span class="o">~/</span><span class="n">Desktop</span><span class="err">$</span><span class="p">.</span><span class="o">/</span><span class="n">f</span>
+</span><span class="line"><span class="n">parent</span> <span class="nl">pid</span><span class="p">:</span><span class="mi">8627</span>
+</span><span class="line"><span class="n">in</span> <span class="n">parent</span> <span class="n">child</span> <span class="nl">pid</span><span class="p">:</span><span class="mi">8628</span>
+</span><span class="line"><span class="n">I</span><span class="err">&#39;</span><span class="n">m</span> <span class="n">Child</span> <span class="n">process</span><span class="p">.</span>
+</span><span class="line"><span class="n">My</span> <span class="nl">pid</span> <span class="p">:</span><span class="mi">8628</span><span class="p">,</span>  <span class="n">parent</span> <span class="nl">pid</span><span class="p">:</span><span class="mi">8627</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 <p>getpid()返回当前进程的pid，getppid（）返回父进程的pid。</p>
 
 <p>这里在fork之后通过返回值知道自己是父进程还是子进程，然后通过if判断进行流程控制，父、子进程各自执行自己的任务。</p>
 
-<h2>2.exec系列函数</h2>
-
+<h2 id="exec">2.exec系列函数</h2>
 <p>刚才说道linux系统内所有进程都是init进程的子孙进程，但是可能会让人不解：“这样的话所有进程不都是一样的吗”。这里我们要用到exec系列函数了。</p>
 
 <p>exec系列函数在执行时会首先清空当前进程（调用exec函数的进程）的栈和堆等内存空间。然后创建新的空间。但是进程的pid和父进程等信息不会变。</p>
 
 <p>exec系列函数有一下几个：</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="kt">int</span> <span class="nf">execl</span><span class="p">(</span><span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">path</span><span class="p">,</span>  <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">arg0</span><span class="p">,</span>  <span class="p">...);</span>
-</span><span class='line'><span class="kt">int</span> <span class="nf">execle</span><span class="p">(</span><span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">path</span><span class="p">,</span>  <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">arg0</span><span class="p">,</span>  <span class="p">...,</span>  <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">envp</span><span class="p">);</span>
-</span><span class='line'><span class="kt">int</span> <span class="nf">execlp</span><span class="p">(</span><span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">file</span><span class="p">,</span>  <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">arg0</span><span class="p">,</span>  <span class="p">...);</span>
-</span><span class='line'><span class="kt">int</span> <span class="nf">execv</span><span class="p">(</span><span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">path</span><span class="p">,</span>  <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">argv</span><span class="p">);</span>
-</span><span class='line'><span class="kt">int</span> <span class="nf">execve</span><span class="p">(</span><span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">path</span><span class="p">,</span>  <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">argv</span><span class="p">,</span>  <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">envp</span><span class="p">);</span>
-</span><span class='line'><span class="kt">int</span> <span class="nf">execvp</span><span class="p">(</span><span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">file</span><span class="p">,</span>  <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">argv</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+</pre></td><td class="code"><pre><code class="cpp"><span class="line"><span class="kt">int</span> <span class="nf">execl</span><span class="p">(</span><span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">path</span><span class="p">,</span>  <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">arg0</span><span class="p">,</span>  <span class="p">...);</span>
+</span><span class="line"><span class="kt">int</span> <span class="nf">execle</span><span class="p">(</span><span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">path</span><span class="p">,</span>  <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">arg0</span><span class="p">,</span>  <span class="p">...,</span>  <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">envp</span><span class="p">);</span>
+</span><span class="line"><span class="kt">int</span> <span class="nf">execlp</span><span class="p">(</span><span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">file</span><span class="p">,</span>  <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">arg0</span><span class="p">,</span>  <span class="p">...);</span>
+</span><span class="line"><span class="kt">int</span> <span class="nf">execv</span><span class="p">(</span><span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">path</span><span class="p">,</span>  <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">argv</span><span class="p">);</span>
+</span><span class="line"><span class="kt">int</span> <span class="nf">execve</span><span class="p">(</span><span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">path</span><span class="p">,</span>  <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">argv</span><span class="p">,</span>  <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">envp</span><span class="p">);</span>
+</span><span class="line"><span class="kt">int</span> <span class="nf">execvp</span><span class="p">(</span><span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">file</span><span class="p">,</span>  <span class="kt">char</span> <span class="k">const</span> <span class="o">*</span><span class="n">argv</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 <p>可以看出来他们的后缀不一样，各个后缀的含义是：</p>
 
@@ -193,382 +187,361 @@ p - 使用系统环境变量PATH搜索可执行文件
 v - 命令的参数通过一个数组`vector`传入
 </pre>
 
-
 <p>需要说明的是：</p>
 
 <ol>
-<li>如果使用带<code>l</code>的函数，即execl、execle、execlp应该在参数列表最后传入一个NULL标记参数完毕。</li>
-<li>如果是带v的函数就应该在数组的最后一项设置成NULL标记数组的完毕。</li>
-<li>并且arg0（就是第一个参数）通常情况下都是可执行文件自身的名字，否则可能会导致函数调用失败，<a name="list"></a>当然也有特例，为了行文通畅，放到<a href="#appendix"> 最后</a>再说。</li>
-<li>如果使用带有e的函数那么环境变量数组envp的最后也要有NULL标记数组的结束。</li>
-<li>实验证明对于带有e的函数在传入正确的envp的前提下还要写对正确的路径，否则不能执行。</li>
+  <li>如果使用带<code>l</code>的函数，即execl、execle、execlp应该在参数列表最后传入一个NULL标记参数完毕。</li>
+  <li>如果是带v的函数就应该在数组的最后一项设置成NULL标记数组的完毕。</li>
+  <li>并且arg0（就是第一个参数）通常情况下都是可执行文件自身的名字，否则可能会导致函数调用失败，<a name="list"></a>当然也有特例，为了行文通畅，放到<a href="#appendix"> 最后</a>再说。</li>
+  <li>如果使用带有e的函数那么环境变量数组envp的最后也要有NULL标记数组的结束。</li>
+  <li>实验证明对于带有e的函数在传入正确的envp的前提下还要写对正确的路径，否则不能执行。</li>
 </ol>
-
 
 <p>函数返回0表示正常。</p>
 
 <p>写个小程序试试看：</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="cp">#include &lt;stdio.h&gt;</span>
-</span><span class='line'><span class="cp">#include &lt;unistd.h&gt;</span>
-</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;process pid: %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">getpid</span><span class="p">());</span>
-</span><span class='line'>  <span class="n">execlp</span><span class="p">(</span><span class="s">&quot;./child&quot;</span><span class="p">,</span> <span class="s">&quot;child&quot;</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
-</span><span class='line'>  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;hello</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
-</span><span class='line'>  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+</pre></td><td class="code"><pre><code class="cpp"><span class="line"><span class="cp">#include &lt;stdio.h&gt;</span>
+</span><span class="line"><span class="cp">#include &lt;unistd.h&gt;</span>
+</span><span class="line"><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+</span><span class="line">	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;process pid: %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">getpid</span><span class="p">());</span>
+</span><span class="line">	<span class="n">execlp</span><span class="p">(</span><span class="s">&quot;./child&quot;</span><span class="p">,</span> <span class="s">&quot;child&quot;</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+</span><span class="line">	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;hello</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+</span><span class="line">	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class="line"><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 <p>编译执行：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">young</span><span class="err">@</span><span class="nl">Y470</span><span class="p">:</span><span class="o">~/</span><span class="n">Desktop</span><span class="err">$</span><span class="p">.</span><span class="o">/</span><span class="n">a</span>
-</span><span class='line'><span class="n">process</span> <span class="nl">pid</span><span class="p">:</span> <span class="mi">12369</span>
-</span><span class='line'><span class="nl">pid</span><span class="p">:</span> <span class="mi">12369</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class="cpp"><span class="line"><span class="n">young</span><span class="err">@</span><span class="nl">Y470</span><span class="p">:</span><span class="o">~/</span><span class="n">Desktop</span><span class="err">$</span><span class="p">.</span><span class="o">/</span><span class="n">a</span>
+</span><span class="line"><span class="n">process</span> <span class="nl">pid</span><span class="p">:</span> <span class="mi">12369</span>
+</span><span class="line"><span class="nl">pid</span><span class="p">:</span> <span class="mi">12369</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 <p>执行了<code>./child</code>命令，第一行输出是原进程的输出，第二行输出是新进程（不是子进程）child的输出，注意printf没有执行。那是因为exec函数执行是清理了当强进程的内存空间整个进程可以说是直接换成了child进程。这个child是一个小程序，代码如下：</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="cp">#include &lt;stdio.h&gt;</span>
-</span><span class='line'><span class="cp">#include &lt;unistd.h&gt;</span>
-</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;pid: %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">getpid</span><span class="p">());</span>
-</span><span class='line'>  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+</pre></td><td class="code"><pre><code class="cpp"><span class="line"><span class="cp">#include &lt;stdio.h&gt;</span>
+</span><span class="line"><span class="cp">#include &lt;unistd.h&gt;</span>
+</span><span class="line"><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="line">	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;pid: %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">getpid</span><span class="p">());</span>
+</span><span class="line">	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class="line"><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 <p>通过这段代码我们也可以证明，<strong>exec创建的进程和调用进程pid一样</strong>。</p>
 
 <p>然后我们写个程序测试并说明上述所有exec函数的用法：</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="cp">#include &lt;stdio.h&gt;</span>
-</span><span class='line'><span class="cp">#include &lt;unistd.h&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-</span><span class='line'>  <span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">];</span>
-</span><span class='line'>  <span class="kt">pid_t</span> <span class="n">p</span><span class="p">;</span>
-</span><span class='line'>  <span class="kt">char</span><span class="o">*</span> <span class="n">m_argv</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
-</span><span class='line'>      <span class="s">&quot;echo&quot;</span><span class="p">,</span> <span class="s">&quot;echo&quot;</span><span class="p">,</span> <span class="s">&quot;Hello world&quot;</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span>
-</span><span class='line'>  <span class="p">};</span>
-</span><span class='line'>  <span class="kt">char</span> <span class="o">*</span><span class="n">envp</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
-</span><span class='line'>      <span class="s">&quot;/usr/bin&quot;</span><span class="p">,</span>
-</span><span class='line'>      <span class="s">&quot;/bin&quot;</span><span class="p">,</span>
-</span><span class='line'>      <span class="nb">NULL</span><span class="p">,</span>
-</span><span class='line'>  <span class="p">};</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;parent pid: %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">getpid</span><span class="p">());</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">switch</span> <span class="p">(</span><span class="n">c</span><span class="p">){</span>
-</span><span class='line'>      <span class="k">case</span> <span class="sc">&#39;1&#39;</span><span class="o">:</span>
-</span><span class='line'>          <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">fork</span><span class="p">())</span> <span class="p">{</span>
-</span><span class='line'>              <span class="n">printf</span><span class="p">(</span><span class="s">&quot;from execl pid: %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">getpid</span><span class="p">());</span>
-</span><span class='line'>              <span class="n">execl</span><span class="p">(</span><span class="s">&quot;/bin/echo&quot;</span><span class="p">,</span> <span class="s">&quot;echo&quot;</span><span class="p">,</span> <span class="s">&quot;Hello world&quot;</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
-</span><span class='line'>          <span class="p">}</span>
-</span><span class='line'>          <span class="k">break</span><span class="p">;</span>
-</span><span class='line'>      <span class="k">case</span> <span class="sc">&#39;2&#39;</span><span class="o">:</span>
-</span><span class='line'>          <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">fork</span><span class="p">())</span> <span class="p">{</span>
-</span><span class='line'>              <span class="n">printf</span><span class="p">(</span><span class="s">&quot;from execle pid: %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">getpid</span><span class="p">());</span>
-</span><span class='line'>              <span class="n">execle</span><span class="p">(</span><span class="s">&quot;/bin/echo&quot;</span><span class="p">,</span> <span class="s">&quot;echo&quot;</span><span class="p">,</span> <span class="s">&quot;Hello world&quot;</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">envp</span><span class="p">);</span>
-</span><span class='line'>          <span class="p">}</span>
-</span><span class='line'>          <span class="k">break</span><span class="p">;</span>
-</span><span class='line'>      <span class="k">case</span> <span class="sc">&#39;3&#39;</span><span class="o">:</span>
-</span><span class='line'>          <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">fork</span><span class="p">())</span> <span class="p">{</span>
-</span><span class='line'>              <span class="n">printf</span><span class="p">(</span><span class="s">&quot;from execlp pid: %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">getpid</span><span class="p">());</span>
-</span><span class='line'>              <span class="n">execlp</span><span class="p">(</span><span class="s">&quot;echo&quot;</span><span class="p">,</span> <span class="s">&quot;echo&quot;</span><span class="p">,</span> <span class="s">&quot;Hello world&quot;</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
-</span><span class='line'>          <span class="p">}</span>
-</span><span class='line'>          <span class="k">break</span><span class="p">;</span>
-</span><span class='line'>      <span class="k">case</span> <span class="sc">&#39;4&#39;</span><span class="o">:</span>
-</span><span class='line'>
-</span><span class='line'>          <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">fork</span><span class="p">())</span> <span class="p">{</span>
-</span><span class='line'>              <span class="n">printf</span><span class="p">(</span><span class="s">&quot;from execv pid: %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">getpid</span><span class="p">());</span>
-</span><span class='line'>              <span class="n">execv</span><span class="p">(</span><span class="s">&quot;/bin/echo&quot;</span><span class="p">,</span> <span class="n">m_argv</span><span class="p">);</span>
-</span><span class='line'>          <span class="p">}</span>
-</span><span class='line'>          <span class="k">break</span><span class="p">;</span>
-</span><span class='line'>      <span class="k">case</span> <span class="sc">&#39;5&#39;</span><span class="o">:</span>
-</span><span class='line'>          <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">fork</span><span class="p">())</span> <span class="p">{</span>
-</span><span class='line'>              <span class="n">printf</span><span class="p">(</span><span class="s">&quot;from execve pid: %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">getpid</span><span class="p">());</span>
-</span><span class='line'>              <span class="n">execve</span><span class="p">(</span><span class="s">&quot;/bin/echo&quot;</span><span class="p">,</span> <span class="n">m_argv</span><span class="p">,</span> <span class="n">envp</span><span class="p">);</span>
-</span><span class='line'>          <span class="p">}</span>
-</span><span class='line'>          <span class="k">break</span><span class="p">;</span>
-</span><span class='line'>      <span class="k">default</span><span class="o">:</span>
-</span><span class='line'>          <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">fork</span><span class="p">())</span> <span class="p">{</span>
-</span><span class='line'>              <span class="n">printf</span><span class="p">(</span><span class="s">&quot;from execvp pid: %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">getpid</span><span class="p">());</span>
-</span><span class='line'>              <span class="n">execvp</span><span class="p">(</span><span class="s">&quot;echo&quot;</span><span class="p">,</span> <span class="n">m_argv</span><span class="p">);</span>
-</span><span class='line'>          <span class="p">}</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'>  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+<span class="line-number">32</span>
+<span class="line-number">33</span>
+<span class="line-number">34</span>
+<span class="line-number">35</span>
+<span class="line-number">36</span>
+<span class="line-number">37</span>
+<span class="line-number">38</span>
+<span class="line-number">39</span>
+<span class="line-number">40</span>
+<span class="line-number">41</span>
+<span class="line-number">42</span>
+<span class="line-number">43</span>
+<span class="line-number">44</span>
+<span class="line-number">45</span>
+<span class="line-number">46</span>
+<span class="line-number">47</span>
+<span class="line-number">48</span>
+<span class="line-number">49</span>
+<span class="line-number">50</span>
+<span class="line-number">51</span>
+<span class="line-number">52</span>
+<span class="line-number">53</span>
+<span class="line-number">54</span>
+<span class="line-number">55</span>
+<span class="line-number">56</span>
+<span class="line-number">57</span>
+<span class="line-number">58</span>
+</pre></td><td class="code"><pre><code class="cpp"><span class="line"><span class="cp">#include &lt;stdio.h&gt;</span>
+</span><span class="line"><span class="cp">#include &lt;unistd.h&gt;</span>
+</span><span class="line">
+</span><span class="line"><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+</span><span class="line">	<span class="kt">char</span> <span class="n">c</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">];</span>
+</span><span class="line">	<span class="kt">pid_t</span> <span class="n">p</span><span class="p">;</span>
+</span><span class="line">	<span class="kt">char</span><span class="o">*</span> <span class="n">m_argv</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class="line">		<span class="s">&quot;echo&quot;</span><span class="p">,</span> <span class="s">&quot;echo&quot;</span><span class="p">,</span> <span class="s">&quot;Hello world&quot;</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span>
+</span><span class="line">	<span class="p">};</span>
+</span><span class="line">	<span class="kt">char</span> <span class="o">*</span><span class="n">envp</span><span class="p">[]</span> <span class="o">=</span> <span class="p">{</span>
+</span><span class="line">		<span class="s">&quot;/usr/bin&quot;</span><span class="p">,</span>
+</span><span class="line">		<span class="s">&quot;/bin&quot;</span><span class="p">,</span>
+</span><span class="line">		<span class="nb">NULL</span><span class="p">,</span>
+</span><span class="line">	<span class="p">};</span>
+</span><span class="line">
+</span><span class="line">	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;parent pid: %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">getpid</span><span class="p">());</span>
+</span><span class="line">
+</span><span class="line">
+</span><span class="line">	<span class="k">switch</span> <span class="p">(</span><span class="n">c</span><span class="p">){</span>
+</span><span class="line">		<span class="k">case</span> <span class="sc">&#39;1&#39;</span><span class="o">:</span>
+</span><span class="line">			<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">fork</span><span class="p">())</span> <span class="p">{</span>
+</span><span class="line">				<span class="n">printf</span><span class="p">(</span><span class="s">&quot;from execl pid: %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">getpid</span><span class="p">());</span>
+</span><span class="line">				<span class="n">execl</span><span class="p">(</span><span class="s">&quot;/bin/echo&quot;</span><span class="p">,</span> <span class="s">&quot;echo&quot;</span><span class="p">,</span> <span class="s">&quot;Hello world&quot;</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+</span><span class="line">			<span class="p">}</span>
+</span><span class="line">			<span class="k">break</span><span class="p">;</span>
+</span><span class="line">		<span class="k">case</span> <span class="sc">&#39;2&#39;</span><span class="o">:</span>
+</span><span class="line">			<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">fork</span><span class="p">())</span> <span class="p">{</span>
+</span><span class="line">				<span class="n">printf</span><span class="p">(</span><span class="s">&quot;from execle pid: %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">getpid</span><span class="p">());</span>
+</span><span class="line">				<span class="n">execle</span><span class="p">(</span><span class="s">&quot;/bin/echo&quot;</span><span class="p">,</span> <span class="s">&quot;echo&quot;</span><span class="p">,</span> <span class="s">&quot;Hello world&quot;</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">envp</span><span class="p">);</span>
+</span><span class="line">			<span class="p">}</span>
+</span><span class="line">			<span class="k">break</span><span class="p">;</span>
+</span><span class="line">		<span class="k">case</span> <span class="sc">&#39;3&#39;</span><span class="o">:</span>
+</span><span class="line">			<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">fork</span><span class="p">())</span> <span class="p">{</span>
+</span><span class="line">				<span class="n">printf</span><span class="p">(</span><span class="s">&quot;from execlp pid: %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">getpid</span><span class="p">());</span>
+</span><span class="line">				<span class="n">execlp</span><span class="p">(</span><span class="s">&quot;echo&quot;</span><span class="p">,</span> <span class="s">&quot;echo&quot;</span><span class="p">,</span> <span class="s">&quot;Hello world&quot;</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+</span><span class="line">			<span class="p">}</span>
+</span><span class="line">			<span class="k">break</span><span class="p">;</span>
+</span><span class="line">		<span class="k">case</span> <span class="sc">&#39;4&#39;</span><span class="o">:</span>
+</span><span class="line">
+</span><span class="line">			<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">fork</span><span class="p">())</span> <span class="p">{</span>
+</span><span class="line">				<span class="n">printf</span><span class="p">(</span><span class="s">&quot;from execv pid: %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">getpid</span><span class="p">());</span>
+</span><span class="line">				<span class="n">execv</span><span class="p">(</span><span class="s">&quot;/bin/echo&quot;</span><span class="p">,</span> <span class="n">m_argv</span><span class="p">);</span>
+</span><span class="line">			<span class="p">}</span>
+</span><span class="line">			<span class="k">break</span><span class="p">;</span>
+</span><span class="line">		<span class="k">case</span> <span class="sc">&#39;5&#39;</span><span class="o">:</span>
+</span><span class="line">			<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">fork</span><span class="p">())</span> <span class="p">{</span>
+</span><span class="line">				<span class="n">printf</span><span class="p">(</span><span class="s">&quot;from execve pid: %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">getpid</span><span class="p">());</span>
+</span><span class="line">				<span class="n">execve</span><span class="p">(</span><span class="s">&quot;/bin/echo&quot;</span><span class="p">,</span> <span class="n">m_argv</span><span class="p">,</span> <span class="n">envp</span><span class="p">);</span>
+</span><span class="line">			<span class="p">}</span>
+</span><span class="line">			<span class="k">break</span><span class="p">;</span>
+</span><span class="line">		<span class="k">default</span><span class="o">:</span>
+</span><span class="line">			<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">fork</span><span class="p">())</span> <span class="p">{</span>
+</span><span class="line">				<span class="n">printf</span><span class="p">(</span><span class="s">&quot;from execvp pid: %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">getpid</span><span class="p">());</span>
+</span><span class="line">				<span class="n">execvp</span><span class="p">(</span><span class="s">&quot;echo&quot;</span><span class="p">,</span> <span class="n">m_argv</span><span class="p">);</span>
+</span><span class="line">			<span class="p">}</span>
+</span><span class="line">	<span class="p">}</span>
+</span><span class="line">	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class="line"><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 <p>编译执行看看能不能出来结果：</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">young</span><span class="err">@</span><span class="nl">Y470</span><span class="p">:</span><span class="o">~/</span><span class="n">Desktop</span><span class="err">$</span><span class="k">for</span> <span class="p">((</span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">7</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">));</span><span class="k">do</span> <span class="p">.</span><span class="o">/</span><span class="n">exec_test</span> <span class="err">$</span><span class="n">i</span><span class="p">;</span> <span class="n">echo</span> <span class="p">;</span><span class="n">done</span>
-</span><span class='line'><span class="n">parent</span> <span class="nl">pid</span><span class="p">:</span> <span class="mi">11046</span>
-</span><span class='line'><span class="n">from</span> <span class="n">execl</span> <span class="nl">pid</span><span class="p">:</span> <span class="mi">11047</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">Hello</span> <span class="n">world</span>
-</span><span class='line'><span class="n">parent</span> <span class="nl">pid</span><span class="p">:</span> <span class="mi">11048</span>
-</span><span class='line'><span class="n">from</span> <span class="n">execle</span> <span class="nl">pid</span><span class="p">:</span> <span class="mi">11049</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">Hello</span> <span class="n">world</span>
-</span><span class='line'><span class="n">parent</span> <span class="nl">pid</span><span class="p">:</span> <span class="mi">11050</span>
-</span><span class='line'><span class="n">from</span> <span class="n">execlp</span> <span class="nl">pid</span><span class="p">:</span> <span class="mi">11051</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">Hello</span> <span class="n">world</span>
-</span><span class='line'><span class="n">parent</span> <span class="nl">pid</span><span class="p">:</span> <span class="mi">11052</span>
-</span><span class='line'><span class="n">from</span> <span class="n">execv</span> <span class="nl">pid</span><span class="p">:</span> <span class="mi">11053</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">echo</span> <span class="n">Hello</span> <span class="n">world</span>
-</span><span class='line'><span class="n">parent</span> <span class="nl">pid</span><span class="p">:</span> <span class="mi">11054</span>
-</span><span class='line'><span class="n">from</span> <span class="n">execve</span> <span class="nl">pid</span><span class="p">:</span> <span class="mi">11055</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">echo</span> <span class="n">Hello</span> <span class="n">world</span>
-</span><span class='line'><span class="n">parent</span> <span class="nl">pid</span><span class="p">:</span> <span class="mi">11056</span>
-</span><span class='line'><span class="n">from</span> <span class="n">execvp</span> <span class="nl">pid</span><span class="p">:</span> <span class="mi">11057</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">echo</span> <span class="n">Hello</span> <span class="n">world</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+</pre></td><td class="code"><pre><code class="cpp"><span class="line"><span class="n">young</span><span class="err">@</span><span class="nl">Y470</span><span class="p">:</span><span class="o">~/</span><span class="n">Desktop</span><span class="err">$</span><span class="k">for</span> <span class="p">((</span><span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">7</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">));</span><span class="k">do</span> <span class="p">.</span><span class="o">/</span><span class="n">exec_test</span> <span class="err">$</span><span class="n">i</span><span class="p">;</span> <span class="n">echo</span> <span class="p">;</span><span class="n">done</span>
+</span><span class="line"><span class="n">parent</span> <span class="nl">pid</span><span class="p">:</span> <span class="mi">11046</span>
+</span><span class="line"><span class="n">from</span> <span class="n">execl</span> <span class="nl">pid</span><span class="p">:</span> <span class="mi">11047</span>
+</span><span class="line">
+</span><span class="line"><span class="n">Hello</span> <span class="n">world</span>
+</span><span class="line"><span class="n">parent</span> <span class="nl">pid</span><span class="p">:</span> <span class="mi">11048</span>
+</span><span class="line"><span class="n">from</span> <span class="n">execle</span> <span class="nl">pid</span><span class="p">:</span> <span class="mi">11049</span>
+</span><span class="line">
+</span><span class="line"><span class="n">Hello</span> <span class="n">world</span>
+</span><span class="line"><span class="n">parent</span> <span class="nl">pid</span><span class="p">:</span> <span class="mi">11050</span>
+</span><span class="line"><span class="n">from</span> <span class="n">execlp</span> <span class="nl">pid</span><span class="p">:</span> <span class="mi">11051</span>
+</span><span class="line">
+</span><span class="line"><span class="n">Hello</span> <span class="n">world</span>
+</span><span class="line"><span class="n">parent</span> <span class="nl">pid</span><span class="p">:</span> <span class="mi">11052</span>
+</span><span class="line"><span class="n">from</span> <span class="n">execv</span> <span class="nl">pid</span><span class="p">:</span> <span class="mi">11053</span>
+</span><span class="line">
+</span><span class="line"><span class="n">echo</span> <span class="n">Hello</span> <span class="n">world</span>
+</span><span class="line"><span class="n">parent</span> <span class="nl">pid</span><span class="p">:</span> <span class="mi">11054</span>
+</span><span class="line"><span class="n">from</span> <span class="n">execve</span> <span class="nl">pid</span><span class="p">:</span> <span class="mi">11055</span>
+</span><span class="line">
+</span><span class="line"><span class="n">echo</span> <span class="n">Hello</span> <span class="n">world</span>
+</span><span class="line"><span class="n">parent</span> <span class="nl">pid</span><span class="p">:</span> <span class="mi">11056</span>
+</span><span class="line"><span class="n">from</span> <span class="n">execvp</span> <span class="nl">pid</span><span class="p">:</span> <span class="mi">11057</span>
+</span><span class="line">
+</span><span class="line"><span class="n">echo</span> <span class="n">Hello</span> <span class="n">world</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 <p>共六个hello world，虽然有点乱，不过也是没办法的事，谁让人家来自不同进程呢！想想也够吊的，六个hello world来六个自不同进程。</p>
 
 <p>这里也展示了<strong>如何开启一个进程</strong>，就是fork之后在子进程执行exec。</p>
 
-<h2>3.附录</h2>
-
-<p><a name="appendix"></a>
+<p>##3.附录
+<a name="appendix"></a>
 在<a href="#list">上面</a>说到arg0和可执行文件名不一样的情况。比如大家读知道的busybox就这一个例子。</p>
 
 <p>在c/c++语言中main函数想使用命令行参数的话就得使用下面的声明方式：</p>
-
 <pre>
 int main(int argc, char *argv[])
 </pre>
-
-
 <p>在程序执行是，argc至少是1, 所以argv<a href="http://en.wikipedia.org/wiki/Fork_(system_call)">0</a>始终有值，他就是程序调用的可执行文件的名字。比如ls命令他的argv<a href="http://en.wikipedia.org/wiki/Fork_(system_call)">0</a>始终都是“ls“。不妨写个程序测试：</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="cp">#include &lt;stdio.h&gt;</span>
-</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-</span><span class='line'>  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
-</span><span class='line'>  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+</pre></td><td class="code"><pre><code class="cpp"><span class="line"><span class="cp">#include &lt;stdio.h&gt;</span>
+</span><span class="line"><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+</span><span class="line">	<span class="n">printf</span><span class="p">(</span><span class="s">&quot;%s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+</span><span class="line">	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class="line"><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 <p>编译执行，请看仔细：</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">young</span><span class="err">@</span><span class="nl">Y470</span><span class="p">:</span><span class="o">~/</span><span class="n">Desktop</span><span class="err">$</span><span class="n">make</span> <span class="n">name</span>
-</span><span class='line'><span class="n">cc</span>     <span class="n">name</span><span class="p">.</span><span class="n">c</span>   <span class="o">-</span><span class="n">o</span> <span class="n">name</span>
-</span><span class='line'><span class="n">young</span><span class="err">@</span><span class="nl">Y470</span><span class="p">:</span><span class="o">~/</span><span class="n">Desktop</span><span class="err">$</span><span class="p">.</span><span class="o">/</span><span class="n">name</span>
-</span><span class='line'><span class="p">.</span><span class="o">/</span><span class="n">name</span>
-</span><span class='line'><span class="n">young</span><span class="err">@</span><span class="nl">Y470</span><span class="p">:</span><span class="o">~/</span><span class="n">Desktop</span><span class="err">$</span><span class="n">ln</span> <span class="o">-</span><span class="n">s</span> <span class="n">name</span> <span class="n">some</span>
-</span><span class='line'><span class="n">young</span><span class="err">@</span><span class="nl">Y470</span><span class="p">:</span><span class="o">~/</span><span class="n">Desktop</span><span class="err">$</span><span class="p">.</span><span class="o">/</span><span class="n">some</span>
-</span><span class='line'><span class="p">.</span><span class="o">/</span><span class="n">some</span>
-</span><span class='line'><span class="n">young</span><span class="err">@</span><span class="nl">Y470</span><span class="p">:</span><span class="o">~/</span><span class="n">Desktop</span><span class="err">$</span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">young</span><span class="o">/</span><span class="n">Desktop</span><span class="o">/</span><span class="n">name</span>
-</span><span class='line'><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">young</span><span class="o">/</span><span class="n">Desktop</span><span class="o">/</span><span class="n">name</span>
-</span><span class='line'><span class="n">young</span><span class="err">@</span><span class="nl">Y470</span><span class="p">:</span><span class="o">~/</span><span class="n">Desktop</span><span class="err">$</span><span class="p">..</span><span class="o">/</span><span class="n">Desktop</span><span class="o">/</span><span class="n">name</span>
-</span><span class='line'><span class="p">..</span><span class="o">/</span><span class="n">Desktop</span><span class="o">/</span><span class="n">name</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+</pre></td><td class="code"><pre><code class="cpp"><span class="line"><span class="n">young</span><span class="err">@</span><span class="nl">Y470</span><span class="p">:</span><span class="o">~/</span><span class="n">Desktop</span><span class="err">$</span><span class="n">make</span> <span class="n">name</span>
+</span><span class="line"><span class="n">cc</span>     <span class="n">name</span><span class="p">.</span><span class="n">c</span>   <span class="o">-</span><span class="n">o</span> <span class="n">name</span>
+</span><span class="line"><span class="n">young</span><span class="err">@</span><span class="nl">Y470</span><span class="p">:</span><span class="o">~/</span><span class="n">Desktop</span><span class="err">$</span><span class="p">.</span><span class="o">/</span><span class="n">name</span>
+</span><span class="line"><span class="p">.</span><span class="o">/</span><span class="n">name</span>
+</span><span class="line"><span class="n">young</span><span class="err">@</span><span class="nl">Y470</span><span class="p">:</span><span class="o">~/</span><span class="n">Desktop</span><span class="err">$</span><span class="n">ln</span> <span class="o">-</span><span class="n">s</span> <span class="n">name</span> <span class="n">some</span>
+</span><span class="line"><span class="n">young</span><span class="err">@</span><span class="nl">Y470</span><span class="p">:</span><span class="o">~/</span><span class="n">Desktop</span><span class="err">$</span><span class="p">.</span><span class="o">/</span><span class="n">some</span>
+</span><span class="line"><span class="p">.</span><span class="o">/</span><span class="n">some</span>
+</span><span class="line"><span class="n">young</span><span class="err">@</span><span class="nl">Y470</span><span class="p">:</span><span class="o">~/</span><span class="n">Desktop</span><span class="err">$</span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">young</span><span class="o">/</span><span class="n">Desktop</span><span class="o">/</span><span class="n">name</span>
+</span><span class="line"><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">young</span><span class="o">/</span><span class="n">Desktop</span><span class="o">/</span><span class="n">name</span>
+</span><span class="line"><span class="n">young</span><span class="err">@</span><span class="nl">Y470</span><span class="p">:</span><span class="o">~/</span><span class="n">Desktop</span><span class="err">$</span><span class="p">..</span><span class="o">/</span><span class="n">Desktop</span><span class="o">/</span><span class="n">name</span>
+</span><span class="line"><span class="p">..</span><span class="o">/</span><span class="n">Desktop</span><span class="o">/</span><span class="n">name</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 <p>想必你已经看明白了，我也不用多解释了。当我们使用软链接时，argv<a href="http://en.wikipedia.org/wiki/Fork_(system_call)">0</a>的名字就是软链接的名字。busybox就是对自身设置了好多软链接比如:<code>ln -s busybox ls</code>这样再调用ls时，argv<a href="http://en.wikipedia.org/wiki/Fork_(system_call)">0</a>就是”ls“这样就能知道用户的目的然后执行ls的功能。</p>
 
 <p>最后在写个程序测试一下：</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="cp">#include &lt;stdio.h&gt;</span>
-</span><span class='line'><span class="cp">#include &lt;unistd.h&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">fork</span><span class="p">())</span> <span class="p">{</span>
-</span><span class='line'>      <span class="n">execlp</span><span class="p">(</span><span class="s">&quot;busybox&quot;</span><span class="p">,</span> <span class="s">&quot;busybox&quot;</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">fork</span><span class="p">())</span> <span class="p">{</span>
-</span><span class='line'>      <span class="c1">//arg0 和可执行文件名不一样</span>
-</span><span class='line'>      <span class="n">execlp</span><span class="p">(</span><span class="s">&quot;busybox&quot;</span><span class="p">,</span> <span class="s">&quot;ls&quot;</span><span class="p">,</span> <span class="s">&quot;-l&quot;</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'>  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+</pre></td><td class="code"><pre><code class="cpp"><span class="line"><span class="cp">#include &lt;stdio.h&gt;</span>
+</span><span class="line"><span class="cp">#include &lt;unistd.h&gt;</span>
+</span><span class="line">
+</span><span class="line"><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="line">	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">fork</span><span class="p">())</span> <span class="p">{</span>
+</span><span class="line">		<span class="n">execlp</span><span class="p">(</span><span class="s">&quot;busybox&quot;</span><span class="p">,</span> <span class="s">&quot;busybox&quot;</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+</span><span class="line">	<span class="p">}</span>
+</span><span class="line">	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">fork</span><span class="p">())</span> <span class="p">{</span>
+</span><span class="line">		<span class="c1">//arg0 和可执行文件名不一样</span>
+</span><span class="line">		<span class="n">execlp</span><span class="p">(</span><span class="s">&quot;busybox&quot;</span><span class="p">,</span> <span class="s">&quot;ls&quot;</span><span class="p">,</span> <span class="s">&quot;-l&quot;</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+</span><span class="line">	<span class="p">}</span>
+</span><span class="line">	<span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class="line"><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 <p>看一下结果：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">young</span><span class="err">@</span><span class="nl">Y470</span><span class="p">:</span><span class="o">~/</span><span class="n">Desktop</span><span class="o">/</span><span class="n">busy</span><span class="err">$</span><span class="n">Copyright</span> <span class="p">(</span><span class="n">C</span><span class="p">)</span> <span class="mi">1998</span><span class="o">-</span><span class="mi">2011</span> <span class="n">Erik</span> <span class="n">Andersen</span><span class="p">,</span>  <span class="n">Rob</span> <span class="n">Landley</span><span class="p">,</span>  <span class="n">Denys</span> <span class="n">Vlasenko</span>
-</span><span class='line'><span class="n">and</span> <span class="n">others</span><span class="p">.</span> <span class="n">Licensed</span> <span class="n">under</span> <span class="n">GPLv2</span><span class="p">.</span>
-</span><span class='line'><span class="n">See</span> <span class="n">source</span> <span class="n">distribution</span> <span class="k">for</span> <span class="n">full</span> <span class="n">notice</span><span class="p">.</span>
-</span><span class='line'>
-</span><span class='line'><span class="nl">Usage</span><span class="p">:</span> <span class="n">busybox</span> <span class="p">[</span><span class="n">function</span><span class="p">]</span> <span class="p">[</span><span class="n">arguments</span><span class="p">]...</span>
-</span><span class='line'>   <span class="nl">or</span><span class="p">:</span> <span class="n">busybox</span> <span class="o">--</span><span class="n">list</span><span class="p">[</span><span class="o">-</span><span class="n">full</span><span class="p">]</span>
-</span><span class='line'>   <span class="nl">or</span><span class="p">:</span> <span class="n">busybox</span> <span class="o">--</span><span class="n">install</span> <span class="p">[</span><span class="o">-</span><span class="n">s</span><span class="p">]</span> <span class="p">[</span><span class="kt">DIR</span><span class="p">]</span>
-</span><span class='line'>   <span class="nl">or</span><span class="p">:</span> <span class="n">function</span> <span class="p">[</span><span class="n">arguments</span><span class="p">]...</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">BusyBox</span> <span class="n">is</span> <span class="n">a</span> <span class="n">multi</span><span class="o">-</span><span class="n">call</span> <span class="n">binary</span> <span class="n">that</span> <span class="n">combines</span> <span class="n">many</span> <span class="n">common</span> <span class="n">Unix</span>
-</span><span class='line'>  <span class="n">utilities</span> <span class="n">into</span> <span class="n">a</span> <span class="n">single</span> <span class="n">executable</span><span class="p">.</span>  <span class="n">Most</span> <span class="n">people</span> <span class="n">will</span> <span class="n">create</span> <span class="n">a</span>
-</span><span class='line'>                  <span class="err">…………</span>
-</span><span class='line'>  <span class="n">cttyhack</span><span class="p">,</span>  <span class="n">cut</span><span class="p">,</span>  <span class="n">date</span><span class="p">,</span>  <span class="n">dc</span><span class="p">,</span>  <span class="o">-</span><span class="n">rwxr</span><span class="o">-</span><span class="n">xr</span><span class="o">-</span><span class="n">x</span>    <span class="mi">1</span> <span class="n">young</span>    <span class="n">young</span>       <span class="mi">697656</span> <span class="n">Jan</span> <span class="mi">13</span> <span class="mo">03</span><span class="o">:</span><span class="mi">29</span> <span class="n">busybox</span>
-</span><span class='line'><span class="n">dd</span><span class="p">,</span>  <span class="o">-</span><span class="n">rwxr</span><span class="o">-</span><span class="n">xr</span><span class="o">-</span><span class="n">x</span>    <span class="mi">1</span> <span class="n">young</span>    <span class="n">young</span>         <span class="mi">6935</span> <span class="n">Jan</span> <span class="mi">13</span> <span class="mo">03</span><span class="o">:</span><span class="mi">35</span> <span class="n">t</span>
-</span><span class='line'><span class="n">deallocvt</span><span class="p">,</span>  <span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">--</span><span class="n">r</span><span class="o">--</span>    <span class="mi">1</span> <span class="n">young</span>    <span class="n">young</span>          <span class="mi">476</span> <span class="n">Jan</span> <span class="mi">13</span> <span class="mo">03</span><span class="o">:</span><span class="mi">35</span> <span class="n">t</span><span class="p">.</span><span class="n">c</span>
-</span><span class='line'><span class="n">depmod</span><span class="p">,</span>  <span class="n">df</span><span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">--</span><span class="n">r</span><span class="o">--</span>    <span class="mi">1</span> <span class="n">young</span>    <span class="n">young</span>            <span class="mi">0</span> <span class="n">Jan</span> <span class="mi">13</span> <span class="mo">03</span><span class="o">:</span><span class="mi">30</span> <span class="o">??</span>
-</span><span class='line'><span class="p">,</span>  <span class="n">diff</span><span class="p">,</span>
-</span><span class='line'>                  <span class="err">…………</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+</pre></td><td class="code"><pre><code class="cpp"><span class="line"><span class="n">young</span><span class="err">@</span><span class="nl">Y470</span><span class="p">:</span><span class="o">~/</span><span class="n">Desktop</span><span class="o">/</span><span class="n">busy</span><span class="err">$</span><span class="n">Copyright</span> <span class="p">(</span><span class="n">C</span><span class="p">)</span> <span class="mi">1998</span><span class="o">-</span><span class="mi">2011</span> <span class="n">Erik</span> <span class="n">Andersen</span><span class="p">,</span>  <span class="n">Rob</span> <span class="n">Landley</span><span class="p">,</span>  <span class="n">Denys</span> <span class="n">Vlasenko</span>
+</span><span class="line"><span class="n">and</span> <span class="n">others</span><span class="p">.</span> <span class="n">Licensed</span> <span class="n">under</span> <span class="n">GPLv2</span><span class="p">.</span>
+</span><span class="line"><span class="n">See</span> <span class="n">source</span> <span class="n">distribution</span> <span class="k">for</span> <span class="n">full</span> <span class="n">notice</span><span class="p">.</span>
+</span><span class="line">
+</span><span class="line"><span class="nl">Usage</span><span class="p">:</span> <span class="n">busybox</span> <span class="p">[</span><span class="n">function</span><span class="p">]</span> <span class="p">[</span><span class="n">arguments</span><span class="p">]...</span>
+</span><span class="line">   <span class="nl">or</span><span class="p">:</span> <span class="n">busybox</span> <span class="o">--</span><span class="n">list</span><span class="p">[</span><span class="o">-</span><span class="n">full</span><span class="p">]</span>
+</span><span class="line">   <span class="nl">or</span><span class="p">:</span> <span class="n">busybox</span> <span class="o">--</span><span class="n">install</span> <span class="p">[</span><span class="o">-</span><span class="n">s</span><span class="p">]</span> <span class="p">[</span><span class="kt">DIR</span><span class="p">]</span>
+</span><span class="line">   <span class="nl">or</span><span class="p">:</span> <span class="n">function</span> <span class="p">[</span><span class="n">arguments</span><span class="p">]...</span>
+</span><span class="line">
+</span><span class="line">	<span class="n">BusyBox</span> <span class="n">is</span> <span class="n">a</span> <span class="n">multi</span><span class="o">-</span><span class="n">call</span> <span class="n">binary</span> <span class="n">that</span> <span class="n">combines</span> <span class="n">many</span> <span class="n">common</span> <span class="n">Unix</span>
+</span><span class="line">	<span class="n">utilities</span> <span class="n">into</span> <span class="n">a</span> <span class="n">single</span> <span class="n">executable</span><span class="p">.</span>  <span class="n">Most</span> <span class="n">people</span> <span class="n">will</span> <span class="n">create</span> <span class="n">a</span>
+</span><span class="line">					<span class="err">…………</span>
+</span><span class="line">	<span class="n">cttyhack</span><span class="p">,</span>  <span class="n">cut</span><span class="p">,</span>  <span class="n">date</span><span class="p">,</span>  <span class="n">dc</span><span class="p">,</span>  <span class="o">-</span><span class="n">rwxr</span><span class="o">-</span><span class="n">xr</span><span class="o">-</span><span class="n">x</span>    <span class="mi">1</span> <span class="n">young</span>    <span class="n">young</span>       <span class="mi">697656</span> <span class="n">Jan</span> <span class="mi">13</span> <span class="mo">03</span><span class="o">:</span><span class="mi">29</span> <span class="n">busybox</span>
+</span><span class="line"><span class="n">dd</span><span class="p">,</span>  <span class="o">-</span><span class="n">rwxr</span><span class="o">-</span><span class="n">xr</span><span class="o">-</span><span class="n">x</span>    <span class="mi">1</span> <span class="n">young</span>    <span class="n">young</span>         <span class="mi">6935</span> <span class="n">Jan</span> <span class="mi">13</span> <span class="mo">03</span><span class="o">:</span><span class="mi">35</span> <span class="n">t</span>
+</span><span class="line"><span class="n">deallocvt</span><span class="p">,</span>  <span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">--</span><span class="n">r</span><span class="o">--</span>    <span class="mi">1</span> <span class="n">young</span>    <span class="n">young</span>          <span class="mi">476</span> <span class="n">Jan</span> <span class="mi">13</span> <span class="mo">03</span><span class="o">:</span><span class="mi">35</span> <span class="n">t</span><span class="p">.</span><span class="n">c</span>
+</span><span class="line"><span class="n">depmod</span><span class="p">,</span>  <span class="n">df</span><span class="o">-</span><span class="n">rw</span><span class="o">-</span><span class="n">r</span><span class="o">--</span><span class="n">r</span><span class="o">--</span>    <span class="mi">1</span> <span class="n">young</span>    <span class="n">young</span>            <span class="mi">0</span> <span class="n">Jan</span> <span class="mi">13</span> <span class="mo">03</span><span class="o">:</span><span class="mi">30</span> <span class="o">??</span>
+</span><span class="line"><span class="p">,</span>  <span class="n">diff</span><span class="p">,</span>
+</span><span class="line">					<span class="err">…………</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 <p>busybox 的输出太长了，我删掉了一部分并用省略号标记。可以看到ls的输出（夹杂在busybox之间，因为是两个进程的输出）。</p>
 
 <p>大功告成，没想到好好写一篇博客需要3个小时！！！困死我了，怒睡！</p>
+
 </div>
 
 </article>
@@ -599,7 +572,7 @@ int main(int argc, char *argv[])
 			</div>
 			<footer id="footer" class="inner">
 <p>
-  Copyright &copy; 2016 - LanderlYoung -
+  Copyright &copy; 2017 - LanderlYoung -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 </footer>
@@ -645,6 +618,10 @@ int main(int argc, char *argv[])
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/03/08/android-zhi-chi-ping-mu-xuan-zhuan-de-fang-shi/">Android 支持屏幕旋转的方式</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/01/11/re-lambda-ce-shi-bao-gao/">Retro-lambda 测试报告</a>
       </li>
     
@@ -660,39 +637,35 @@ int main(int argc, char *argv[])
         <a href="/blog/2014/11/09/androidzhong-servicede-shi-yong/">Android中service的使用</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/10/31/androidzhong-de-wakelockshi-yong/">Android中的WakeLock使用</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/android/'>android (9)</a></li><li><a href='/blog/categories/git/'>git (2)</a></li><li><a href='/blog/categories/html5/'>html5 (5)</a></li><li><a href='/blog/categories/java/'>java (4)</a></li><li><a href='/blog/categories/javascript/'>javascript (3)</a></li><li><a href='/blog/categories/linux/'>linux (7)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/android/'>android (10)</a></li><li><a href='/blog/categories/git/'>git (2)</a></li><li><a href='/blog/categories/html5/'>html5 (5)</a></li><li><a href='/blog/categories/java/'>java (4)</a></li><li><a href='/blog/categories/javascript/'>javascript (3)</a></li><li><a href='/blog/categories/linux/'>linux (7)</a></li></ul>
 </section>
 <section>
 	<h1>Tags</h1>
 	<ul class="tag-cloud">
-		<li><a style="font-size: 76.9%" href="/tags/android/">Android</a></li>
-<li><a style="font-size: 104.5%" href="/tags/linux/">Linux</a></li>
-<li><a style="font-size: 104.5%" href="/tags/html5/">HTML5</a></li>
-<li><a style="font-size: 78.0%" href="/tags/java/">Java</a></li>
-<li><a style="font-size: 93.1%" href="/tags/node-dot-js/">Node.js</a></li>
-<li><a style="font-size: 109.9%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
-<li><a style="font-size: 70.7%" href="/tags/java/">java</a></li>
-<li><a style="font-size: 76.5%" href="/tags/android/">android</a></li>
-<li><a style="font-size: 70.4%" href="/tags/git/">Git</a></li>
-<li><a style="font-size: 76.0%" href="/tags/vim/">Vim</a></li>
-<li><a style="font-size: 103.6%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
-<li><a style="font-size: 100.5%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
-<li><a style="font-size: 70.9%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
-<li><a style="font-size: 111.7%" href="/tags/tencent/">tencent</a></li>
-<li><a style="font-size: 111.5%" href="/tags/zhuan-tie/">转贴</a></li>
-<li><a style="font-size: 117.5%" href="/tags/sensor/">sensor</a></li>
-<li><a style="font-size: 91.1%" href="/tags/ui/">UI</a></li>
-<li><a style="font-size: 104.1%" href="/tags/svg/">SVG</a></li>
-<li><a style="font-size: 101.6%" href="/tags/intellij/">IntelliJ</a></li>
-<li><a style="font-size: 74.2%" href="/tags/jni/">JNI</a></li>
+		<li><a style="font-size: 103.7%" href="/tags/android/">Android</a></li>
+<li><a style="font-size: 80.7%" href="/tags/linux/">Linux</a></li>
+<li><a style="font-size: 106.9%" href="/tags/html5/">HTML5</a></li>
+<li><a style="font-size: 76.2%" href="/tags/java/">Java</a></li>
+<li><a style="font-size: 118.2%" href="/tags/node-dot-js/">Node.js</a></li>
+<li><a style="font-size: 82.8%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
+<li><a style="font-size: 72.7%" href="/tags/java/">java</a></li>
+<li><a style="font-size: 99.7%" href="/tags/android/">android</a></li>
+<li><a style="font-size: 80.9%" href="/tags/git/">Git</a></li>
+<li><a style="font-size: 115.8%" href="/tags/vim/">Vim</a></li>
+<li><a style="font-size: 100.0%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
+<li><a style="font-size: 89.3%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
+<li><a style="font-size: 109.7%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
+<li><a style="font-size: 92.8%" href="/tags/tencent/">tencent</a></li>
+<li><a style="font-size: 118.2%" href="/tags/zhuan-tie/">转贴</a></li>
+<li><a style="font-size: 76.9%" href="/tags/sensor/">sensor</a></li>
+<li><a style="font-size: 103.5%" href="/tags/ui/">UI</a></li>
+<li><a style="font-size: 78.4%" href="/tags/svg/">SVG</a></li>
+<li><a style="font-size: 118.1%" href="/tags/intellij/">IntelliJ</a></li>
+<li><a style="font-size: 101.8%" href="/tags/jni/">JNI</a></li>
 
 	</ul>
 </section>

@@ -7,9 +7,7 @@
 	<meta name="author" content="LanderlYoung">
 
 	
-	<meta name="description" content="dictionary_Node.js-版本v1.0 &lt; 开场白 &gt; 基于Node.js的命令行词典应用 &lt;/ 开场白 &gt; 这个小工具需要的功能有以下几个： 解析命令行参数
-发送http请求并取得返回的xml 解析xml并得到单词的解释
-输出结果 最后还有一个，不过在v1. &hellip;">
+	<meta name="description" content="dictionary_Node.js-版本v1.0 &lt; 开场白 &gt; 基于Node.js的命令行词典应用 &lt;/ 开场白 &gt; 这个小工具需要的功能有以下几个： 解析命令行参数 发送http请求并取得返回的xml 解析xml并得到单词的解释 输出结果 最后还有一个，不过在v1. &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -91,325 +89,313 @@
 <p>这个小工具需要的功能有以下几个：</p>
 
 <ul>
-<li>解析命令行参数</li>
-<li>发送http请求并取得返回的xml <!--more--></li>
-<li>解析xml并得到单词的解释</li>
-<li>输出结果</li>
+  <li>解析命令行参数</li>
+  <li>发送http请求并取得返回的xml <!--more--></li>
+  <li>解析xml并得到单词的解释</li>
+  <li>输出结果</li>
 </ul>
-
 
 <p>最后还有一个，不过在v1.0中没有加入：</p>
 
 <ul>
-<li>发送http请求，获得单词发音，并播放出来</li>
+  <li>发送http请求，获得单词发音，并播放出来</li>
 </ul>
-
 
 <p>下面一部分一部分的把各个功能实现说明一下：</p>
 
-<h3>1.解析命令行参数</h3>
+<h3 id="section">1.解析命令行参数</h3>
 
 <p>这里的重点是获取命令行参数，在Node.js里面命令行参数可以从<code>process.argv</code>获取。
 得到的是一个string数组，数组的第一项是node解释器的调用名，一般是<code>node</code>;第二项是js脚本的绝对路径，后面的各项就是传进去的命令行参数。于是得到下面的解析命令行参数的代码。</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="c1">//command line arguments</span>
-</span><span class='line'><span class="n">var</span> <span class="n">argv</span> <span class="o">=</span> <span class="n">process</span><span class="p">.</span><span class="n">argv</span><span class="p">.</span><span class="n">splice</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">(</span><span class="n">function</span><span class="p">(){</span>
-</span><span class='line'> <span class="k">if</span> <span class="p">(</span><span class="n">argv</span><span class="p">.</span><span class="n">length</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">argv</span><span class="p">.</span><span class="n">length</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'> <span class="n">usage</span><span class="p">();</span>
-</span><span class='line'> <span class="n">process</span><span class="p">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-</span><span class='line'> <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="n">argv</span><span class="p">.</span><span class="n">length</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'> <span class="n">word</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
-</span><span class='line'> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span><span class='line'> <span class="n">var</span> <span class="n">swt</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
-</span><span class='line'> <span class="n">word</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
-</span><span class='line'> <span class="k">if</span><span class="p">(</span> <span class="n">swt</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="o">/</span><span class="n">e</span><span class="o">|</span><span class="n">E</span><span class="o">/</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'> <span class="n">ee</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
-</span><span class='line'> <span class="p">}</span>
-</span><span class='line'> <span class="k">if</span><span class="p">(</span> <span class="n">swt</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="o">/</span><span class="n">p</span><span class="o">|</span><span class="n">P</span><span class="o">/</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'> <span class="n">pnc</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
-</span><span class='line'> <span class="p">}</span>
-</span><span class='line'> <span class="k">if</span><span class="p">(</span> <span class="n">swt</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="o">/</span><span class="n">v</span><span class="o">/</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'> <span class="n">ee</span> <span class="o">=</span> <span class="n">cc</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
-</span><span class='line'> <span class="p">}</span>
-</span><span class='line'> <span class="k">if</span><span class="p">(</span><span class="n">swt</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="o">/</span><span class="n">V</span><span class="o">/</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'> <span class="n">pnc</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
-</span><span class='line'> <span class="n">ee</span> <span class="o">=</span> <span class="n">cc</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
-</span><span class='line'> <span class="p">}</span>
-</span><span class='line'> <span class="p">}</span>
-</span><span class='line'><span class="p">})();</span>
-</span></code></pre></td></tr></table></div></figure>
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+</pre></td><td class="code"><pre><code class="cpp"><span class="line"><span class="c1">//command line arguments</span>
+</span><span class="line"><span class="n">var</span> <span class="n">argv</span> <span class="o">=</span> <span class="n">process</span><span class="p">.</span><span class="n">argv</span><span class="p">.</span><span class="n">splice</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+</span><span class="line">
+</span><span class="line"><span class="p">(</span><span class="n">function</span><span class="p">(){</span>
+</span><span class="line"> <span class="k">if</span> <span class="p">(</span><span class="n">argv</span><span class="p">.</span><span class="n">length</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">argv</span><span class="p">.</span><span class="n">length</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="line"> <span class="n">usage</span><span class="p">();</span>
+</span><span class="line"> <span class="n">process</span><span class="p">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class="line"> <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="n">argv</span><span class="p">.</span><span class="n">length</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="line"> <span class="n">word</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+</span><span class="line"> <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class="line"> <span class="n">var</span> <span class="n">swt</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+</span><span class="line"> <span class="n">word</span> <span class="o">=</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+</span><span class="line"> <span class="k">if</span><span class="p">(</span> <span class="n">swt</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="o">/</span><span class="n">e</span><span class="o">|</span><span class="n">E</span><span class="o">/</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="line"> <span class="n">ee</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+</span><span class="line"> <span class="p">}</span>
+</span><span class="line"> <span class="k">if</span><span class="p">(</span> <span class="n">swt</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="o">/</span><span class="n">p</span><span class="o">|</span><span class="n">P</span><span class="o">/</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="line"> <span class="n">pnc</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+</span><span class="line"> <span class="p">}</span>
+</span><span class="line"> <span class="k">if</span><span class="p">(</span> <span class="n">swt</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="o">/</span><span class="n">v</span><span class="o">/</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="line"> <span class="n">ee</span> <span class="o">=</span> <span class="n">cc</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+</span><span class="line"> <span class="p">}</span>
+</span><span class="line"> <span class="k">if</span><span class="p">(</span><span class="n">swt</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="o">/</span><span class="n">V</span><span class="o">/</span><span class="p">)</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="line"> <span class="n">pnc</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+</span><span class="line"> <span class="n">ee</span> <span class="o">=</span> <span class="n">cc</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+</span><span class="line"> <span class="p">}</span>
+</span><span class="line"> <span class="p">}</span>
+</span><span class="line"><span class="p">})();</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
-
-<h3>2.发送http请求并取得返回的xml</h3>
-
+<h3 id="httpxml">2.发送http请求并取得返回的xml</h3>
 <p>说到这个话题，最先想到的是AJAX，不过在Node.js里面对http request 有另一种封装。</p>
 
-<p>代码中的 http 来自于源代码最前面的 <code>var  http = require("http");</code></p>
+<p>代码中的 http 来自于源代码最前面的 <code>var  http = require("http"); </code></p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">var</span> <span class="n">req</span> <span class="o">=</span> <span class="n">http</span><span class="p">.</span><span class="n">request</span><span class="p">(</span><span class="n">queryURL</span><span class="p">,</span>  <span class="n">function</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>      <span class="n">var</span> <span class="n">chunks</span> <span class="o">=</span> <span class="p">[],</span> <span class="n">length</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-</span><span class='line'>      <span class="n">res</span><span class="p">.</span><span class="n">on</span><span class="p">(</span><span class="err">&#39;</span><span class="n">data</span><span class="err">&#39;</span><span class="p">,</span> <span class="n">function</span><span class="p">(</span><span class="n">trunk</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>          <span class="n">length</span> <span class="o">+=</span> <span class="n">trunk</span><span class="p">.</span><span class="n">length</span><span class="p">;</span>
-</span><span class='line'>          <span class="n">chunks</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">trunk</span><span class="p">);</span>
-</span><span class='line'>          <span class="p">});</span>
-</span><span class='line'>      <span class="n">res</span><span class="p">.</span><span class="n">on</span><span class="p">(</span><span class="err">&#39;</span><span class="n">end</span><span class="err">&#39;</span><span class="p">,</span> <span class="n">function</span><span class="p">()</span> <span class="p">{</span>
-</span><span class='line'>          <span class="n">var</span> <span class="n">data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Buffer</span><span class="p">(</span><span class="n">length</span><span class="p">),</span>
-</span><span class='line'>          <span class="n">pos</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-</span><span class='line'>          <span class="n">l</span> <span class="o">=</span> <span class="n">chunks</span><span class="p">.</span><span class="n">length</span><span class="p">;</span>
-</span><span class='line'>          <span class="k">for</span> <span class="p">(</span><span class="n">var</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">l</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>          <span class="n">chunks</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">copy</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">pos</span><span class="p">);</span>
-</span><span class='line'>          <span class="n">pos</span> <span class="o">+=</span> <span class="n">chunks</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">length</span><span class="p">;</span>
-</span><span class='line'>          <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>          <span class="n">res</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">data</span><span class="p">;</span>
-</span><span class='line'>          <span class="c1">//TODO</span>
-</span><span class='line'>          <span class="c1">//console.log(data.toString());</span>
-</span><span class='line'>          <span class="n">var</span> <span class="n">output</span> <span class="o">=</span> <span class="n">genOutput</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">toString</span><span class="p">());</span>
-</span><span class='line'>          <span class="n">show</span><span class="p">(</span><span class="n">output</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>          <span class="p">});</span>
-</span><span class='line'>      <span class="n">res</span><span class="p">.</span><span class="n">on</span><span class="p">(</span><span class="err">&#39;</span><span class="n">error</span><span class="err">&#39;</span><span class="p">,</span> <span class="n">function</span><span class="p">(</span><span class="n">err</span><span class="p">){</span>
-</span><span class='line'>              <span class="c1">//FIXME</span>
-</span><span class='line'>              <span class="n">console</span><span class="p">.</span><span class="n">log</span><span class="p">(</span><span class="s">&quot;requesr error&quot;</span><span class="p">);</span>
-</span><span class='line'>              <span class="p">});</span>
-</span><span class='line'><span class="p">});</span>
-</span><span class='line'><span class="n">req</span><span class="p">.</span><span class="n">end</span><span class="p">();</span>
-</span></code></pre></td></tr></table></div></figure>
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+</pre></td><td class="code"><pre><code class="cpp"><span class="line"><span class="n">var</span> <span class="n">req</span> <span class="o">=</span> <span class="n">http</span><span class="p">.</span><span class="n">request</span><span class="p">(</span><span class="n">queryURL</span><span class="p">,</span>  <span class="n">function</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="line">		<span class="n">var</span> <span class="n">chunks</span> <span class="o">=</span> <span class="p">[],</span> <span class="n">length</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class="line">		<span class="n">res</span><span class="p">.</span><span class="n">on</span><span class="p">(</span><span class="err">&#39;</span><span class="n">data</span><span class="err">&#39;</span><span class="p">,</span> <span class="n">function</span><span class="p">(</span><span class="n">trunk</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="line">			<span class="n">length</span> <span class="o">+=</span> <span class="n">trunk</span><span class="p">.</span><span class="n">length</span><span class="p">;</span>
+</span><span class="line">			<span class="n">chunks</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">trunk</span><span class="p">);</span>
+</span><span class="line">			<span class="p">});</span>
+</span><span class="line">		<span class="n">res</span><span class="p">.</span><span class="n">on</span><span class="p">(</span><span class="err">&#39;</span><span class="n">end</span><span class="err">&#39;</span><span class="p">,</span> <span class="n">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class="line">			<span class="n">var</span> <span class="n">data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Buffer</span><span class="p">(</span><span class="n">length</span><span class="p">),</span>
+</span><span class="line">			<span class="n">pos</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+</span><span class="line">			<span class="n">l</span> <span class="o">=</span> <span class="n">chunks</span><span class="p">.</span><span class="n">length</span><span class="p">;</span>
+</span><span class="line">			<span class="k">for</span> <span class="p">(</span><span class="n">var</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">l</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="line">			<span class="n">chunks</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">copy</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">pos</span><span class="p">);</span>
+</span><span class="line">			<span class="n">pos</span> <span class="o">+=</span> <span class="n">chunks</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">length</span><span class="p">;</span>
+</span><span class="line">			<span class="p">}</span>
+</span><span class="line">
+</span><span class="line">			<span class="n">res</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">data</span><span class="p">;</span>
+</span><span class="line">			<span class="c1">//TODO</span>
+</span><span class="line">			<span class="c1">//console.log(data.toString());</span>
+</span><span class="line">			<span class="n">var</span> <span class="n">output</span> <span class="o">=</span> <span class="n">genOutput</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">toString</span><span class="p">());</span>
+</span><span class="line">			<span class="n">show</span><span class="p">(</span><span class="n">output</span><span class="p">);</span>
+</span><span class="line">
+</span><span class="line">			<span class="p">});</span>
+</span><span class="line">		<span class="n">res</span><span class="p">.</span><span class="n">on</span><span class="p">(</span><span class="err">&#39;</span><span class="n">error</span><span class="err">&#39;</span><span class="p">,</span> <span class="n">function</span><span class="p">(</span><span class="n">err</span><span class="p">){</span>
+</span><span class="line">				<span class="c1">//FIXME</span>
+</span><span class="line">				<span class="n">console</span><span class="p">.</span><span class="n">log</span><span class="p">(</span><span class="s">&quot;requesr error&quot;</span><span class="p">);</span>
+</span><span class="line">				<span class="p">});</span>
+</span><span class="line"><span class="p">});</span>
+</span><span class="line"><span class="n">req</span><span class="p">.</span><span class="n">end</span><span class="p">();</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>这里面主要做事的是三个回调函数，分别是当得到数据、数据下载结束、发生错误。代码所做的事是，把每次得到的数据缓存起来；当数据下载结束时把缓存的数据拼接起来。需要说明的是：在代码中用到了Node.js的Buffer类，其中on ‘data’ 时的回调函数的参数就是Buffer类的实例。在一开始出现的问题是：设置了返回的xml的编码，然后就出现了乱码，猜测原因是每次on ‘data’ 时传来的数据段把utf-8编码截断了。解决方法是先把返回数据当成二进制来处理，最后拼接起来再转成字符串。</p>
 
+<p>###3.解析xml
+在浏览器下的javascript解析xml是原生支持的，不过在Node.js里面就要依赖于第三方的扩展库了。这里解析xml我选择了xmlreader库。安装方式相当简单<code>npm install xmlreader</code>就能把xmlreader安装到当前目录下。使用该xml库解析xml也是相当简单的。还是先上代码吧。</p>
 
-<p>这里面主要做事的是三个回调函数，分别是当得到数据、数据下载结束、发生错误。代码所做的事是，把每次得到的数据缓存起来；当数据下载结束时把缓存的数据拼接起来。需要说明的是：在代码中用到了Node.js的Buffer类，其中on &lsquo;data&rsquo; 时的回调函数的参数就是Buffer类的实例。在一开始出现的问题是：设置了返回的xml的编码，然后就出现了乱码，猜测原因是每次on &lsquo;data&rsquo; 时传来的数据段把utf-8编码截断了。解决方法是先把返回数据当成二进制来处理，最后拼接起来再转成字符串。</p>
-
-<h3>3.解析xml</h3>
-
-<p>在浏览器下的javascript解析xml是原生支持的，不过在Node.js里面就要依赖于第三方的扩展库了。这里解析xml我选择了xmlreader库。安装方式相当简单<code>npm install xmlreader</code>就能把xmlreader安装到当前目录下。使用该xml库解析xml也是相当简单的。还是先上代码吧。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">function</span> <span class="nf">genOutput</span><span class="p">(</span><span class="n">xml</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>  <span class="n">var</span> <span class="n">res</span> <span class="o">=</span> <span class="p">[];</span>
-</span><span class='line'>  <span class="n">xmlreader</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">xml</span><span class="p">,</span> <span class="n">function</span> <span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>          <span class="k">if</span> <span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="k">return</span> <span class="n">console</span><span class="p">.</span><span class="n">log</span><span class="p">(</span><span class="n">err</span><span class="p">);</span>
-</span><span class='line'>
-</span><span class='line'>          <span class="n">var</span> <span class="n">basic</span> <span class="o">=</span> <span class="n">response</span><span class="p">.</span><span class="n">yodaodict</span><span class="p">.</span><span class="n">basic</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>          <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">basic</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>          <span class="k">for</span> <span class="p">(</span><span class="n">var</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">basic</span><span class="p">.</span><span class="n">count</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>          <span class="n">var</span> <span class="n">expand</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
-</span><span class='line'>          <span class="c1">//english chinese --default</span>
-</span><span class='line'>          <span class="n">var</span> <span class="n">type</span> <span class="o">=</span> <span class="n">basic</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">i</span><span class="p">).</span><span class="n">type</span><span class="p">.</span><span class="n">text</span><span class="p">().</span><span class="n">toLowerCase</span><span class="p">();</span>
-</span><span class='line'>          <span class="k">if</span> <span class="p">(</span> <span class="p">(</span><span class="n">type</span> <span class="o">===</span> <span class="err">&#39;</span><span class="n">ec</span><span class="err">&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">cc</span><span class="p">)</span> <span class="o">||</span>
-</span><span class='line'>              <span class="p">(</span><span class="n">type</span> <span class="o">===</span> <span class="err">&#39;</span><span class="n">ee</span><span class="err">&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">ee</span><span class="p">)</span> <span class="o">||</span>
-</span><span class='line'>              <span class="p">(</span><span class="n">type</span> <span class="o">===</span> <span class="err">&#39;</span><span class="n">ce</span><span class="err">&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">cc</span><span class="p">)</span> <span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>          <span class="n">res</span><span class="p">.</span><span class="n">push</span><span class="p">({</span>
-</span><span class='line'><span class="nl">type</span> <span class="p">:</span> <span class="n">basic</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">i</span><span class="p">).</span><span class="n">name</span><span class="p">.</span><span class="n">text</span><span class="p">(),</span>
-</span><span class='line'><span class="nl">word</span> <span class="p">:</span> <span class="p">[]</span>
-</span><span class='line'><span class="p">});</span>
-</span><span class='line'>          <span class="n">expand</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
-</span><span class='line'>          <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">if</span> <span class="p">(</span><span class="n">expand</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>  <span class="c1">//console.log(res[res.length - 1].type);</span>
-</span><span class='line'>  <span class="n">var</span> <span class="n">xword</span> <span class="o">=</span> <span class="n">basic</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">i</span><span class="p">)[</span><span class="err">&#39;</span><span class="n">authoritative</span><span class="o">-</span><span class="n">dict</span><span class="err">&#39;</span><span class="p">].</span><span class="n">word</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">xword</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>  <span class="n">var</span> <span class="n">word</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="n">res</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">].</span><span class="n">word</span><span class="p">;</span>
-</span><span class='line'>  <span class="k">for</span><span class="p">(</span> <span class="n">var</span> <span class="n">word_c</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">word_c</span> <span class="o">&lt;</span> <span class="n">xword</span><span class="p">.</span><span class="n">count</span><span class="p">();</span> <span class="n">word_c</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>      <span class="n">word</span><span class="p">.</span><span class="n">push</span><span class="p">(</span> <span class="p">{</span> <span class="nl">type</span> <span class="p">:</span> <span class="err">&#39;&#39;</span><span class="p">,</span> <span class="nl">trs</span> <span class="p">:</span> <span class="p">[]});</span>
-</span><span class='line'>
-</span><span class='line'>      <span class="n">var</span> <span class="n">xtrs</span> <span class="o">=</span> <span class="n">xword</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">word_c</span><span class="p">).</span><span class="n">trs</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">xtrs</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>      <span class="n">var</span> <span class="n">trs</span> <span class="o">=</span> <span class="n">word</span><span class="p">[</span><span class="n">word</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span><span class="mi">1</span><span class="p">].</span><span class="n">trs</span><span class="p">;</span>
-</span><span class='line'>      <span class="n">trs</span><span class="p">.</span><span class="n">push</span><span class="p">({</span><span class="nl">type</span> <span class="p">:</span> <span class="err">&#39;&#39;</span><span class="p">,</span> <span class="nl">exp</span> <span class="p">:</span> <span class="p">[]});</span>
-</span><span class='line'>      <span class="n">var</span> <span class="n">exp</span> <span class="o">=</span> <span class="n">trs</span><span class="p">[</span><span class="n">trs</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">].</span><span class="n">exp</span><span class="p">;</span>
-</span><span class='line'>      <span class="k">for</span><span class="p">(</span><span class="n">var</span> <span class="n">trs_c</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">trs_c</span> <span class="o">&lt;</span> <span class="n">xtrs</span><span class="p">.</span><span class="n">count</span><span class="p">();</span> <span class="n">trs_c</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>          <span class="k">if</span><span class="p">(</span> <span class="n">xtrs</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">trs_c</span><span class="p">).</span><span class="n">pos</span> <span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>              <span class="n">trs</span><span class="p">[</span><span class="n">trs</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span><span class="mi">1</span><span class="p">].</span><span class="n">type</span> <span class="o">=</span> <span class="n">xtrs</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">trs_c</span><span class="p">).</span><span class="n">pos</span><span class="p">.</span><span class="n">text</span><span class="p">();</span>
-</span><span class='line'>          <span class="p">}</span>
-</span><span class='line'>          <span class="n">var</span> <span class="n">xtr</span> <span class="o">=</span> <span class="n">xtrs</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">trs_c</span><span class="p">).</span><span class="n">tr</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>          <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">xtr</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'>          <span class="k">for</span><span class="p">(</span> <span class="n">var</span> <span class="n">tr_c</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">tr_c</span> <span class="o">&lt;</span> <span class="n">xtr</span><span class="p">.</span><span class="n">count</span><span class="p">();</span> <span class="n">tr_c</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>              <span class="n">try</span> <span class="p">{</span>
-</span><span class='line'>                  <span class="n">exp</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">xtr</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">tr_c</span><span class="p">).</span><span class="n">l</span><span class="p">.</span><span class="n">i</span><span class="p">.</span><span class="n">text</span><span class="p">());</span>
-</span><span class='line'>              <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'>              <span class="p">}</span>
-</span><span class='line'>          <span class="p">}</span>
-</span><span class='line'>      <span class="p">}</span>
-</span><span class='line'>  <span class="p">}</span>
-</span><span class='line'><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span><span class='line'>  <span class="c1">//console.log(basic.at(i).name.text());</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">});</span>
-</span><span class='line'><span class="k">return</span> <span class="n">res</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+<span class="line-number">32</span>
+<span class="line-number">33</span>
+<span class="line-number">34</span>
+<span class="line-number">35</span>
+<span class="line-number">36</span>
+<span class="line-number">37</span>
+<span class="line-number">38</span>
+<span class="line-number">39</span>
+<span class="line-number">40</span>
+<span class="line-number">41</span>
+<span class="line-number">42</span>
+<span class="line-number">43</span>
+<span class="line-number">44</span>
+<span class="line-number">45</span>
+<span class="line-number">46</span>
+<span class="line-number">47</span>
+<span class="line-number">48</span>
+<span class="line-number">49</span>
+<span class="line-number">50</span>
+<span class="line-number">51</span>
+<span class="line-number">52</span>
+<span class="line-number">53</span>
+<span class="line-number">54</span>
+<span class="line-number">55</span>
+<span class="line-number">56</span>
+<span class="line-number">57</span>
+<span class="line-number">58</span>
+<span class="line-number">59</span>
+<span class="line-number">60</span>
+<span class="line-number">61</span>
+<span class="line-number">62</span>
+<span class="line-number">63</span>
+<span class="line-number">64</span>
+</pre></td><td class="code"><pre><code class="cpp"><span class="line"><span class="n">function</span> <span class="nf">genOutput</span><span class="p">(</span><span class="n">xml</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="line">	<span class="n">var</span> <span class="n">res</span> <span class="o">=</span> <span class="p">[];</span>
+</span><span class="line">	<span class="n">xmlreader</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">xml</span><span class="p">,</span> <span class="n">function</span> <span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="line">			<span class="k">if</span> <span class="p">(</span><span class="n">err</span><span class="p">)</span> <span class="k">return</span> <span class="n">console</span><span class="p">.</span><span class="n">log</span><span class="p">(</span><span class="n">err</span><span class="p">);</span>
+</span><span class="line">
+</span><span class="line">			<span class="n">var</span> <span class="n">basic</span> <span class="o">=</span> <span class="n">response</span><span class="p">.</span><span class="n">yodaodict</span><span class="p">.</span><span class="n">basic</span><span class="p">;</span>
+</span><span class="line">
+</span><span class="line">			<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">basic</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+</span><span class="line">
+</span><span class="line">			<span class="k">for</span> <span class="p">(</span><span class="n">var</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">basic</span><span class="p">.</span><span class="n">count</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="line">			<span class="n">var</span> <span class="n">expand</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+</span><span class="line">			<span class="c1">//english chinese --default</span>
+</span><span class="line">			<span class="n">var</span> <span class="n">type</span> <span class="o">=</span> <span class="n">basic</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">i</span><span class="p">).</span><span class="n">type</span><span class="p">.</span><span class="n">text</span><span class="p">().</span><span class="n">toLowerCase</span><span class="p">();</span>
+</span><span class="line">			<span class="k">if</span> <span class="p">(</span> <span class="p">(</span><span class="n">type</span> <span class="o">===</span> <span class="err">&#39;</span><span class="n">ec</span><span class="err">&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">cc</span><span class="p">)</span> <span class="o">||</span>
+</span><span class="line">				<span class="p">(</span><span class="n">type</span> <span class="o">===</span> <span class="err">&#39;</span><span class="n">ee</span><span class="err">&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">ee</span><span class="p">)</span> <span class="o">||</span>
+</span><span class="line">				<span class="p">(</span><span class="n">type</span> <span class="o">===</span> <span class="err">&#39;</span><span class="n">ce</span><span class="err">&#39;</span> <span class="o">&amp;&amp;</span> <span class="n">cc</span><span class="p">)</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class="line">			<span class="n">res</span><span class="p">.</span><span class="n">push</span><span class="p">({</span>
+</span><span class="line"><span class="nl">type</span> <span class="p">:</span> <span class="n">basic</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">i</span><span class="p">).</span><span class="n">name</span><span class="p">.</span><span class="n">text</span><span class="p">(),</span>
+</span><span class="line"><span class="nl">word</span> <span class="p">:</span> <span class="p">[]</span>
+</span><span class="line"><span class="p">});</span>
+</span><span class="line">			<span class="n">expand</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+</span><span class="line">			<span class="p">}</span>
+</span><span class="line">
+</span><span class="line"><span class="k">if</span> <span class="p">(</span><span class="n">expand</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="line">	<span class="c1">//console.log(res[res.length - 1].type);</span>
+</span><span class="line">	<span class="n">var</span> <span class="n">xword</span> <span class="o">=</span> <span class="n">basic</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">i</span><span class="p">)[</span><span class="err">&#39;</span><span class="n">authoritative</span><span class="o">-</span><span class="n">dict</span><span class="err">&#39;</span><span class="p">].</span><span class="n">word</span><span class="p">;</span>
+</span><span class="line">
+</span><span class="line">	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">xword</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
+</span><span class="line">
+</span><span class="line">	<span class="n">var</span> <span class="n">word</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="n">res</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">].</span><span class="n">word</span><span class="p">;</span>
+</span><span class="line">	<span class="k">for</span><span class="p">(</span> <span class="n">var</span> <span class="n">word_c</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">word_c</span> <span class="o">&lt;</span> <span class="n">xword</span><span class="p">.</span><span class="n">count</span><span class="p">();</span> <span class="n">word_c</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="line">		<span class="n">word</span><span class="p">.</span><span class="n">push</span><span class="p">(</span> <span class="p">{</span> <span class="nl">type</span> <span class="p">:</span> <span class="err">&#39;&#39;</span><span class="p">,</span> <span class="nl">trs</span> <span class="p">:</span> <span class="p">[]});</span>
+</span><span class="line">
+</span><span class="line">		<span class="n">var</span> <span class="n">xtrs</span> <span class="o">=</span> <span class="n">xword</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">word_c</span><span class="p">).</span><span class="n">trs</span><span class="p">;</span>
+</span><span class="line">
+</span><span class="line">		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">xtrs</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
+</span><span class="line">
+</span><span class="line">		<span class="n">var</span> <span class="n">trs</span> <span class="o">=</span> <span class="n">word</span><span class="p">[</span><span class="n">word</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span><span class="mi">1</span><span class="p">].</span><span class="n">trs</span><span class="p">;</span>
+</span><span class="line">		<span class="n">trs</span><span class="p">.</span><span class="n">push</span><span class="p">({</span><span class="nl">type</span> <span class="p">:</span> <span class="err">&#39;&#39;</span><span class="p">,</span> <span class="nl">exp</span> <span class="p">:</span> <span class="p">[]});</span>
+</span><span class="line">		<span class="n">var</span> <span class="n">exp</span> <span class="o">=</span> <span class="n">trs</span><span class="p">[</span><span class="n">trs</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">].</span><span class="n">exp</span><span class="p">;</span>
+</span><span class="line">		<span class="k">for</span><span class="p">(</span><span class="n">var</span> <span class="n">trs_c</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">trs_c</span> <span class="o">&lt;</span> <span class="n">xtrs</span><span class="p">.</span><span class="n">count</span><span class="p">();</span> <span class="n">trs_c</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="line">			<span class="k">if</span><span class="p">(</span> <span class="n">xtrs</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">trs_c</span><span class="p">).</span><span class="n">pos</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class="line">				<span class="n">trs</span><span class="p">[</span><span class="n">trs</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span><span class="mi">1</span><span class="p">].</span><span class="n">type</span> <span class="o">=</span> <span class="n">xtrs</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">trs_c</span><span class="p">).</span><span class="n">pos</span><span class="p">.</span><span class="n">text</span><span class="p">();</span>
+</span><span class="line">			<span class="p">}</span>
+</span><span class="line">			<span class="n">var</span> <span class="n">xtr</span> <span class="o">=</span> <span class="n">xtrs</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">trs_c</span><span class="p">).</span><span class="n">tr</span><span class="p">;</span>
+</span><span class="line">
+</span><span class="line">			<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">xtr</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
+</span><span class="line">
+</span><span class="line">			<span class="k">for</span><span class="p">(</span> <span class="n">var</span> <span class="n">tr_c</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">tr_c</span> <span class="o">&lt;</span> <span class="n">xtr</span><span class="p">.</span><span class="n">count</span><span class="p">();</span> <span class="n">tr_c</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="line">				<span class="n">try</span> <span class="p">{</span>
+</span><span class="line">					<span class="n">exp</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">xtr</span><span class="p">.</span><span class="n">at</span><span class="p">(</span><span class="n">tr_c</span><span class="p">).</span><span class="n">l</span><span class="p">.</span><span class="n">i</span><span class="p">.</span><span class="n">text</span><span class="p">());</span>
+</span><span class="line">				<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+</span><span class="line">				<span class="p">}</span>
+</span><span class="line">			<span class="p">}</span>
+</span><span class="line">		<span class="p">}</span>
+</span><span class="line">	<span class="p">}</span>
+</span><span class="line"><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class="line">	<span class="c1">//console.log(basic.at(i).name.text());</span>
+</span><span class="line"><span class="p">}</span>
+</span><span class="line"><span class="p">}</span>
+</span><span class="line">
+</span><span class="line"><span class="p">});</span>
+</span><span class="line"><span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+</span><span class="line"><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 <p>这里面回调函数的参数就是遍历xml的关键，其相当与整个xml的父节点。在xmlreader库中，获取字节点只需要使用<code>.</code>即可取得，比如html有个字节点body可以使用html.body来取得body节点。对于每个节点有几个方法，text()是获取该节点内的文本内容。如果某一父节点有多个相同标签的字节点，那么就要用count和at来取得每一个字节点。还有一个attributes（）方法来获取标签内的属性。</p>
 
-<h3>4.输出结果</h3>
-
+<h3 id="section-1">4.输出结果</h3>
 <p>没什么好解释的，使用<code>console.log</code>输出。值得说明的只是bash的文本显示格式，bash可以控制文字的颜色，和样式（包括：正常，下划线，加粗等）。使用方法如下：</p>
 
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">RED</span> <span class="o">=</span> <span class="s">&quot;</span><span class="se">\033</span><span class="s">[1;31m&quot;</span><span class="p">;</span>
-</span><span class='line'><span class="n">GREEN</span> <span class="o">=</span> <span class="s">&quot;</span><span class="se">\033</span><span class="s">[1;32m&quot;</span><span class="p">;</span>
-</span><span class='line'><span class="n">DEFAULT</span> <span class="o">=</span> <span class="s">&quot;</span><span class="se">\033</span><span class="s">[0;49m&quot;</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">BOLD</span> <span class="o">=</span> <span class="s">&quot;</span><span class="se">\033</span><span class="s">[1m&quot;</span><span class="p">;</span>
-</span><span class='line'><span class="n">UNDERLINE</span> <span class="o">=</span> <span class="s">&quot;</span><span class="se">\033</span><span class="s">[4m&quot;</span><span class="p">;</span>
-</span><span class='line'><span class="n">NORMAL</span> <span class="o">=</span> <span class="s">&quot;</span><span class="se">\033</span><span class="s">[m&quot;</span><span class="p">;</span>
-</span><span class='line'><span class="n">p</span><span class="p">(</span><span class="err">&#39;</span>  <span class="err">&#39;</span> <span class="o">+</span> <span class="n">GREEN</span> <span class="o">+</span> <span class="n">BOLD</span> <span class="o">+</span> <span class="n">trs</span><span class="p">[</span><span class="n">trs_c</span><span class="p">].</span><span class="n">type</span> <span class="o">+</span> <span class="n">NORMAL</span><span class="p">);</span>
-</span></code></pre></td></tr></table></div></figure>
-
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+</pre></td><td class="code"><pre><code class="cpp"><span class="line"><span class="n">RED</span> <span class="o">=</span> <span class="s">&quot;</span><span class="se">\033</span><span class="s">[1;31m&quot;</span><span class="p">;</span>
+</span><span class="line"><span class="n">GREEN</span> <span class="o">=</span> <span class="s">&quot;</span><span class="se">\033</span><span class="s">[1;32m&quot;</span><span class="p">;</span>
+</span><span class="line"><span class="n">DEFAULT</span> <span class="o">=</span> <span class="s">&quot;</span><span class="se">\033</span><span class="s">[0;49m&quot;</span><span class="p">;</span>
+</span><span class="line">
+</span><span class="line"><span class="n">BOLD</span> <span class="o">=</span> <span class="s">&quot;</span><span class="se">\033</span><span class="s">[1m&quot;</span><span class="p">;</span>
+</span><span class="line"><span class="n">UNDERLINE</span> <span class="o">=</span> <span class="s">&quot;</span><span class="se">\033</span><span class="s">[4m&quot;</span><span class="p">;</span>
+</span><span class="line"><span class="n">NORMAL</span> <span class="o">=</span> <span class="s">&quot;</span><span class="se">\033</span><span class="s">[m&quot;</span><span class="p">;</span>
+</span><span class="line"><span class="n">p</span><span class="p">(</span><span class="err">&#39;</span>  <span class="err">&#39;</span> <span class="o">+</span> <span class="n">GREEN</span> <span class="o">+</span> <span class="n">BOLD</span> <span class="o">+</span> <span class="n">trs</span><span class="p">[</span><span class="n">trs_c</span><span class="p">].</span><span class="n">type</span> <span class="o">+</span> <span class="n">NORMAL</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 <hr />
-
-<h3>即将添加到V2.0中的新功能</h3>
+<p>### 即将添加到V2.0中的新功能</p>
 
 <ul>
-<li>可以实现异步发音</li>
+  <li>可以实现异步发音</li>
 </ul>
-
 
 <p>即发音和词典显示分两个进程进行，不会因为发音文件硕大影响单词显示速度，进而产生阻塞感。</p>
 
 <p>预计实现方式，是使用Node.js的http request下载下来发音的mp3文件，放到临时文件中，使用ffplay或其他工具播放，然后删除掉mp3文件。</p>
 
 <p>如果可能的话不是用ffplay，而是使用ffmpeg库开发一个mp3播放小程序，增强可移植行。</p>
+
 </div>
 
 </article>
@@ -440,7 +426,7 @@
 			</div>
 			<footer id="footer" class="inner">
 <p>
-  Copyright &copy; 2016 - LanderlYoung -
+  Copyright &copy; 2017 - LanderlYoung -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 </footer>
@@ -486,6 +472,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2016/03/08/android-zhi-chi-ping-mu-xuan-zhuan-de-fang-shi/">Android 支持屏幕旋转的方式</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/01/11/re-lambda-ce-shi-bao-gao/">Retro-lambda 测试报告</a>
       </li>
     
@@ -501,39 +491,35 @@
         <a href="/blog/2014/11/09/androidzhong-servicede-shi-yong/">Android中service的使用</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014/10/31/androidzhong-de-wakelockshi-yong/">Android中的WakeLock使用</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/android/'>android (9)</a></li><li><a href='/blog/categories/git/'>git (2)</a></li><li><a href='/blog/categories/html5/'>html5 (5)</a></li><li><a href='/blog/categories/java/'>java (4)</a></li><li><a href='/blog/categories/javascript/'>javascript (3)</a></li><li><a href='/blog/categories/linux/'>linux (7)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/android/'>android (10)</a></li><li><a href='/blog/categories/git/'>git (2)</a></li><li><a href='/blog/categories/html5/'>html5 (5)</a></li><li><a href='/blog/categories/java/'>java (4)</a></li><li><a href='/blog/categories/javascript/'>javascript (3)</a></li><li><a href='/blog/categories/linux/'>linux (7)</a></li></ul>
 </section>
 <section>
 	<h1>Tags</h1>
 	<ul class="tag-cloud">
-		<li><a style="font-size: 107.1%" href="/tags/android/">Android</a></li>
-<li><a style="font-size: 71.1%" href="/tags/linux/">Linux</a></li>
-<li><a style="font-size: 118.6%" href="/tags/html5/">HTML5</a></li>
-<li><a style="font-size: 90.8%" href="/tags/java/">Java</a></li>
-<li><a style="font-size: 116.5%" href="/tags/node-dot-js/">Node.js</a></li>
-<li><a style="font-size: 79.1%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
-<li><a style="font-size: 80.5%" href="/tags/java/">java</a></li>
-<li><a style="font-size: 119.4%" href="/tags/android/">android</a></li>
-<li><a style="font-size: 90.8%" href="/tags/git/">Git</a></li>
-<li><a style="font-size: 101.7%" href="/tags/vim/">Vim</a></li>
-<li><a style="font-size: 109.6%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
-<li><a style="font-size: 107.9%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
-<li><a style="font-size: 86.6%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
-<li><a style="font-size: 118.5%" href="/tags/tencent/">tencent</a></li>
-<li><a style="font-size: 114.1%" href="/tags/zhuan-tie/">转贴</a></li>
-<li><a style="font-size: 102.0%" href="/tags/sensor/">sensor</a></li>
-<li><a style="font-size: 109.3%" href="/tags/ui/">UI</a></li>
-<li><a style="font-size: 78.6%" href="/tags/svg/">SVG</a></li>
-<li><a style="font-size: 113.8%" href="/tags/intellij/">IntelliJ</a></li>
-<li><a style="font-size: 73.3%" href="/tags/jni/">JNI</a></li>
+		<li><a style="font-size: 83.0%" href="/tags/android/">Android</a></li>
+<li><a style="font-size: 113.0%" href="/tags/linux/">Linux</a></li>
+<li><a style="font-size: 100.1%" href="/tags/html5/">HTML5</a></li>
+<li><a style="font-size: 102.1%" href="/tags/java/">Java</a></li>
+<li><a style="font-size: 115.8%" href="/tags/node-dot-js/">Node.js</a></li>
+<li><a style="font-size: 84.7%" href="/tags/dictonary-node-dot-js/">dictonary_Node.js</a></li>
+<li><a style="font-size: 77.4%" href="/tags/java/">java</a></li>
+<li><a style="font-size: 98.0%" href="/tags/android/">android</a></li>
+<li><a style="font-size: 85.4%" href="/tags/git/">Git</a></li>
+<li><a style="font-size: 104.3%" href="/tags/vim/">Vim</a></li>
+<li><a style="font-size: 79.0%" href="/tags/androidyuan-dai-ma/">Android源代码</a></li>
+<li><a style="font-size: 94.2%" href="/tags/sou-gou-shu-ru-fa/">搜狗输入法</a></li>
+<li><a style="font-size: 78.6%" href="/tags/octpressban-qian-bian-ji-wei-zhi/">Octpress搬迁编辑位置</a></li>
+<li><a style="font-size: 102.0%" href="/tags/tencent/">tencent</a></li>
+<li><a style="font-size: 77.2%" href="/tags/zhuan-tie/">转贴</a></li>
+<li><a style="font-size: 102.9%" href="/tags/sensor/">sensor</a></li>
+<li><a style="font-size: 77.2%" href="/tags/ui/">UI</a></li>
+<li><a style="font-size: 91.5%" href="/tags/svg/">SVG</a></li>
+<li><a style="font-size: 89.1%" href="/tags/intellij/">IntelliJ</a></li>
+<li><a style="font-size: 118.0%" href="/tags/jni/">JNI</a></li>
 
 	</ul>
 </section>
